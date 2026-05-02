@@ -1,0 +1,397 @@
+# -*- coding: utf-8 -*-
+"""
+风控相关 API 路由
+覆盖: /api/risk/status, /api/risk/rules, /api/risk/stress-test, /api/risk/kelly, /api/risk/check
+"""
+from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
+from typing import Literal, Optional
+from datetime import datetime
+
+router = APIRouter(prefix="/api/risk", tags=["risk"])
+
+
+# ==================== 风控状态 ====================
+
+class RiskRuleItem(BaseModel):
+    ruleId: str
+    name: str
+    layer: int
+    severity: str
+    currentValue: float
+    threshold: float
+    message: str
+    updatedAt: str
+
+
+class RiskStatusResponse(BaseModel):
+    status: str
+    data: list[RiskRuleItem]
+    timestamp: str
+
+
+@router.get("/status")
+async def get_risk_status():
+    """
+    风控状态总览 — 返回与前端 RiskStatusResponse 格式匹配的数据
+    """
+    try:
+        from services.vnpy_bridge import bridge
+        risk_data = bridge.get_risk_status()
+        # risk_data 是 dict: {date, overallStatus, rules, triggeredCount, circuitBreaker, updatedAt}
+        if isinstance(risk_data, dict):
+            return {
+                "code": 0,
+                "message": "success",
+                "data": risk_data
+            }
+        # 兼容 list 格式
+        return {
+            "code": 0,
+            "message": "success",
+            "data": {
+                "date": datetime.now().strftime("%Y-%m-%d"),
+                "overallStatus": "PASS",
+                "rules": risk_data if isinstance(risk_data, list) else [],
+                "triggeredCount": 0,
+                "circuitBreaker": False,
+                "updatedAt": datetime.now().isoformat()
+            }
+        }
+    except Exception as e:
+        return {
+            "code": 1,
+            "message": str(e),
+            "data": None
+        }
+
+
+# ==================== 风控规则 ====================
+
+class RiskRuleConfigItem(BaseModel):
+    id: str
+    ruleId: str
+    name: str
+    layer: int
+    threshold: float
+    currentValue: float
+    unit: str
+    enabled: bool
+
+
+class RiskRulesResponse(BaseModel):
+    status: str
+    data: list[RiskRuleConfigItem]
+
+
+@router.get("/rules", response_model=RiskRulesResponse)
+async def get_risk_rules():
+    """
+    风控规则列表
+    """
+    try:
+        from services.vnpy_bridge import bridge
+        rules_data = bridge.get_risk_rules() if hasattr(bridge, 'get_risk_rules') else []
+        return RiskRulesResponse(status="success", data=rules_data)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/rules", response_model=RiskRulesResponse)
+async def update_risk_rules(rules: list[RiskRuleConfigItem]):
+    """
+    更新风控规则配置
+    """
+    try:
+        from services.vnpy_bridge import bridge
+        if hasattr(bridge, 'update_risk_rules'):
+            bridge.update_risk_rules([r.model_dump() for r in rules])
+        return RiskRulesResponse(
+            status="success",
+            data=[r.model_dump() for r in rules]
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==================== 压力测试 ====================
+
+class StressPosition(BaseModel):
+    symbol: str
+    exchange: str
+    direction: str  # long / short
+    volume: int
+    avgPrice: float
+    positionType: str = "open"
+
+
+class StressTestRequest(BaseModel):
+    scenario: Literal["flash_crash", "volatility_spike", "liquidity_dryup", "correlated_drawdown"]
+    positions: list[StressPosition]
+
+
+class StressTestResult(BaseModel):
+    scenarioName: str
+    totalPnl: float
+    remainingEquity: float
+    drawdownPct: float
+    survived: bool
+    rating: str  # PASS / LOW / MEDIUM / HIGH
+
+
+@router.post("/stress-test")
+async def run_stress_test(req: StressTestRequest):
+    """
+    压力测试 — 计算极端行情场景下的持仓表现
+    """
+    base_equity = 500000.0
+    total_exposure = sum(
+        p.avgPrice * p.volume * (1 if p.direction == "long" else -0.5)
+        for p in req.positions
+    )
+    abs_exposure = abs(total_exposure)
+
+    scenarios_map = {
+        "flash_crash": (
+            "闪崩 (Flash Crash)",
+            abs_exposure * -0.082,
+            abs_exposure * 0.082 < 150000,
+            "MEDIUM" if abs_exposure * 0.082 < 100000 else "HIGH"
+        ),
+        "volatility_spike": (
+            "波动率飙升",
+            abs_exposure * -0.055,
+            True,
+            "MEDIUM"
+        ),
+        "liquidity_dryup": (
+            "流动性枯竭",
+            abs_exposure * -0.15,
+            abs_exposure * 0.15 < 200000,
+            "MEDIUM" if abs_exposure * 0.15 < 100000 else "HIGH"
+        ),
+        "correlated_drawdown": (
+            "相关性回撤",
+            abs_exposure * -0.162,
+            abs_exposure * 0.162 < 200000,
+            "HIGH"
+        ),
+    }
+
+    scenario_name, total_pnl, survived, rating = scenarios_map[req.scenario]
+    remaining = base_equity + total_pnl
+
+    return {
+        "status": "success",
+        "data": [{
+            "scenarioName": scenario_name,
+            "totalPnl": round(total_pnl, 2),
+            "remainingEquity": round(remaining, 2),
+            "drawdownPct": round(abs(total_pnl) / base_equity * 100, 2),
+            "survived": survived,
+            "rating": rating,
+        }]
+    }
+
+
+# ==================== 凯利公式 ====================
+
+class KellyInput(BaseModel):
+    winRate: float          # 胜率 0-1
+    avgWin: float           # 平均盈利
+    avgLoss: float          # 平均亏损
+    capital: float = 500000  # 资金
+
+
+class KellyResult(BaseModel):
+    kellyPct: float         # 凯利比例 %
+    optimalF: float         # 最优 f
+    suggestedSize: int      # 建议仓位（手）
+    riskLevel: str          # LOW / MEDIUM / HIGH
+
+
+@router.post("/kelly")
+async def calc_kelly(input: KellyInput):
+    """
+    凯利公式计算器
+    kelly = (p * B - q) / B
+    其中 p=胜率, q=1-p, B=盈亏比
+    """
+    if not (0 < input.winRate < 1):
+        raise HTTPException(status_code=400, detail="winRate must be between 0 and 1")
+    if input.avgLoss <= 0:
+        raise HTTPException(status_code=400, detail="avgLoss must be positive")
+    if input.avgWin <= 0:
+        raise HTTPException(status_code=400, detail="avgWin must be positive")
+
+    p = input.winRate
+    q = 1 - p
+    b = input.avgWin / input.avgLoss  # 盈亏比
+
+    # 凯利公式
+    kelly = (p * b - q) / b
+    kelly = max(0, min(kelly, 1))  # 限制在 [0, 1]
+
+    # 最优 f（简化版）
+    optimal_f = kelly
+
+    # 建议仓位（手）
+    contract_value = 10 * input.capital * kelly  # 简化：每手价值 = 10% 保证金
+    suggested_size = max(1, int(input.capital * kelly * 0.1 / 10000))
+
+    # 风险等级
+    if kelly < 0.1:
+        risk_level = "LOW"
+    elif kelly < 0.25:
+        risk_level = "MEDIUM"
+    else:
+        risk_level = "HIGH"
+
+    return {
+        "status": "success",
+        "data": {
+            "kellyPct": round(kelly * 100, 2),
+            "optimalF": round(optimal_f, 4),
+            "suggestedSize": suggested_size,
+            "riskLevel": risk_level,
+        }
+    }
+
+
+# ==================== 风控预检（下单前） ====================
+
+class RiskCheckRequest(BaseModel):
+    symbol: str           # 合约代码，如 "RU2405"
+    direction: str        # "LONG" / "SHORT"
+    price: float          # 委托价格
+    volume: int           # 委托手数
+
+
+class RiskCheckResponse(BaseModel):
+    passed: bool
+    blockedRules: list[str]
+    message: str
+
+
+@router.post("/check", response_model=RiskCheckResponse)
+async def risk_check(req: RiskCheckRequest):
+    """
+    风控预检 — 下单前检查
+
+    检查规则：
+    1. 交易时段检查（is_trading_hours）
+    2. 账户可用资金是否充足
+    3. 持仓上限检查（单品种不超过 20 手）
+    4. 总持仓比例不超过 80%
+    5. 涨跌停价格限制
+    6. 宏观熔断（综合打分 < 30 禁止做多，> 70 禁止做空）
+
+    返回：
+        pass: True 表示可以通过，False 表示被拦截
+        blockedRules: 被触发的规则ID列表
+        message: 总体说明
+    """
+    blocked_rules: list[str] = []
+
+    try:
+        from services.vnpy_bridge import bridge
+    except Exception:
+        return RiskCheckResponse(
+            passed=True,
+            blockedRules=[],
+            message="VNpyBridge 未初始化，跳过风控检查（Paper模式）"
+        )
+
+    # 规则1：交易时段检查
+    if not bridge.is_trading_hours():
+        blocked_rules.append("R8")
+
+    # 规则2：账户可用资金检查
+    account = bridge.get_account()
+    if account:
+        available = account.get("available", 0)
+        # 估算保证金（简化：价格 * 手数 * 10 * 10%保证金率）
+        required_margin = req.price * req.volume * 10 * 0.1
+        if available < required_margin:
+            blocked_rules.append("R9")
+
+    # 规则3：单品种持仓上限
+    positions = bridge.get_positions()
+    current_pos_vol = 0
+    for pos in positions:
+        pos_symbol = pos.get("symbol", "")
+        if isinstance(pos_symbol, str) and req.symbol.upper() in pos_symbol.upper():
+            if pos.get("direction", "") == req.direction.upper():
+                current_pos_vol += pos.get("volume", 0)
+    if current_pos_vol + req.volume > 20:
+        blocked_rules.append("R1")
+
+    # 规则4：总持仓比例不超过 80%
+    if account:
+        total_equity = account.get("balance", 1_000_000)
+        total_exposure = sum(
+            p.get("price", 0) * p.get("volume", 0) * 10
+            for p in positions
+        )
+        new_exposure = req.price * req.volume * 10
+        if (total_exposure + new_exposure) / total_equity > 0.8:
+            blocked_rules.append("R4")
+
+    # 规则5：涨跌停检查（简化：超过当日涨跌停板 ±8% 拒绝）
+    # 实际应查交易所公告，简化使用 ±8%
+    try:
+        import macro_scoring_engine as engine
+        signal_data = engine.get_latest_signal(req.symbol.upper().replace("\d+", ""))
+        if signal_data:
+            last_price = signal_data.get("last_price") or signal_data.get("close") or req.price
+        else:
+            last_price = req.price
+    except Exception:
+        last_price = req.price
+
+    limit_pct = 0.08
+    upper_limit = last_price * (1 + limit_pct)
+    lower_limit = last_price * (1 - limit_pct)
+    if req.direction.upper() == "LONG" and req.price > upper_limit:
+        blocked_rules.append("R3")
+    if req.direction.upper() == "SHORT" and req.price < lower_limit:
+        blocked_rules.append("R3")
+
+    # 规则6：宏观熔断检查（需要宏观打分 < 30 禁止做多，> 70 禁止做空）
+    try:
+        import macro_scoring_engine as engine
+        raw_symbol = req.symbol.upper()
+        # 去掉数字后缀获取品种主代码
+        import re
+        main_symbol = re.sub(r'\d+$', '', raw_symbol)
+        signal_data = engine.get_latest_signal(main_symbol)
+        if signal_data:
+            score = signal_data.get("compositeScore", 0)
+            if req.direction.upper() == "LONG" and score < 0.3:
+                blocked_rules.append("R10")
+            if req.direction.upper() == "SHORT" and score > 0.7:
+                blocked_rules.append("R10")
+    except Exception:
+        pass  # 宏观打分不可用时跳过熔断检查
+
+    # 汇总结果
+    passed = len(blocked_rules) == 0
+    if passed:
+        message = "风控预检通过"
+    else:
+        rule_names = {
+            "R1": "单品种持仓上限",
+            "R3": "涨跌停限制",
+            "R4": "总保证金上限",
+            "R8": "交易时段限制",
+            "R9": "资金充足性不足",
+            "R10": "宏观熔断",
+        }
+        names = [f"{rid}({rule_names.get(rid, rid)})" for rid in blocked_rules]
+        message = f"被以下规则拦截: {', '.join(names)}"
+
+    return RiskCheckResponse(
+        passed=passed,
+        blockedRules=blocked_rules,
+        message=message,
+    )

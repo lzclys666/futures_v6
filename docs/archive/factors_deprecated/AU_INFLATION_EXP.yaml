@@ -1,0 +1,18 @@
+# AU_INFLATION_EXP - 通胀预期因子
+factor_code: "AU_INFLATION_EXP"
+factor_name: "通胀预期因子"
+commodity: "AU"
+
+factor_direction: "positive"
+weight: 0.12
+
+data_source: "akshare"
+api_params:
+  function: "macro_usa_cpi"
+  symbol: "CPI"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "美国CPI通胀预期，实际利率=名义利率-通胀预期"
+pit_required: false
+dependencies: []

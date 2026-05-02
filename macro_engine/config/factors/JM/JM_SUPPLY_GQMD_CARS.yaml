@@ -1,0 +1,16 @@
+﻿---
+factor_code: "JM_SUPPLY_GQMD_CARS"
+factor_name: "三大口岸蒙煤总库存"
+econ_category: "INV"
+logic_category: "QTY"
+direction: 1
+frequency: "weekly"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 12
+base_weight: 0.06
+max_weight: 0.08
+is_active: false
+dependencies:
+  - "汾渭能源(年费)/煤焦>蒙煤>三口岸库存"
+description: "甘其毛都+策克+满都拉口岸蒙煤库存"

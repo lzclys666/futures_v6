@@ -1,0 +1,8 @@
+factor_code: PB_FUT_OI
+name: "PB沪铅期货持仓量"
+category: free_data
+description: "SHFE沪铅期货主力合约持仓量（手）。"
+data_source: AKShare futures_main_sina(symbol="PB0")['持仓量']
+source_confidence: 1.0
+expected_range: [20000.0, 200000.0]
+notes: "L1: AKShare PB0 | L4: DB历史回补"

@@ -1,0 +1,20 @@
+# TA_CST_PX.yaml
+# PX价格（CFR中国）
+
+factor_code: TA_CST_PX
+symbol: TA
+category: cost
+name: PX价格（CFR中国）
+description: 对二甲苯（PX）CFR中国价格，占PTA成本约70%，成本端核心定价锚
+frequency: daily
+unit: 美元/吨
+direction: positive  # PX上涨=成本上升=利多
+confidence: 3  # ★★★
+source: 隆众资讯（付费）
+calculation: null
+tags:
+  - cost
+  - px
+  - feedstock
+  - upstream
+notes: 需要订阅隆众资讯数据服务

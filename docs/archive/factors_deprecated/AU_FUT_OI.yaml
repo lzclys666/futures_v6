@@ -1,0 +1,18 @@
+# AU_FUT_OI - 期货持仓量因子
+factor_code: "AU_FUT_OI"
+factor_name: "黄金期货持仓量因子"
+commodity: "AU"
+
+factor_direction: "positive"
+weight: 0.0
+
+data_source: "akshare"
+api_params:
+  function: "futures_zh_daily_sina"
+  symbol: "au0"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "沪金主力合约持仓量，反映市场参与度"
+pit_required: false
+dependencies: []

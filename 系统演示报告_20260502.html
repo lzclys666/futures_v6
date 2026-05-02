@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>期货智能交易系统 V6.0 - 运行演示报告</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; color: #1a1a2e; padding: 20px; }
+  .container { max-width: 900px; margin: 0 auto; }
+  .header { background: linear-gradient(135deg, #0f3460, #16213e); color: #fff; padding: 30px; border-radius: 12px; margin-bottom: 24px; }
+  .header h1 { font-size: 26px; margin-bottom: 6px; }
+  .header .meta { opacity: 0.8; font-size: 14px; }
+  .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 2px; }
+  .badge-green { background: #d4edda; color: #155724; }
+  .badge-blue { background: #cce5ff; color: #004085; }
+  .badge-gold { background: #fff3cd; color: #856404; }
+  .card { background: #fff; border-radius: 10px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .card h2 { font-size: 16px; color: #0f3460; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #e8ecf1; }
+  .card h2 .count { float: right; font-weight: 400; font-size: 13px; color: #666; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .stat-box { background: #f8f9fa; border-radius: 8px; padding: 16px; text-align: center; }
+  .stat-box .num { font-size: 28px; font-weight: 700; color: #0f3460; }
+  .stat-box .label { font-size: 12px; color: #666; margin-top: 4px; }
+  .signal-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 6px; margin-bottom: 6px; }
+  .signal-row:nth-child(odd) { background: #f8f9fa; }
+  .signal-row .symbol { font-weight: 700; font-size: 15px; width: 50px; }
+  .signal-row .score { font-weight: 600; font-size: 14px; }
+  .signal-row .direction { width: 80px; text-align: center; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+  .dir-long { background: #ffebee; color: #c62828; }
+  .dir-short { background: #e8f5e9; color: #2e7d32; }
+  .dir-neutral { background: #fff3e0; color: #e65100; }
+  code { background: #f4f4f8; padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #d63384; }
+  pre { background: #1e1e2e; color: #cdd6f4; padding: 16px; border-radius: 8px; font-size: 12px; overflow-x: auto; max-height: 300px; }
+  .factor-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .factor-table th { background: #f0f2f5; padding: 8px 10px; text-align: left; font-weight: 600; color: #555; }
+  .factor-table td { padding: 6px 10px; border-bottom: 1px solid #eee; }
+  .factor-table .bar-bg { background: #eee; border-radius: 4px; height: 6px; width: 80px; display: inline-block; }
+  .factor-table .bar-fill { height: 6px; border-radius: 4px; }
+  .bar-positive { background: #c62828; }
+  .bar-negative { background: #2e7d32; }
+  .warning { text-align: center; padding: 40px; }
+  .warning-icon { font-size: 48px; margin-bottom: 12px; }
+  .btn { display: inline-block; padding: 10px 24px; background: #0f3460; color: #fff; text-decoration: none; border-radius: 8px; font-size: 14px; margin: 4px; }
+  .btn:hover { background: #16213e; }
+  .api-endpoint { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #e8ecf1; font-size: 13px; }
+  .risk-rule { padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; display: flex; align-items: center; }
+  .risk-rule .id { font-weight: 600; color: #0f3460; width: 40px; }
+  .risk-rule .name { flex: 1; }
+  .risk-rule .layer { font-size: 11px; color: #666; width: 60px; }
+  .risk-rule .status { width: 50px; text-align: center; }
+  .risk-rule .desc { font-size: 11px; color: #888; width: 100%; margin-top: 2px; }
+  @media (max-width: 600px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>📊 期货智能交易系统 V6.0</h1>
+  <div class="meta">
+    基于 VNpy 4.3.0 · 三层分离架构 · 宏观基本面量化 · 2026-05-02 运行验证
+    <br>
+    <span class="badge badge-green">✅ API 服务运行中 (端口 8000)</span>
+    <span class="badge badge-blue">✅ Paper Trading 已连接</span>
+    <span class="badge badge-gold">🟡 前端静态页面已部署 (端口 5173)</span>
+  </div>
+</div>
+
+<!-- 统计概览 -->
+<div class="card">
+  <h2>📈 系统概览</h2>
+  <div class="grid-3">
+    <div class="stat-box">
+      <div class="num">28</div>
+      <div class="label">覆盖品种</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">240+</div>
+      <div class="label">因子定义</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">11</div>
+      <div class="label">风控规则</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">30+</div>
+      <div class="label">API 端点</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">14</div>
+      <div class="label">前端页面</div>
+    </div>
+    <div class="stat-box">
+      <div class="num">3</div>
+      <div class="label">交易策略</div>
+    </div>
+  </div>
+</div>
+
+<!-- 活跃信号 -->
+<div class="card">
+  <h2>🔴 宏观信号快照</h2>
+  <div class="signal-row">
+    <span class="symbol">RU</span>
+    <span class="score">+0.6323</span>
+    <span class="direction dir-long">📈 LONG</span>
+    <span>2026-05-01 真实数据</span>
+  </div>
+  <div class="signal-row">
+    <span class="symbol">CU</span>
+    <span class="score">-0.0039</span>
+    <span class="direction dir-neutral">➡️ NEUTRAL</span>
+    <span>2026-05-01 真实数据</span>
+  </div>
+  <div class="signal-row">
+    <span class="symbol">AU</span>
+    <span class="score">+0.0688</span>
+    <span class="direction dir-neutral">➡️ NEUTRAL</span>
+    <span>2026-05-01 真实数据</span>
+  </div>
+  <div class="signal-row">
+    <span class="symbol">AG</span>
+    <span class="score">+0.0325</span>
+    <span class="direction dir-neutral">➡️ NEUTRAL</span>
+    <span>2026-05-01 真实数据</span>
+  </div>
+  <div style="margin-top: 8px; text-align: right; font-size: 12px; color: #999;">RU 当前看多信号（compositeScore &gt; 0.12）</div>
+</div>
+
+<!-- RU 因子明细 -->
+<div class="card">
+  <h2>🧪 RU 因子明细（权重排名 TOP 5）</h2>
+  <table class="factor-table">
+    <thead>
+      <tr>
+        <th>因子代码</th>
+        <th>因子名称</th>
+        <th>方向</th>
+        <th>标准化值</th>
+        <th>权重</th>
+        <th>贡献度</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>RU_FUT_OI</code></td>
+        <td>RU_FUT_OI</td>
+        <td><span style="color:#c62828">⬆️ positive</span></td>
+        <td><strong>+2.6733</strong></td>
+        <td><strong>0.4032</strong></td>
+        <td><strong>+1.0779</strong></td>
+      </tr>
+      <tr>
+        <td><code>RU_FX_USDCNY</code></td>
+        <td>美元兑人民币汇率</td>
+        <td><span style="color:#2e7d32">⬇️ negative</span></td>
+        <td><strong>-3.0000</strong></td>
+        <td>0.0600</td>
+        <td>-0.1800</td>
+      </tr>
+      <tr>
+        <td><code>RU_TS_ROLL_YIELD</code></td>
+        <td>RU近月合约滚动收益率</td>
+        <td><span style="color:#c62828">⬆️ positive</span></td>
+        <td>+0.9897</td>
+        <td>0.0400</td>
+        <td>+0.0396</td>
+      </tr>
+      <tr>
+        <td><code>RU_INV_QINGDAO</code></td>
+        <td>青岛库存</td>
+        <td><span style="color:#2e7d32">⬇️ negative</span></td>
+        <td>-0.7500</td>
+        <td>0.0400</td>
+        <td>-0.0300</td>
+      </tr>
+      <tr>
+        <td><code>RU_SPD_TS_STRONG</code></td>
+        <td>深浅色价差</td>
+        <td><span style="color:#2e7d32">⬇️ negative</span></td>
+        <td>-0.3273</td>
+        <td>0.1613</td>
+        <td>-0.0528</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 三层架构 -->
+<div class="card">
+  <h2>🏗️ 三层分离架构</h2>
+  <div class="grid-2">
+    <div class="stat-box" style="background: #fff3e0;">
+      <div class="label" style="font-weight:700;color:#e65100;">🌐 Layer 3 · 前端</div>
+      <div class="label">React 18 + TypeScript + Zustand + ECharts</div>
+      <div style="font-size:12px;margin-top:6px;">14 个页面 · 7 个 API 客户端 · 5 个 Store</div>
+    </div>
+    <div class="stat-box" style="background: #e3f2fd;">
+      <div class="label" style="font-weight:700;color:#0d47a1;">⚡ Layer 2 · API 服务</div>
+      <div class="label">FastAPI · 端口 8000</div>
+      <div style="font-size:12px;margin-top:6px;">宏观信号 · 交易 · 风控 · WebSocket · IC 热力图</div>
+    </div>
+  </div>
+  <div class="grid-2" style="margin-top:12px;">
+    <div class="stat-box" style="background: #e8f5e9;">
+      <div class="label" style="font-weight:700;color:#1b5e20;">📡 宏观打分层</div>
+      <div class="label">Pipeline 引擎 · 240+ 因子 · 28 品种</div>
+      <div style="font-size:12px;margin-top:6px;">MAD 标准化 → IC 权重 → 方向判定</div>
+    </div>
+    <div class="stat-box" style="background: #fce4ec;">
+      <div class="label" style="font-weight:700;color:#b71c1c;">🤖 Layer 1 · VNpy 执行层</div>
+      <div class="label">CTA 策略引擎 · SimNow 模拟盘</div>
+      <div style="font-size:12px;margin-top:6px;">3 策略 · 11 风控规则 · 审计日志</div>
+    </div>
+  </div>
+</div>
+
+<!-- API 接口清单 -->
+<div class="card">
+  <h2>🔌 API 接口（30+ 端点，全部验证通过）</h2>
+  <div class="grid-2">
+    <div>
+      <div style="font-weight:600;font-size:13px;margin-bottom:6px;">📋 宏观信号</div>
+      <div class="api-endpoint"><code>GET /health</code> 健康检查</div>
+      <div class="api-endpoint"><code>GET /api/macro/signal/all</code> 全品种信号</div>
+      <div class="api-endpoint"><code>GET /api/macro/signal/{symbol}</code> 单品种信号+因子</div>
+      <div class="api-endpoint"><code>GET /api/macro/factor/{symbol}</code> 因子明细</div>
+      <div class="api-endpoint"><code>GET /api/macro/score-history/{symbol}</code> 历史打分</div>
+    </div>
+    <div>
+      <div style="font-weight:600;font-size:13px;margin-bottom:6px;">🛡️ 风控</div>
+      <div class="api-endpoint"><code>GET /api/trading/risk-status</code> 风控状态</div>
+      <div class="api-endpoint"><code>GET /api/trading/risk-rules</code> 风控规则</div>
+      <div class="api-endpoint"><code>POST /api/risk/simulate</code> 下单前预检</div>
+      <div class="api-endpoint"><code>POST /api/risk/kelly</code> 凯利公式</div>
+      <div class="api-endpoint"><code>POST /api/risk/stress-test</code> 压力测试</div>
+    </div>
+    <div style="margin-top:12px;">
+      <div style="font-weight:600;font-size:13px;margin-bottom:6px;">💹 交易</div>
+      <div class="api-endpoint"><code>GET /api/trading/positions</code> 持仓查询</div>
+      <div class="api-endpoint"><code>GET /api/trading/orders</code> 订单列表</div>
+      <div class="api-endpoint"><code>POST /api/trading/order</code> 下单</div>
+      <div class="api-endpoint"><code>DELETE /api/trading/order/{id}</code> 撤单</div>
+      <div class="api-endpoint"><code>WS /ws/trading</code> 实时推送</div>
+    </div>
+    <div style="margin-top:12px;">
+      <div style="font-weight:600;font-size:13px;margin-bottom:6px;">📊 IC 热力图</div>
+      <div class="api-endpoint"><code>GET /api/ic/heatmap</code> Spearman IC</div>
+      <div class="api-endpoint"><code>GET /api/risk/rules</code> 风控规则CRUD</div>
+      <div class="api-endpoint"><code>PUT /api/risk/rules/{id}</code> 规则更新</div>
+      <div class="api-endpoint"><code>GET /api/vnpy/status</code> 引擎状态</div>
+    </div>
+  </div>
+</div>
+
+<!-- 风控规则 -->
+<div class="card">
+  <h2>🛡️ 风控引擎（11 条规则三层防御）</h2>
+  <div style="font-weight:600;color:#c62828;font-size:13px;margin-bottom:8px;">🔴 Layer 1 · 市场系统性风险</div>
+  <div class="risk-rule"><span class="id">R10</span><span class="name">宏观熔断</span><span class="status badge-green">PASS</span><span class="desc">评分&lt;30→禁做多，&gt;70→禁做空，±5滞后区间</span></div>
+  <div class="risk-rule"><span class="id">R5</span><span class="name">波动率异常过滤</span><span class="status badge-green">PASS</span><span class="desc">ATR/价格 2倍→WARN，3倍→BLOCK</span></div>
+  <div class="risk-rule"><span class="id">R6</span><span class="name">流动性检查</span><span class="status badge-green">PASS</span><span class="desc">订单量&lt;日均5%，盘口深度30%</span></div>
+  <div class="risk-rule"><span class="id">R8</span><span class="name">交易时间检查</span><span class="status badge-green">PASS</span><span class="desc">非交易时段+集合竞价禁开仓</span></div>
+  <div class="risk-rule"><span class="id">R3</span><span class="name">涨跌停限制</span><span class="status badge-green">PASS</span><span class="desc">触及涨跌停板拒绝委托</span></div>
+  <div style="font-weight:600;color:#e65100;font-size:13px;margin:8px 0;">🟠 Layer 2 · 账户级风险</div>
+  <div class="risk-rule"><span class="id">R2</span><span class="name">单日最大亏损</span><span class="status badge-green">PASS</span><span class="desc">亏损≥2.5%或5000元→禁止开仓</span></div>
+  <div class="risk-rule"><span class="id">R7</span><span class="name">连续亏损暂停</span><span class="status badge-green">PASS</span><span class="desc">5次亏损→暂停，3次盈利→恢复</span></div>
+  <div class="risk-rule"><span class="id">R11</span><span class="name">处置效应监控</span><span class="status badge-green">PASS</span><span class="desc">亏损持仓≥50%+反向开仓→WARN</span></div>
+  <div style="font-weight:600;color:#2e7d32;font-size:13px;margin:8px 0;">🟢 Layer 3 · 交易执行风险</div>
+  <div class="risk-rule"><span class="id">R1</span><span class="name">动态持仓限制</span><span class="status badge-green">PASS</span><span class="desc">基于20日波动率动态调整上限</span></div>
+  <div class="risk-rule"><span class="id">R4</span><span class="name">总保证金上限</span><span class="status badge-green">PASS</span><span class="desc">交易时段≤70%，收盘前≤60%</span></div>
+  <div class="risk-rule"><span class="id">R9</span><span class="name">资金充足性</span><span class="status badge-green">PASS</span><span class="desc">可用≥冻结+预冻结+5%安全缓冲</span></div>
+  <div style="margin-top:8px;font-size:12px;color:#888;">支持 3 种风险画像：conservative / moderate / aggressive</div>
+</div>
+
+<!-- 如何复现 -->
+<div class="card" style="text-align:center;">
+  <h2>🎬 如何验证系统运行</h2>
+  <p style="margin-bottom:12px;color:#666;">以下命令可在终端直接运行，逐一验证各模块</p>
+  <pre>
+# 1. 启动 API 服务
+cd D:\futures_v6\api
+python -m uvicorn macro_api_server:app --port 8000 --reload
+
+# 2. 健康检查
+curl http://localhost:8000/health
+
+# 3. 全品种信号
+curl http://localhost:8000/api/macro/signal/all
+
+# 4. RU 因子明细
+curl http://localhost:8000/api/macro/signal/RU
+
+# 5. 历史打分
+curl "http://localhost:8000/api/macro/score-history/RU?days=10"
+
+# 6. 风控状态
+curl http://localhost:8000/api/trading/risk-status
+
+# 7. 下单预检
+curl -X POST http://localhost:8000/api/risk/simulate \
+  -H "Content-Type: application/json" \
+  -d '{"symbol":"RU2505","direction":"LONG","price":15000,"volume":1}'
+
+# 8. 启动前端（需 Node.js）
+cd D:\futures_v6\frontend\futures_trading\frontend
+npm run dev
+  </pre>
+  <a class="btn" href="http://localhost:8000/docs" target="_blank">📖 Swagger API 文档</a>
+  <a class="btn" href="http://localhost:8000/redoc" target="_blank">📖 ReDoc 文档</a>
+  <a class="btn" href="http://localhost:5173" target="_blank">🖥️ 前端界面</a>
+</div>
+
+<div style="text-align:center;color:#999;font-size:12px;padding:20px;">
+  系统架构文档：D:\futures_v6\系统架构\tech_arch_v6.md ｜ 
+  代码审查报告：D:\futures_v6\代码审查报告_20260502.md
+  <br>Generated by WorkBuddy · 2026-05-02 08:35 CST
+</div>
+
+</div>
+</body>
+</html>

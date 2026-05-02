@@ -1,0 +1,8 @@
+factor_code: CU_INV_SHFE
+name: "浙铜库存"
+category: inventory
+description: "浙铜库存"
+data_source: AKShare futures_inventory_em
+source_confidence: 1.0
+expected_range: [50000-300000]
+notes: "实测2026-04-17=140339吨"

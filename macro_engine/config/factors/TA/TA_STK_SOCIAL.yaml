@@ -1,0 +1,18 @@
+# TA_STK_SOCIAL.yaml
+# PTA社会库存
+
+factor_code: TA_STK_SOCIAL
+symbol: TA
+category: inventory
+name: PTA社会库存
+description: PTA社会库存（行业口径），反映聚酯产业链库存压力
+frequency: daily
+unit: 吨
+direction: negative
+confidence: 3
+source: 百川盈孚/隆众资讯
+calculation: null
+tags:
+  - inventory
+  - social
+  - PTA

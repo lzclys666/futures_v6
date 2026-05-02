@@ -1,0 +1,34 @@
+# 因子配置文件模板
+# ====================
+# 用法：复制此文件并重命名为 AU_{因子名}.yaml，填入实际参数
+
+factor_code: "{{因子代码}}"
+factor_name: "{{因子中文名称}}"
+commodity: "AU"
+
+# 因子方向：positive（正相关）/ negative（负相关）/ neutral（中性）
+factor_direction: "{{positive|negative|neutral}}"
+
+# 初始权重（引擎运行时可能被 IC 动态调整）
+weight: 0.0
+
+# 数据源：akshare / tushare / custom / exchange
+data_source: "{{数据源}}"
+
+# API 参数（如适用）
+api_params:
+  function: "{{API函数名}}"
+  symbol: "{{交易品种}}"
+  start_date: "{{起始日期}}"
+
+# 数据路径（相对于 data/raw_factors/）
+data_path: "data/raw_factors/AU/"
+
+# 描述
+description: "{{因子描述}}"
+
+# 是否需要 PIT（时点有效性）处理
+pit_required: false
+
+# 依赖的其他因子（如有）
+dependencies: []

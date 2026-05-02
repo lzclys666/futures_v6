@@ -1,0 +1,17 @@
+# PP_PP_STK_PLANT_RATE.yaml
+# 聚丙烯装置开工率
+
+factor_code: PP_PP_STK_PLANT_RATE
+symbol: PP
+category: operation
+name: 聚丙烯装置开工率
+description: 聚丙烯装置开工率
+frequency: daily
+unit: "%"
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - operation
+  - PP

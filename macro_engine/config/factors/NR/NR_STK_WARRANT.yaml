@@ -1,0 +1,18 @@
+# NR_STK_WARRANT.yaml
+# NR橡胶注册仓单
+
+factor_code: NR_STK_WARRANT
+symbol: NR
+category: inventory
+name: NR橡胶仓单
+description: NR橡胶SHFE注册仓单量，反映可交割货源松紧
+frequency: daily
+unit: 手
+direction: negative
+confidence: 3
+source: SHFE官网
+calculation: null
+tags:
+  - inventory
+  - warrant
+  - NR

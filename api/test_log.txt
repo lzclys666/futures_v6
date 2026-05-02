@@ -1,0 +1,16 @@
+﻿python : INFO:     Started server process [18816]
+所在位置 行:1 字符: 23
++ ... res_v6\api; python -m uvicorn macro_api_server:app --host 0.0.0.0 --p ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (INFO:     Started server process [18816]:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+INFO:     Waiting for application startup.
+2026-04-27 10:24:47,630 - VNpyBridge - INFO - VNpyBridge initialized
+2026-04-27 10:24:47,630 - macro_api - WARNING - DEBUG: paper_bridge=<services.vnpy_bridge.VNpyBridge object at 0x000002
+53E0601750>, status=BridgeStatus.STOPPED, value=stopped
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8004 (Press CTRL+C to quit)
+2026-04-27 10:27:12,817 - macro_api - WARNING - DEBUG: paper_bridge=<services.vnpy_bridge.VNpyBridge object at 0x000002
+53E0601750>, status=BridgeStatus.STOPPED, value=stopped
+INFO:     127.0.0.1:20743 - "GET /health HTTP/1.1" 200 OK

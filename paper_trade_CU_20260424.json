@@ -1,0 +1,39 @@
+{
+  "symbol": "CU",
+  "params": {
+    "score_threshold": 0.2,
+    "hold_days": 3,
+    "position_size": 1
+  },
+  "initial_capital": 100000.0,
+  "final_capital": 99698.5249257864,
+  "returns": -0.003014750742135948,
+  "trades": [
+    {
+      "date": "20260108",
+      "action": "OPEN",
+      "direction": "LONG",
+      "price": 10010.594484776047,
+      "volume": 1,
+      "score": 0.2124
+    },
+    {
+      "date": "20260112",
+      "action": "CLOSE",
+      "direction": "LONG",
+      "price": 9980.446977354688,
+      "volume": 1,
+      "pnl": -301.4750742135948,
+      "hold_days": 4,
+      "capital": 99698.5249257864
+    },
+    {
+      "date": "20260423",
+      "action": "OPEN",
+      "direction": "LONG",
+      "price": 9962.801433862116,
+      "volume": 1,
+      "score": 0.4253
+    }
+  ]
+}

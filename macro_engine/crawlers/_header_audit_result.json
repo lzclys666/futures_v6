@@ -1,0 +1,2722 @@
+{
+  "total": 266,
+  "compliant": 1,
+  "non_compliant": 265,
+  "details": [
+    {
+      "variety": "AG",
+      "fname": "AG_抓取CFTC白银持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取COMEX白银库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取COMEX黄金库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取CPI.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取SHFE白银仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取TIPS.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取期货日行情.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取汇率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取现货价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取白银ETF持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取美元指数.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取黄金白银比.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_抓取黄金白银比_FRED.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AG",
+      "fname": "AG_计算沪银COMEX比价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AL",
+      "fname": "AL_批次2_手动输入.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AL",
+      "fname": "AL_抓取LME铝价_铝道网.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AL",
+      "fname": "AL_抓取LME铝库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AL",
+      "fname": "AL_抓取上期所沪铝仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AL",
+      "fname": "AL_抓取净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AL",
+      "fname": "AL_计算SHFE_LME比价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AL",
+      "fname": "AL_计算持仓集中度.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AL",
+      "fname": "AL_计算期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AL",
+      "fname": "AL_计算近远月价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AL",
+      "fname": "AL_计算铝铜比价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AO",
+      "fname": "AO_大连期货库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AO",
+      "fname": "AO_豆一期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AO",
+      "fname": "AO_豆一期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_CFTC非商业净多.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_COMEX_AU.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_DXY美元指数.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_FUT_CLOSE.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_FUT_OI.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_SGE现货基准价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_SHFE沪金前20会员净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_SPDR黄金ETF持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_US_CPI.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_US_NFP.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_VIX.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_央行黄金储备.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_美国10年期国债收益率（名义）.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_美联储点阵图（2026年末利率预测中位数）.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_美联储联邦基金目标利率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "AU",
+      "fname": "AU_金银比_AUAG.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BR",
+      "fname": "BR_批次2_手动输入.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BR",
+      "fname": "BR_批次2手动因子.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BR",
+      "fname": "BR_抓取仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BR",
+      "fname": "BR_抓取库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BR",
+      "fname": "BR_抓取期货持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BR",
+      "fname": "BR_抓取汽车销量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BR",
+      "fname": "BR_抓取现货和基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BR",
+      "fname": "BR_计算比价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "BU_全国高速公路整车流量.py",
+      "state": "未知",
+      "issues": [
+        "无法读取文件(utf-8/gbk)"
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "BU_华东沥青市场价格.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "BU_沥青与布伦特原油价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "BU_沥青期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "BU_沥青期货仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "BU_沥青期货净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "BU_沥青期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "BU_沥青社会库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "BU_炼厂沥青开工率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "BU_美元兑人民币汇率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "BU",
+      "fname": "check_bu_j_data.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "CU",
+      "fname": "CU_批次2_手动输入.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "CU",
+      "fname": "CU_抓取LME库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "CU",
+      "fname": "CU_抓取SHFE仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "CU",
+      "fname": "CU_抓取库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "CU",
+      "fname": "CU_抓取持仓排名.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "CU",
+      "fname": "CU_抓取期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "CU",
+      "fname": "CU_沪铜期货库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "CU",
+      "fname": "CU_计算基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "CU",
+      "fname": "CU_计算近远月价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "CU_NI",
+      "fname": "CU_NI_抓取LME升贴水_EVENT.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EC",
+      "fname": "EC_欧线期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EC",
+      "fname": "EC_欧线期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EG",
+      "fname": "EG_乙二醇工厂库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EG",
+      "fname": "EG_乙二醇期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EG",
+      "fname": "EG_乙二醇期货净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EG",
+      "fname": "EG_乙二醇期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EG",
+      "fname": "EG_乙二醇期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EG",
+      "fname": "EG_乙二醇装置开工率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EG",
+      "fname": "EG_华东乙二醇港口库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EG",
+      "fname": "EG_煤制乙二醇开工率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EG",
+      "fname": "EG_石脑油裂解价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "EG",
+      "fname": "EG_聚酯企业乙二醇库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_制造业PMI.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_我的钢铁网热卷现货价格.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_汽车产量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_热卷-螺纹钢跨品种价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_热卷仓单库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_热卷期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_热卷期货净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_热卷期货合约间价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_热卷期货近远月价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_热卷社会库存总量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_热轧卷板期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_热轧卷板期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "HC",
+      "fname": "HC_钢厂热卷库存周度.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "I",
+      "fname": "I_批次2_手动输入.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "I",
+      "fname": "I_抓取期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "I",
+      "fname": "I_抓取期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "I",
+      "fname": "I_抓取港口库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "I",
+      "fname": "I_计算基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "I",
+      "fname": "I_计算近远月价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_CCI焦炭价格指数.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_我的钢铁网焦炭现货价格.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_焦化企业开工率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_焦炭与焦煤价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_焦炭出口FOB价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_焦炭期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_焦炭期货仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_焦炭期货净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_焦炭期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_焦炭期货近远月价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "J",
+      "fname": "J_钢厂焦炭可用天数.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_三大口岸库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_批次2_手动输入.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_抓取焦煤期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_抓取焦煤进口量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_澳煤进口盈亏.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_焦企产能利用率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_焦化利润.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_焦化厂炼焦煤库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_甘其毛都口岸库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_甘其毛都通关车数.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_矿山开工率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_精煤产量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_蒙煤口岸成本.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_蒙煤山西煤价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_计算焦煤动力煤比价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_计算焦煤月差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_计算焦煤期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_钢厂炼焦煤库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "JM",
+      "fname": "JM_铁水产量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "LC",
+      "fname": "LC_碳酸锂期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "LC",
+      "fname": "LC_碳酸锂期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "LH",
+      "fname": "LH_生猪期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "LH",
+      "fname": "LH_生猪期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "M",
+      "fname": "M_抓取仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "M",
+      "fname": "M_抓取库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "M",
+      "fname": "M_抓取期货持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "M",
+      "fname": "M_抓取现货和基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "M",
+      "fname": "M_计算比价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "M",
+      "fname": "M_计算近远月价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NI",
+      "fname": "NI_抓取SHFE仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NI",
+      "fname": "NI_抓取期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NI",
+      "fname": "NI_抓取期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NI",
+      "fname": "NI_沪镍期货库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NI",
+      "fname": "NI_浙镍期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NI",
+      "fname": "NI_计算基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_回填历史数据.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_天然橡胶期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_批次2_手动输入.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取ANRPC产量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取BDI.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取INE仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取RSS3报价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取STR20_FOB.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取合艾原料.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取持仓排名.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取期货库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取期货持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取橡胶.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取汇率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取现货和基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取轮胎出口.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取轮胎开工率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_抓取青岛库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_橡胶合约间价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_橡胶持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_计算RU-NR价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_计算比价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "NR",
+      "fname": "NR_计算进口利润.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "P",
+      "fname": "P_原油参考.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "P",
+      "fname": "P_批次2_月报爬虫.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "P",
+      "fname": "P_抓取期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "P",
+      "fname": "P_抓取期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "P",
+      "fname": "P_棕榈油期货库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "P",
+      "fname": "P_计算基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "P",
+      "fname": "P_计算近远月价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_SMM沪铅现货价格.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_原生铅与再生铅价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_沪铅期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_沪铅期货净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_沪铅期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_沪铅期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_沪铅期货近远月价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_美元兑人民币汇率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_铅TC加工费.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_铅酸电池用铅占比.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_铅锭仓单库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PB",
+      "fname": "PB_铅锭社会库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_CFR中国丙烯到岸价格.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_拉丝-共聚价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_线型低密度聚乙烯-聚丙烯价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_聚丙烯仓单库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_聚丙烯期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_聚丙烯期货净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_聚丙烯期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_聚丙烯期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_聚丙烯港口库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_聚丙烯袋装比例.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "PP",
+      "fname": "PP_聚丙烯装置开工率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RB",
+      "fname": "RB_批次2_手动输入.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RB",
+      "fname": "RB_抓取上期所螺纹钢仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RB",
+      "fname": "RB_抓取净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RB",
+      "fname": "RB_抓取螺纹钢库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RB",
+      "fname": "RB_计算持仓集中度.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RB",
+      "fname": "RB_计算期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RB",
+      "fname": "RB_计算螺纹钢热卷比价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RB",
+      "fname": "RB_计算近远月价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RU",
+      "fname": "RU_抓取仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RU",
+      "fname": "RU_抓取库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RU",
+      "fname": "RU_抓取期货持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RU",
+      "fname": "RU_抓取现货和基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RU",
+      "fname": "RU_期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "RU",
+      "fname": "RU_计算比价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_抓取产量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_抓取仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_抓取厂家库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_抓取持仓排名.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_抓取期货日行情.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_抓取次月合约价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_抓取现货价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_抓取纯碱库存_em.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_抓取行业开工率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_抓取近月合约价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SA",
+      "fname": "SA_计算SA_FG比价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SC",
+      "fname": "SC_原油期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SC",
+      "fname": "SC_原油期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SN",
+      "fname": "SN_沪锡期货库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SN",
+      "fname": "SN_沪锡期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "SN",
+      "fname": "SN_沪锡期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_批次2_手动输入.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_抓取BRENT价格.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_抓取PTA库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_抓取PTA开工率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺状态标签",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_抓取PTA成本.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺状态标签"
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_抓取PX价格.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺状态标签",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_抓取期货持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_抓取汇率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_抓取社会库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_抓取聚酯开工率.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺状态标签",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_抓取郑商所仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "TA",
+      "fname": "TA_计算基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "Y",
+      "fname": "Y_CBOT大豆期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "Y",
+      "fname": "Y_CBOT豆油期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "Y",
+      "fname": "Y_棕榈油期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "Y",
+      "fname": "Y_棕榈油期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "Y",
+      "fname": "Y_豆油与棕榈油价差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "Y",
+      "fname": "Y_豆油商业库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "Y",
+      "fname": "Y_豆油期现基差.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "Y",
+      "fname": "Y_豆油期货仓单.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "Y",
+      "fname": "Y_豆油期货净持仓.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "Y",
+      "fname": "Y_进口大豆CNF价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "ZN",
+      "fname": "ZN_沪锌期货库存.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "缺coding声明",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "ZN",
+      "fname": "ZN_沪锌期货持仓量.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "ZN",
+      "fname": "ZN_沪锌期货收盘价.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "ZN_PB_SN",
+      "fname": "fetch_lme_zn_pb_sn.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "缺shebang",
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    },
+    {
+      "variety": "_shared",
+      "fname": "gen_stub.py",
+      "state": "⚠️待修复",
+      "issues": [
+        "docstring缺\"因子: FACTOR_CODE =\"",
+        "docstring缺\"当前状态:\"",
+        "docstring缺\"公式:\""
+      ]
+    }
+  ]
+}

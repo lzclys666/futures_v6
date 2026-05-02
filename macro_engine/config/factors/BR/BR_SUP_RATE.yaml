@@ -1,0 +1,17 @@
+# config/factors/BR/BR_SUP_RATE.yaml
+factor_code: "BR_SUP_RATE"
+factor_name: "BR行业开工率"
+template: null
+econ_category: "SUP"
+logic_category: "STK"
+direction: -1          # 开工率上升→供给增加→利空
+frequency: "weekly"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 156
+base_weight: 0.10
+max_weight: 0.20
+is_active: true
+dependencies:
+  - "WebScraper/br_operating_rate"
+description: "高顺顺丁橡胶行业开工率（%），反映BR供给端变化"

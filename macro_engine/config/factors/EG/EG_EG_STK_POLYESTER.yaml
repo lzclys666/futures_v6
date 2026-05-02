@@ -1,0 +1,17 @@
+# EG_EG_STK_POLYESTER.yaml
+# 聚酯企业乙二醇库存
+
+factor_code: EG_EG_STK_POLYESTER
+symbol: EG
+category: inventory
+name: 聚酯企业乙二醇库存
+description: 聚酯企业乙二醇库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - EG

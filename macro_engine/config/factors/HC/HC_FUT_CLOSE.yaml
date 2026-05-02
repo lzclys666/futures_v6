@@ -1,0 +1,8 @@
+factor_code: HC_FUT_CLOSE
+name: "HC热轧卷板期货收盘价"
+category: free_data
+description: "SHFE热轧卷板期货主力合约日行情收盘价，反映钢材卷板市场价格。"
+data_source: AKShare futures_main_sina(symbol="HC0")['收盘价']
+source_confidence: 1.0
+expected_range: [2500.0, 6000.0]
+notes: "L1: AKShare HC0主力合约 | L4: DB历史回补"

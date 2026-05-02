@@ -1,0 +1,130 @@
+{
+  "generated_at": "2026-04-25T14:29:44.361174",
+  "capital": 1000000,
+  "total_results": 6,
+  "results": [
+    {
+      "symbol": "RU",
+      "vt_symbol": "RU2505.SHFE",
+      "total_trades": 64,
+      "win_rate": 1.0,
+      "net_profit": 112771900.0,
+      "profit_factor": Infinity,
+      "return_pct": 11277.19,
+      "config": {
+        "name": "保守配置",
+        "fast_window": 10,
+        "slow_window": 20,
+        "use_macro": false,
+        "enable_stop_loss": true,
+        "enable_take_profit": true,
+        "enable_trailing_stop": false,
+        "enable_tech_exit": false,
+        "stop_loss": 50,
+        "take_profit": 100
+      }
+    },
+    {
+      "symbol": "RU",
+      "vt_symbol": "RU2505.SHFE",
+      "total_trades": 258,
+      "win_rate": 1.0,
+      "net_profit": 336983600.0,
+      "profit_factor": Infinity,
+      "return_pct": 33698.36,
+      "config": {
+        "name": "激进配置",
+        "fast_window": 5,
+        "slow_window": 10,
+        "use_macro": false,
+        "enable_stop_loss": true,
+        "enable_take_profit": false,
+        "enable_trailing_stop": false,
+        "enable_tech_exit": true,
+        "stop_loss": 100
+      }
+    },
+    {
+      "symbol": "ZN",
+      "vt_symbol": "ZN2505.SHFE",
+      "total_trades": 64,
+      "win_rate": 1.0,
+      "net_profit": 56385950.0,
+      "profit_factor": Infinity,
+      "return_pct": 5638.595,
+      "config": {
+        "name": "保守配置",
+        "fast_window": 10,
+        "slow_window": 20,
+        "use_macro": false,
+        "enable_stop_loss": true,
+        "enable_take_profit": true,
+        "enable_trailing_stop": false,
+        "enable_tech_exit": false,
+        "stop_loss": 50,
+        "take_profit": 100
+      }
+    },
+    {
+      "symbol": "ZN",
+      "vt_symbol": "ZN2505.SHFE",
+      "total_trades": 258,
+      "win_rate": 1.0,
+      "net_profit": 168491800.0,
+      "profit_factor": Infinity,
+      "return_pct": 16849.18,
+      "config": {
+        "name": "激进配置",
+        "fast_window": 5,
+        "slow_window": 10,
+        "use_macro": false,
+        "enable_stop_loss": true,
+        "enable_take_profit": false,
+        "enable_trailing_stop": false,
+        "enable_tech_exit": true,
+        "stop_loss": 100
+      }
+    },
+    {
+      "symbol": "RB",
+      "vt_symbol": "RB2505.SHFE",
+      "total_trades": 64,
+      "win_rate": 1.0,
+      "net_profit": 112337780.0,
+      "profit_factor": Infinity,
+      "return_pct": 11233.778,
+      "config": {
+        "name": "保守配置",
+        "fast_window": 10,
+        "slow_window": 20,
+        "use_macro": false,
+        "enable_stop_loss": true,
+        "enable_take_profit": true,
+        "enable_trailing_stop": false,
+        "enable_tech_exit": false,
+        "stop_loss": 50,
+        "take_profit": 100
+      }
+    },
+    {
+      "symbol": "RB",
+      "vt_symbol": "RB2505.SHFE",
+      "total_trades": 252,
+      "win_rate": 1.0,
+      "net_profit": 334627880.0,
+      "profit_factor": Infinity,
+      "return_pct": 33462.788,
+      "config": {
+        "name": "激进配置",
+        "fast_window": 5,
+        "slow_window": 10,
+        "use_macro": false,
+        "enable_stop_loss": true,
+        "enable_take_profit": false,
+        "enable_trailing_stop": false,
+        "enable_tech_exit": true,
+        "stop_loss": 100
+      }
+    }
+  ]
+}

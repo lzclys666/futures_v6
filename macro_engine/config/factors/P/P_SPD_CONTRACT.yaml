@@ -1,0 +1,8 @@
+factor_code: P_SPD_CONTRACT
+name: "棕榈油近远月价差"
+category: free_data
+description: "棕榈油近远月价差"
+data_source: AKShare futures_spot_price(vars_list=['P'])
+source_confidence: 1.0
+expected_range: [-500-500]
+notes: "实测2024-04-30=350(滞后)"

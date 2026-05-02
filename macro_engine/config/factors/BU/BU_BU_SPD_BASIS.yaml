@@ -1,0 +1,17 @@
+# BU_BU_SPD_BASIS.yaml
+# 沥青期现基差
+
+factor_code: BU_BU_SPD_BASIS
+symbol: BU
+category: spread
+name: 沥青期现基差
+description: 沥青期现基差
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - spread
+  - BU

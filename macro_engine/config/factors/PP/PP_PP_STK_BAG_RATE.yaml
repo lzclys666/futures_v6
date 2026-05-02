@@ -1,0 +1,17 @@
+# PP_PP_STK_BAG_RATE.yaml
+# 聚丙烯袋装比例
+
+factor_code: PP_PP_STK_BAG_RATE
+symbol: PP
+category: operation
+name: 聚丙烯袋装比例
+description: 聚丙烯袋装比例
+frequency: daily
+unit: "%"
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - operation
+  - PP

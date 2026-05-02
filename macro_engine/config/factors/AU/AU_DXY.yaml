@@ -1,0 +1,9 @@
+factor_code: AU_DXY
+name: "DXY美元指数"
+category: free_data
+description: "DXY = 美联储贸易加权美元指数，反映美国出口竞争力与全球资本流向。日度数据。"
+data_source: "无免费API（Yahoo Finance 403, EIA DXY 404, FRED timeout, Stooq需API key, investing.com 403, 东方财富CFD拒绝连接）"
+source_confidence: 0.5
+expected_range: [90.0, 130.0]
+notes: "【L4占位】当前无免费数据源。初始值97.756（2026-04-17，金十数据快讯）。L4置信度0.5。"
+source: L4_historical_fallback

@@ -1,0 +1,17 @@
+# Y_Y_SPD_PALM_OIL.yaml
+# 豆油与棕榈油价差
+
+factor_code: Y_Y_SPD_PALM_OIL
+symbol: Y
+category: spread
+name: 豆油与棕榈油价差
+description: 豆油与棕榈油价差
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - spread
+  - Y

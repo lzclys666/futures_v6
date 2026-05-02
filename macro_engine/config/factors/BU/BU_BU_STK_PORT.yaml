@@ -1,0 +1,17 @@
+# BU_BU_STK_PORT.yaml
+# 港口沥青库存
+
+factor_code: BU_BU_STK_PORT
+symbol: BU
+category: inventory
+name: 港口沥青库存
+description: 港口沥青库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - BU

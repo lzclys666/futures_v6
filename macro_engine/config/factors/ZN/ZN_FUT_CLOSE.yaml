@@ -1,0 +1,17 @@
+# ZN_FUT_CLOSE.yaml
+# 沪锌期货收盘价
+
+factor_code: ZN_FUT_CLOSE
+symbol: ZN
+category: price
+name: 沪锌期货收盘价
+description: 沪锌期货收盘价
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - ZN

@@ -1,0 +1,9 @@
+﻿symbol,date,row_type,composite_score,direction,factor_count,updated_at,engine_version,factor_code,factor_name,raw_value,normalized_score,weight,contribution,factor_direction,ic_value
+CU,2026-01-27,SUMMARY,0.0422,NEUTRAL,7,2026-04-21T00:33:52+08:00,backfill_v1.0,,,,,,,,
+CU,2026-01-27,FACTOR,0.0422,NEUTRAL,7,2026-04-21T00:33:52+08:00,backfill_v1.0,CU_LME_INVENTORY,LME铜库存因子,172350.0,-0.3513,0.18,-0.063225,negative,0.0
+CU,2026-01-27,FACTOR,0.0422,NEUTRAL,7,2026-04-21T00:33:52+08:00,backfill_v1.0,CU_CHINA_PMI,中国制造业PMI因子,49.3,0.0,0.2,0.0,positive,0.0
+CU,2026-01-27,FACTOR,0.0422,NEUTRAL,7,2026-04-21T00:33:52+08:00,backfill_v1.0,CU_USD_CNY,美元/人民币汇率因子,6.9548,0.5986,0.15,0.089783,negative,0.0
+CU,2026-01-27,FACTOR,0.0422,NEUTRAL,7,2026-04-21T00:33:52+08:00,backfill_v1.0,CU_REER,人民币实际有效汇率因子,29.883671,0.3907,0.12,0.046884,negative,0.0
+CU,2026-01-27,FACTOR,0.0422,NEUTRAL,7,2026-04-21T00:33:52+08:00,backfill_v1.0,CU_PROPERTY,中国房地产销售因子,91.45,0.0,0.15,0.0,positive,0.0
+CU,2026-01-27,FACTOR,0.0422,NEUTRAL,7,2026-04-21T00:33:52+08:00,backfill_v1.0,CU_NEW_ENERGY,新能源汽车销量因子,5.7,0.0,0.12,0.0,positive,0.0
+CU,2026-01-27,FACTOR,0.0422,NEUTRAL,7,2026-04-21T00:33:52+08:00,backfill_v1.0,CU_RISK_APPETITE,风险偏好因子,29.883671,-0.3907,0.08,-0.031256,positive,0.0

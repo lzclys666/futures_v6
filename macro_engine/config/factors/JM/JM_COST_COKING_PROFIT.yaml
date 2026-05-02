@@ -1,0 +1,16 @@
+﻿---
+factor_code: "JM_COST_COKING_PROFIT"
+factor_name: "独立焦化厂炼焦煤库存(230家)"
+econ_category: "INV"
+logic_category: "QTY"
+direction: 1
+frequency: "weekly"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 12
+base_weight: 0.05
+max_weight: 0.07
+is_active: false
+dependencies:
+  - "Mysteel(年费)/黑色>煤焦>库存>焦化厂炼焦煤库存"
+description: "焦化厂库存高短期需求弱"

@@ -1,0 +1,17 @@
+# BU_BU_STK_PETROCHEM.yaml
+# 石化企业沥青库存
+
+factor_code: BU_BU_STK_PETROCHEM
+symbol: BU
+category: inventory
+name: 石化企业沥青库存
+description: 石化企业沥青库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - BU

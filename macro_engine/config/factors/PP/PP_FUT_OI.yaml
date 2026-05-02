@@ -1,0 +1,8 @@
+factor_code: PP_FUT_OI
+name: "PP聚丙烯期货持仓量"
+category: free_data
+description: "DCE聚丙烯期货主力合约持仓量（手）。"
+data_source: AKShare futures_main_sina(symbol="PP0")['持仓量']
+source_confidence: 1.0
+expected_range: [100000.0, 1000000.0]
+notes: "L1: AKShare PP0 | L4: DB历史回补"

@@ -1,0 +1,18 @@
+# AU_FUT_POSITION - 黄金持仓集中度因子
+factor_code: "AU_FUT_POSITION"
+factor_name: "黄金持仓集中度因子"
+commodity: "AU"
+
+factor_direction: "negative"
+weight: 0.0
+
+data_source: "custom"
+api_params:
+  function: "futures_position_concentration"
+  symbol: "au0"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "主力席位持仓集中度，集中度过高可能反转"
+pit_required: false
+dependencies: []

@@ -1,0 +1,17 @@
+# config/factors/AG/AG_COST_USDCNY.yaml
+factor_code: "AG_COST_USDCNY"
+factor_name: "美元人民币汇率"
+template: null
+econ_category: "CST"
+logic_category: "FX"
+direction: 1            # 人民币贬值(汇率上升)→进口成本增加→利多国内银价
+frequency: "daily"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 252
+base_weight: 0.06
+max_weight: 0.10
+is_active: true
+dependencies:
+  - "AKShare/fx_spot_quote"
+description: "美元兑人民币即期汇率，影响白银进口成本"

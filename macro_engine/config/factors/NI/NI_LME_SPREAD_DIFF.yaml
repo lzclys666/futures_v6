@@ -1,0 +1,8 @@
+factor_code: NI_LME_SPREAD_DIFF
+name: "LME镍升贴水变化量"
+category: spread
+description: "LME镍升贴水日变化量（当日spread - 前日spread），单位USD/吨。用于捕捉升贴水的动态变化"
+data_source: derived_from_NI_LME_SPREAD
+source_confidence: 0.9
+expected_range: [-50-50]
+notes: "事件驱动方案因子：计算升贴水的日度变化，比原始spread更有IC价值"

@@ -1,0 +1,17 @@
+# EC_FUT_CLOSE.yaml
+# 欧线期货收盘价
+
+factor_code: EC_FUT_CLOSE
+symbol: EC
+category: price
+name: 欧线期货收盘价
+description: 欧线期货收盘价
+frequency: daily
+unit: 点
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - EC

@@ -1,0 +1,19 @@
+# sa_sup_inventory_w.yaml
+# SA厂家库存
+
+factor_code: "sa_sup_inventory_w"
+factor_name: "SA厂家库存"
+template: null
+econ_category: "INV"
+logic_category: "INV"
+direction: -1
+frequency: "weekly"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.12
+max_weight: 0.30
+is_active: true
+dependencies:
+  - "akshare/futures_spot_price_daily"
+description: "SA厂家库存，PIT数据"

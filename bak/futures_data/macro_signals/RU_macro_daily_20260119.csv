@@ -1,0 +1,9 @@
+﻿symbol,date,row_type,composite_score,direction,factor_count,updated_at,engine_version,factor_code,factor_name,raw_value,normalized_score,weight,contribution,factor_direction,ic_value
+RU,2026-01-19,SUMMARY,-0.2483,SHORT,7,2026-04-21T08:55:45+08:00,backfill_v1.0,,,,,,,,
+RU,2026-01-19,FACTOR,-0.2483,SHORT,7,2026-04-21T08:55:45+08:00,backfill_v1.0,RU_TS_ROLL_YIELD,橡胶跨期价差展期收益率,-0.010375,0.1309,0.2,0.026182,positive,0.0
+RU,2026-01-19,FACTOR,-0.2483,SHORT,7,2026-04-21T08:55:45+08:00,backfill_v1.0,RU_SUPPLY_ANRPC,ANRPC全球产量因子,0.013839,-0.1497,0.15,-0.022457,negative,0.0
+RU,2026-01-19,FACTOR,-0.2483,SHORT,7,2026-04-21T08:55:45+08:00,backfill_v1.0,RU_DEMAND_TYRE,轮胎开工率因子,-0.007431,-0.3249,0.2,-0.064987,positive,0.0
+RU,2026-01-19,FACTOR,-0.2483,SHORT,7,2026-04-21T08:55:45+08:00,backfill_v1.0,RU_INVENTORY_QD,青岛库存因子,109890.0,-0.8956,0.18,-0.161216,negative,0.0
+RU,2026-01-19,FACTOR,-0.2483,SHORT,7,2026-04-21T08:55:45+08:00,backfill_v1.0,RU_COST_STR20,STR20进口成本因子,15583.33,-0.7814,0.12,-0.093768,positive,0.0
+RU,2026-01-19,FACTOR,-0.2483,SHORT,7,2026-04-21T08:55:45+08:00,backfill_v1.0,RU_FX_USDCNY,人民币汇率因子,6.9634,0.7451,0.1,0.074512,negative,0.0
+RU,2026-01-19,FACTOR,-0.2483,SHORT,7,2026-04-21T08:55:45+08:00,backfill_v1.0,RU_SPREAD_RU_NR,深浅色价差因子,-0.010375,-0.1309,0.05,-0.006546,negative,0.0

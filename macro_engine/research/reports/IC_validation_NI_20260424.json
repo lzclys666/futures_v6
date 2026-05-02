@@ -1,0 +1,64 @@
+{
+  "ic_summary": [
+    {
+      "factor": "CU_LME_3M_CLOSE",
+      "name": "LME铜3M收盘价",
+      "direction": "负向",
+      "ic_mean": -0.14016656498446614,
+      "ic_std": 0.23117458549936515,
+      "ic_median": -0.13998667029200876,
+      "ic_min": -0.6671934741932251,
+      "ic_max": 0.5824242152619068,
+      "ic_count": 1389,
+      "ir": -0.6063234186478127,
+      "win_rate": 0.2994960403167747,
+      "t_stat": -22.597243509620164,
+      "p_value": 1.566109472061619e-96,
+      "significant": "True",
+      "ic_p25": -0.319930959898912,
+      "ic_p75": 0.038809925933693576,
+      "ic_iqr": 0.3587408858326056,
+      "max_consecutive_pos": 63,
+      "max_consecutive_neg": 175,
+      "ic_positive_pct": 29.949604031677467,
+      "rating": "⚫ 无效"
+    },
+    {
+      "factor": "NI_LME_3M_CLOSE",
+      "name": "LME镍3M收盘价",
+      "direction": "负向",
+      "ic_mean": -0.28417928281601107,
+      "ic_std": 0.2052038012810461,
+      "ic_median": -0.30555796030754206,
+      "ic_min": -0.7412546053945743,
+      "ic_max": 0.37245837225034195,
+      "ic_count": 1385,
+      "ir": -1.3848636382071722,
+      "win_rate": 0.11696750902527075,
+      "t_stat": -51.53851477830284,
+      "p_value": 0.0,
+      "significant": "True",
+      "ic_p25": -0.4501336634667248,
+      "ic_p75": -0.14453732075589804,
+      "ic_iqr": 0.30559634271082675,
+      "max_consecutive_pos": 43,
+      "max_consecutive_neg": 309,
+      "ic_positive_pct": 11.696750902527075,
+      "rating": "⚫ 无效"
+    }
+  ],
+  "decay": {
+    "CU_LME_3M_CLOSE": "   forward_days   ic_mean    ic_std        ir  sample_count\n0             1  0.012853  0.109772  0.117089          1422\n1             5 -0.139748  0.235566 -0.593241          1418\n2            10 -0.225368  0.308331 -0.730927          1414\n3            20 -0.214776  0.392167 -0.547664          1404",
+    "NI_LME_3M_CLOSE": "   forward_days   ic_mean    ic_std        ir  sample_count\n0             1  0.029737  0.118537  0.250868          1418\n1             5 -0.290326  0.205285 -1.414255          1414\n2            10 -0.425158  0.269014 -1.580430          1410\n3            20 -0.465469  0.339680 -1.370316          1400"
+  },
+  "high_corr": [],
+  "multiple_test": {
+    "n_tests": 2,
+    "bonferroni_sig": 2,
+    "fdr_sig": 2
+  },
+  "ic_weights": {
+    "CU_LME_3M_CLOSE": 0.024352737039356774,
+    "NI_LME_3M_CLOSE": -0.2226469495760353
+  }
+}

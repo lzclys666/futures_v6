@@ -1,0 +1,66 @@
+# config/settings.yaml
+database:
+  type: sqlite
+  path: ../pit_data.db   # 假设 settings.yaml 位于 config/ 下
+
+redis:
+  host: localhost
+  port: 6379
+  db: 0
+  password: 123456
+  cache_ttl: 86400
+
+data_sources:
+  - name: akshare
+    priority: 1
+    confidence: 0.9
+  - name: tushare
+    priority: 2
+    confidence: 0.8
+    token: ""
+
+veighna:
+  ctp:
+    broker_id: "9999"
+    user_id: "13127977293"
+    password: "luzc19891222@"
+    front_addr: "tcp://180.168.146.187:10130"
+
+scoring:
+  norm_window: 756
+  ic_window: 60
+  score_change_daily_max: 15
+  max_weight_single_factor: 0.25
+  weight_change_daily_max: 0.10
+  shrink_lambda_default: 0.5
+  direction_cooling_days: 3
+  direction_confirm_days: 2
+  sentiment_weight_default: 0.10
+  sentiment_weight_event: 0.25
+  # 信号阈值：|z_score| >= 此值才下单，降低无效切换
+  # W4 组合回测中发现日均换手率 47%，设此阈值过滤低置信信号
+  signal_zscore_threshold: 0.5
+
+risk:
+  meltdown:
+    yellow:
+      credit_spread_change: 0.3
+      vix_threshold: 30
+      volatility_percentile: 0.8
+    orange:
+      liquidity_drop: 0.5
+    red:
+      volatility_percentile: 0.95
+
+symbols:
+  - RU
+  - AU
+  - BR
+  - NR
+  - TA
+  - AG
+  - CU
+  - SA
+  - RB  # 螺纹钢（2026-04-30 补加）
+  - NI  # 镍（2026-04-30 补加）
+  - ZN  # 锌（2026-04-30 补加）

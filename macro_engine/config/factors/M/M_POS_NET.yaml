@@ -1,0 +1,16 @@
+factor_code: "M_POS_NET"
+factor_name: "豆粕持仓量"
+template: null
+econ_category: "SEN"
+logic_category: "POS"
+direction: 1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.05
+max_weight: 0.10
+is_active: true
+dependencies:
+  - "AKShare/futures_main_sina"
+description: "豆粕期货主力合约总持仓量（手），反映市场活跃度"

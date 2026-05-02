@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Environment & secrets
+.env
+*.env.local
+config/ctp*.json
+**/credentials*.json
+
+# Node
+node_modules/
+frontend/*/node_modules/
+macro_engine/frontend/*/node_modules/
+frontend/*/dist/
+macro_engine/frontend/*/dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# VNpy user data
+.vntrader/
+
+# Agent memory
+memory/
+
+# Generated screenshots
+截图输出/
+gen_screenshots.py
+
+# Large data files
+*.parquet
+*.db
+*.sqlite
+data/historical/raw/

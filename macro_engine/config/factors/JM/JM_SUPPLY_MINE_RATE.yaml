@@ -1,0 +1,16 @@
+﻿---
+factor_code: "JM_SUPPLY_MINE_RATE"
+factor_name: "精煤日均产量"
+econ_category: "SUPPLY"
+logic_category: "QTY"
+direction: 1
+frequency: "weekly"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 12
+base_weight: 0.05
+max_weight: 0.07
+is_active: false
+dependencies:
+  - "Mysteel(年费)/黑色>煤焦>精煤产量"
+description: "精煤产量增加供给压力"

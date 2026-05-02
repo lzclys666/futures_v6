@@ -1,0 +1,17 @@
+# PB_PB_PROD_CAPACITY.yaml
+# 原生铅产能利用率
+
+factor_code: PB_PB_PROD_CAPACITY
+symbol: PB
+category: operation
+name: 原生铅产能利用率
+description: 原生铅产能利用率
+frequency: daily
+unit: "%"
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - operation
+  - PB

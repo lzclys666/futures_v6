@@ -1,0 +1,16 @@
+factor_code: "M_BASIS_SPOT_FUTURES"
+factor_name: "豆粕期现基差"
+template: null
+econ_category: "SPD"
+logic_category: "SPD"
+direction: 1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.05
+max_weight: 0.10
+is_active: false
+dependencies:
+  - "MyAgri/SMM_spot_price"
+description: "豆粕现货价格 - 期货主力价格（元/吨），正值=现货升水，数据源需付费账号"

@@ -1,0 +1,18 @@
+# AU_FUT_CARRY - 黄金仓储持有成本因子
+factor_code: "AU_FUT_CARRY"
+factor_name: "黄金仓储持有成本因子"
+commodity: "AU"
+
+factor_direction: "neutral"
+weight: 0.0
+
+data_source: "custom"
+api_params:
+  function: "gold_storage_cost"
+  symbol: "SHFE"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "黄金持有成本（利率+仓储费+保险费）"
+pit_required: false
+dependencies: []

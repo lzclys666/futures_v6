@@ -1,0 +1,37 @@
+﻿symbol,file,type,status,zero_close,null_close,err
+AG,AG_fut_close.csv,OHLCV,FAIL,0,0,2个失败: column failure_case index  schema_context               check check_number   Non
+AG,usd_index.csv,宏观价格,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+AL,AL_fut_close.csv,OHLCV,FAIL,0,0,2个失败: column failure_case index  schema_context               check check_number   Non
+AO,AO_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+AU,AU_SGE_SHFE_spread.csv,金银价差,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+AU,AU_fut_close.csv,OHLCV,FAIL,0,0,2个失败: column failure_case index  schema_context               check check_number   Non
+BR,BR_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+CU,CU_fut_close.csv,OHLCV,FAIL,0,0,2个失败: column failure_case index  schema_context               check check_number   Non
+CU,LME_copper_cash_3m_spread.csv,价差,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+EC,EC_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+I,I_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+JM,JM01_futures_ohlcv_2026-04-18.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+JM,JM02_futures_spread_2026-04-18.csv,金银价差,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+JM,JM10_jm_zc_ratio.csv,比价,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+JM,JM_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+LC,LC_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+LH,LH_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+M,M_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+NI,LME_nickel_cash_3m_spread.csv,价差,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+NI,NI_fut_close.csv,OHLCV,FAIL,0,0,2个失败: column failure_case index  schema_context               check check_number   Non
+NR,NR_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+P,P_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+PB,PB_LME_3M.csv,LME_3M,FAIL,0,0,2个失败: column failure_case index  schema_context               check check_number   Non
+PB,PB_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+RB,RB_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+RU,RU_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+SA,SA_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+SC,SC_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+SHARED,AU_AG_ratio_corrected.csv,金银比,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+SHARED,AU_AG_ratio_v2.csv,金银比,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+SHARED,Brent_crude.csv,宏观价格,FAIL,0,69,1个失败: schema_context column           check  check_number  failure_case  index        
+SN,SN_LME_3M.csv,LME_3M,FAIL,0,0,2个失败: column failure_case index  schema_context               check check_number   Non
+SN,SN_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+TA,TA_fut_close.csv,OHLCV,FAIL,0,0,1个失败: column failure_case index  schema_context               check check_number   Non
+ZN,ZN_LME_3M.csv,LME_3M,FAIL,0,0,2个失败: column failure_case index  schema_context               check check_number   Non
+ZN,ZN_fut_close.csv,OHLCV,FAIL,0,0,2个失败: column failure_case index  schema_context               check check_number   Non

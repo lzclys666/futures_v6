@@ -1,0 +1,18 @@
+# AU_FUT_VOLUME - 黄金期货成交量因子
+factor_code: "AU_FUT_VOLUME"
+factor_name: "黄金期货成交量因子"
+commodity: "AU"
+
+factor_direction: "neutral"
+weight: 0.0
+
+data_source: "akshare"
+api_params:
+  function: "futures_zh_daily_sina"
+  symbol: "au0"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "沪金主力合约成交量，市场活跃度指标"
+pit_required: false
+dependencies: []

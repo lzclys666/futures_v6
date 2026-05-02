@@ -1,0 +1,15 @@
+import sqlite3
+from pathlib import Path
+
+db_path = Path.home() / ".vntrader" / "audit.db"
+conn = sqlite3.connect(db_path)
+conn.row_factory = sqlite3.Row
+cur = conn.cursor()
+
+print("=== 最近 10 条审计日志 ===")
+for row in cur.execute("SELECT * FROM audit_log ORDER BY created_at DESC LIMIT 10"):
+    print(dict(row))
+
+print("\n=== 最近 10 条事件队列 ===")
+for row in cur.execute("SELECT * FROM event_queue ORDER BY created_at DESC LIMIT 10"):
+    print(dict(row))

@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+NR_抓取库存.py — 天然橡胶NR库存
+
+数据源：
+  L1: AKShare 无NR库存接口 → L4历史值
+  L2: NR期货持仓量作为库存代理（市场情绪指标）
+  L3: 数据库历史最新值
+
+因子：NR_INV_TOTAL（吨）
+"""
+import sys, os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+
+import akshare as ak
+from datetime import timedelta
+
+FACTOR_CODE = "NR_INV_TOTAL"
+SYMBOL = "NR"
+MIN_VALUE = 10000
+MAX_VALUE = 100000
+
+
+def main():
+    pub_date, obs_date = get_pit_dates(freq="日频")
+    if obs_date is None:
+        from datetime import date
+        obs_date = date.today()
+        for d in range(1, 10):
+            check = obs_date - timedelta(days=d)
+            if check.weekday() < 5:
+                obs_date = check
+                break
+        pub_date = obs_date
+
+    ensure_table()
+    print(f"=== NR库存 === obs={obs_date}")
+
+    value = None
+
+    # L1: NR期货持仓量（代理）
+    try:
+        df = ak.futures_main_sina(symbol='NR0')
+        if df is not None and not df.empty:
+            df2 = df.sort_values('日期')
+            oi = float(df2.iloc[-1]['持仓量'])
+            price = float(df2.iloc[-1]['收盘价'])
+            # 持仓量作为库存代理（市场参与度指标）
+            if MIN_VALUE <= oi <= MAX_VALUE:
+                value = oi
+                print(f"[L1] NR持仓量(库存代理)={oi:.0f}手, 收盘={price}")
+    except Exception as e:
+        print(f"[L1] NR持仓量失败: {e}")
+
+    # L2: DB兜底
+    if value is None:
+        val = get_latest_value(FACTOR_CODE, SYMBOL)
+        if val is not None:
+            value = val
+            print(f"[L2] DB兜底: {value}")
+
+    if value is not None:
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=0.7)
+        print(f"OK: NR_INV_TOTAL={value:.0f}")
+    else:
+        print("FAIL: NR库存无数据")
+        exit(1)
+
+
+if __name__ == "__main__":
+    main()

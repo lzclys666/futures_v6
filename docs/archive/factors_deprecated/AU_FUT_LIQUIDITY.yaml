@@ -1,0 +1,18 @@
+# AU_FUT_LIQUIDITY - 黄金市场流动性因子
+factor_code: "AU_FUT_LIQUIDITY"
+factor_name: "黄金市场流动性因子"
+commodity: "AU"
+
+factor_direction: "positive"
+weight: 0.0
+
+data_source: "akshare"
+api_params:
+  function: "futures_zh_daily_sina"
+  symbol: "au0"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "黄金期货市场买卖盘深度和价差"
+pit_required: false
+dependencies: []

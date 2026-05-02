@@ -1,0 +1,17 @@
+# config/factors/AL/AL_POS_NET.yaml
+factor_code: "AL_POS_NET"
+factor_name: "上期所前20净持仓"
+template: null
+econ_category: "POS"
+logic_category: "SEN"
+direction: 1            # 净持仓增加→资金看多→利多
+frequency: "daily"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 60
+base_weight: 0.10
+max_weight: 0.15
+is_active: true
+dependencies:
+  - "上期所官网/position_rank"
+description: "上期所前20名会员净持仓（多头-空头），反映主力资金流向"

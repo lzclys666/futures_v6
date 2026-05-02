@@ -1,0 +1,8 @@
+factor_code: EG_STK_WARRANT
+name: "EG乙二醇工厂库存"
+category: free_data
+description: "乙二醇工厂库存（万吨），反映国内市场供应压力。"
+data_source: AKShare futures_inventory_em(symbol="乙二醇")['库存']
+source_confidence: 1.0
+expected_range: [3000.0, 20000.0]
+notes: "L1: AKShare futures_inventory_em(乙二醇) | 周度更新"

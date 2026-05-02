@@ -1,0 +1,17 @@
+# HC_HC_STK_WARRANT.yaml
+# 热卷仓单库存
+
+factor_code: HC_HC_STK_WARRANT
+symbol: HC
+category: inventory
+name: 热卷仓单库存
+description: 热卷仓单库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - HC

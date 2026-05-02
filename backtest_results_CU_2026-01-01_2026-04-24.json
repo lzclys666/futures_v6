@@ -1,0 +1,14 @@
+{
+  "symbol": "CU",
+  "period": "2026-01-01 ~ 2026-04-24",
+  "total_signals": 80,
+  "long_signals": 6,
+  "short_signals": 4,
+  "total_trades": 4,
+  "winning_trades": 3,
+  "win_rate": 0.75,
+  "total_pnl": 4537.142035210927,
+  "final_capital": 104537.14203521091,
+  "returns": 0.04537142035210913,
+  "sharpe_ratio": 15.184253791945688
+}

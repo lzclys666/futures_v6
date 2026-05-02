@@ -1,0 +1,16 @@
+factor_code: "RU_INV_QINGDAO"
+factor_name: "青岛保税区库存"
+template: null
+econ_category: "INV"
+logic_category: "STK"
+direction: -1          # 库存增加→利空
+frequency: "weekly"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 156
+base_weight: 0.15
+max_weight: 0.30
+is_active: true
+dependencies:
+  - "WebScraper/qingdao_stock"
+description: "青岛保税区天然橡胶库存（万吨）"

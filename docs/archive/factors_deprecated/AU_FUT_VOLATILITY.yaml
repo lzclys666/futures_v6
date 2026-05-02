@@ -1,0 +1,18 @@
+# AU_FUT_VOLATILITY - 黄金价格波动率因子
+factor_code: "AU_FUT_VOLATILITY"
+factor_name: "黄金价格波动率因子"
+commodity: "AU"
+
+factor_direction: "positive"
+weight: 0.0
+
+data_source: "akshare"
+api_params:
+  function: "futures_zh_daily_sina"
+  symbol: "au0"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "黄金期货N日历史波动率，高波动时期避险需求强"
+pit_required: false
+dependencies: []

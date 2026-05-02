@@ -1,0 +1,17 @@
+# PB_PB_STK_FUTURES.yaml
+# 沪铅期货库存
+
+factor_code: PB_PB_STK_FUTURES
+symbol: PB
+category: inventory
+name: 沪铅期货库存
+description: 沪铅期货库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - PB

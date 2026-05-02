@@ -1,0 +1,17 @@
+# HC_HC_SPT_MYSTEEEL.yaml
+# 我的钢铁网热卷现货价格
+
+factor_code: HC_HC_SPT_MYSTEEEL
+symbol: HC
+category: price
+name: 我的钢铁网热卷现货价格
+description: 我的钢铁网热卷现货价格
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - HC

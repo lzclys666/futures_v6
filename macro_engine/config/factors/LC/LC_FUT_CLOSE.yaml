@@ -1,0 +1,17 @@
+# LC_FUT_CLOSE.yaml
+# 碳酸锂期货收盘价
+
+factor_code: LC_FUT_CLOSE
+symbol: LC
+category: price
+name: 碳酸锂期货收盘价
+description: 碳酸锂期货收盘价
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - LC

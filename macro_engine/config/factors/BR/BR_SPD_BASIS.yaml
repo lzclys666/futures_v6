@@ -1,0 +1,17 @@
+# config/factors/BR/BR_SPD_BASIS.yaml
+factor_code: "BR_SPD_BASIS"
+factor_name: "BR期现基差"
+template: null
+econ_category: "SPD"
+logic_category: "SPD"
+direction: 1           # 基差扩大（现货强于期货）→现货偏紧→利多
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.08
+max_weight: 0.15
+is_active: true
+dependencies:
+  - "Calculation/br_basis"
+description: "BR现货价 - BR期货价（元/吨），反映期现结构和现货紧张程度"

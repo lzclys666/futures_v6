@@ -1,0 +1,17 @@
+# EG_EG_SPD_BASIS.yaml
+# 乙二醇期现基差
+
+factor_code: EG_EG_SPD_BASIS
+symbol: EG
+category: spread
+name: 乙二醇期现基差
+description: 乙二醇期现基差
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - spread
+  - EG

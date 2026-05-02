@@ -1,0 +1,1092 @@
+期货基本面量化数据系统·操作手册 V7.0
+适用版本：V7.0 宏观基本面打分引擎 + 自定义爬虫数据层
+最后更新：2026年4月
+修订说明：整合数据采集优先级指南 V2.0，修复 V6.2 评估中的硬伤，纳入 RU/BR/AG 实战演化出的工程化方法（实测驱动、动态阈值、四级降级、联动清单、临时文件清理）。本手册是系统维护和扩展的唯一权威参考。
+
+一、整体架构
+text
+┌─────────────────────────────────────────────────────────┐
+│                  每日自动触发（或手动）                     │
+│           双击 update_and_score.py 或 任务计划执行          │
+└──────────────────────────┬──────────────────────────────┘
+                           ▼
+┌─────────────────────────────────────────────────────────┐
+│              crawlers/update_all.py（顶层总控）           │
+│           遍历所有品种，调用各品种的 *_run_all.py           │
+└──────────────────────────┬──────────────────────────────┘
+                           ▼
+┌─────────────────────────────────────────────────────────┐
+│               crawlers/{SYMBOL}/{SYMBOL}_run_all.py       │
+│           品种爬虫总控，按顺序执行各脚本                    │
+└──────────────────────────┬──────────────────────────────┘
+                           │ 调用
+                           ▼
+┌─────────────────────────────────────────────────────────┐
+│              爬虫脚本群（crawlers/{SYMBOL}/）              │
+│                                                          │
+│  每个因子一个 .py 文件，独立运行，互不依赖                  │
+│  命名规范：{SYMBOL}_{功能描述}.py                         │
+│  每个脚本内部结构统一：                                    │
+│    编码兼容 → 导入 → 配置 → 建表/写入 → 多源获取 → 校验 → 主程序 │
+└──────────────────────────┬──────────────────────────────┘
+                           │ 写入
+                           ▼
+┌─────────────────────────────────────────────────────────┐
+│                pit_data.db（SQLite数据库）                 │
+│                                                          │
+│  表：pit_factor_observations                              │
+│  ┌───────────────────────────────────────────────┐       │
+│  │ factor_code   TEXT    因子代码                  │       │
+│  │ symbol        TEXT    品种代码                  │       │
+│  │ pub_date      TEXT    数据发布日期（脚本运行日） │       │
+│  │ obs_date      TEXT    数据实际观测日期          │       │
+│  │ raw_value     REAL    原始数值                  │       │
+│  │ source_confidence REAL 数据源置信度（1.0=主源）  │       │
+│  │ PRIMARY KEY (factor_code, symbol, pub_date, obs_date)│  │
+│  └───────────────────────────────────────────────┘       │
+└──────────────────────────┬──────────────────────────────┘
+                           │ 读取
+                           ▼
+┌─────────────────────────────────────────────────────────┐
+│                 V7.0 宏观基本面打分引擎                     │
+│                                                          │
+│  scripts/daily_scoring.py → PitDataService → 流水线       │
+│  输出：output/macro_signals.csv                           │
+│  字段：symbol / score(0-100) / direction(LONG/NEUTRAL/SHORT) │
+└─────────────────────────────────────────────────────────┘
+二、项目标准目录结构
+text
+d:\futures_macro_engine\
+├── pit_data.db                     # 主数据库（爬虫写入，引擎读取）
+├── config\
+│   ├── factors\                    # 因子YAML配置（按品种分目录）
+│   │   ├── RU\                     # 天然橡胶
+│   │   ├── BR\                     # 合成橡胶
+│   │   ├── AG\                     # 白银
+│   │   └── _templates.yaml
+│   ├── instruments\                # 品种级配置（权重、λ等）
+│   │   ├── _base.yaml
+│   │   ├── RU.yaml
+│   │   ├── BR.yaml
+│   │   ├── AG.yaml
+│   │   └── ...
+│   ├── risk\
+│   │   └── meltdown.yaml
+│   ├── pipeline.yaml
+│   └── settings.yaml
+├── core\                           # 引擎核心代码
+│   ├── data\
+│   │   └── pit_service.py
+│   ├── normalizer\
+│   ├── pipeline\
+│   ├── scoring\
+│   └── ...
+├── crawlers\                       # 爬虫脚本根目录
+│   ├── RU\                         # 天然橡胶
+│   │   ├── RU_run_all.py
+│   │   ├── RU_抓取橡胶数据.py
+│   │   ├── RU_抓取青岛库存.py
+│   │   ├── RU_抓取上期所RU仓单.py
+│   │   ├── RU_计算RU-BR价差.py
+│   │   ├── RU_抓取轮胎开工率.py
+│   │   ├── RU_计算展期收益率.py
+│   │   ├── RU_抓取持仓排名.py
+│   │   └── RU_验证数据读取.py
+│   ├── BR\                         # 合成橡胶
+│   │   ├── BR_run_all.py
+│   │   ├── BR_抓取丁二烯价格.py
+│   │   ├── BR_抓取仓单.py
+│   │   ├── BR_抓取持仓排名.py
+│   │   ├── BR_抓取轮胎开工率.py
+│   │   ├── BR_抓取开工率.py
+│   │   ├── BR_抓取库存.py
+│   │   ├── BR_抓取汽车产销.py
+│   │   ├── BR_计算价差比价.py
+│   │   ├── BR_计算行业毛利.py
+│   │   └── BR_验证数据读取.py
+│   ├── AG\                         # 白银
+│   │   ├── AG_run_all.py
+│   │   ├── AG_抓取美国TIPS实际利率.py
+│   │   ├── AG_抓取美元指数.py
+│   │   ├── AG_抓取汇率.py
+│   │   ├── AG_抓取上期所沪银仓单.py
+│   │   ├── AG_抓取COMEX白银库存.py
+│   │   ├── AG_计算沪银COMEX比价.py
+│   │   ├── AG_计算期现基差.py
+│   │   ├── AG_抓取金银比.py
+│   │   ├── AG_抓取美国CPI.py
+│   │   ├── AG_抓取净持仓.py
+│   │   ├── AG_抓取CFTC净持仓.py
+│   │   ├── AG_抓取白银ETF持仓.py
+│   │   └── AG_验证数据读取.py
+│   ├── common\                     # 公共工具模块
+│   │   ├── __init__.py
+│   │   ├── db_utils.py
+│   │   ├── web_utils.py
+│   │   ├── check_health.py
+│   │   ├── data_source_knowledge.yaml   # 数据源知识库
+│   │   └── interface_cheatsheet.md      # 接口函数速查手册
+│   └── update_all.py               # 全品种总控
+├── output\
+│   └── macro_signals.csv           # 每日信号输出
+├── scripts\
+│   ├── daily_scoring.py            # 评分引擎入口
+│   ├── backfill_history.py
+│   └── scheduler.py
+├── strategies\
+│   └── macro_demo_strategy.py      # VeighNa策略文件
+├── tools\
+│   ├── diagnose_ru.py
+│   └── generate_all_symbols.py
+├── backups\                        # 历史备份（数据库、旧脚本）
+├── update_and_score.py             # 项目总入口（一键更新+评分）
+└── requirements.txt
+三、爬虫脚本编写规范
+3.1 统一文件结构
+每个爬虫脚本必须包含以下部分，顺序固定。文件名格式：{品种代码}_{功能描述}.py，如 RU_抓取橡胶数据.py。
+
+python
+"""
+文件头注释：说明 factor_code、含义、频率、数据源优先级
+数据源详见 common/data_source_knowledge.yaml #{FACTOR_CODE}
+接口速查详见 common/interface_cheatsheet.md
+上次验证可用: YYYY-MM-DD
+"""
+
+# ========== 1. 编码兼容（Windows 必读） ==========
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+
+# ========== 2. 导入公共模块 ==========
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+from common.db_utils import ensure_table, save_to_db, get_pit_dates
+from common.web_utils import fetch_url_text, DEFAULT_HEADERS
+
+import akshare as ak
+import datetime
+import requests
+import re
+import time
+import traceback
+
+# ========== 3. 配置 ==========
+FACTOR_CODE = "SYMBOL_XXXXX"  # 必须与引擎 config/factors/{SYMBOL}/ 下的 YAML 文件名一致
+SYMBOL = "XX"
+
+# ========== 4. 合理性阈值（动态标定，非写死） ==========
+# 阈值应基于近期数据3倍标准差或物理极限设定，每月重新校准
+MIN_VALUE = ...   # 根据实测数据标定
+MAX_VALUE = ...   # 根据实测数据标定
+
+# ========== 5. 数据获取（四级降级） ==========
+def fetch_xxx():
+    """
+    返回: value 或 None
+    降级顺序: 源1(主力) → 源2(备用) → 源3(DB历史最新值) → 源4(手动输入)
+    """
+    # 源1：主力源
+    try:
+        # 实现主力源获取逻辑
+        value = source_1()
+        if value is not None:
+            print(f"[源1] 成功: {value}")
+            return value, "primary"
+    except Exception as e:
+        print(f"[源1] 失败: {e}")
+        traceback.print_exc()
+
+    # 源2：备用源
+    try:
+        value = source_2()
+        if value is not None:
+            print(f"[源2] 成功: {value}")
+            return value, "backup"
+    except Exception as e:
+        print(f"[源2] 失败: {e}")
+
+    # 源3：DB历史最新值（月频必须，日/周频可选）
+    try:
+        value, pub_date_str = get_latest_from_db(FACTOR_CODE, SYMBOL)
+        if value is not None:
+            days_old = (datetime.date.today() - parse_date(pub_date_str)).days
+            if days_old <= MAX_STALENESS_DAYS:
+                print(f"[源3] DB兜底成功: {value} (已过{days_old}天)")
+                return value, "database"
+            else:
+                print(f"[源3] DB数据过期({days_old}天 > {MAX_STALENESS_DAYS})")
+    except Exception as e:
+        print(f"[源3] DB兜底失败: {e}")
+
+    # 源4：手动输入（自动模式跳过）
+    if "--auto" not in sys.argv:
+        try:
+            val = manual_input()
+            if val is not None:
+                return val, "manual"
+        except Exception as e:
+            print(f"[源4] 手动输入失败: {e}")
+
+    print("[错误] 所有数据源均失败")
+    return None, None
+
+
+def get_latest_from_db(factor_code, symbol):
+    """从数据库读取指定因子的最新值"""
+    import sqlite3
+    conn = sqlite3.connect(DB_PATH, timeout=10)
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT raw_value, pub_date FROM pit_factor_observations
+        WHERE factor_code = ? AND symbol = ?
+        ORDER BY pub_date DESC LIMIT 1
+    """, (factor_code, symbol))
+    row = cursor.fetchone()
+    conn.close()
+    if row:
+        return float(row[0]), row[1]
+    return None, None
+
+
+def parse_date(date_str):
+    """解析日期字符串"""
+    for fmt in ("%Y-%m-%d", "%Y%m%d", "%Y/%m/%d"):
+        try:
+            return datetime.datetime.strptime(date_str, fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
+# ========== 6. 主程序入口 ==========
+if __name__ == "__main__":
+    pub_date, obs_date = get_pit_dates()
+    if pub_date is None:
+        print("非交易日，跳过")
+        exit(0)
+
+    ensure_table()
+    print(f"=== {FACTOR_CODE} 爬虫 ===")
+    print(f"发布日期(pub_date): {pub_date}")
+    print(f"观测日期(obs_date): {obs_date}")
+
+    value = fetch_xxx()
+
+    if value is not None:
+        if not (MIN_VALUE <= value <= MAX_VALUE):
+            print(f"[警告] {value} 超出正常范围({MIN_VALUE}~{MAX_VALUE})，丢弃不写入")
+            exit(1)
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value)
+        print("完成")
+    else:
+        print("[失败] 未能获取数据")
+        exit(1)
+3.2 数据源优先级与四级降级
+数据源选择遵循 权威性 > 准确性 > 稳定性 原则。
+
+优先级	名称	使用场景	特点	source_confidence
+源1（主力源）	优先采集	正常情况下的默认数据源	最权威、最稳定、最准确	1.0
+源2（备用源）	主力异常时切换	主力源失败/超时/数据异常	次稳定，用于容错	0.9
+源3（DB历史最新值）	外部源全失效	月频数据无新值时，或日/周频临时兜底	内部数据，有滞后风险	0.6
+源4（手动输入）	最后保底	所有自动源失效，且非自动模式	人工介入	0.5
+采集顺序：源1优先 → 源1失败切源2 → 源2失败切源3 → 源3失败且非自动模式切源4 → 全部失败则告警退出。
+
+3.3 各类数据源优先级分配表
+3.3.1 期货行情数据
+数据类型	源1（首选）	源2（备用）	源3（DB兜底）	源4（手动）
+日线行情（OHLCV）	交易所官网 / CTP API	AKShare	前一日收盘价	手动输入
+分钟线行情	AKShare	Tushare	-	-
+实时行情	AKShare	新浪财经	前一日收盘价	手动输入
+持仓量/成交量	交易所官网	AKShare	前一日值	手动输入
+3.3.2 基本面数据
+数据类型	源1（首选）	源2（备用）	源3（DB兜底）	源4（手动）
+库存数据	交易所官网 / 官方机构	AKShare	前一期值	手动输入
+仓单数据	交易所官网	AKShare	前一日值	手动输入
+产业链数据	行业协会官网	行业资讯网站	上期值	手动输入
+海外数据	官方机构（USDA/EIA等）	Bloomberg公开部分	上期值	手动输入
+3.3.3 宏观经济数据
+数据类型	源1（首选）	源2（备用）	源3（DB兜底）	源4（手动）
+中国宏观	国家统计局	AKShare	上期值	手动输入
+美国宏观	FRED（圣路易斯联储）	St. Louis Fed	上期值	手动输入
+货币/汇率	央行官网 / 中国银行	AKShare	前一日值	手动输入
+全球数据	世界银行	IMF	上期值	手动输入
+3.4 实测驱动开发（先验证后编码）
+原则：在编写爬虫脚本前，必须先验证数据源的可用性和响应格式，不依赖AKShare文档或猜测。
+
+操作流程：
+
+在品种目录下创建 {SYMBOL}_debug_sources.py 调试脚本
+
+依次测试每个因子的源1、源2
+
+记录实际返回的：
+
+数据类型（DataFrame/字典/列表）
+
+字段名（精确到大小写）
+
+数值范围和单位
+
+编码格式
+
+根据实测结果编写解析逻辑
+
+输出物：{SYMBOL}_source_validation.md（记录每个数据源的最后验证日期、可用状态、注意事项）
+
+示例调试脚本：
+
+python
+# AG_debug_sources.py
+import akshare as ak
+
+# 测试沪银仓单
+print("=== 测试 get_receipt ===")
+df = ak.get_receipt(start_date="20260417", end_date="20260417", vars_list=["AG"])
+print(f"类型: {type(df)}")
+print(f"列名: {df.columns.tolist()}")
+print(f"数据:\n{df.head()}")
+3.5 动态阈值标定
+原则：合理性校验的阈值必须基于近期市场数据，不能凭经验写死。
+
+标定方法：
+
+获取该因子最近30个交易日（或30个有效观测点）的历史数据
+
+计算均值 μ 和标准差 σ
+
+初始阈值设为 [μ - 5σ, μ + 5σ]，同时考虑物理极限（如价格不能为负、开工率在0-100%之间）
+
+每月初根据上月数据重新校准一次
+
+特殊处理：
+
+因子类型	变化率检查	阈值标定频率
+日频价格类	检查日环比，超过3σ告警	每月
+周频库存类	检查周环比，超过3σ告警	每月
+月频宏观类	豁免变化率检查（连续值不变量正常的）	每季度
+百分比因子（展期收益率等）	可相对固定（-10%~+10%）	每半年
+3.6 异常处理规则
+规则1：每个数据源独立 try-except，互不干扰
+
+python
+# ✅ 正确：源1失败不影响源2
+try:
+    result = source_1()
+except:
+    pass
+try:
+    result = source_2()
+except:
+    pass
+规则2：打印明确的错误信息，包含失败原因和完整堆栈
+
+python
+# ✅ 正确
+print(f"[源1] get_shfe_rank_table 失败: {e}")
+traceback.print_exc()
+规则3：非交易日返回空数据是正常情况，应前置交易日判断，不进入切源流程（见3.7）
+
+规则4：对 AKShare 接口签名变化做参数自适应
+
+python
+# 参数自适应示例
+df = None
+for kwargs in [
+    {"symbol": "RU"},
+    {"var": "RU"},
+    {"code": "RU"},
+    {},
+]:
+    try:
+        df = ak.some_function(**kwargs)
+        if df is not None and len(df) > 0:
+            break
+    except TypeError:
+        continue
+3.7 非交易日前置处理
+采集开始前必须判断当日是否为交易日，非交易日直接 SKIP，不触发切源和告警。
+
+python
+def is_trading_day(date):
+    """判断是否为交易日，三级降级"""
+    # 源1：交易日历
+    try:
+        import akshare as ak
+        cal_df = ak.tool_trade_date_hist_sina()
+        trade_dates = set(cal_df['trade_date'].astype(str).tolist())
+        if date.strftime("%Y%m%d") in trade_dates:
+            return True
+    except:
+        pass
+    
+    # 源2：内置节假日列表（春节、国庆、临时休市公告）
+    holidays = {
+        "2026-01-01", "2026-01-02",  # 元旦
+        "2026-01-28", "2026-01-29", "2026-01-30", "2026-01-31", "2026-02-01", "2026-02-02", "2026-02-03",  # 春节
+        "2026-04-04", "2026-04-05", "2026-04-06",  # 清明
+        "2026-05-01", "2026-05-02", "2026-05-03",  # 五一
+        "2026-10-01", "2026-10-02", "2026-10-03", "2026-10-04", "2026-10-05", "2026-10-06", "2026-10-07",  # 国庆
+    }
+    if date.strftime("%Y-%m-%d") in holidays:
+        return False
+    
+    # 源3：简单周末判断
+    return date.weekday() not in (5, 6)
+3.8 数据校验规则
+3.8.1 行情数据校验（每次采集）
+校验项	规则	异常处理
+非空检查	OHLCV 必须非空	切源重试
+范围检查	High ≥ Open, High ≥ Close, Low ≤ Open, Low ≤ Close	切源重试
+时间检查	数据日期 ≤ 当前日期	跳过未来数据
+重复检查	同一交易日同一合约无重复（主键：symbol+contract+trade_date）	去重
+3.8.2 基本面因子校验（每次采集）
+校验项	规则	异常处理
+非空检查	因子值不能为 None 或 NaN	切源重试
+范围检查	数值必须在预设的 [MIN, MAX] 范围内	告警 + 丢弃 + 切源（不写入）
+变化率检查（日/周频）	环比变化超过历史3倍标准差	记录日志，连续3次切源
+变化率检查（月频）	豁免	-
+单位一致性	检查单位是否与历史数据一致	切源重试 + 告警
+3.8.3 定期校验（每日/每周）
+校验项	规则	异常处理
+跨源对齐	主力 vs 备用，收盘价差异 < 0.1%，成交量差异 < 5%	记录差异，连续3次告警
+历史连续性	无缺失交易日（对比交易日历）	自动补采缺失数据
+数据完整性	覆盖所有目标品种	补采缺失品种
+PIT合规性	每条记录的 pub_date ≥ obs_date	标记异常，通知研究员
+3.9 PIT日期处理（最重要）
+pub_date 和 obs_date 的区分是避免回测中未来信息泄露的关键。
+
+数据频率	pub_date	obs_date	说明
+日频	脚本运行当天	同一天	当天发布当天数据
+周频	脚本运行当天	上周五	回退到最近一个周五
+月频	脚本运行当天	上月末	上个月的最后一天
+python
+from datetime import date, timedelta
+
+def get_pit_dates(freq="日频"):
+    today = date.today()
+    
+    if today.weekday() == 6:  # 周日
+        return None, None
+    
+    pub_date = today
+    
+    if freq == "日频":
+        obs_date = today
+    elif freq == "周频":
+        obs_date = today
+        while obs_date.weekday() != 4:  # 回退到周五
+            obs_date -= timedelta(days=1)
+    elif freq == "月频":
+        if today.month == 1:
+            obs_date = date(today.year - 1, 12, 31)
+        else:
+            obs_date = date(today.year, today.month, 1) - timedelta(days=1)
+    
+    return pub_date, obs_date
+3.10 数据库写入规范
+使用 common/db_utils.py 中的 save_to_db 函数，已内置：
+
+3次重试机制（处理数据库锁定）
+
+幂等性保证（INSERT OR REPLACE）
+
+source_confidence 字段记录数据源置信度（1.0=主源, 0.9=备用, 0.6=DB兜底, 0.5=手动）
+
+python
+# common/db_utils.py
+import sqlite3
+import time
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).parent.parent.parent
+DB_PATH = PROJECT_ROOT / "pit_data.db"
+
+def ensure_table():
+    conn = sqlite3.connect(DB_PATH)
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS pit_factor_observations (
+            factor_code TEXT,
+            symbol TEXT,
+            pub_date TEXT,
+            obs_date TEXT,
+            raw_value REAL,
+            source_confidence REAL,
+            PRIMARY KEY (factor_code, symbol, pub_date, obs_date)
+        )
+    """)
+    conn.commit()
+    conn.close()
+
+def save_to_db(factor_code, symbol, pub_date, obs_date, raw_value, source_confidence=1.0):
+    """
+    带重试的数据库写入
+    source_confidence: 数据源置信度（1.0=主源, 0.9=备用, 0.6=DB兜底, 0.5=手动）
+    """
+    for attempt in range(3):
+        try:
+            conn = sqlite3.connect(DB_PATH, timeout=10)
+            conn.execute("""
+                INSERT OR REPLACE INTO pit_factor_observations
+                (factor_code, symbol, pub_date, obs_date, raw_value, source_confidence)
+                VALUES (?, ?, ?, ?, ?, ?)
+            """, (factor_code, symbol, str(pub_date), str(obs_date), raw_value, source_confidence))
+            conn.commit()
+            conn.close()
+            print(f"[DB] 写入成功: {factor_code} = {raw_value}")
+            return True
+        except sqlite3.OperationalError as e:
+            if "locked" in str(e).lower() and attempt < 2:
+                print(f"[DB] 锁定，重试 {attempt+1}/3...")
+                time.sleep(2)
+            else:
+                raise
+    return False
+字段对齐要求：
+
+字段	要求	示例
+factor_code	与引擎 YAML 文件名一致（不含 .yaml）	RU_TS_ROLL_YIELD
+symbol	统一大写	RU
+pub_date	ISO格式字符串	2026-04-17
+obs_date	ISO格式字符串	2026-04-17
+raw_value	数值型（int 或 float），不可为字符串	1.9469 或 32500
+source_confidence	数据源置信度	1.0=主源, 0.9=备用, 0.6=DB兜底, 0.5=手动
+3.11 合理性校验行为规范
+超出范围时的处理：
+
+python
+if value is not None:
+    if not (MIN_VALUE <= value <= MAX_VALUE):
+        print(f"[警告] {FACTOR_CODE} = {value} 超出正常范围({MIN_VALUE}~{MAX_VALUE})，丢弃不写入")
+        # 不写入数据库，切换到下一个数据源
+        return fetch_next_source()
+    save_to_db(...)
+明确原则：超出范围 → 打印警告 → 不写入 → 切换到下一个数据源。防止脏数据污染数据库。
+
+3.12 编码兼容性规范（Windows 必读）
+在每个可被 subprocess 调用的脚本最顶部添加：
+
+python
+import sys
+import io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8', errors='replace')
+父进程调用时设置：
+
+python
+import os
+import subprocess
+
+env = os.environ.copy()
+env["PYTHONIOENCODING"] = "utf-8"
+
+result = subprocess.run(
+    [sys.executable, str(script_path)],
+    capture_output=True,
+    text=True,
+    encoding='utf-8',
+    env=env
+)
+四、数据融入引擎系统
+4.1 数据共享机制
+爬虫和引擎通过根目录的 pit_data.db 文件交换数据：
+
+爬虫负责写入：每日运行后将新数据 INSERT OR REPLACE 到表中
+
+引擎负责读取：通过 PitDataService 查询 pub_date <= 今天 的最新数据
+
+4.2 引擎读取逻辑
+引擎内部 PitDataService.get_snapshot() 执行的查询：
+
+sql
+SELECT factor_code, raw_value, source_confidence
+FROM pit_factor_observations
+WHERE symbol = 'RU' AND pub_date <= '2026-04-17'
+GROUP BY factor_code
+HAVING pub_date = MAX(pub_date)
+4.3 验证数据接入
+运行品种验证脚本（如 crawlers/RU/RU_验证数据读取.py）或直接查询数据库：
+
+python
+import sqlite3
+conn = sqlite3.connect("pit_data.db")
+cursor = conn.cursor()
+cursor.execute("SELECT DISTINCT factor_code FROM pit_factor_observations WHERE symbol='AG'")
+factors = [row[0] for row in cursor.fetchall()]
+print(f"已入库因子 ({len(factors)}个):")
+for f in sorted(factors):
+    print(f"  {f}")
+conn.close()
+五、每日操作流程
+5.1 一键自动模式（推荐）
+在项目根目录执行：
+
+cmd
+cd d:\futures_macro_engine
+python update_and_score.py
+该脚本自动完成：
+
+调用 crawlers/update_all.py 更新所有品种数据
+
+调用 scripts/daily_scoring.py 生成宏观信号
+
+信号输出到 output/macro_signals.csv
+
+5.2 分步手动模式
+步骤1：更新数据
+
+cmd
+cd d:\futures_macro_engine
+python crawlers/update_all.py
+步骤2：查看日志
+打开 crawlers/logs/ 目录下的当日日志，确认所有脚本输出 [DB] 写入成功。
+
+步骤3：运行引擎
+
+cmd
+python scripts/daily_scoring.py
+步骤4：查看信号
+打开 output/macro_signals.csv，根据 direction 字段决定交易方向。
+
+5.3 自动化模式（Windows 任务计划）
+使用 Windows 任务计划程序：
+
+触发时间：每个交易日 07:30
+
+操作：运行 d:\futures_macro_engine\update_and_score.py
+
+程序：d:\futures_macro_engine\venv\Scripts\python.exe
+
+起始于：d:\futures_macro_engine
+
+条件：仅当计算机使用交流电源时启动
+
+六、总控脚本模板
+6.1 品种级总控：crawlers/{SYMBOL}/{SYMBOL}_run_all.py
+python
+# {SYMBOL}_run_all.py
+"""
+{品种名称}爬虫总控脚本
+"""
+import subprocess
+import sys
+import os
+import datetime
+from pathlib import Path
+
+CURRENT_DIR = Path(__file__).parent
+PROJECT_ROOT = CURRENT_DIR.parent.parent
+DB_PATH = PROJECT_ROOT / "pit_data.db"
+LOG_DIR = CURRENT_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+scripts = [
+    # 按依赖顺序排列：先基础数据，后派生计算
+    "{SYMBOL}_抓取基础数据1.py",
+    "{SYMBOL}_抓取基础数据2.py",
+    "{SYMBOL}_计算派生因子1.py",
+    "{SYMBOL}_计算派生因子2.py",
+]
+
+def run_all():
+    now = datetime.datetime.now()
+    log_file = LOG_DIR / f"{now.strftime('%Y-%m-%d')}.log"
+
+    print("=" * 60)
+    print(f"{SYMBOL} 数据采集任务启动 @ {now}")
+    print("=" * 60)
+
+    if not DB_PATH.exists():
+        print(f"❌ 数据库文件不存在: {DB_PATH}")
+        sys.exit(1)
+
+    success_count = 0
+    failures = []
+
+    with open(log_file, "a", encoding="utf-8") as log:
+        log.write(f"\n{'='*60}\n{SYMBOL} 数据采集开始 @ {now}\n{'='*60}\n")
+
+        for script in scripts:
+            script_path = CURRENT_DIR / script
+            if not script_path.exists():
+                print(f"⚠️ 脚本不存在，跳过: {script}")
+                failures.append((script, "文件不存在"))
+                continue
+
+            print(f"\n>>> 运行 {script}...")
+            log.write(f"\n--- 运行 {script} @ {datetime.datetime.now()} ---\n")
+
+            env = os.environ.copy()
+            env["PYTHONIOENCODING"] = "utf-8"
+
+            try:
+                result = subprocess.run(
+                    [sys.executable, str(script_path)],
+                    capture_output=True,
+                    text=True,
+                    encoding='utf-8',
+                    timeout=180,
+                    cwd=str(CURRENT_DIR),
+                    env=env
+                )
+                log.write(result.stdout)
+                if result.stderr:
+                    log.write(f"[stderr]\n{result.stderr}\n")
+
+                if result.returncode == 0:
+                    success_count += 1
+                    print(f"   [OK] 完成")
+                else:
+                    failures.append((script, f"退出码 {result.returncode}"))
+                    print(f"   [WARN] 失败 (退出码 {result.returncode})")
+            except Exception as e:
+                failures.append((script, str(e)))
+                print(f"   [WARN] 异常: {e}")
+
+        summary = f"\n{'='*60}\n"
+        summary += f"{SYMBOL} 数据采集完成，成功: {success_count}/{len(scripts)}\n"
+        if failures:
+            summary += f"失败 {len(failures)} 个:\n"
+            for name, reason in failures:
+                summary += f"  - {name}: {reason}\n"
+        summary += f"{'='*60}\n"
+        log.write(summary)
+        print(summary)
+
+    return 0 if len(failures) == 0 else 1
+
+if __name__ == "__main__":
+    sys.exit(run_all())
+6.2 顶层总控：crawlers/update_all.py
+python
+# update_all.py
+"""
+全品种数据更新总控脚本
+"""
+import subprocess
+import sys
+import os
+import datetime
+from pathlib import Path
+
+CRAWLERS_DIR = Path(__file__).parent
+LOG_DIR = CRAWLERS_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+# 已接入品种列表
+SYMBOLS = ["RU", "BR", "NR", "TA", "AG"]
+
+def update_all():
+    now = datetime.datetime.now()
+    log_file = LOG_DIR / f"update_all_{now.strftime('%Y-%m-%d')}.log"
+
+    print("=" * 60)
+    print(f"全品种数据更新任务启动 @ {now}")
+    print(f"活跃品种: {', '.join(SYMBOLS)}")
+    print("=" * 60)
+
+    results = {}
+
+    with open(log_file, "a", encoding="utf-8") as log:
+        log.write(f"\n{'='*60}\n全品种更新开始 @ {now}\n{'='*60}\n")
+
+        for symbol in SYMBOLS:
+            run_script = CRAWLERS_DIR / symbol / f"{symbol}_run_all.py"
+            if not run_script.exists():
+                results[symbol] = "脚本不存在"
+                continue
+
+            print(f"\n>>> 更新 {symbol} 数据...")
+            log.write(f"\n--- 更新 {symbol} @ {datetime.datetime.now()} ---\n")
+
+            env = os.environ.copy()
+            env["PYTHONIOENCODING"] = "utf-8"
+
+            try:
+                result = subprocess.run(
+                    [sys.executable, str(run_script)],
+                    capture_output=True,
+                    text=True,
+                    encoding='utf-8',
+                    timeout=600,
+                    env=env
+                )
+                log.write(result.stdout)
+                if result.returncode == 0:
+                    results[symbol] = "成功"
+                else:
+                    results[symbol] = f"退出码 {result.returncode}"
+            except Exception as e:
+                results[symbol] = str(e)
+
+        summary = f"\n{'='*60}\n全品种更新完成\n"
+        for sym, status in results.items():
+            icon = "[OK]" if status == "成功" else "[WARN]"
+            summary += f"  {icon} {sym}: {status}\n"
+        summary += f"{'='*60}\n"
+        log.write(summary)
+        print(summary)
+
+if __name__ == "__main__":
+    update_all()
+6.3 项目总入口：update_and_score.py
+python
+# update_and_score.py
+"""
+V7.0 宏观引擎一键更新入口
+"""
+import subprocess
+import sys
+import datetime
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).parent
+LOG_DIR = PROJECT_ROOT / "crawlers" / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+now = datetime.datetime.now()
+log_file = LOG_DIR / f"full_pipeline_{now.strftime('%Y-%m-%d')}.log"
+
+print("=" * 60)
+print(f"V7.0 宏观基本面打分引擎 @ {now}")
+print("=" * 60)
+
+with open(log_file, "a", encoding="utf-8") as log:
+    log.write(f"\n{'='*60}\nupdate_and_score 启动 @ {now}\n{'='*60}\n")
+
+    # 1. 更新数据
+    print("\n📡 步骤 1/2：更新数据...")
+    update_script = PROJECT_ROOT / "crawlers" / "update_all.py"
+    if update_script.exists():
+        subprocess.run([sys.executable, str(update_script)], check=False)
+
+    # 2. 生成信号
+    print("\n📊 步骤 2/2：生成宏观信号...")
+    scoring_script = PROJECT_ROOT / "scripts" / "daily_scoring.py"
+    if scoring_script.exists():
+        subprocess.run([sys.executable, str(scoring_script)], check=True)
+
+    print("\n✅ 全部完成！查看 output/macro_signals.csv")
+七、常见失败场景与排查
+7.1 接口类问题
+现象	可能原因	解决办法
+module 'akshare' has no attribute 'xxx'	AKShare版本升级，函数名变更	查看可用函数：[f for f in dir(ak) if '关键词' in f.lower()]，替换为实际存在的函数名
+got an unexpected keyword argument 'xxx'	参数名变更	使用参数自适应循环尝试多种参数组合
+请输入正确的 symbol 参数	新浪/交易所接口的symbol格式变化	确认实际格式，或换用其他数据源
+Expecting value: line 1 column 1	交易所.dat文件在非交易日返回空内容	加 JSONDecodeError 专项捕获，不阻断流程
+返回空DataFrame	非交易日、合约已摘牌、接口临时故障	判断 len(df) > 0，空数据自动降级到下一源
+7.2 数据库类问题
+现象	可能原因	解决办法
+no such table: pit_factor_observations	表未创建	脚本开头调用 ensure_table()
+database is locked	多进程并发写入	写入函数已带3次重试
+数据写入成功但引擎读不到	factor_code 与YAML文件名不一致	逐字符对比，注意大小写和下划线
+7.3 数据质量问题
+现象	可能原因	解决办法
+展期收益率突然跳变	主力合约换月，近远月合约代码错位	使用合约换月处理规则（8.1节）
+净持仓为0	上期所.dat格式变更，字段名改了	用 get_shfe_rank_table 作为主源
+数据连续多日不变	爬虫实际失败但未报错（静默失败）	每周运行健康检查脚本
+周频数据回测异常好	obs_date 设置错误导致未来信息泄露	确保使用3.9节的回退到周五逻辑
+7.4 编码与进程通信问题
+现象	解决办法
+单独运行正常，被 update_all 调用时崩溃	添加UTF-8强制输出代码（3.12节），父进程设置 encoding='utf-8'
+UnicodeEncodeError: 'gbk' codec can't encode character	同上
+TypeError: write() argument must be str, not None	写入前检查：log.write(result.stdout or "")
+7.5 告警规则与响应
+告警级别	触发条件	通知方式
+⚠️ 警告	单次主力源失败	日志记录
+⚠️ 警告	数据质量校验失败（单次）	日志记录
+⚠️ 警告	基本面因子超出合理范围	日志 + 邮件/企业微信
+🚨 严重	主力源连续失败 3 次	邮件/企业微信即时告警
+🚨 严重	四级降级全部失败	邮件/企业微信 + 桌面弹窗
+🔔 恢复	主力源自愈恢复	日志 + 邮件通知
+通知渠道配置：
+
+企业微信/钉钉/飞书机器人 Webhook
+
+邮件（含错误日志附件）
+
+Windows 桌面弹窗（msg 命令或 win10toast）
+
+八、维护指南
+8.1 合约换月处理规则（行情数据专用）
+步骤	操作	说明
+1	每日检测各合约持仓量	使用交易所持仓数据
+2	当新合约持仓量连续3日超过旧合约	确认主力切换
+3	记录换月日期和新旧合约代码	存入 contract_roll_history 表
+4	计算后复权连续价格	使用换月日新旧合约收盘价差作为调整因子
+5	展期收益率因子在换月日暂停计算	或使用新旧合约价差修正
+8.2 数据源自愈机制（动态健康度评分）
+事件	分数变化	说明
+初始状态	100 分	新接入数据源默认满分
+请求超时	-5 分	单次超时
+返回空数据	-10 分	非交易日除外
+数据格式错误	-10 分	解析失败
+数据校验失败	-15 分	数值超出合理范围
+连续成功（每日）	+1 分	上限100分
+状态切换：
+
+降级：分数低于 80 分时，自动降级为备用源，发送告警
+
+探针：每次采集前对降级源做轻量级请求（如 HEAD 请求），成功则 +5 分
+
+恢复：分数达到 85 分时，恢复为主源
+
+8.3 联动修改检查清单（必做）
+每完成一个品种的开发或批量修复后，必须逐项确认：
+
+检查项	验证方法	状态
+crawlers/update_all.py 的 SYMBOLS 列表	确认品种已加入	☐
+crawlers/common/check_health.py 的因子配置	逐一核对 FACTOR_CODES 与脚本 FACTOR_CODE 一致	☐
+config/factors/{SYMBOL}/ 目录	确认每个因子YAML文件名与内部 factor_code 一致	☐
+config/instruments/{SYMBOL}.yaml	确认 factors 列表包含所有因子	☐
+config/settings.yaml 的 symbols 列表	确认品种已加入	☐
+crawlers/{SYMBOL}/{SYMBOL}_run_all.py	确认 scripts 列表包含所有脚本	☐
+告警渠道测试	发送一条测试消息确认webhook通	☐
+健康检查脚本已注册新因子	在 check_health.py 的 FACTOR_CODES 中添加	☐
+8.4 临时文件清理规范
+原则：开发调试过程中产生的临时文件不得进入生产环境。
+
+清理清单：
+
+*_test.py
+
+*_debug.py
+
+*_manual.py（手动输入脚本，正式环境通过 --auto 跳过）
+
+*.bak
+
+__pycache__/
+
+操作方法：每个品种开发完成后，在品种目录下执行：
+
+cmd
+del *_test.py *_debug.py *_manual.py 2>nul
+rmdir /s /q __pycache__ 2>nul
+8.5 健康检查脚本
+crawlers/common/check_health.py 每周一运行一次，检查数据完整性、PIT合规性、新鲜度。
+
+8.6 维护周期
+周期	操作	耗时
+每日	运行健康检查脚本，查看日志	1分钟
+每日	运行全品种数据采集	3-5分钟
+每周一	查看日志，关注周频数据新鲜度	2分钟
+每月1日	备份数据库到 backups/pit_data_YYYYMM.db	5秒
+每月10日	重新标定各因子阈值（基于上月数据）	10分钟
+AKShare报错时	运行 pip install akshare --upgrade，重新测试接口	5分钟
+九、因子清单与数据源对照
+9.1 天然橡胶（RU）—— 9个因子
+因子代码	因子名称	频率	源1（主）	源2（备）	源3（DB）	源4（手动）	状态
+RU_SUP_THAI_CUP	泰国杯胶价格	日	生意社	同花顺	前一日值	手动输入	✅
+RU_SUP_THAI_LATEX	泰国胶水价格	日	生意社	同花顺	前一日值	手动输入	✅
+RU_INV_QINGDAO	青岛保税区库存	周	同花顺	隆众资讯	前一周值	手动输入	✅
+RU_STK_WARRANT	上期所RU仓单	日	AKShare get_receipt	上期所.dat	前一日值	手动输入	✅
+RU_SPD_RU_BR	RU-BR价差	日	新浪API	AKShare	前一日值	手动输入	✅
+RU_DEM_TIRE_ALLSTEEL	全钢胎开工率	周	东方财富	瑞达期货	前一周值	手动输入	✅
+RU_DEM_TIRE_SEMI	半钢胎开工率	周	东方财富	瑞达期货	前一周值	手动输入	✅
+RU_TS_ROLL_YIELD	展期收益率	日	手动计算	AKShare	前一日值	手动输入	✅
+RU_POS_NET	前20净持仓	日	AKShare get_shfe_rank_table	上期所.dat	前一日值	手动输入	✅
+9.2 合成橡胶（BR）—— 12个因子
+因子代码	因子名称	频率	源1（主）	源2（备）	源3（DB）	源4（手动）	状态
+BR_COST_BD	丁二烯价格	日	隆众资讯	生意社	前一日值	手动输入	✅
+BR_COST_MARGIN	BR行业毛利	周	计算（BR-成本）	-	前一周值	手动输入	✅
+BR_COST_ETH	乙烯装置开工率	周	隆众资讯	东方财富	前一周值	手动输入	✅
+BR_SUP_RATE	BR行业开工率	周	东方财富	隆众资讯	前一周值	手动输入	✅
+BR_DEM_TIRE_ALLSTEEL	全钢胎开工率	周	RU数据库	-	前一周值	手动输入	✅
+BR_DEM_TIRE_SEMI	半钢胎开工率	周	RU数据库	-	前一周值	手动输入	✅
+BR_DEM_AUTO	汽车月度销量	月	AKShare乘联会	中汽协	上月值	手动输入	✅
+BR_INV_TOTAL	BR全国总库存	周	同花顺	隆众资讯	前一周值	手动输入	✅
+BR_STK_WARRANT	上期所BR仓单	日	AKShare get_receipt	上期所.dat	前一日值	手动输入	✅
+BR_SPD_BASIS	BR期现基差	日	计算	-	前一日值	手动输入	✅
+BR_SPD_RU_BR	BR/RU比价	日	计算	-	前一日值	手动输入	✅
+BR_POS_NET	BR前20净持仓	日	AKShare get_shfe_rank_table	上期所.dat	前一日值	手动输入	✅
+9.3 白银（AG）—— 12个因子
+因子代码	因子名称	频率	源1（主）	源2（备）	源3（DB）	源4（手动）	状态
+AG_MACRO_TIPS_10Y	美国TIPS实际利率	日	FRED	AKShare	前一日值	手动输入	✅
+AG_MACRO_DXY	美元指数	日	新浪API	AKShare	前一日值	手动输入	✅
+AG_COST_USDCNY	美元人民币汇率	日	中国银行	新浪API	前一日值	手动输入	✅
+AG_INV_SHFE_AG	上期所沪银仓单	日	上期所.dat	AKShare	前一日值	手动输入	✅
+AG_INV_COMEX_SILVER	COMEX白银库存	日	AKShare	COMEX官网	前一日值	手动输入	✅
+AG_SPD_SHFE_COMEX	沪银-COMEX比价	日	计算	-	前一日值	手动输入	✅
+AG_SPD_BASIS	沪银期现基差	日	SGE基准价	新浪	前一日值	手动输入	✅
+AG_MACRO_GOLD_SILVER_RATIO	金银比	日	新浪API	AKShare	前一日值	手动输入	✅
+AG_MACRO_US_CPI_YOY	美国CPI同比	月	AKShare	FRED	上月值	手动输入	✅
+AG_POS_NET	沪银前20净持仓	日	⚠️已失效	-	前一日值	手动输入	🔴 待修复
+AG_POS_CFTC_NET	CFTC白银净持仓	周	AKShare	CFTC官网	前一周值	手动输入	⚠️ 无数据
+AG_DEM_ETF_HOLDING	白银ETF持仓	日	AKShare	iShares官网	前一日值	手动输入	⚠️ 无数据
+十、新增因子/品种的操作步骤
+实测驱动：先跑 {SYMBOL}_debug_sources.py 验证数据源可用性
+
+复制模板脚本，修改 FACTOR_CODE、SYMBOL、阈值
+
+实现四级降级的 fetch 函数
+
+运行联动检查清单（8.3节）逐项确认
+
+手动运行验证，确认数据正确入库
+
+清理临时文件（8.4节）
+
+更新本手册第九章因子清单
+
+十一、最终检查清单
+每个脚本开头有编码兼容代码
+
+四级降级已实现（月频必须含DB兜底）
+
+阈值已基于实测数据标定（非写死）
+
+非交易日判断已前置
+
+PIT日期处理正确（周频回退到周五）
+
+数据库写入使用 INSERT OR REPLACE
+
+factor_code 与 YAML 文件名一致
+
+symbol 统一大写
+
+写入前有合理性校验（超出范围丢弃不写入）
+
+*_run_all.py 能正常调度所有脚本
+
+update_all.py 能遍历所有品种
+
+check_health.py 能正确检查数据新鲜度
+
+联动检查清单全部通过
+
+临时文件已清理
+
+告警渠道测试通过
+
+数据库已备份
+
+十二、工程化实战进阶
+12.1 实测驱动开发
+（详见3.4节）
+
+12.2 范围校验阈值动态标定
+（详见3.5节）
+
+12.3 四级降级策略
+（详见3.2节）
+
+12.4 联动修改检查清单
+（详见8.3节）
+
+12.5 临时文件清理规范
+（详见8.4节）
+
+12.6 批量修复方法论
+当多个脚本存在同类问题时：
+
+归类问题类型：接口失效 / 范围错误 / 死代码 / 编码问题
+
+先修复一个作为模板：选择最典型的脚本，完整修复并测试通过
+
+批量应用到其余脚本：复制修复模式，注意替换品种特定参数
+
+一次性全量测试：运行 {SYMBOL}_run_all.py 确认全部通过

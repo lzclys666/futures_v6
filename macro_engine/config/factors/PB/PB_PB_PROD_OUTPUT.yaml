@@ -1,0 +1,17 @@
+# PB_PB_PROD_OUTPUT.yaml
+# 铅锭产量
+
+factor_code: PB_PB_PROD_OUTPUT
+symbol: PB
+category: supply
+name: 铅锭产量
+description: 铅锭产量
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - supply
+  - PB

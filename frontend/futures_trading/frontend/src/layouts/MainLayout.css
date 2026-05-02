@@ -1,0 +1,44 @@
+/* MainLayout 样式 */
+
+.sider-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 64px;
+  border-bottom: 1px solid #f0f0f0;
+  padding: 0 16px;
+}
+
+.layout-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 56px;
+  line-height: 56px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.layout-content {
+  padding: 16px 24px;
+  min-height: calc(100vh - 56px);
+  overflow-y: auto;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .layout-content {
+    padding: 12px;
+  }
+}

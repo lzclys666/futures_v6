@@ -1,0 +1,17 @@
+# J_J_TOT_DISPATCH.yaml
+# 焦炭总调出量
+
+factor_code: J_J_TOT_DISPATCH
+symbol: J
+category: supply
+name: 焦炭总调出量
+description: 焦炭总调出量
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - supply
+  - J

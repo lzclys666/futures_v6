@@ -1,0 +1,14 @@
+{
+  "symbol": "AG",
+  "period": "2026-01-01 ~ 2026-04-24",
+  "total_signals": 80,
+  "long_signals": 58,
+  "short_signals": 5,
+  "total_trades": 18,
+  "winning_trades": 9,
+  "win_rate": 0.5,
+  "total_pnl": 940.919461674257,
+  "final_capital": 100940.91946167428,
+  "returns": 0.009409194616742752,
+  "sharpe_ratio": 0.4766504913021249
+}

@@ -1,0 +1,24 @@
+# NR_MACRO_POSITION.yaml
+# 20号胶期货持仓排名（前20席位净持仓）
+
+factor_code: NR_MACRO_POSITION
+factor_name: NR持仓排名
+symbol: NR
+category: macro
+frequency: daily
+unit: 手
+description: 上海国际能源交易中心NR期货前20席位持仓排名，净持仓=多头持仓-空头持仓
+
+data_source:
+  primary: AKShare get_shfe_rank_table
+  url: https://www.shfe.com.cn/
+  update_time: "每日15:30后更新前一交易日数据"
+
+validation:
+  min_value: -500000
+  max_value: 500000
+  
+notes: |
+  - 正值表示多头占优，负值表示空头占优
+  - 数据来源为上海期货交易所官方持仓排名
+  - T+1更新，获取最近交易日数据

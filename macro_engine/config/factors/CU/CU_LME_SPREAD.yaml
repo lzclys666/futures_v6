@@ -1,0 +1,8 @@
+factor_code: CU_LME_SPREAD
+name: "LME铜升贴水(Cash-3M)"
+category: spread
+description: "LME铜Cash-3M升贴水，单位USD/吨。正常市场条件下接近0，市场紧张时>50表示供需紧张"
+data_source: "AKShare futures_foreign_commodity_realtime_CAD (LME铜3个月期货，符号'CAD'=LME铜3M)"
+source_confidence: 1.0
+expected_range: [-100, 100]
+notes: "计算: 昨天3M结算价 - 今天3M结算价。正值=backwardation(现货紧张)，负值=contango(供需宽松)。AKShare符号'CAD'实为LME铜3个月期货，非加元汇率"

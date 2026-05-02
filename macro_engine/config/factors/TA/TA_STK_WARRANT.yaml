@@ -1,0 +1,18 @@
+# TA_STK_WARRANT.yaml
+# PTA交易所仓单
+
+factor_code: TA_STK_WARRANT
+symbol: TA
+category: inventory
+name: PTA交易所仓单
+description: 郑商所PTA注册仓单量，反映可交割货源松紧和套保压力
+frequency: daily
+unit: 手
+direction: negative  # 仓单增加=利空
+confidence: 3  # ★★★
+source: 郑商所官网
+calculation: null
+tags:
+  - inventory
+  - exchange
+  - deliverable

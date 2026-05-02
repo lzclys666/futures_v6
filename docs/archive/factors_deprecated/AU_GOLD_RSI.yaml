@@ -1,0 +1,18 @@
+# AU_GOLD_RSI - 黄金RSI超买超卖因子
+factor_code: "AU_GOLD_RSI"
+factor_name: "黄金RSI超买超卖因子"
+commodity: "AU"
+
+factor_direction: "neutral"
+weight: 0.12
+
+data_source: "akshare"
+api_params:
+  function: "futures_zh_daily_sina"
+  symbol: "au0"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "黄金期货RSI指标，识别超买超卖区间"
+pit_required: false
+dependencies: []

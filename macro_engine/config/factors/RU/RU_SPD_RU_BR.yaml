@@ -1,0 +1,17 @@
+factor_code: "RU_SPD_RU_BR"
+factor_name: "RU-BR价差"
+template: null
+econ_category: "SPD"
+logic_category: "SPD"
+direction: 1           # 价差为正（RU>BR）时，替代需求可能转向BR，对RU利空？根据文档：合成胶高价增强天胶替代需求，即RU-BR价差扩大（RU相对更贵）时利空RU。因此方向应为 -1。
+direction: -1          # 修正
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.05
+max_weight: 0.15
+is_active: true
+dependencies:
+  - "AKShare/futures_main_sina"
+description: "RU主力合约收盘价 - BR主力合约收盘价"

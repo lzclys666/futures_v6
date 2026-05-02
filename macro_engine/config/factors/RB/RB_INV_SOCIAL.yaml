@@ -1,0 +1,17 @@
+﻿# config/factors/RB/RB_INV_LME.yaml
+factor_code: "RB_INV_LME"
+factor_name: "LME螺纹钢库存"
+template: null
+econ_category: "INV"
+logic_category: "STK"
+direction: -1           # 全球库存增加→供应增加→利空
+frequency: "daily"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 252
+base_weight: 0.06
+max_weight: 0.09
+is_active: true
+dependencies:
+  - "LME官网/lme_RBuminium"
+description: "LME螺纹钢库存（含注销仓单），反映全球螺纹钢显性库存变化"

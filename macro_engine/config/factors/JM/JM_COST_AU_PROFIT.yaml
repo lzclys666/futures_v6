@@ -1,0 +1,16 @@
+﻿---
+factor_code: "JM_COST_AU_PROFIT"
+factor_name: "甘其毛都口岸库存"
+econ_category: "INV"
+logic_category: "QTY"
+direction: 1
+frequency: "weekly"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 12
+base_weight: 0.04
+max_weight: 0.06
+is_active: false
+dependencies:
+  - "汾渭能源(年费)/煤焦>蒙煤>甘其毛都库存"
+description: "口岸库存高转运压力"

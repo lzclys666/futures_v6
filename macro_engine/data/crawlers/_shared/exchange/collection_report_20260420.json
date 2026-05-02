@@ -1,0 +1,30 @@
+{
+  "trade_date": "20260417",
+  "collection_date": "2026-04-20",
+  "results": {
+    "shfe_wr": {
+      "success": false,
+      "error": "All dates failed"
+    },
+    "shfe_rank": {
+      "success": true,
+      "error": null
+    },
+    "dce_wr": {
+      "success": false,
+      "error": "All dates failed"
+    },
+    "dce_rank": {
+      "success": false,
+      "error": "File is not a zip file"
+    },
+    "shfe_daily": {
+      "success": true,
+      "error": null
+    },
+    "shfe_settle": {
+      "success": true,
+      "error": null
+    }
+  }
+}

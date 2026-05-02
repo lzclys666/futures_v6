@@ -1,0 +1,8 @@
+factor_code: CU_WRT_SHFE
+name: "SHFE铜仓单"
+category: warehouse_receipt
+description: "SHFE铜仓单"
+data_source: AKShare futures_shfe_warehouse_receipt
+source_confidence: 1.0
+expected_range: [5000-200000]
+notes: "obs_date=2025-04-15最近有效数据"

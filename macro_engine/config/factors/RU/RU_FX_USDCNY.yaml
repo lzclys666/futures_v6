@@ -1,0 +1,16 @@
+factor_code: "RU_FX_USDCNY"
+factor_name: "美元兑人民币汇率"
+template: null
+econ_category: "CST"
+logic_category: "FX"
+direction: -1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 252
+base_weight: 0.12
+max_weight: 0.25
+is_active: true
+dependencies:
+  - "AKShare/fx_spot_quote"
+description: "美元兑人民币即期汇率，RU 橡胶进口依赖，汇率影响进口成本及贸易商定价"

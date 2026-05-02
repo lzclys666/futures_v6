@@ -1,0 +1,17 @@
+# HC_HC_PROD_CAPACITY.yaml
+# 热卷产能利用率
+
+factor_code: HC_HC_PROD_CAPACITY
+symbol: HC
+category: supply
+name: 热卷产能利用率
+description: 热卷产能利用率
+frequency: daily
+unit: "%"
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - supply
+  - HC

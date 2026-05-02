@@ -1,0 +1,18 @@
+# TA_CST_BRENT.yaml
+# 布伦特原油价格
+
+factor_code: TA_CST_BRENT
+symbol: TA
+category: cost
+name: 布伦特原油价格
+description: 布伦特原油期货价格，聚酯产业链成本源头，通过石脑油-PX链条传导至PTA
+frequency: daily
+unit: 美元/桶
+direction: positive  # 原油上涨=成本上升=利多
+confidence: 3  # ★★★
+source: ICE/AKShare
+calculation: null
+tags:
+  - cost
+  - crude_oil
+  - upstream

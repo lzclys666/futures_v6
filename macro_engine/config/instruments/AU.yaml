@@ -1,0 +1,19 @@
+symbol: AU
+extends: _base
+macro_lambda: 0.7
+weights:
+  supply: 0.1
+  demand: 0.15
+  inventory: 0.1
+  spread: 0.15
+  macro: 0.5
+factors:
+- code: AU_TS_ROLL_YIELD
+  enabled: true
+  weight_override: 0.15
+- code: AU_STK_WARRANT
+  enabled: true
+  weight_override: 0.15
+- code: AU_INV_COMEX
+  enabled: true
+  weight_override: 0.12

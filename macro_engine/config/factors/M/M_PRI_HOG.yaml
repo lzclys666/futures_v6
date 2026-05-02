@@ -1,0 +1,16 @@
+factor_code: "M_PRI_HOG"
+factor_name: "全国生猪价格"
+template: null
+econ_category: "DEM"
+logic_category: "PRI"
+direction: 1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.10
+max_weight: 0.20
+is_active: true
+dependencies:
+  - "AKShare/futures_hog_core"
+description: "全国生猪平均收购价（元/公斤），猪价高→补栏积极→饲料需求增→利多豆粕"

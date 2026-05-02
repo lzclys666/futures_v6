@@ -1,0 +1,761 @@
+========================================
+  期货智能交易系统 V6.0 运行验证日志
+  生成时间: 2026-05-02 08:35:01
+========================================
+
+--- [1/8] 健康检查 ---
+{
+    "code": 0,
+    "message": "success",
+    "data": {
+        "status": "ok",
+        "service": "macro-api",
+        "version": "1.0.0",
+        "vnpy_bridge": "connected"
+    }
+}
+
+--- [2/8] 全品种信号 ---
+{
+    "code": 0,
+    "message": "success",
+    "data": [
+        {
+            "symbol": "RU",
+            "compositeScore": 0.6323,
+            "direction": "LONG",
+            "updatedAt": "2026-05-01T14:30:02+08:00 (\u975e\u4eca\u65e5\u6570\u636e)"
+        },
+        {
+            "symbol": "CU",
+            "compositeScore": -0.0039,
+            "direction": "NEUTRAL",
+            "updatedAt": "2026-05-01T14:30:02+08:00 (\u975e\u4eca\u65e5\u6570\u636e)"
+        },
+        {
+            "symbol": "AU",
+            "compositeScore": 0.0688,
+            "direction": "NEUTRAL",
+            "updatedAt": "2026-05-01T14:30:02+08:00 (\u975e\u4eca\u65e5\u6570\u636e)"
+        },
+        {
+            "symbol": "AG",
+            "compositeScore": 0.0325,
+            "direction": "NEUTRAL",
+            "updatedAt": "2026-05-01T14:30:02+08:00 (\u975e\u4eca\u65e5\u6570\u636e)"
+        }
+    ]
+}
+
+--- [3/8] RU 单品种信号（含因子明细）---
+{
+    "code": 0,
+    "message": "success",
+    "data": {
+        "symbol": "RU",
+        "compositeScore": 0.6323,
+        "direction": "LONG",
+        "updatedAt": "2026-05-01T14:30:02+08:00 (\u975e\u4eca\u65e5\u6570\u636e)",
+        "factors": [
+            {
+                "factorCode": "RU_DEM_TIRE_ALLSTEEL",
+                "factorName": "\u5168\u94a2\u80ce\u5f00\u5de5\u7387",
+                "direction": "neutral",
+                "rawValue": 70.48,
+                "normalizedScore": 0.0,
+                "weight": 0.0161,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_DEM_TIRE_SEMI",
+                "factorName": "\u534a\u94a2\u80ce\u5f00\u5de5\u7387",
+                "direction": "neutral",
+                "rawValue": 76.5,
+                "normalizedScore": 0.0,
+                "weight": 0.0161,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_FUT_OI",
+                "factorName": "RU_FUT_OI",
+                "direction": "positive",
+                "rawValue": 199237.0,
+                "normalizedScore": 2.6733,
+                "weight": 0.4032,
+                "contribution": 1.077875,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_FX_USDCNY",
+                "factorName": "\u7f8e\u5143\u5151\u4eba\u6c11\u5e01\u6c47\u7387",
+                "direction": "negative",
+                "rawValue": 6.81585,
+                "normalizedScore": -3.0,
+                "weight": 0.06,
+                "contribution": -0.18,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_INV_QINGDAO",
+                "factorName": "\u9752\u5c9b\u4fdd\u7a0e\u533a\u5e93\u5b58",
+                "direction": "neutral",
+                "rawValue": 125200.0,
+                "normalizedScore": 0.0,
+                "weight": 0.0161,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_INV_QINGDAO_BONDED",
+                "factorName": "RU_INV_QINGDAO_BONDED",
+                "direction": "neutral",
+                "rawValue": 12.51,
+                "normalizedScore": 0.0,
+                "weight": 0.0161,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_INV_TOTAL",
+                "factorName": "RU_INV_TOTAL",
+                "direction": "positive",
+                "rawValue": 199237.0,
+                "normalizedScore": 2.6733,
+                "weight": 0.4032,
+                "contribution": 1.077875,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_POS_NET",
+                "factorName": "\u5929\u7136\u6a61\u80f6\u524d20\u51c0\u6301\u4ed3",
+                "direction": "neutral",
+                "rawValue": 199237.0,
+                "normalizedScore": 0.0,
+                "weight": 0.0161,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_SPD_RU_BR",
+                "factorName": "RU-BR\u4ef7\u5dee",
+                "direction": "neutral",
+                "rawValue": 1.0,
+                "normalizedScore": 0.0,
+                "weight": 0.0161,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_SPOT_PRICE",
+                "factorName": "RU_SPOT_PRICE",
+                "direction": "neutral",
+                "rawValue": 16630.0,
+                "normalizedScore": 0.0,
+                "weight": 0.0161,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_STK_WARRANT",
+                "factorName": "RU_STK_WARRANT",
+                "direction": "neutral",
+                "rawValue": 125200.0,
+                "normalizedScore": 0.0,
+                "weight": 0.0161,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_SUP_THAI_CUP",
+                "factorName": "\u6cf0\u56fd\u676f\u80f6\u4ef7\u683c",
+                "direction": "neutral",
+                "rawValue": 59.5,
+                "normalizedScore": 0.0,
+                "weight": 0.0161,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_SUP_THAI_LATEX",
+                "factorName": "\u6cf0\u56fd\u80f6\u6c34\u4ef7\u683c",
+                "direction": "neutral",
+                "rawValue": 80.0,
+                "normalizedScore": 0.0,
+                "weight": 0.0161,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            },
+            {
+                "factorCode": "RU_TS_ROLL_YIELD",
+                "factorName": "\u5929\u7136\u6a61\u80f6\u5c55\u671f\u6536\u76ca\u7387",
+                "direction": "neutral",
+                "rawValue": 0.1203,
+                "normalizedScore": 0.0,
+                "weight": 0.22,
+                "contribution": 0.0,
+                "factorIc": 0.0
+            }
+        ]
+    }
+}
+
+--- [4/8] RU 因子明细 ---
+{
+    "code": 0,
+    "message": "success",
+    "data": [
+        {
+            "factorCode": "RU_TS_ROLL_YIELD",
+            "factorName": "\u6a61\u80f6\u8de8\u671f\u4ef7\u5dee\u5c55\u671f\u6536\u76ca\u7387",
+            "direction": "negative",
+            "rawValue": -0.4426753546010487,
+            "normalizedScore": -0.4159,
+            "weight": 0.22,
+            "contribution": -0.091489,
+            "factorIc": 0.0766
+        },
+        {
+            "factorCode": "RU_SUPPLY_ANRPC",
+            "factorName": "ANRPC\u5168\u7403\u4ea7\u91cf\u56e0\u5b50",
+            "direction": "positive",
+            "rawValue": 0.32836719368612943,
+            "normalizedScore": 0.3171,
+            "weight": 0.15,
+            "contribution": 0.047558,
+            "factorIc": 0.0232
+        },
+        {
+            "factorCode": "RU_DEMAND_TYRE",
+            "factorName": "\u8f6e\u80ce\u5f00\u5de5\u7387\u56e0\u5b50",
+            "direction": "positive",
+            "rawValue": 0.6042987967065687,
+            "normalizedScore": 0.5401,
+            "weight": 0.2,
+            "contribution": 0.10802,
+            "factorIc": 0.0802
+        },
+        {
+            "factorCode": "RU_INVENTORY_QD",
+            "factorName": "\u9752\u5c9b\u5e93\u5b58\u56e0\u5b50",
+            "direction": "negative",
+            "rawValue": -0.023083863074628175,
+            "normalizedScore": -0.0231,
+            "weight": 0.12,
+            "contribution": -0.00277,
+            "factorIc": -0.0376
+        },
+        {
+            "factorCode": "RU_COST_STR20",
+            "factorName": "STR20\u8fdb\u53e3\u6210\u672c\u56e0\u5b50",
+            "direction": "negative",
+            "rawValue": -0.8246392425214968,
+            "normalizedScore": -0.6776,
+            "weight": 0.12,
+            "contribution": -0.08131,
+            "factorIc": 0.0927
+        },
+        {
+            "factorCode": "RU_FX_USDCNY",
+            "factorName": "\u4eba\u6c11\u5e01\u6c47\u7387\u56e0\u5b50",
+            "direction": "negative",
+            "rawValue": -0.3697272212986724,
+            "normalizedScore": -0.3538,
+            "weight": 0.06,
+            "contribution": -0.021225,
+            "factorIc": -0.0851
+        },
+        {
+            "factorCode": "RU_SPREAD_RU_NR",
+            "factorName": "\u6df1\u6d45\u8272\u4ef7\u5dee\u56e0\u5b50",
+            "direction": "negative",
+            "rawValue": -0.8783648668161801,
+            "normalizedScore": -0.7056,
+            "weight": 0.07,
+            "contribution": -0.049392,
+            "factorIc": 0.0395
+        }
+    ]
+}
+
+--- [5/8] RU 历史打分(10天) ---
+{
+    "code": 0,
+    "message": "success",
+    "data": [
+        {
+            "date": "2026-04-22",
+            "score": 0.1856,
+            "direction": "LONG",
+            "label": ""
+        },
+        {
+            "date": "2026-04-23",
+            "score": 0.0799,
+            "direction": "NEUTRAL",
+            "label": ""
+        },
+        {
+            "date": "2026-04-24",
+            "score": 0.1252,
+            "direction": "LONG",
+            "label": ""
+        },
+        {
+            "date": "2026-04-25",
+            "score": 0.6323,
+            "direction": "LONG",
+            "label": "(\u975e\u4eca\u65e5)"
+        },
+        {
+            "date": "2026-04-26",
+            "score": 0.6323,
+            "direction": "LONG",
+            "label": "(\u975e\u4eca\u65e5)"
+        },
+        {
+            "date": "2026-04-27",
+            "score": 0.1252,
+            "direction": "LONG",
+            "label": ""
+        },
+        {
+            "date": "2026-04-28",
+            "score": 0.1252,
+            "direction": "LONG",
+            "label": ""
+        },
+        {
+            "date": "2026-04-29",
+            "score": 0.1252,
+            "direction": "LONG",
+            "label": ""
+        },
+        {
+            "date": "2026-04-30",
+            "score": 0.6323,
+            "direction": "LONG",
+            "label": ""
+        },
+        {
+            "date": "2026-05-01",
+            "score": 0.6323,
+            "direction": "LONG",
+            "label": ""
+        },
+        {
+            "date": "2026-05-02",
+            "score": 0.6323,
+            "direction": "LONG",
+            "label": "(\u975e\u4eca\u65e5)"
+        }
+    ]
+}
+
+--- [6/8] 持仓查询 ---
+{
+    "status": "success",
+    "count": 0,
+    "positions": []
+}
+
+--- [7/8] 风控状态 ---
+{
+    "code": 0,
+    "message": "success",
+    "data": {
+        "date": "2026-05-02",
+        "overall_status": "normal",
+        "levels": [
+            {
+                "level": "L1",
+                "name": "\u5355\u54c1\u79cd\u6700\u5927\u6301\u4ed3",
+                "status": "normal",
+                "value": "10\u624b",
+                "threshold": "10\u624b",
+                "message": null
+            },
+            {
+                "level": "L1",
+                "name": "\u5355\u65e5\u6700\u5927\u4e8f\u635f",
+                "status": "normal",
+                "value": "5000",
+                "threshold": "5000",
+                "message": null
+            },
+            {
+                "level": "L2",
+                "name": "\u6da8\u8dcc\u505c\u9650\u5236",
+                "status": "normal",
+                "value": "-",
+                "threshold": "-",
+                "message": null
+            },
+            {
+                "level": "L2",
+                "name": "\u603b\u6301\u4ed3\u6bd4\u4f8b\u4e0a\u9650",
+                "status": "normal",
+                "value": "80%",
+                "threshold": "80%",
+                "message": null
+            },
+            {
+                "level": "L2",
+                "name": "\u5355\u54c1\u79cd\u96c6\u4e2d\u5ea6\u4e0a\u9650",
+                "status": "normal",
+                "value": "30%",
+                "threshold": "30%",
+                "message": null
+            },
+            {
+                "level": "L3",
+                "name": "\u8fde\u7eed\u4e8f\u635f\u6b21\u6570\u9650\u5236",
+                "status": "normal",
+                "value": "3\u6b21",
+                "threshold": "3\u6b21",
+                "message": null
+            },
+            {
+                "level": "L4",
+                "name": "\u4ea4\u6613\u65f6\u95f4\u68c0\u67e5",
+                "status": "normal",
+                "value": "-",
+                "threshold": "-",
+                "message": null
+            },
+            {
+                "level": "L4",
+                "name": "\u8d44\u91d1\u5145\u8db3\u6027\u68c0\u67e5",
+                "status": "normal",
+                "value": "-",
+                "threshold": "-",
+                "message": null
+            },
+            {
+                "level": "L5",
+                "name": "\u5b8f\u89c2\u7194\u65ad",
+                "status": "normal",
+                "value": "-0.5",
+                "threshold": "-0.5",
+                "message": null
+            }
+        ],
+        "equity": 1000000.0,
+        "drawdown": 0.0,
+        "drawdown_alert": -0.15,
+        "drawdown_stop": -0.2,
+        "drawdown_circuit": -0.25,
+        "updated_at": "2026-05-02T08:35:04.405249"
+    }
+}
+
+--- [8/8] 风控规则列表 ---
+{
+    "code": 0,
+    "message": "success",
+    "data": [
+        {
+            "id": "R10",
+            "name": "R10 \u5b8f\u89c2\u7194\u65ad",
+            "description": "\u5b8f\u89c2\u8bc4\u5206<30\u7981\u6b62\u505a\u591a\uff0c>70\u7981\u6b62\u505a\u7a7a\uff0c\u00b15\u6ede\u540e\u533a\u95f4",
+            "layer": "L1",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R5",
+            "name": "R5 \u6ce2\u52a8\u7387\u5f02\u5e38\u8fc7\u6ee4",
+            "description": "ATR/\u4ef7\u683c\u8d852\u500d\u5747\u503c\u2192WARN\uff0c\u8d853\u500d\u2192BLOCK",
+            "layer": "L1",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R6",
+            "name": "R6 \u6d41\u52a8\u6027\u68c0\u67e5",
+            "description": "\u8ba2\u5355\u91cf<20\u65e5\u5747\u91cf5%\uff0c<\u76d8\u53e3\u6df1\u5ea630%",
+            "layer": "L1",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R8",
+            "name": "R8 \u4ea4\u6613\u65f6\u95f4\u68c0\u67e5",
+            "description": "\u975e\u4ea4\u6613\u65f6\u6bb5\u7981\u6b62\u4e0b\u5355\uff0c\u96c6\u5408\u7ade\u4ef7\u7981\u5f00\u4ed3",
+            "layer": "L3",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R3",
+            "name": "R3 \u6da8\u8dcc\u505c\u9650\u5236",
+            "description": "\u5f00\u4ed3\u4ef7\u89e6\u53ca\u6da8\u8dcc\u505c\u677f\u62d2\u7edd\u59d4\u6258",
+            "layer": "L1",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R9",
+            "name": "R9 \u8d44\u91d1\u5145\u8db3\u6027\u68c0\u67e5",
+            "description": "\u53ef\u7528\u8d44\u91d1\u2265\u51bb\u7ed3+\u9884\u51bb\u7ed3+5%\u5b89\u5168\u7f13\u51b2",
+            "layer": "L3",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R2",
+            "name": "R2 \u5355\u65e5\u6700\u5927\u4e8f\u635f\u9650\u5236",
+            "description": "\u5f53\u65e5\u4e8f\u635f\u2265\u6743\u76ca2.5%\u62165000\u5143\u2192\u7981\u6b62\u5f00\u4ed3",
+            "layer": "L2",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R7",
+            "name": "R7 \u8fde\u7eed\u4e8f\u635f\u6682\u505c",
+            "description": "\u8fde\u7eed\u4e8f\u635f\u22655\u6b21\u2192\u6682\u505c\uff0c\u8fde\u7eed\u76c8\u5229\u22653\u6b21\u2192\u6062\u590d",
+            "layer": "L2",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R11",
+            "name": "R11 \u5904\u7f6e\u6548\u5e94\u76d1\u63a7",
+            "description": "\u4e8f\u635f\u6301\u4ed3\u5360\u6bd4\u226550%\u4e14\u53cd\u5411\u5f00\u4ed3\u2192WARN",
+            "layer": "L2",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R1",
+            "name": "R1 \u54c1\u79cd\u6301\u4ed3\u9650\u5236(\u52a8\u6001)",
+            "description": "\u57fa\u4e8e20\u65e5\u6ce2\u52a8\u7387\u52a8\u6001\u8c03\u6574\u6301\u4ed3\u6bd4\u4f8b\u4e0a\u9650",
+            "layer": "L3",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R4",
+            "name": "R4 \u603b\u4fdd\u8bc1\u91d1\u4e0a\u9650(\u5206\u65f6\u6bb5)",
+            "description": "\u4ea4\u6613\u65f6\u6bb5\u226470%\uff0c\u6536\u76d8\u524d15\u5206\u949f\u226460%",
+            "layer": "L3",
+            "enabled": true,
+            "status": "normal"
+        }
+    ]
+}
+
+========================================
+  全部接口验证完成
+========================================
+
+--- 风控状态（续）---
+{
+    "code": 0,
+    "message": "success",
+    "data": {
+        "date": "2026-05-02",
+        "overall_status": "normal",
+        "levels": [
+            {
+                "level": "L1",
+                "name": "\u5355\u54c1\u79cd\u6700\u5927\u6301\u4ed3",
+                "status": "normal",
+                "value": "10\u624b",
+                "threshold": "10\u624b",
+                "message": null
+            },
+            {
+                "level": "L1",
+                "name": "\u5355\u65e5\u6700\u5927\u4e8f\u635f",
+                "status": "normal",
+                "value": "5000",
+                "threshold": "5000",
+                "message": null
+            },
+            {
+                "level": "L2",
+                "name": "\u6da8\u8dcc\u505c\u9650\u5236",
+                "status": "normal",
+                "value": "-",
+                "threshold": "-",
+                "message": null
+            },
+            {
+                "level": "L2",
+                "name": "\u603b\u6301\u4ed3\u6bd4\u4f8b\u4e0a\u9650",
+                "status": "normal",
+                "value": "80%",
+                "threshold": "80%",
+                "message": null
+            },
+            {
+                "level": "L2",
+                "name": "\u5355\u54c1\u79cd\u96c6\u4e2d\u5ea6\u4e0a\u9650",
+                "status": "normal",
+                "value": "30%",
+                "threshold": "30%",
+                "message": null
+            },
+            {
+                "level": "L3",
+                "name": "\u8fde\u7eed\u4e8f\u635f\u6b21\u6570\u9650\u5236",
+                "status": "normal",
+                "value": "3\u6b21",
+                "threshold": "3\u6b21",
+                "message": null
+            },
+            {
+                "level": "L4",
+                "name": "\u4ea4\u6613\u65f6\u95f4\u68c0\u67e5",
+                "status": "normal",
+                "value": "-",
+                "threshold": "-",
+                "message": null
+            },
+            {
+                "level": "L4",
+                "name": "\u8d44\u91d1\u5145\u8db3\u6027\u68c0\u67e5",
+                "status": "normal",
+                "value": "-",
+                "threshold": "-",
+                "message": null
+            },
+            {
+                "level": "L5",
+                "name": "\u5b8f\u89c2\u7194\u65ad",
+                "status": "normal",
+                "value": "-0.5",
+                "threshold": "-0.5",
+                "message": null
+            }
+        ],
+        "equity": 1000000.0,
+        "drawdown": 0.0,
+        "drawdown_alert": -0.15,
+        "drawdown_stop": -0.2,
+        "drawdown_circuit": -0.25,
+        "updated_at": "2026-05-02T08:35:37.323451"
+    }
+}
+
+--- 风控规则列表 ---
+{
+    "code": 0,
+    "message": "success",
+    "data": [
+        {
+            "id": "R10",
+            "name": "R10 \u5b8f\u89c2\u7194\u65ad",
+            "description": "\u5b8f\u89c2\u8bc4\u5206<30\u7981\u6b62\u505a\u591a\uff0c>70\u7981\u6b62\u505a\u7a7a\uff0c\u00b15\u6ede\u540e\u533a\u95f4",
+            "layer": "L1",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R5",
+            "name": "R5 \u6ce2\u52a8\u7387\u5f02\u5e38\u8fc7\u6ee4",
+            "description": "ATR/\u4ef7\u683c\u8d852\u500d\u5747\u503c\u2192WARN\uff0c\u8d853\u500d\u2192BLOCK",
+            "layer": "L1",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R6",
+            "name": "R6 \u6d41\u52a8\u6027\u68c0\u67e5",
+            "description": "\u8ba2\u5355\u91cf<20\u65e5\u5747\u91cf5%\uff0c<\u76d8\u53e3\u6df1\u5ea630%",
+            "layer": "L1",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R8",
+            "name": "R8 \u4ea4\u6613\u65f6\u95f4\u68c0\u67e5",
+            "description": "\u975e\u4ea4\u6613\u65f6\u6bb5\u7981\u6b62\u4e0b\u5355\uff0c\u96c6\u5408\u7ade\u4ef7\u7981\u5f00\u4ed3",
+            "layer": "L3",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R3",
+            "name": "R3 \u6da8\u8dcc\u505c\u9650\u5236",
+            "description": "\u5f00\u4ed3\u4ef7\u89e6\u53ca\u6da8\u8dcc\u505c\u677f\u62d2\u7edd\u59d4\u6258",
+            "layer": "L1",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R9",
+            "name": "R9 \u8d44\u91d1\u5145\u8db3\u6027\u68c0\u67e5",
+            "description": "\u53ef\u7528\u8d44\u91d1\u2265\u51bb\u7ed3+\u9884\u51bb\u7ed3+5%\u5b89\u5168\u7f13\u51b2",
+            "layer": "L3",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R2",
+            "name": "R2 \u5355\u65e5\u6700\u5927\u4e8f\u635f\u9650\u5236",
+            "description": "\u5f53\u65e5\u4e8f\u635f\u2265\u6743\u76ca2.5%\u62165000\u5143\u2192\u7981\u6b62\u5f00\u4ed3",
+            "layer": "L2",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R7",
+            "name": "R7 \u8fde\u7eed\u4e8f\u635f\u6682\u505c",
+            "description": "\u8fde\u7eed\u4e8f\u635f\u22655\u6b21\u2192\u6682\u505c\uff0c\u8fde\u7eed\u76c8\u5229\u22653\u6b21\u2192\u6062\u590d",
+            "layer": "L2",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R11",
+            "name": "R11 \u5904\u7f6e\u6548\u5e94\u76d1\u63a7",
+            "description": "\u4e8f\u635f\u6301\u4ed3\u5360\u6bd4\u226550%\u4e14\u53cd\u5411\u5f00\u4ed3\u2192WARN",
+            "layer": "L2",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R1",
+            "name": "R1 \u54c1\u79cd\u6301\u4ed3\u9650\u5236(\u52a8\u6001)",
+            "description": "\u57fa\u4e8e20\u65e5\u6ce2\u52a8\u7387\u52a8\u6001\u8c03\u6574\u6301\u4ed3\u6bd4\u4f8b\u4e0a\u9650",
+            "layer": "L3",
+            "enabled": true,
+            "status": "normal"
+        },
+        {
+            "id": "R4",
+            "name": "R4 \u603b\u4fdd\u8bc1\u91d1\u4e0a\u9650(\u5206\u65f6\u6bb5)",
+            "description": "\u4ea4\u6613\u65f6\u6bb5\u226470%\uff0c\u6536\u76d8\u524d15\u5206\u949f\u226460%",
+            "layer": "L3",
+            "enabled": true,
+            "status": "normal"
+        }
+    ]
+}
+
+--- CN 不支持的品种返回 ---
+{
+    "code": 404,
+    "message": "symbol not found: UNKNOWN",
+    "data": null
+}
+
+--- Paper Trading 风控预检 ---
+{
+    "code": 0,
+    "message": "success",
+    "data": {
+        "pass": true,
+        "violations": []
+    }
+}
+--- VNpy 引擎状态 ---
+{
+    "status": "running",
+    "connected": true,
+    "mode": "paper"
+}
+

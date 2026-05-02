@@ -1,0 +1,54 @@
+/* MacroDashboard 样式 */
+
+.macro-dashboard {
+  padding: 16px;
+  min-height: 100vh;
+  background: #f0f2f5;
+}
+
+.macro-dashboard__toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.macro-dashboard__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #262626;
+}
+
+.macro-dashboard__score-card {
+  border-radius: 8px;
+}
+
+.macro-dashboard__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: #595959;
+  min-height: 48px;
+  justify-content: center;
+}
+
+.macro-dashboard__all-signals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  min-height: 48px;
+}
+
+.macro-dashboard__all-label {
+  font-size: 12px;
+  color: #8c8c8c;
+  width: 100%;
+}
+
+.macro-dashboard__factor-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}

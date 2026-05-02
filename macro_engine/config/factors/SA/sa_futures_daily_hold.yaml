@@ -1,0 +1,19 @@
+# sa_futures_daily_hold.yaml
+# SA期货持仓量
+
+factor_code: "sa_futures_daily_hold"
+factor_name: "SA期货持仓量"
+template: null
+econ_category: "TS"
+logic_category: "TS"
+direction: 1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.1
+max_weight: 0.30
+is_active: true
+dependencies:
+  - "akshare/futures_spot_price_daily"
+description: "SA期货持仓量，PIT数据"

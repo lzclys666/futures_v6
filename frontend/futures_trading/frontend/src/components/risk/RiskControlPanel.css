@@ -1,0 +1,149 @@
+.risk-control-panel {
+  padding: 8px 0;
+}
+
+.rcp-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.rcp-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rcp-header-left h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.rcp-error {
+  background: #fff2f0;
+  border: 1px solid #ffccc7;
+  border-radius: 6px;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  color: #cf1322;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rcp-metrics {
+  margin-bottom: 4px;
+}
+
+.rcp-metrics .ant-card {
+  border-radius: 8px;
+  transition: box-shadow 0.2s ease;
+}
+
+.rcp-metrics .ant-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+}
+
+.rcp-rule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rcp-rule-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #f0f0f0;
+  transition: background 0.15s ease;
+}
+
+.rcp-rule-item:hover {
+  background: #fafafa;
+}
+
+.rcp-rule-normal {
+  border-left: 3px solid #52c41a;
+}
+
+.rcp-rule-warning {
+  border-left: 3px solid #faad14;
+  background: #fffdf0;
+}
+
+.rcp-rule-blocked {
+  border-left: 3px solid #ff4d4f;
+  background: #fff2f0;
+}
+
+.rcp-rule-disabled {
+  border-left: 3px solid #d9d9d9;
+  opacity: 0.6;
+}
+
+.rcp-rule-icon {
+  font-size: 18px;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.rcp-rule-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.rcp-rule-name {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.rcp-rule-desc {
+  font-size: 12px;
+  color: #8c8c8c;
+  margin-bottom: 2px;
+}
+
+.rcp-rule-msg {
+  font-size: 12px;
+  color: #ff4d4f;
+  background: #fff2f0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 4px;
+}
+
+.rcp-rules-card .ant-collapse {
+  border: none;
+  background: transparent;
+}
+
+.rcp-rules-card .ant-collapse-item {
+  border-radius: 6px;
+  margin-bottom: 4px;
+  border: 1px solid #f0f0f0;
+}
+
+.rcp-rules-card .ant-collapse-header {
+  padding: 8px 12px !important;
+  font-size: 13px;
+}
+
+.rcp-rules-card .ant-collapse-content-box {
+  padding: 8px 4px !important;
+}
+
+.rcp-events-card .ant-table {
+  font-size: 12px;
+}

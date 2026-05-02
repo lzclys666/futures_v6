@@ -1,0 +1,17 @@
+# NI_DCE_INV.yaml
+# 沪镍期货库存
+
+factor_code: NI_DCE_INV
+symbol: NI
+category: inventory
+name: 沪镍期货库存
+description: 沪镍期货库存
+frequency: daily
+unit: 吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - NI

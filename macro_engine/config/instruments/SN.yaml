@@ -1,0 +1,19 @@
+symbol: SN
+extends: _base
+macro_lambda: 0.6
+weights:
+  supply: 0.2
+  demand: 0.3
+  inventory: 0.2
+  spread: 0.1
+  macro: 0.2
+factors:
+- code: SN_TS_ROLL_YIELD
+  enabled: true
+  weight_override: 0.15
+- code: SN_STK_WARRANT
+  enabled: true
+  weight_override: 0.15
+- code: SN_INV_LME
+  enabled: true
+  weight_override: 0.12

@@ -1,0 +1,18 @@
+# AU_VIX - VIX波动率/避险情绪因子
+factor_code: "AU_VIX"
+factor_name: "VIX波动率/避险情绪因子"
+commodity: "AU"
+
+factor_direction: "positive"
+weight: 0.15
+
+data_source: "akshare"
+api_params:
+  function: "global_vix_index"
+  symbol: "VIX"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "CBOE VIX波动率指数，避险情绪升温时黄金受益"
+pit_required: false
+dependencies: []

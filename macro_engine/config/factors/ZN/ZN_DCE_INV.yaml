@@ -1,0 +1,17 @@
+# ZN_DCE_INV.yaml
+# 沪锌期货库存
+
+factor_code: ZN_DCE_INV
+symbol: ZN
+category: inventory
+name: 沪锌期货库存
+description: 沪锌期货库存
+frequency: daily
+unit: 吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - ZN

@@ -1,0 +1,17 @@
+# J_J_STK_SEPARATE.yaml
+# 独立焦企焦炭库存
+
+factor_code: J_J_STK_SEPARATE
+symbol: J
+category: inventory
+name: 独立焦企焦炭库存
+description: 独立焦企焦炭库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - J

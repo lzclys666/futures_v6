@@ -1,0 +1,9 @@
+factor_code: AU_SPD_GLD
+name: "SPDR黄金ETF持仓量"
+category: free_data
+description: "SPDR Gold Shares (GLD) 持仓量(吨)，全球最大实物黄金ETF，反映机构黄金配置动向。日度数据。"
+data_source: "无免费API（SPDR官网改版404, Yahoo Finance 403）"
+source_confidence: 0.5
+expected_range: [500.0, 1200.0]
+notes: "【L4占位】SPDR网站改版404，东方财富/我的钢铁网持仓接口均不可直接获取。初始值1060.62吨（2026-04-17，东方财富快讯）。L4置信度0.5。"
+source: L4_historical_fallback

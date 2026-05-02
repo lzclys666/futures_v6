@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+*.log
+crawlers/logs/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+ENV/
+
+# Database（生产数据不进版本库）
+*.db
+*.db-journal
+*.sqlite
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 备份目录（桌面备份文件）
+desktop_backup/
+项目备份*/
+
+# 临时文件
+*.tmp
+*_tmp.*
+
+# Generated outputs and data
+output/
+data/crawlers/AG/
+data/crawlers/AL/
+data/crawlers/AU/
+data/crawlers/PB/
+data/crawlers/SN/
+data/crawlers/shared/
+research/reports/daily/
+research/reports/W4_backtest/
+

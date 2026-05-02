@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>IC热力图</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #4CAF50; color: white; }
+        .variety { font-weight: bold; background-color: #f2f2f2; }
+        .value { font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h2>品种×因子 IC热力图</h2>
+    <p>颜色说明: 绿色=正IC, 红色=负IC, 白色=无数据</p>
+    <table>
+        <tr>
+            <th>品种</th>
+            <th>金银比</th>
+            <th>美元人民币</th>
+            <th>布伦特原油</th>
+        </tr>
+        <tr>
+            <td class='variety'>AG</td>
+            <td class='value' style='background-color: rgb(255, 245.06761137352967, 245.06761137352967); color: black;'>-0.050</td>
+            <td class='value' style='background-color: rgb(255, 246.71992220061128, 246.71992220061128); color: black;'>-0.041</td>
+            <td class='value' style='background-color: rgb(255, 243.22265444104843, 243.22265444104843); color: black;'>-0.059</td>
+        </tr>
+        <tr>
+            <td class='variety'>AL</td>
+            <td class='value' style='background-color: rgb(239.62535889598962, 255, 239.62535889598962); color: black;'>0.077</td>
+            <td class='value' style='background-color: rgb(255, 233.80522367324255, 233.80522367324255); color: white;'>-0.106</td>
+            <td class='value' style='background-color: rgb(255, 245.1083634342873, 245.1083634342873); color: black;'>-0.049</td>
+        </tr>
+        <tr>
+            <td class='variety'>AO</td>
+            <td class='value' style='background-color: rgb(237.29137723441696, 255, 237.29137723441696); color: black;'>0.089</td>
+            <td class='value' style='background-color: rgb(254.52949893488932, 255, 254.52949893488932); color: black;'>0.002</td>
+            <td class='value' style='background-color: rgb(255, 253.19209039548022, 253.19209039548022); color: black;'>-0.009</td>
+        </tr>
+        <tr>
+            <td class='variety'>AU</td>
+            <td class='value' style='background-color: rgb(255, 241.73705658979347, 241.73705658979347); color: black;'>-0.066</td>
+            <td class='value' style='background-color: rgb(255, 248.35370936371214, 248.35370936371214); color: black;'>-0.033</td>
+            <td class='value' style='background-color: rgb(228.40742798925626, 255, 228.40742798925626); color: white;'>0.133</td>
+        </tr>
+        <tr>
+            <td class='variety'>BR</td>
+            <td class='value' style='background-color: rgb(255, 247.5386681485598, 247.5386681485598); color: black;'>-0.037</td>
+            <td class='value' style='background-color: rgb(245.1083634342873, 255, 245.1083634342873); color: black;'>0.049</td>
+            <td class='value' style='background-color: rgb(249.84301194776327, 255, 249.84301194776327); color: black;'>0.026</td>
+        </tr>
+        <tr>
+            <td class='variety'>CU</td>
+            <td class='value' style='background-color: rgb(249.6874131703251, 255, 249.6874131703251); color: black;'>0.027</td>
+            <td class='value' style='background-color: rgb(255, 236.7764193757525, 236.7764193757525); color: black;'>-0.091</td>
+            <td class='value' style='background-color: rgb(255, 239.7957766046124, 239.7957766046124); color: black;'>-0.076</td>
+        </tr>
+        <tr>
+            <td class='variety'>EC</td>
+            <td class='value' style='background-color: rgb(224.6878762619246, 255, 224.6878762619246); color: white;'>0.152</td>
+            <td class='value' style='background-color: rgb(247.47568769102529, 255, 247.47568769102529); color: black;'>0.038</td>
+            <td class='value' style='background-color: rgb(255, 228.9594331758822, 228.9594331758822); color: white;'>-0.130</td>
+        </tr>
+        <tr>
+            <td class='variety'>I</td>
+            <td class='value' style='background-color: rgb(251.08780216726868, 255, 251.08780216726868); color: black;'>0.020</td>
+            <td class='value' style='background-color: rgb(220.65342224692043, 255, 220.65342224692043); color: white;'>0.172</td>
+            <td class='value' style='background-color: rgb(255, 244.6045197740113, 244.6045197740113); color: black;'>-0.052</td>
+        </tr>
+        <tr>
+            <td class='variety'>JM</td>
+            <td class='value' style='background-color: rgb(244.21552283041586, 255, 244.21552283041586); color: black;'>0.054</td>
+            <td class='value' style='background-color: rgb(252.42521070667777, 255, 252.42521070667777); color: black;'>0.013</td>
+            <td class='value' style='background-color: rgb(255, 242.707696582384, 242.707696582384); color: black;'>-0.061</td>
+        </tr>
+        <tr>
+            <td class='variety'>LC</td>
+            <td class='value' style='background-color: rgb(234.91293877929053, 255, 234.91293877929053); color: white;'>0.100</td>
+            <td class='value' style='background-color: rgb(255, 229.28544966194312, 229.28544966194312); color: white;'>-0.129</td>
+            <td class='value' style='background-color: rgb(241.322126516625, 255, 241.322126516625); color: black;'>0.068</td>
+        </tr>
+        <tr>
+            <td class='variety'>LH</td>
+            <td class='value' style='background-color: rgb(253.54587217554052, 255, 253.54587217554052); color: black;'>0.007</td>
+            <td class='value' style='background-color: rgb(255, 239.8270560380287, 239.8270560380287); color: black;'>-0.076</td>
+            <td class='value' style='background-color: rgb(242.3203758491401, 255, 242.3203758491401); color: black;'>0.063</td>
+        </tr>
+        <tr>
+            <td class='variety'>M</td>
+            <td class='value' style='background-color: rgb(236.23552838751505, 255, 236.23552838751505); color: black;'>0.094</td>
+            <td class='value' style='background-color: rgb(252.8994165045846, 255, 252.8994165045846); color: black;'>0.011</td>
+            <td class='value' style='background-color: rgb(202.45207001944982, 255, 202.45207001944982); color: white;'>0.263</td>
+        </tr>
+        <tr>
+            <td class='variety'>NI</td>
+            <td class='value' style='background-color: rgb(255, 252.95869222932296, 252.95869222932296); color: black;'>-0.010</td>
+            <td class='value' style='background-color: rgb(255, 229.04093729739742, 229.04093729739742); color: white;'>-0.130</td>
+            <td class='value' style='background-color: rgb(247.81281837547468, 255, 247.81281837547468); color: black;'>0.036</td>
+        </tr>
+        <tr>
+            <td class='variety'>NR</td>
+            <td class='value' style='background-color: rgb(235.72771224754618, 255, 235.72771224754618); color: black;'>0.096</td>
+            <td class='value' style='background-color: rgb(255, 250.10042280803148, 250.10042280803148); color: black;'>-0.024</td>
+            <td class='value' style='background-color: rgb(255, 244.05236249355997, 244.05236249355997); color: black;'>-0.055</td>
+        </tr>
+        <tr>
+            <td class='variety'>P</td>
+            <td class='value' style='background-color: rgb(205.4232657219598, 255, 205.4232657219598); color: white;'>0.248</td>
+            <td class='value' style='background-color: rgb(255, 233.69408168935814, 233.69408168935814); color: white;'>-0.107</td>
+            <td class='value' style='background-color: rgb(250.61359636936186, 255, 250.61359636936186); color: black;'>0.022</td>
+        </tr>
+        <tr>
+            <td class='variety'>PB</td>
+            <td class='value' style='background-color: rgb(207.80540890988237, 255, 207.80540890988237); color: white;'>0.236</td>
+            <td class='value' style='background-color: rgb(255, 228.14068722793368, 228.14068722793368); color: white;'>-0.134</td>
+            <td class='value' style='background-color: rgb(255, 243.1819023802908, 243.1819023802908); color: black;'>-0.059</td>
+        </tr>
+        <tr>
+            <td class='variety'>RB</td>
+            <td class='value' style='background-color: rgb(228.21478188385663, 255, 228.21478188385663); color: white;'>0.134</td>
+            <td class='value' style='background-color: rgb(217.619246086876, 255, 217.619246086876); color: white;'>0.187</td>
+            <td class='value' style='background-color: rgb(255, 235.76132258960823, 235.76132258960823); color: black;'>-0.096</td>
+        </tr>
+        <tr>
+            <td class='variety'>RU</td>
+            <td class='value' style='background-color: rgb(232.42706307307586, 255, 232.42706307307586); color: white;'>0.113</td>
+            <td class='value' style='background-color: rgb(255, 230.36723163841808, 230.36723163841808); color: white;'>-0.123</td>
+            <td class='value' style='background-color: rgb(255, 242.10382513661202, 242.10382513661202); color: black;'>-0.064</td>
+        </tr>
+        <tr>
+            <td class='variety'>SA</td>
+            <td class='value' style='background-color: rgb(231.31564323423171, 255, 231.31564323423171); color: white;'>0.118</td>
+            <td class='value' style='background-color: rgb(229.38918218023525, 255, 229.38918218023525); color: white;'>0.128</td>
+            <td class='value' style='background-color: rgb(255, 251.02852644253034, 251.02852644253034); color: black;'>-0.020</td>
+        </tr>
+        <tr>
+            <td class='variety'>SC</td>
+            <td class='value' style='background-color: rgb(255, 242.12234880059276, 242.12234880059276); color: black;'>-0.064</td>
+            <td class='value' style='background-color: rgb(255, 240.98870056497174, 240.98870056497174); color: black;'>-0.070</td>
+            <td class='value' style='background-color: rgb(255, 220.40890988237473, 220.40890988237473); color: white;'>-0.173</td>
+        </tr>
+        <tr>
+            <td class='variety'>SN</td>
+            <td class='value' style='background-color: rgb(247.4608687598407, 255, 247.4608687598407); color: black;'>0.038</td>
+            <td class='value' style='background-color: rgb(255, 251.39159025655275, 251.39159025655275); color: black;'>-0.018</td>
+            <td class='value' style='background-color: rgb(255, 203.38195795128277, 203.38195795128277); color: white;'>-0.258</td>
+        </tr>
+        <tr>
+            <td class='variety'>TA</td>
+            <td class='value' style='background-color: rgb(205.42697045475595, 255, 205.42697045475595); color: white;'>0.248</td>
+            <td class='value' style='background-color: rgb(232.56784291932945, 255, 232.56784291932945); color: white;'>0.112</td>
+            <td class='value' style='background-color: rgb(255, 198.15828470871537, 198.15828470871537); color: white;'>-0.284</td>
+        </tr>
+        <tr>
+            <td class='variety'>ZN</td>
+            <td class='value' style='background-color: rgb(234.16458275446882, 255, 234.16458275446882); color: white;'>0.104</td>
+            <td class='value' style='background-color: rgb(255, 230.94516995461703, 230.94516995461703); color: white;'>-0.120</td>
+            <td class='value' style='background-color: rgb(248.12772066314716, 255, 248.12772066314716); color: black;'>0.034</td>
+        </tr>
+
+    </table>
+</body>
+</html>

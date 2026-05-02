@@ -1,0 +1,17 @@
+# config/factors/AG/AG_POS_CFTC_NET.yaml
+factor_code: "AG_POS_CFTC_NET"
+factor_name: "CFTC白银净持仓"
+template: null
+econ_category: "POS"
+logic_category: "CTR"
+direction: 1           # 净多增加→机构看多白银→利多
+frequency: "weekly"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 252
+base_weight: 0.06
+max_weight: 0.10
+is_active: true
+dependencies:
+  - "CFTC/COT_report"
+description: "CFTC白银期货非商业净持仓(多头-空头)，反映海外基金对白银的看法"

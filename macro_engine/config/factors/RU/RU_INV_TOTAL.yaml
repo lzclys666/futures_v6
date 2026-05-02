@@ -1,0 +1,15 @@
+# RU_INV_TOTAL.yaml
+factor_code: RU_INV_TOTAL
+symbol: RU
+category: inventory
+name: RU橡胶库存代理
+description: RU橡胶持仓量作为库存代理指标
+frequency: daily
+unit: 手
+direction: neutral
+confidence: 2
+source: AKShare futures_main_sina
+calculation: RU期货持仓量
+tags:
+  - inventory
+  - RU

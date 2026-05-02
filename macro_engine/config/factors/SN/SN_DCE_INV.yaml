@@ -1,0 +1,17 @@
+# SN_DCE_INV.yaml
+# 沪锡期货库存
+
+factor_code: SN_DCE_INV
+symbol: SN
+category: inventory
+name: 沪锡期货库存
+description: 沪锡期货库存
+frequency: daily
+unit: 吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - SN

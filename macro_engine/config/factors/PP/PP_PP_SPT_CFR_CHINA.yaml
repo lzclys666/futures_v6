@@ -1,0 +1,17 @@
+# PP_PP_SPT_CFR_CHINA.yaml
+# CFR中国丙烯到岸价格
+
+factor_code: PP_PP_SPT_CFR_CHINA
+symbol: PP
+category: price
+name: CFR中国丙烯到岸价格
+description: CFR中国丙烯到岸价格
+frequency: daily
+unit: 美元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - PP

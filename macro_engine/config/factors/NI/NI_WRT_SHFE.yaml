@@ -1,0 +1,8 @@
+factor_code: NI_WRT_SHFE
+name: "浙镍SHFE仓单"
+category: free_data
+description: "浙镍SHFE仓单"
+data_source: AKShare futures_shfe_warehouse_receipt
+source_confidence: 1.0
+expected_range: [5000-80000]
+notes: "实测2025-04-30=24308吨"

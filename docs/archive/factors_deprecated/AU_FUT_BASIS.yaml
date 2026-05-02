@@ -1,0 +1,18 @@
+# AU_FUT_BASIS - 黄金期现基差因子
+factor_code: "AU_FUT_BASIS"
+factor_name: "黄金期现基差因子"
+commodity: "AU"
+
+factor_direction: "neutral"
+weight: 0.0
+
+data_source: "akshare"
+api_params:
+  function: "gold_spot_price"
+  symbol: "Au99.99"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "期货与现货价差偏离度，基差收敛信号"
+pit_required: false
+dependencies: []

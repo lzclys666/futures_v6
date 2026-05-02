@@ -1,0 +1,17 @@
+# PP_PP_STK_POLYMER.yaml
+# 高分子库存
+
+factor_code: PP_PP_STK_POLYMER
+symbol: PP
+category: inventory
+name: 高分子库存
+description: 高分子库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - PP

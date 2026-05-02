@@ -1,0 +1,17 @@
+# BU_BU_MACRO_CCI.yaml
+# 消费者信心指数
+
+factor_code: BU_BU_MACRO_CCI
+symbol: BU
+category: macro
+name: 消费者信心指数
+description: 消费者信心指数
+frequency: daily
+unit: 
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - macro
+  - BU

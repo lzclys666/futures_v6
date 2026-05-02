@@ -1,0 +1,17 @@
+# config/factors/BR/BR_DEM_TIRE_ALLSTEEL.yaml
+factor_code: "BR_DEM_TIRE_ALLSTEEL"
+factor_name: "全钢胎开工率"
+template: null
+econ_category: "DEM"
+logic_category: "DEM"
+direction: 1           # 开工率高→需求好→利多
+frequency: "weekly"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 156
+base_weight: 0.12
+max_weight: 0.25
+is_active: true
+dependencies:
+  - "RU_Database/tire_operating_rate"
+description: "山东地区全钢胎开工率（%），从RU数据库读取，反映下游需求"

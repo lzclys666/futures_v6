@@ -1,0 +1,17 @@
+# AO_DCE_INV.yaml
+# 大连期货库存
+
+factor_code: AO_DCE_INV
+symbol: AO
+category: inventory
+name: 大连期货库存
+description: 大连期货库存
+frequency: daily
+unit: 手
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - AO

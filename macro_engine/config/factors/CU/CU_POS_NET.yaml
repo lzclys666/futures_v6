@@ -1,0 +1,8 @@
+factor_code: CU_POS_NET
+name: "浙铜持仓净多"
+category: position
+description: "浙铜持仓净多"
+data_source: AKShare get_shfe_rank_table
+source_confidence: 1.0
+expected_range: [-200000-200000]
+notes: "实测2026-04-17=-22322手净空"

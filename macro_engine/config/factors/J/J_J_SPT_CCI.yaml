@@ -1,0 +1,17 @@
+# J_J_SPT_CCI.yaml
+# CCI焦炭价格指数
+
+factor_code: J_J_SPT_CCI
+symbol: J
+category: price
+name: CCI焦炭价格指数
+description: CCI焦炭价格指数
+frequency: daily
+unit: 点
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - J

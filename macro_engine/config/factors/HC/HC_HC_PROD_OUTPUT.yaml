@@ -1,0 +1,17 @@
+# HC_HC_PROD_OUTPUT.yaml
+# 热卷产量
+
+factor_code: HC_HC_PROD_OUTPUT
+symbol: HC
+category: supply
+name: 热卷产量
+description: 热卷产量
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - supply
+  - HC

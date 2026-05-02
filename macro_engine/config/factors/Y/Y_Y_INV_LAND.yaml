@@ -1,0 +1,17 @@
+# Y_Y_INV_LAND.yaml
+# 进口大豆港口库存
+
+factor_code: Y_Y_INV_LAND
+symbol: Y
+category: inventory
+name: 进口大豆港口库存
+description: 进口大豆港口库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - Y

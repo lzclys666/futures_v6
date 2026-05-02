@@ -1,0 +1,19 @@
+# sa_futures_near_price.yaml
+# SA近月期货价
+
+factor_code: "sa_futures_near_price"
+factor_name: "SA近月期货价"
+template: null
+econ_category: "CST"
+logic_category: "CST"
+direction: 1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.08
+max_weight: 0.30
+is_active: true
+dependencies:
+  - "akshare/futures_spot_price_daily"
+description: "SA近月期货价，PIT数据"

@@ -1,0 +1,17 @@
+# config/factors/BR/BR_COST_BD.yaml
+factor_code: "BR_COST_BD"
+factor_name: "丁二烯价格"
+template: null
+econ_category: "SUP"
+logic_category: "STK"
+direction: 1           # 丁二烯价格上涨→成本支撑→利多
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.12
+max_weight: 0.25
+is_active: true
+dependencies:
+  - "WebScraper/butadiene_price"
+description: "丁二烯华东现货价（元/吨），占BR成本82%，是核心成本因子"

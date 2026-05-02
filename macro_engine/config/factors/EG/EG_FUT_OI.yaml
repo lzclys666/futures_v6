@@ -1,0 +1,8 @@
+factor_code: EG_FUT_OI
+name: "EG乙二醇期货持仓量"
+category: free_data
+description: "DCE乙二醇期货主力合约持仓量（手），反映市场投机/套保热度。"
+data_source: AKShare futures_main_sina(symbol="EG0")['持仓量']
+source_confidence: 1.0
+expected_range: [100000.0, 1000000.0]
+notes: "L1: AKShare EG0 | L4: DB历史回补"

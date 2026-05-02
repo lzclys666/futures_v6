@@ -1,0 +1,24 @@
+# config/pipeline.yaml
+pipeline:
+  nodes:
+    - type: "NormalizeNode"
+      params:
+        normalizer: "mad"
+    - type: "OrthogonalizeNode"
+      params:
+        method: "hierarchical"
+        threshold: 0.7
+    - type: "WeightNode"
+      params:
+        calculator: "dynamic_ic"
+    - type: "FusionNode"
+      params:
+        lambda_source: "financial_attribute"
+        fusion_weight: 0.3
+    - type: "SmoothNode"
+      params:
+        max_daily_change: 15
+    - type: "DirectionNode"
+      params:
+        thresholds: [40, 60]
+        confirm_days: 2

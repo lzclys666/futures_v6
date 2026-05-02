@@ -1,0 +1,19 @@
+symbol: PP
+extends: _base
+macro_lambda: 0.5
+weights:
+  supply: 0.25
+  demand: 0.25
+  inventory: 0.2
+  spread: 0.15
+  macro: 0.15
+factors:
+- code: PP_TS_ROLL_YIELD
+  enabled: true
+  weight_override: 0.15
+- code: PP_STK_WARRANT
+  enabled: true
+  weight_override: 0.15
+- code: PP_INV_FACTORY
+  enabled: true
+  weight_override: 0.12

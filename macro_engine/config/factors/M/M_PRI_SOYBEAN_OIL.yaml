@@ -1,0 +1,16 @@
+factor_code: "M_PRI_SOYBEAN_OIL"
+factor_name: "豆油期货价格"
+template: null
+econ_category: "SUP"
+logic_category: "PRI"
+direction: 1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.10
+max_weight: 0.20
+is_active: true
+dependencies:
+  - "AKShare/futures_main_sina"
+description: "豆油期货主力合约收盘价（元/吨）"

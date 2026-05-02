@@ -1,0 +1,17 @@
+# J_J_STK_TOTAL.yaml
+# 焦炭社会总库存
+
+factor_code: J_J_STK_TOTAL
+symbol: J
+category: inventory
+name: 焦炭社会总库存
+description: 焦炭社会总库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - J

@@ -1,0 +1,12 @@
+# config/instruments/_base.yaml
+signal_enabled: true
+intraday_enabled: true
+macro_lambda: 0.35
+weights:
+  supply: 0.30
+  demand: 0.25
+  inventory: 0.25
+  spread: 0.10
+  macro: 0.10
+sentiment_weight: 0.10
+factors: []

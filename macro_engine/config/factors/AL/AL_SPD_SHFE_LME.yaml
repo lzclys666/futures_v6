@@ -1,0 +1,19 @@
+# config/factors/AL/AL_SPD_SHFE_LME.yaml
+factor_code: "AL_SPD_SHFE_LME"
+factor_name: "SHFE/LME铝比价"
+template: null
+econ_category: "SPD"
+logic_category: "STR"
+direction: -1           # 比值过高→出口窗口打开→供应减少→利多
+frequency: "daily"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 60
+base_weight: 0.06
+max_weight: 0.09
+is_active: true
+dependencies:
+  - "上期所/shfe_al_main"
+  - "LME/lme_aluminium"
+  - "汇率/usdcny"
+description: "内盘/外盘价格比值，反映内外价差及进出口窗口"

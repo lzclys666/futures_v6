@@ -1,0 +1,18 @@
+# AU_FUT_CLOSE - 期货收盘价因子
+factor_code: "AU_FUT_CLOSE"
+factor_name: "黄金期货收盘价因子"
+commodity: "AU"
+
+factor_direction: "positive"
+weight: 0.0
+
+data_source: "akshare"
+api_params:
+  function: "futures_zh_daily_sina"
+  symbol: "au0"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "沪金主力合约收盘价，价格发现功能"
+pit_required: false
+dependencies: []

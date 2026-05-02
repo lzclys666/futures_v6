@@ -1,0 +1,17 @@
+# J_J_SPD_BASIS.yaml
+# 焦炭期现基差
+
+factor_code: J_J_SPD_BASIS
+symbol: J
+category: spread
+name: 焦炭期现基差
+description: 焦炭期现基差
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - spread
+  - J

@@ -1,0 +1,8 @@
+factor_code: CU_LME_SPREAD_EVENT
+name: "LME铜升贴水事件标记"
+category: event
+description: "LME铜升贴水事件标记。当spread绝对值>50 USD/吨时为1，表示市场紧张；否则为0"
+data_source: derived_from_CU_LME_SPREAD_threshold
+source_confidence: 0.9
+expected_range: [0-1]
+notes: "事件驱动方案因子：阈值50 USD/吨，仅在市场紧张时触发。正常市场条件下大部分时间为0"

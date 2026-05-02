@@ -1,0 +1,17 @@
+﻿# config/factors/RB/RB_INV_SHFE.yaml
+factor_code: "RB_INV_SHFE"
+factor_name: "上期所沪螺纹钢仓单"
+template: null
+econ_category: "INV"
+logic_category: "STK"
+direction: -1           # 仓单增加→交割货源充足→利空
+frequency: "daily"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 252
+base_weight: 0.08
+max_weight: 0.12
+is_active: true
+dependencies:
+  - "上期所官网/shfe_warrant"
+description: "上期所螺纹钢期货仓单数量，反映国内螺纹钢现货可交割量"

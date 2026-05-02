@@ -1,0 +1,8 @@
+factor_code: AU_GOLD_RESERVE_CB
+name: "中央银行黄金储备(吨)"
+category: free_data
+description: "中央银行黄金储备(吨)"
+data_source: AKShare macro_china_fx_gold()
+source_confidence: 1.0
+expected_range: [2000-6000]
+notes: "月度数据。最新=3427.63吨(2026-03)"

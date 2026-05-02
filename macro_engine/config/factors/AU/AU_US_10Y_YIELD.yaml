@@ -1,0 +1,8 @@
+factor_code: AU_US_10Y_YIELD
+name: "美国10年期国债收益率（名义）"
+category: free_data
+description: "美国10年期国债收益率（名义），作为TIPS实际收益率的代理指标。AKShare无TIPS专属函数，使用bond_zh_us_rate()美国国债收益率10年字段作为替代。"
+data_source: AKShare bond_zh_us_rate()['美国国债收益率10年']
+source_confidence: 0.9
+expected_range: [0.0, 10.0]
+notes: "日度数据，更新时间滞后1天。2026-04-17最新值=4.26%。注：此为名义收益率，非通胀调整后的TIPS实际收益率。"

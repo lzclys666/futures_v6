@@ -1,0 +1,18 @@
+# config/factors/AG/AG_SPD_BASIS.yaml
+factor_code: "AG_SPD_BASIS"
+factor_name: "沪银期现基差"
+template: null
+econ_category: "SPD"
+logic_category: "STR"
+direction: 1            # 基差为正(现货升水)→现货偏紧→利多
+frequency: "daily"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 252
+base_weight: 0.06
+max_weight: 0.10
+is_active: true
+dependencies:
+  - "AKShare/spot_silver"
+  - "AKShare/futures_zh_spot"
+description: "白银现货价格-期货主力价格，反映现货市场供需松紧"

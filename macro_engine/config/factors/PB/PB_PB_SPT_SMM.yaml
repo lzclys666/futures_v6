@@ -1,0 +1,17 @@
+# PB_PB_SPT_SMM.yaml
+# SMM沪铅现货价格
+
+factor_code: PB_PB_SPT_SMM
+symbol: PB
+category: price
+name: SMM沪铅现货价格
+description: SMM沪铅现货价格
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - PB

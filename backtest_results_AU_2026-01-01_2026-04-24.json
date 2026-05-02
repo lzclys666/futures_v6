@@ -1,0 +1,14 @@
+{
+  "symbol": "AU",
+  "period": "2026-01-01 ~ 2026-04-24",
+  "total_signals": 80,
+  "long_signals": 27,
+  "short_signals": 9,
+  "total_trades": 13,
+  "winning_trades": 8,
+  "win_rate": 0.6153846153846154,
+  "total_pnl": 4117.945749349128,
+  "final_capital": 104117.94574934916,
+  "returns": 0.041179457493491646,
+  "sharpe_ratio": 2.9704181053695855
+}

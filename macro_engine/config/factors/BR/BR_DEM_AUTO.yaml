@@ -1,0 +1,17 @@
+# config/factors/BR/BR_DEM_AUTO.yaml
+factor_code: "BR_DEM_AUTO"
+factor_name: "汽车月度销量"
+template: null
+econ_category: "DEM"
+logic_category: "DEM"
+direction: 1           # 汽车销量↑→轮胎需求↑→利多
+frequency: "monthly"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 36        # 月频数据，约3年
+base_weight: 0.10
+max_weight: 0.20
+is_active: true
+dependencies:
+  - "WebScraper/auto_sales"
+description: "中国汽车月度销量（万辆），反映终端需求景气度"

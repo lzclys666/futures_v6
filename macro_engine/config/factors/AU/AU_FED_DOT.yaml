@@ -1,0 +1,9 @@
+factor_code: AU_FED_DOT
+name: "美联储点阵图（2026年末利率预测中位数）"
+category: free_data
+description: "FOMC委员对2026年末联邦基金利率预测中位数，反映美联储前瞻指引。季度数据，每次FOMC会议更新。"
+data_source: "无免费API（FOMC projections页面404, FRED timeout, CME FedWatch connection refused）"
+source_confidence: 0.5
+expected_range: [2.0, 6.0]
+notes: "【L4占位】FOMC网站2024年改版，fomcprojtable.htm等所有历史projection页面返回404/403。FRED超时不可达。初始值4.5%（2026年3月FOMC会议）。季度手动更新。L4置信度0.5。"
+source: L4_pending_source

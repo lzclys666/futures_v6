@@ -1,0 +1,8 @@
+factor_code: NI_LME_SPREAD
+name: "LME镍升贴水(Cash-3M)"
+category: spread
+description: "LME镍Cash-3M升贴水，单位USD/吨。正常市场条件下接近0，市场紧张时>50表示供需紧张"
+data_source: AKShare futures_foreign_commodity_realtime (NID价格变化代理)
+source_confidence: 1.0
+expected_range: [-100-100]
+notes: "事件驱动方案：每日记录升贴水数值，另有DIFF和EVENT因子"

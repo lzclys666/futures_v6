@@ -1,0 +1,8 @@
+factor_code: CU_FUT_OI
+name: "浙铜期货持仓量"
+category: position
+description: "浙铜期货持仓量"
+data_source: AKShare futures_main_sina
+source_confidence: 1.0
+expected_range: [50000-500000]
+notes: "实测2026-04-17=176222手"

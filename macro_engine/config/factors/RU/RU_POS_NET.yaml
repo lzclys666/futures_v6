@@ -1,0 +1,17 @@
+# config/factors/RU_POS_NET.yaml
+factor_code: "RU_POS_NET"
+factor_name: "天然橡胶前20净持仓"
+template: null
+econ_category: "SEN"
+logic_category: "POS"
+direction: 1           # 净多单增加通常利多
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.05
+max_weight: 0.10
+is_active: true
+dependencies:
+  - "AKShare/get_shfe_rank_table"
+description: "上期所天然橡胶期货前20名会员净多单（多头-空头），反映主力资金情绪"

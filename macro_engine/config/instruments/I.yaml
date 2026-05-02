@@ -1,0 +1,19 @@
+symbol: I
+extends: _base
+macro_lambda: 0.4
+weights:
+  supply: 0.25
+  demand: 0.3
+  inventory: 0.25
+  spread: 0.1
+  macro: 0.1
+factors:
+- code: I_TS_ROLL_YIELD
+  enabled: true
+  weight_override: 0.15
+- code: I_STK_WARRANT
+  enabled: true
+  weight_override: 0.15
+- code: I_INV_PORT
+  enabled: true
+  weight_override: 0.12

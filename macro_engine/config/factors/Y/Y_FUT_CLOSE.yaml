@@ -1,0 +1,8 @@
+factor_code: Y_FUT_CLOSE
+name: "Y棕榈油期货收盘价"
+category: free_data
+description: "CZCE棕榈油期货主力合约日行情收盘价，反映油脂市场价格。"
+data_source: AKShare futures_main_sina(symbol="Y0")['收盘价']
+source_confidence: 1.0
+expected_range: [4000.0, 15000.0]
+notes: "L1: AKShare Y0主力合约 | L4: DB历史回补"

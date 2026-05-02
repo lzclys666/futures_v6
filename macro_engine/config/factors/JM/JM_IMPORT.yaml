@@ -1,0 +1,16 @@
+factor_code: "JM_IMPORT"
+factor_name: "焦煤月度进口量"
+template: null
+econ_category: "SUPPLY"
+logic_category: "QTY"
+direction: 1
+frequency: "monthly"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 12
+base_weight: 0.06
+max_weight: 0.08
+is_active: true
+dependencies:
+  - "海关总署/商品贸易统计"
+description: "炼焦煤月度进口总量(万吨)，进口增加供给压力"

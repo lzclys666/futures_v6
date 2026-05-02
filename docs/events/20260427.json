@@ -1,0 +1,14 @@
+[
+  {
+    "event_type": "SCORING_COMPLETE",
+    "timestamp": "2026-04-27T14:30:04+08:00",
+    "payload": {
+      "script": "daily_scoring.py",
+      "interface": "I005",
+      "date": "2026-04-27",
+      "symbols_count": 8,
+      "output_dir": "D:\\futures_v6\\macro_engine\\output",
+      "engine_version": "d_engine_v1.0"
+    }
+  }
+]

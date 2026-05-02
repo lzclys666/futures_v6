@@ -1,0 +1,1347 @@
+{
+  "core_interfaces": {
+    "macro_api_server.py": [],
+    "macro_scoring_engine.py": [],
+    "daily_scoring.py": [],
+    "macro_demo_strategy.py": []
+  },
+  "call_chains": [
+    {
+      "file": "macro_api_server.py",
+      "function": "_not_found",
+      "calls": [
+        {
+          "type": "call",
+          "function": "HTTPException",
+          "line": 136
+        }
+      ]
+    },
+    {
+      "file": "macro_api_server.py",
+      "function": "get_all_signals",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "engine",
+          "method": "get_all_signals",
+          "line": 156
+        },
+        {
+          "type": "call",
+          "function": "_wrap",
+          "line": 157
+        },
+        {
+          "type": "method_call",
+          "object": "app",
+          "method": "get",
+          "line": 146
+        }
+      ]
+    },
+    {
+      "file": "macro_api_server.py",
+      "function": "get_signal",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "engine",
+          "method": "get_latest_signal",
+          "line": 175
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 175
+        },
+        {
+          "type": "call",
+          "function": "_not_found",
+          "line": 177
+        },
+        {
+          "type": "call",
+          "function": "_wrap",
+          "line": 179
+        },
+        {
+          "type": "method_call",
+          "object": "app",
+          "method": "get",
+          "line": 164
+        }
+      ]
+    },
+    {
+      "file": "macro_api_server.py",
+      "function": "get_factor",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "engine",
+          "method": "get_factor_details",
+          "line": 197
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 197
+        },
+        {
+          "type": "call",
+          "function": "_not_found",
+          "line": 199
+        },
+        {
+          "type": "call",
+          "function": "_wrap",
+          "line": 201
+        },
+        {
+          "type": "method_call",
+          "object": "app",
+          "method": "get",
+          "line": 186
+        }
+      ]
+    },
+    {
+      "file": "macro_api_server.py",
+      "function": "get_score_history",
+      "calls": [
+        {
+          "type": "call",
+          "function": "Query",
+          "line": 216
+        },
+        {
+          "type": "method_call",
+          "object": "engine",
+          "method": "get_score_history",
+          "line": 222
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 222
+        },
+        {
+          "type": "call",
+          "function": "_not_found",
+          "line": 224
+        },
+        {
+          "type": "call",
+          "function": "_wrap",
+          "line": 226
+        },
+        {
+          "type": "method_call",
+          "object": "app",
+          "method": "get",
+          "line": 208
+        }
+      ]
+    },
+    {
+      "file": "macro_api_server.py",
+      "function": "health",
+      "calls": [
+        {
+          "type": "call",
+          "function": "_wrap",
+          "line": 235
+        },
+        {
+          "type": "method_call",
+          "object": "app",
+          "method": "get",
+          "line": 233
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "_trade_date_str",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "date",
+          "method": "today",
+          "line": 60
+        },
+        {
+          "type": "method_call",
+          "object": "d",
+          "method": "strftime",
+          "line": 61
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "_read_csv_row",
+      "calls": [
+        {
+          "type": "call",
+          "function": "_trade_date_str",
+          "line": 76
+        },
+        {
+          "type": "call",
+          "function": "_csv_path",
+          "line": 78
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 78
+        },
+        {
+          "type": "method_call",
+          "object": "csv_file",
+          "method": "exists",
+          "line": 79
+        },
+        {
+          "type": "call",
+          "function": "open",
+          "line": 85
+        },
+        {
+          "type": "method_call",
+          "object": "csv",
+          "method": "DictReader",
+          "line": 86
+        },
+        {
+          "type": "method_call",
+          "object": "row",
+          "method": "get",
+          "line": 88
+        },
+        {
+          "type": "method_call",
+          "object": "row_type",
+          "method": "upper",
+          "line": 88
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "_read_csv_factors",
+      "calls": [
+        {
+          "type": "call",
+          "function": "_trade_date_str",
+          "line": 101
+        },
+        {
+          "type": "call",
+          "function": "_csv_path",
+          "line": 103
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 103
+        },
+        {
+          "type": "method_call",
+          "object": "csv_file",
+          "method": "exists",
+          "line": 104
+        },
+        {
+          "type": "call",
+          "function": "open",
+          "line": 111
+        },
+        {
+          "type": "method_call",
+          "object": "csv",
+          "method": "DictReader",
+          "line": 112
+        },
+        {
+          "type": "method_call",
+          "object": "row",
+          "method": "get",
+          "line": 114
+        },
+        {
+          "type": "method_call",
+          "object": "factors",
+          "method": "append",
+          "line": 115
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "_load_us_cpi_cache",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "ak",
+          "method": "macro_usa_cpi_monthly",
+          "line": 316
+        },
+        {
+          "type": "method_call",
+          "object": "df",
+          "method": "iterrows",
+          "line": 318
+        },
+        {
+          "type": "call",
+          "function": "str",
+          "line": 319
+        },
+        {
+          "type": "call",
+          "function": "float",
+          "line": 320
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "_get_us_cpi_yoy",
+      "calls": [
+        {
+          "type": "call",
+          "function": "sorted",
+          "line": 332
+        },
+        {
+          "type": "method_call",
+          "object": "_US_CPI_CACHE",
+          "method": "keys",
+          "line": 332
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "_init_score",
+      "calls": [
+        {
+          "type": "call",
+          "function": "hash",
+          "line": 360
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "_drift",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "random",
+          "method": "gauss",
+          "line": 375
+        },
+        {
+          "type": "method_call",
+          "object": "_current_scores",
+          "method": "get",
+          "line": 376
+        },
+        {
+          "type": "call",
+          "function": "max",
+          "line": 379
+        },
+        {
+          "type": "call",
+          "function": "min",
+          "line": 379
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "refresh_scores",
+      "calls": [
+        {
+          "type": "call",
+          "function": "_drift",
+          "line": 385
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "get_latest_signal",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 400
+        },
+        {
+          "type": "call",
+          "function": "KeyError",
+          "line": 401
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 403
+        },
+        {
+          "type": "call",
+          "function": "_trade_date_str",
+          "line": 404
+        },
+        {
+          "type": "call",
+          "function": "_read_csv_row",
+          "line": 407
+        },
+        {
+          "type": "call",
+          "function": "_build_factor_details_from_csv",
+          "line": 414
+        },
+        {
+          "type": "call",
+          "function": "float",
+          "line": 415
+        },
+        {
+          "type": "method_call",
+          "object": "summary_row",
+          "method": "get",
+          "line": 415
+        },
+        {
+          "type": "method_call",
+          "object": "summary_row",
+          "method": "get",
+          "line": 416
+        },
+        {
+          "type": "method_call",
+          "object": "datetime",
+          "method": "strptime",
+          "line": 420
+        },
+        {
+          "type": "call",
+          "function": "timedelta",
+          "line": 420
+        },
+        {
+          "type": "call",
+          "function": "_read_csv_row",
+          "line": 421
+        },
+        {
+          "type": "call",
+          "function": "_build_factor_details_from_csv",
+          "line": 423
+        },
+        {
+          "type": "call",
+          "function": "sum",
+          "line": 424
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 425
+        },
+        {
+          "type": "call",
+          "function": "composite_to_direction",
+          "line": 426
+        },
+        {
+          "type": "call",
+          "function": "_build_factor_details_from_mock",
+          "line": 430
+        },
+        {
+          "type": "call",
+          "function": "sum",
+          "line": 431
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 434
+        },
+        {
+          "type": "call",
+          "function": "composite_to_direction",
+          "line": 435
+        },
+        {
+          "type": "method_call",
+          "object": "datetime",
+          "method": "now",
+          "line": 436
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 440
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "get_all_signals",
+      "calls": [
+        {
+          "type": "call",
+          "function": "_trade_date_str",
+          "line": 452
+        },
+        {
+          "type": "call",
+          "function": "_read_csv_row",
+          "line": 459
+        },
+        {
+          "type": "call",
+          "function": "_build_factor_details_from_csv",
+          "line": 463
+        },
+        {
+          "type": "call",
+          "function": "float",
+          "line": 464
+        },
+        {
+          "type": "method_call",
+          "object": "summary_row",
+          "method": "get",
+          "line": 464
+        },
+        {
+          "type": "method_call",
+          "object": "summary_row",
+          "method": "get",
+          "line": 465
+        },
+        {
+          "type": "method_call",
+          "object": "datetime",
+          "method": "strptime",
+          "line": 469
+        },
+        {
+          "type": "call",
+          "function": "timedelta",
+          "line": 469
+        },
+        {
+          "type": "call",
+          "function": "_read_csv_row",
+          "line": 470
+        },
+        {
+          "type": "call",
+          "function": "_build_factor_details_from_csv",
+          "line": 472
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 473
+        },
+        {
+          "type": "call",
+          "function": "sum",
+          "line": 473
+        },
+        {
+          "type": "call",
+          "function": "composite_to_direction",
+          "line": 474
+        },
+        {
+          "type": "call",
+          "function": "_build_factor_details_from_mock",
+          "line": 478
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 479
+        },
+        {
+          "type": "call",
+          "function": "sum",
+          "line": 479
+        },
+        {
+          "type": "call",
+          "function": "composite_to_direction",
+          "line": 480
+        },
+        {
+          "type": "method_call",
+          "object": "datetime",
+          "method": "now",
+          "line": 481
+        },
+        {
+          "type": "method_call",
+          "object": "signals",
+          "method": "append",
+          "line": 483
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "get_factor_details",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 498
+        },
+        {
+          "type": "call",
+          "function": "KeyError",
+          "line": 499
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 501
+        },
+        {
+          "type": "call",
+          "function": "_trade_date_str",
+          "line": 502
+        },
+        {
+          "type": "call",
+          "function": "_read_csv_factors",
+          "line": 505
+        },
+        {
+          "type": "call",
+          "function": "_build_factor_details_from_csv",
+          "line": 508
+        },
+        {
+          "type": "call",
+          "function": "_build_factor_details_from_mock",
+          "line": 510
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "_build_factor_details_from_csv",
+      "calls": [
+        {
+          "type": "call",
+          "function": "_read_csv_factors",
+          "line": 526
+        },
+        {
+          "type": "call",
+          "function": "float",
+          "line": 527
+        },
+        {
+          "type": "method_call",
+          "object": "meta_map",
+          "method": "get",
+          "line": 531
+        },
+        {
+          "type": "method_call",
+          "object": "meta",
+          "method": "get",
+          "line": 532
+        },
+        {
+          "type": "call",
+          "function": "float",
+          "line": 532
+        },
+        {
+          "type": "method_call",
+          "object": "meta",
+          "method": "get",
+          "line": 533
+        },
+        {
+          "type": "method_call",
+          "object": "row",
+          "method": "get",
+          "line": 539
+        },
+        {
+          "type": "call",
+          "function": "float",
+          "line": 540
+        },
+        {
+          "type": "method_call",
+          "object": "factors",
+          "method": "append",
+          "line": 542
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 549
+        },
+        {
+          "type": "method_call",
+          "object": "row",
+          "method": "get",
+          "line": 550
+        },
+        {
+          "type": "call",
+          "function": "float",
+          "line": 550
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "_build_factor_details_from_mock",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "datetime",
+          "method": "now",
+          "line": 559
+        },
+        {
+          "type": "call",
+          "function": "_get_us_cpi_yoy",
+          "line": 565
+        },
+        {
+          "type": "method_call",
+          "object": "math",
+          "method": "tanh",
+          "line": 568
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 570
+        },
+        {
+          "type": "method_call",
+          "object": "random",
+          "method": "uniform",
+          "line": 570
+        },
+        {
+          "type": "method_call",
+          "object": "results",
+          "method": "append",
+          "line": 572
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 577
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 579
+        }
+      ]
+    },
+    {
+      "file": "macro_scoring_engine.py",
+      "function": "get_score_history",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 595
+        },
+        {
+          "type": "call",
+          "function": "KeyError",
+          "line": 596
+        },
+        {
+          "type": "call",
+          "function": "min",
+          "line": 598
+        },
+        {
+          "type": "call",
+          "function": "max",
+          "line": 598
+        },
+        {
+          "type": "method_call",
+          "object": "date",
+          "method": "today",
+          "line": 599
+        },
+        {
+          "type": "call",
+          "function": "_trade_date_str",
+          "line": 600
+        },
+        {
+          "type": "method_call",
+          "object": "today",
+          "method": "strftime",
+          "line": 601
+        },
+        {
+          "type": "call",
+          "function": "_read_csv_row",
+          "line": 605
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 605
+        },
+        {
+          "type": "call",
+          "function": "float",
+          "line": 607
+        },
+        {
+          "type": "method_call",
+          "object": "today_summary",
+          "method": "get",
+          "line": 607
+        },
+        {
+          "type": "call",
+          "function": "composite_to_direction",
+          "line": 608
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 610
+        },
+        {
+          "type": "call",
+          "function": "composite_to_direction",
+          "line": 611
+        },
+        {
+          "type": "method_call",
+          "object": "random",
+          "method": "Random",
+          "line": 614
+        },
+        {
+          "type": "call",
+          "function": "hash",
+          "line": 614
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 614
+        },
+        {
+          "type": "call",
+          "function": "range",
+          "line": 618
+        },
+        {
+          "type": "call",
+          "function": "timedelta",
+          "line": 619
+        },
+        {
+          "type": "method_call",
+          "object": "d",
+          "method": "strftime",
+          "line": 620
+        },
+        {
+          "type": "method_call",
+          "object": "d",
+          "method": "strftime",
+          "line": 621
+        },
+        {
+          "type": "call",
+          "function": "_read_csv_row",
+          "line": 624
+        },
+        {
+          "type": "method_call",
+          "object": "symbol",
+          "method": "upper",
+          "line": 624
+        },
+        {
+          "type": "call",
+          "function": "float",
+          "line": 626
+        },
+        {
+          "type": "method_call",
+          "object": "hist_summary",
+          "method": "get",
+          "line": 626
+        },
+        {
+          "type": "call",
+          "function": "composite_to_direction",
+          "line": 627
+        },
+        {
+          "type": "method_call",
+          "object": "rng",
+          "method": "gauss",
+          "line": 630
+        },
+        {
+          "type": "call",
+          "function": "max",
+          "line": 632
+        },
+        {
+          "type": "call",
+          "function": "min",
+          "line": 632
+        },
+        {
+          "type": "call",
+          "function": "composite_to_direction",
+          "line": 633
+        },
+        {
+          "type": "method_call",
+          "object": "results",
+          "method": "append",
+          "line": 636
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 638
+        },
+        {
+          "type": "method_call",
+          "object": "results",
+          "method": "append",
+          "line": 643
+        },
+        {
+          "type": "call",
+          "function": "round",
+          "line": 645
+        }
+      ]
+    },
+    {
+      "file": "strategies\\macro_demo_strategy.py",
+      "function": "__init__",
+      "calls": [
+        {
+          "type": "call",
+          "function": "super",
+          "line": 24
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "extract_symbol",
+          "line": 26
+        },
+        {
+          "type": "method_call",
+          "object": "datetime",
+          "method": "now",
+          "line": 31
+        },
+        {
+          "type": "call",
+          "function": "Path",
+          "line": 32
+        },
+        {
+          "type": "call",
+          "function": "BarGenerator",
+          "line": 35
+        },
+        {
+          "type": "call",
+          "function": "ArrayManager",
+          "line": 36
+        }
+      ]
+    },
+    {
+      "file": "strategies\\macro_demo_strategy.py",
+      "function": "extract_symbol",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "vt_symbol",
+          "method": "split",
+          "line": 41
+        },
+        {
+          "type": "method_call",
+          "object": "c",
+          "method": "isdigit",
+          "line": 42
+        }
+      ]
+    },
+    {
+      "file": "strategies\\macro_demo_strategy.py",
+      "function": "on_init",
+      "calls": [
+        {
+          "type": "call",
+          "function": "print",
+          "line": 46
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 47
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 48
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 49
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "load_macro_signal",
+          "line": 50
+        }
+      ]
+    },
+    {
+      "file": "strategies\\macro_demo_strategy.py",
+      "function": "on_timer",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "load_macro_signal",
+          "line": 53
+        }
+      ]
+    },
+    {
+      "file": "strategies\\macro_demo_strategy.py",
+      "function": "load_macro_signal",
+      "calls": [
+        {
+          "type": "call",
+          "function": "print",
+          "line": 56
+        },
+        {
+          "type": "method_call",
+          "object": "datetime",
+          "method": "now",
+          "line": 58
+        },
+        {
+          "type": "call",
+          "function": "Path",
+          "line": 59
+        },
+        {
+          "type": "method_call",
+          "object": "csv_path",
+          "method": "exists",
+          "line": 60
+        },
+        {
+          "type": "call",
+          "function": "print",
+          "line": 62
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 63
+        },
+        {
+          "type": "call",
+          "function": "open",
+          "line": 68
+        },
+        {
+          "type": "method_call",
+          "object": "csv",
+          "method": "DictReader",
+          "line": 69
+        },
+        {
+          "type": "method_call",
+          "object": "row",
+          "method": "get",
+          "line": 71
+        },
+        {
+          "type": "method_call",
+          "object": "row",
+          "method": "get",
+          "line": 71
+        },
+        {
+          "type": "call",
+          "function": "float",
+          "line": 73
+        },
+        {
+          "type": "method_call",
+          "object": "row",
+          "method": "get",
+          "line": 74
+        },
+        {
+          "type": "call",
+          "function": "print",
+          "line": 77
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 81
+        },
+        {
+          "type": "call",
+          "function": "print",
+          "line": 84
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_error",
+          "line": 85
+        }
+      ]
+    },
+    {
+      "file": "strategies\\macro_demo_strategy.py",
+      "function": "on_1min_bar",
+      "calls": [
+        {
+          "type": "call",
+          "function": "print",
+          "line": 94
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "load_macro_signal",
+          "line": 95
+        },
+        {
+          "type": "call",
+          "function": "print",
+          "line": 98
+        },
+        {
+          "type": "call",
+          "function": "len",
+          "line": 98
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "calc_tech_signal",
+          "line": 102
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "check_entry",
+          "line": 103
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "check_exit",
+          "line": 104
+        }
+      ]
+    },
+    {
+      "file": "strategies\\macro_demo_strategy.py",
+      "function": "calc_tech_signal",
+      "calls": [
+        {
+          "type": "call",
+          "function": "len",
+          "line": 112
+        },
+        {
+          "type": "call",
+          "function": "len",
+          "line": 113
+        },
+        {
+          "type": "call",
+          "function": "print",
+          "line": 117
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 118
+        },
+        {
+          "type": "call",
+          "function": "print",
+          "line": 121
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 122
+        }
+      ]
+    },
+    {
+      "file": "strategies\\macro_demo_strategy.py",
+      "function": "check_entry",
+      "calls": [
+        {
+          "type": "call",
+          "function": "print",
+          "line": 130
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "buy",
+          "line": 133
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 134
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "short",
+          "line": 136
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 137
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "buy",
+          "line": 140
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 141
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "short",
+          "line": 143
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 144
+        }
+      ]
+    },
+    {
+      "file": "strategies\\macro_demo_strategy.py",
+      "function": "check_exit",
+      "calls": [
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "sell",
+          "line": 150
+        },
+        {
+          "type": "call",
+          "function": "abs",
+          "line": 150
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 151
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "cover",
+          "line": 153
+        },
+        {
+          "type": "call",
+          "function": "abs",
+          "line": 153
+        },
+        {
+          "type": "method_call",
+          "object": "self",
+          "method": "write_log",
+          "line": 154
+        }
+      ]
+    }
+  ]
+}

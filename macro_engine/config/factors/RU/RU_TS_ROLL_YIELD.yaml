@@ -1,0 +1,17 @@
+# config/factors/RU_TS_ROLL_YIELD.yaml
+factor_code: "RU_TS_ROLL_YIELD"
+factor_name: "天然橡胶展期收益率"
+template: null
+econ_category: "SPD"
+logic_category: "TS"
+direction: 1           # 展期收益率为正（近月升水）通常利多
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.05
+max_weight: 0.15
+is_active: true
+dependencies:
+  - "AKShare/get_roll_yield"
+description: "RU近月与远月合约展期收益率（年化），反映期限结构"

@@ -1,0 +1,17 @@
+# EG_EG_STK_PLANT_RATE.yaml
+# 乙二醇装置开工率
+
+factor_code: EG_EG_STK_PLANT_RATE
+symbol: EG
+category: operation
+name: 乙二醇装置开工率
+description: 乙二醇装置开工率
+frequency: daily
+unit: "%"
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - operation
+  - EG

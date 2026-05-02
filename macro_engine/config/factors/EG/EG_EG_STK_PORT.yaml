@@ -1,0 +1,17 @@
+# EG_EG_STK_PORT.yaml
+# 华东乙二醇港口库存
+
+factor_code: EG_EG_STK_PORT
+symbol: EG
+category: inventory
+name: 华东乙二醇港口库存
+description: 华东乙二醇港口库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - EG

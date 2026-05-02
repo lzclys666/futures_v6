@@ -1,0 +1,17 @@
+# PB_PB_STK_PORT.yaml
+# 铅锭港口库存
+
+factor_code: PB_PB_STK_PORT
+symbol: PB
+category: inventory
+name: 铅锭港口库存
+description: 铅锭港口库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - PB

@@ -1,0 +1,17 @@
+# BU_BU_STK_INVENTORY.yaml
+# 全国沥青总库存
+
+factor_code: BU_BU_STK_INVENTORY
+symbol: BU
+category: inventory
+name: 全国沥青总库存
+description: 全国沥青总库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - BU

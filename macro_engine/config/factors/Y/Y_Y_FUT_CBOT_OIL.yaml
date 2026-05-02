@@ -1,0 +1,17 @@
+# Y_Y_FUT_CBOT_OIL.yaml
+# CBOT豆油期货收盘价
+
+factor_code: Y_Y_FUT_CBOT_OIL
+symbol: Y
+category: price
+name: CBOT豆油期货收盘价
+description: CBOT豆油期货收盘价
+frequency: daily
+unit: 美分/磅
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - Y

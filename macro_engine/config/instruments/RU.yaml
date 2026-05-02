@@ -1,0 +1,22 @@
+symbol: RU
+extends: _base
+macro_lambda: 0.35
+weights:
+  supply: 0.3
+  demand: 0.25
+  inventory: 0.25
+  spread: 0.1
+  macro: 0.1
+factors:
+- code: RU_FX_USDCNY
+  enabled: true
+  weight_override: 0.12
+- code: RU_TS_ROLL_YIELD
+  enabled: true
+  weight_override: 0.15
+- code: RU_STK_WARRANT
+  enabled: true
+  weight_override: 0.15
+- code: RU_INV_QINGDAO
+  enabled: true
+  weight_override: 0.12

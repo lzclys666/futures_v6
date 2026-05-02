@@ -1,0 +1,17 @@
+# SC_FUT_CLOSE.yaml
+# 原油期货收盘价
+
+factor_code: SC_FUT_CLOSE
+symbol: SC
+category: price
+name: 原油期货收盘价
+description: 原油期货收盘价
+frequency: daily
+unit: 元/桶
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - SC

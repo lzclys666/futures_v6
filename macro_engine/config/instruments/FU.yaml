@@ -1,0 +1,19 @@
+symbol: FU
+extends: _base
+macro_lambda: 0.55
+weights:
+  supply: 0.25
+  demand: 0.25
+  inventory: 0.2
+  spread: 0.15
+  macro: 0.15
+factors:
+- code: FU_TS_ROLL_YIELD
+  enabled: true
+  weight_override: 0.15
+- code: FU_STK_WARRANT
+  enabled: true
+  weight_override: 0.15
+- code: FU_INV_SINGAPORE
+  enabled: true
+  weight_override: 0.12

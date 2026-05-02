@@ -1,0 +1,17 @@
+# PP_PP_STK_PLANT.yaml
+# 聚丙烯石化库存
+
+factor_code: PP_PP_STK_PLANT
+symbol: PP
+category: inventory
+name: 聚丙烯石化库存
+description: 聚丙烯石化库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - PP

@@ -1,0 +1,8 @@
+factor_code: HC_FUT_OI
+name: "HC热轧卷板期货持仓量"
+category: free_data
+description: "SHFE热轧卷板期货主力合约持仓量（手），反映市场资金热度。"
+data_source: AKShare futures_main_sina(symbol="HC0")['持仓量']
+source_confidence: 1.0
+expected_range: [500000.0, 5000000.0]
+notes: "L1: AKShare HC0 | L4: DB历史回补"

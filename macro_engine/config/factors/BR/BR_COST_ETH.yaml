@@ -1,0 +1,17 @@
+# config/factors/BR/BR_COST_ETH.yaml
+factor_code: "BR_COST_ETH"
+factor_name: "乙烯装置开工率"
+template: null
+econ_category: "SUP"
+logic_category: "STK"
+direction: 1           # 乙烯开工率↓→丁二烯供给↓→成本↑→利多 BR
+frequency: "weekly"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 156
+base_weight: 0.08
+max_weight: 0.15
+is_active: true
+dependencies:
+  - "WebScraper/ethylene_rate"
+description: "乙烯装置开工率（%），影响丁二烯副产品供给，间接影响BR成本"

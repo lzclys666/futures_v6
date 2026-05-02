@@ -1,0 +1,16 @@
+factor_code: "M_SPD_M_RM"
+factor_name: "豆粕-菜粕价差"
+template: null
+econ_category: "SPD"
+logic_category: "SPD"
+direction: 1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.05
+max_weight: 0.15
+is_active: true
+dependencies:
+  - "AKShare/futures_main_sina"
+description: "豆粕主力收盘价 - 菜粕主力收盘价（元/吨），价差扩大通常反映豆粕供需偏紧"

@@ -1,0 +1,9 @@
+Gateway created: CTP
+connect() called successfully
+Params used: user=260345, broker=9999
+td_server=182.254.243.31:30001, md_server=182.254.243.31:30011
+ERROR: No module named 'vnpy.api'
+Traceback (most recent call last):
+  File "D:\futures_v6\_simple_ctp_test.py", line 35, in <module>
+    from vnpy.api.ctp import MdApi, TraderApi
+ModuleNotFoundError: No module named 'vnpy.api'

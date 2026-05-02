@@ -1,0 +1,17 @@
+# J_J_STK_WARRANT.yaml
+# 焦炭期货仓单
+
+factor_code: J_J_STK_WARRANT
+symbol: J
+category: inventory
+name: 焦炭期货仓单
+description: 焦炭期货仓单
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - J

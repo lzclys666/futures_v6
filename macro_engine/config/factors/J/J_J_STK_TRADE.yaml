@@ -1,0 +1,17 @@
+# J_J_STK_TRADE.yaml
+# 贸易商焦炭库存
+
+factor_code: J_J_STK_TRADE
+symbol: J
+category: inventory
+name: 贸易商焦炭库存
+description: 贸易商焦炭库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - J

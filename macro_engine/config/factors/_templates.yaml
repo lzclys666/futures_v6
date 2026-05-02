@@ -1,0 +1,14 @@
+# config/factors/_templates.yaml
+templates:
+  roll_yield:
+    description: "展期收益率"
+    formula: "(near_price - far_price) / near_price"
+    dependencies: ["near_price", "far_price"]
+  momentum:
+    description: "时序动量"
+    formula: "(price - price_lag) / price_lag"
+    dependencies: ["price", "price_lag"]
+  inventory_change:
+    description: "库存变化率"
+    formula: "(current - previous) / previous"
+    dependencies: ["current", "previous"]

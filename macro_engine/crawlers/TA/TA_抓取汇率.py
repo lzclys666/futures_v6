@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+抓取汇率
+因子: 待定义 = 抓取汇率
+
+公式: 数据采集（无独立计算公式）
+
+当前状态: ⚠️待修复
+- 脚本已有数据获取逻辑，Header待完善
+- 尝试过的数据源及结果：需补充
+- 解决方案：需补充
+
+订阅优先级: ★★（付费源才需要标注）
+替代付费源: 具体平台名称
+"""
+    try:
+        r = requests.get(
+            'https://qt.gtimg.cn/q=USDCNY,USDCNH',
+            headers={'User-Agent': 'Mozilla/5.0'},
+            timeout=10
+        )
+        r.encoding = 'gbk'
+        for line in r.text.strip().split('\n'):
+            if 'USDCNY' in line and 'pv_none' not in line:
+                parts = line.split('"')[1].split(',')
+                if len(parts) > 1:
+                    return float(parts[1])
+    except Exception as e:
+        print(f"  [L2] 腾讯汇率失败: {e}")
+    return None
+
+def main():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"(auto) === TA_USDCNY汇率 === obs={obs_date}")
+
+    # L1: 新浪
+    rate = fetch_usd_cny_sina()
+    src = "新浪财经"
+
+    # L2: 腾讯
+    if rate is None:
+        rate = fetch_usd_cny_qq()
+        src = "腾讯财经"
+
+    if rate:
+        print(f"  {src} USDCNY: {rate}")
+        save_to_db("TA_CST_USDCNY", SYMBOL, pub_date, obs_date, rate, src, 1.0)
+        print(f">>> TA_CST_USDCNY={rate} 写入成功")
+    else:
+        print("  [L1/L2] 无免费汇率数据")
+        val = get_latest_value("TA_CST_USDCNY", SYMBOL)
+        if val is not None:
+            save_to_db("TA_CST_USDCNY", SYMBOL, pub_date, obs_date, val, source_confidence=0.5, source="db_回补")
+            print(f">>> TA_CST_USDCNY={val} L4回补成功")
+        else:
+            print("FAIL: USDCNY无数据")
+
+if __name__ == "__main__":
+    main()

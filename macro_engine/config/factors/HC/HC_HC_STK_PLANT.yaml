@@ -1,0 +1,17 @@
+# HC_HC_STK_PLANT.yaml
+# 钢厂热卷库存
+
+factor_code: HC_HC_STK_PLANT
+symbol: HC
+category: inventory
+name: 钢厂热卷库存
+description: 钢厂热卷库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - HC

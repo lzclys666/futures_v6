@@ -1,0 +1,8 @@
+factor_code: AU_SPD_AUAG
+name: "金银比（AUAG）"
+category: free_data
+description: "金银比 = SGE黄金现货午市价(元/克) / SGE白银现货午市价(元/千克÷1000)。金银比↑表示黄金相对白银偏强（多金空银机会）；金银比↓表示白银相对黄金偏强（多银空金机会）。"
+data_source: AKShare spot_golden_benchmark_sge() + spot_silver_benchmark_sge()
+source_confidence: 1.0
+expected_range: [30.0, 100.0]
+notes: "日度数据（SGE休市日无更新）。2026-04-15最新值=53.18。历史区间约30-100，极端值可至100+。"

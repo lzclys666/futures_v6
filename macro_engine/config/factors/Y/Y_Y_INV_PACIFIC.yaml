@@ -1,0 +1,17 @@
+# Y_Y_INV_PACIFIC.yaml
+# 太平洋大豆到港量
+
+factor_code: Y_Y_INV_PACIFIC
+symbol: Y
+category: supply
+name: 太平洋大豆到港量
+description: 太平洋大豆到港量
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - supply
+  - Y

@@ -1,0 +1,8 @@
+factor_code: NI_SPD_BASIS
+name: "浙镍期现基差"
+category: free_data
+description: "浙镍期现基差"
+data_source: AKShare futures_spot_price(vars_list=['NI'])
+source_confidence: 1.0
+expected_range: [-3000-3000]
+notes: "实测20240430=-1307(滞后红2年)"

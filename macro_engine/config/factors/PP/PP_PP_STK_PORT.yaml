@@ -1,0 +1,17 @@
+# PP_PP_STK_PORT.yaml
+# 聚丙烯港口库存
+
+factor_code: PP_PP_STK_PORT
+symbol: PP
+category: inventory
+name: 聚丙烯港口库存
+description: 聚丙烯港口库存
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - PP

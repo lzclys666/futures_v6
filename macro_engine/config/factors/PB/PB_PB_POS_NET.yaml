@@ -1,0 +1,17 @@
+# PB_PB_POS_NET.yaml
+# 沪铅期货净持仓
+
+factor_code: PB_PB_POS_NET
+symbol: PB
+category: position
+name: 沪铅期货净持仓
+description: 沪铅期货净持仓
+frequency: daily
+unit: 手
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - position
+  - PB

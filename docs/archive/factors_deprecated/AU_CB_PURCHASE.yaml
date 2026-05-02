@@ -1,0 +1,18 @@
+# AU_CB_PURCHASE - 全球央行购金因子
+factor_code: "AU_CB_PURCHASE"
+factor_name: "全球央行购金因子"
+commodity: "AU"
+
+factor_direction: "positive"
+weight: 0.12
+
+data_source: "custom"
+api_params:
+  function: "cb_gold_purchase"
+  symbol: "GLOBAL"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "全球央行黄金购买量，需求支撑金价"
+pit_required: false
+dependencies: []

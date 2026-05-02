@@ -1,0 +1,17 @@
+# config/factors/AG/AG_MACRO_US_CPI_YOY.yaml
+factor_code: "AG_MACRO_US_CPI_YOY"
+factor_name: "美国CPI同比"
+template: null
+econ_category: "MAC"
+logic_category: "INF"
+direction: 1            # CPI超预期→通胀上行→白银抗通胀需求增加→利多
+frequency: "monthly"    # 月频数据，日频因子
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 36         # 36个月=3年
+base_weight: 0.08
+max_weight: 0.12
+is_active: true
+dependencies:
+  - "FRED/CPIAUCSL_PC1"
+description: "美国CPI同比增速，反映通胀水平，白银具有抗通胀属性"

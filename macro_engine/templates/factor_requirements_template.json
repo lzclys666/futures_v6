@@ -1,0 +1,71 @@
+{
+ "project": {
+ "name": "期货宏观经济数据采集",
+ "version": "1.0.0",
+ "description": "采集橡胶主力合约、铜主力合约和中国GDP数据",
+ "date": "2026-04-16"
+ },
+ "factor_groups": [
+ {
+ "group_name": "期货演示组",
+ "group_description": "期货主力合约数据",
+ "data_dir": "demo_data",
+ "factors": [
+ {
+ "factor_code": "RU_MAIN",
+ "factor_name": "橡胶主力合约",
+ "description": "橡胶期货主力合约数据",
+ "data_source": "akshare",
+ "api_params": {
+ "function": "futures_main_sina",
+ "symbol": "RU0",
+ "exchange": "shfe"
+ },
+ "pit_requirement": {"need_pit": false},
+ "expected_columns": ["symbol", "open", "high", "low", "close", "volume", "date"],
+ "frequency": "daily"
+ },
+ {
+ "factor_code": "CU_MAIN",
+ "factor_name": "铜主力合约",
+ "description": "铜期货主力合约数据",
+ "data_source": "akshare",
+ "api_params": {
+ "function": "futures_main_sina",
+ "symbol": "CU0",
+ "exchange": "shfe"
+ },
+ "pit_requirement": {"need_pit": false},
+ "expected_columns": ["symbol", "open", "high", "low", "close", "volume", "date"],
+ "frequency": "daily"
+ }
+ ]
+ },
+ {
+ "group_name": "宏观经济数据组",
+ "group_description": "中国宏观经济数据",
+ "data_dir": "macro_data",
+ "factors": [
+ {
+ "factor_code": "GDP",
+ "factor_name": "中国GDP",
+ "description": "中国GDP数据",
+ "data_source": "akshare",
+ "api_params": {
+ "function": "macro_china_gdp"
+ },
+ "pit_requirement": {"need_pit": false},
+ "expected_columns": ["季度", "国内生产总值_绝对值", "国内生产总值_同比增长"],
+ "frequency": "quarterly"
+ }
+ ]
+ }
+ ],
+ "collection_settings": {
+ "max_retries": 2,
+ "timeout": 60,
+ "log_dir": "demo_logs",
+ "error_handling": "continue",
+ "concurrent": false
+ }
+}

@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+AU_金银比_AUAG.py
+因子: AU_SPD_AUAG = 金银比（SGE黄金现货/白银现货）
+
+公式: AU_SPD_AUAG = AU_SPOT_SGE / (AG_SPOT_SGE / 1000)
+      即 黄金现货价(元/克) / 白银现货价(元/克)
+      SGE白银现货单位是 CNY/kg，需除以1000转为 CNY/g
+
+当前状态: ✅正常
+- 数据源: AKShare spot_golden_benchmark_sge() + spot_silver_benchmark_sge()，L1权威
+- 采集逻辑: 最新日期的黄金收盘价 / (白银收盘价 / 1000)
+- obs_date: 取黄金和白银中较新者
+- bounds: [30, 100]（金银比历史区间，30以下白银强势，100以上黄金强势）
+
+订阅优先级: 无需付费
+替代付费源: 无
+"""
+import sys, os as _os
+sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+
+import akshare as ak
+import pandas as pd
+
+FACTOR_CODE = "AU_SPD_AUAG"
+SYMBOL = "AU"
+BOUNDS = (30.0, 100.0)
+
+
+def fetch():
+    """L1: AKShare SGE黄金+白银现货价比"""
+    print("[L1] AKShare spot_golden/silver_benchmark_sge()...")
+    df_gold = ak.spot_golden_benchmark_sge()
+    if df_gold is None or df_gold.empty:
+        raise ValueError("gold spot empty")
+    df_gold = df_gold.sort_values("交易时间")
+    latest_gold = df_gold.iloc[-1]
+    gold_price = float(latest_gold["晚盘价"])  # CNY/g
+    gold_date = pd.to_datetime(latest_gold["交易时间"]).date()
+
+    df_silver = ak.spot_silver_benchmark_sge()
+    if df_silver is None or df_silver.empty:
+        raise ValueError("silver spot empty")
+    df_silver = df_silver.sort_values("交易时间")
+    latest_silver = df_silver.iloc[-1]
+    # SGE白银现货单位是 CNY/kg，需除以1000转为 CNY/g
+    silver_price = float(latest_silver["晚盘价"]) / 1000.0  # CNY/g
+    silver_date = pd.to_datetime(latest_silver["交易时间"]).date()
+
+    obs_date = max(gold_date, silver_date)
+    raw_value = round(gold_price / silver_price, 4)
+    print(f"[L1] gold={gold_price} CNY/g, silver={silver_price*1000} CNY/kg, ratio={raw_value}")
+    return raw_value, obs_date
+
+
+if __name__ == "__main__":
+    pub_date, obs_date = get_pit_dates()
+    if pub_date is None:
+        print("-- 非交易日，跳过"); sys.exit(0)
+
+    ensure_table()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
+
+    try:
+        raw_value, obs_date = fetch()
+    except Exception as e:
+        print(f"[L1] 失败: {e}")
+        val = get_latest_value(FACTOR_CODE, SYMBOL)
+        if val is not None:
+            print(f"[L4] 兜底: {val}")
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                       source="db_回补", source_confidence=0.5)
+        else:
+            print(f"[WARN] {FACTOR_CODE} 所有数据源均失败")
+        sys.exit(0)
+
+    if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+        print(f"[WARN] {FACTOR_CODE}={raw_value} 超出bounds{BOUNDS}，跳过")
+        sys.exit(0)
+
+    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value,
+               source="akshare", source_confidence=1.0)
+    print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")

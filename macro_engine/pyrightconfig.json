@@ -1,0 +1,6 @@
+{
+  "include": ["crawlers"],
+  "extraPaths": ["crawlers/common"],
+  "pythonVersion": "3.11",
+  "typeCheckingMode": "basic"
+}

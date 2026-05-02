@@ -1,0 +1,16 @@
+factor_code: "M_FX_USDCNY"
+factor_name: "美元兑人民币汇率"
+template: null
+econ_category: "MAC"
+logic_category: "FX"
+direction: -1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.10
+max_weight: 0.20
+is_active: true
+dependencies:
+  - "AKShare/fx_spot_quote"
+description: "USD/CNY即期汇率，汇率上升→大豆进口成本增加→利多豆粕"

@@ -1,0 +1,17 @@
+# J_J_PROD_OUTPUT.yaml
+# 焦炭产量
+
+factor_code: J_J_PROD_OUTPUT
+symbol: J
+category: supply
+name: 焦炭产量
+description: 焦炭产量
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - supply
+  - J

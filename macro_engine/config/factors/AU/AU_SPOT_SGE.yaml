@@ -1,0 +1,8 @@
+factor_code: AU_SPOT_SGE
+name: "SGE金条玻净价标准价(元盎司克)"
+category: free_data
+description: "SGE金条玻净价标准价(元盎司克)"
+data_source: AKShare spot_golden_benchmark_sge()
+source_confidence: 1.0
+expected_range: [500-1500]
+notes: "周度数据。最新=1058.62(2026-04-15)"

@@ -1,0 +1,19 @@
+# sa_warrant_daily.yaml
+# SA有效预报
+
+factor_code: "sa_warrant_daily"
+factor_name: "SA有效预报"
+template: null
+econ_category: "INV"
+logic_category: "INV"
+direction: -1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.12
+max_weight: 0.30
+is_active: true
+dependencies:
+  - "akshare/futures_spot_price_daily"
+description: "SA有效预报，PIT数据"

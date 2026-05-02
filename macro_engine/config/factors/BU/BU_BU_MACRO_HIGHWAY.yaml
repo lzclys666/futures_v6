@@ -1,0 +1,17 @@
+# BU_BU_MACRO_HIGHWAY.yaml
+# 全国高速公路整车流量
+
+factor_code: BU_BU_MACRO_HIGHWAY
+symbol: BU
+category: macro
+name: 全国高速公路整车流量
+description: 全国高速公路整车流量
+frequency: daily
+unit: 
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - macro
+  - BU

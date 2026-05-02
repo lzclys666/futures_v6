@@ -1,0 +1,17 @@
+# Y_Y_COST_CNF.yaml
+# 进口大豆CNF价
+
+factor_code: Y_Y_COST_CNF
+symbol: Y
+category: cost
+name: 进口大豆CNF价
+description: 进口大豆CNF价
+frequency: daily
+unit: 美元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - cost
+  - Y

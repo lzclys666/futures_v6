@@ -1,0 +1,9 @@
+﻿symbol,date,row_type,composite_score,direction,factor_count,updated_at,engine_version,factor_code,factor_name,raw_value,normalized_score,weight,contribution,factor_direction,ic_value
+AG,2026-02-24,SUMMARY,0.1577,LONG,7,2026-04-21T00:48:57+08:00,backfill_v1.0,,,,,,,,
+AG,2026-02-24,FACTOR,0.1577,LONG,7,2026-04-21T00:48:57+08:00,backfill_v1.0,AG_AU_AG_RATIO,金银比因子,0.007106,-0.8599,0.18,-0.154777,negative,0.0
+AG,2026-02-24,FACTOR,0.1577,LONG,7,2026-04-21T00:48:57+08:00,backfill_v1.0,AG_INDUSTRIAL_IP,全球工业生产因子,805.0,0.4666,0.18,0.08399,positive,0.0
+AG,2026-02-24,FACTOR,0.1577,LONG,7,2026-04-21T00:48:57+08:00,backfill_v1.0,AG_CU_PRICE,铜价联动因子,101810.0,0.0904,0.15,0.013558,positive,0.0
+AG,2026-02-24,FACTOR,0.1577,LONG,7,2026-04-21T00:48:57+08:00,backfill_v1.0,AG_USD_CNY,美元/人民币汇率因子,6.8817,0.659,0.14,0.092254,negative,0.0
+AG,2026-02-24,FACTOR,0.1577,LONG,7,2026-04-21T00:48:57+08:00,backfill_v1.0,AG_Solar_Demand,光伏白银需求因子,805.0,0.4666,0.15,0.069992,positive,0.0
+AG,2026-02-24,FACTOR,0.1577,LONG,7,2026-04-21T00:48:57+08:00,backfill_v1.0,AG_CHINA_PMI,中国PMI/制造业需求因子,49.0,0.0,0.12,0.0,positive,0.0
+AG,2026-02-24,FACTOR,0.1577,LONG,7,2026-04-21T00:48:57+08:00,backfill_v1.0,AG_GOLD_NDF,黄金NDF隐含汇率因子,6.8817,0.659,0.08,0.052717,negative,0.0

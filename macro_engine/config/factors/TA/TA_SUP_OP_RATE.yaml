@@ -1,0 +1,18 @@
+# TA_SUP_OP_RATE.yaml
+# PTA开工率
+
+factor_code: TA_SUP_OP_RATE
+symbol: TA
+category: supply
+name: PTA开工率
+description: PTA生产企业开工率，反映市场供应能力。付费数据源，无免费接口
+frequency: daily
+unit: "%"
+direction: neutral
+confidence: 2
+source: 隆众资讯（付费）
+calculation: null
+tags:
+  - supply
+  - operating_rate
+  - paid

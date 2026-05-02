@@ -1,0 +1,8 @@
+factor_code: I_STK_PORT
+name: "铁矿石港口库存"
+category: inventory
+description: "铁矿石港口库存"
+data_source: AKShare futures_inventory_em
+source_confidence: 1.0
+expected_range: [0-6000]
+notes: "单位万吨实测2026-04-17=3650万吨"

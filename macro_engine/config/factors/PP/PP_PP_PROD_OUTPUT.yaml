@@ -1,0 +1,17 @@
+# PP_PP_PROD_OUTPUT.yaml
+# 聚丙烯产量
+
+factor_code: PP_PP_PROD_OUTPUT
+symbol: PP
+category: supply
+name: 聚丙烯产量
+description: 聚丙烯产量
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - supply
+  - PP

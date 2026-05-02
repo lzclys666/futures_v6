@@ -1,0 +1,19 @@
+# sa_spot_price.yaml
+# SA现货基准价
+
+factor_code: "sa_spot_price"
+factor_name: "SA现货基准价"
+template: null
+econ_category: "CST"
+logic_category: "CST"
+direction: 1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.15
+max_weight: 0.30
+is_active: true
+dependencies:
+  - "akshare/futures_spot_price_daily"
+description: "SA现货基准价，PIT数据"

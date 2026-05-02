@@ -1,0 +1,17 @@
+# BU_BU_FX_USDCNY.yaml
+# 美元兑人民币汇率
+
+factor_code: BU_BU_FX_USDCNY
+symbol: BU
+category: fx
+name: 美元兑人民币汇率
+description: 美元兑人民币汇率
+frequency: daily
+unit: 
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - fx
+  - BU

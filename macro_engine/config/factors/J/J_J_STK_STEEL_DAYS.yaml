@@ -1,0 +1,17 @@
+# J_J_STK_STEEL_DAYS.yaml
+# 钢厂焦炭可用天数
+
+factor_code: J_J_STK_STEEL_DAYS
+symbol: J
+category: inventory
+name: 钢厂焦炭可用天数
+description: 钢厂焦炭可用天数
+frequency: daily
+unit: 天
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - J

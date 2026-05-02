@@ -1,0 +1,57 @@
+{
+  "symbol": "AU",
+  "params": {
+    "score_threshold": 0.3,
+    "hold_days": 3,
+    "position_size": 1
+  },
+  "initial_capital": 100000.0,
+  "final_capital": 100796.94813543638,
+  "returns": 0.007969481354363815,
+  "trades": [
+    {
+      "date": "20260112",
+      "action": "OPEN",
+      "direction": "LONG",
+      "price": 10033.005008642296,
+      "volume": 1,
+      "score": 0.3242
+    },
+    {
+      "date": "20260115",
+      "action": "CLOSE",
+      "direction": "LONG",
+      "price": 10049.545099599129,
+      "volume": 1,
+      "pnl": 165.400909568325,
+      "hold_days": 3,
+      "capital": 100165.40090956833
+    },
+    {
+      "date": "20260223",
+      "action": "OPEN",
+      "direction": "LONG",
+      "price": 9907.557747372104,
+      "volume": 1,
+      "score": 0.3291
+    },
+    {
+      "date": "20260226",
+      "action": "CLOSE",
+      "direction": "LONG",
+      "price": 9970.71246995891,
+      "volume": 1,
+      "pnl": 631.5472258680529,
+      "hold_days": 3,
+      "capital": 100796.94813543638
+    },
+    {
+      "date": "20260423",
+      "action": "OPEN",
+      "direction": "LONG",
+      "price": 10019.989130924296,
+      "volume": 1,
+      "score": 0.3208
+    }
+  ]
+}

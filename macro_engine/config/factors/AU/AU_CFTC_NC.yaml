@@ -1,0 +1,8 @@
+factor_code: AU_CFTC_NC
+name: "黑币金钻非商业净多头"
+category: free_data
+description: "黑币金钻非商业净多头"
+data_source: AKShare macro_usa_cftc_nc_holding()
+source_confidence: 1.0
+expected_range: [-100000-200000]
+notes: "周度数据，每周五公布。最新=45530(2026-04-14)"

@@ -1,0 +1,17 @@
+﻿---
+factor_code: "JM_INV_STEEL_PLANT"
+factor_name: "澳煤进口盈亏"
+econ_category: "COST"
+logic_category: "QTY"
+direction: 1
+frequency: "daily"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 60
+base_weight: 0.04
+max_weight: 0.06
+is_active: false
+dependencies:
+  - "普氏能源(付费)/焦煤价格"
+  - "海关总署/进口单价"
+description: "澳煤进口利润影响进口积极性"

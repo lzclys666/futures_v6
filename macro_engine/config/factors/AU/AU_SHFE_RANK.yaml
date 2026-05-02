@@ -1,0 +1,9 @@
+factor_code: AU_SHFE_RANK
+name: "SHFE沪金前20会员净持仓"
+category: free_data
+description: "SHFE AU前20名会员净持仓（多空轧差手数），反映机构在沪金上的净投机/套保方向。日度数据。"
+data_source: "无免费API（AKShare futures_dce_position_rank仅支持DCE不支持SHFE；SHFE官网404）"
+source_confidence: 0.5
+expected_range: [-50000.0, 50000.0]
+notes: "【L4占位】AKShare DCE函数不支持SHFE；SHFE官网2024年改版后所有持仓数据接口(kxqmr.dat等)返回404。需因子分析师提供付费数据源。L4置信度0.5。"
+source: L4_pending_source

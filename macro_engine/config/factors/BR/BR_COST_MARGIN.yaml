@@ -1,0 +1,17 @@
+# config/factors/BR/BR_COST_MARGIN.yaml
+factor_code: "BR_COST_MARGIN"
+factor_name: "BR行业毛利"
+template: null
+econ_category: "SUP"
+logic_category: "STK"
+direction: 1           # 亏损扩大→供给收缩→利多
+frequency: "weekly"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 156
+base_weight: 0.10
+max_weight: 0.20
+is_active: true
+dependencies:
+  - "Calculation/br_margin"
+description: "BR行业毛利 = BR价格 - 丁二烯成本 - 加工费，反映生产利润和供给意愿"

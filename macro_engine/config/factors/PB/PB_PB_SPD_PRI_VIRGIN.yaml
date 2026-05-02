@@ -1,0 +1,17 @@
+# PB_PB_SPD_PRI_VIRGIN.yaml
+# 原生铅与再生铅价差
+
+factor_code: PB_PB_SPD_PRI_VIRGIN
+symbol: PB
+category: spread
+name: 原生铅与再生铅价差
+description: 原生铅与再生铅价差
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - spread
+  - PB

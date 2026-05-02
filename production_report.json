@@ -1,0 +1,73 @@
+{
+  "generated_at": "2026-04-25T15:35:22.026593",
+  "capital": 1000000,
+  "total_results": 6,
+  "results": [
+    {
+      "symbol": "RU",
+      "config": "Conservative",
+      "trades": 24,
+      "win_rate": 0.4166666666666667,
+      "net_profit": -2600.0,
+      "profit_factor": 0.5630252100840336,
+      "sharpe": -3.5513842423881448,
+      "max_dd_pct": 0.4046358277550205,
+      "return_pct": -0.26
+    },
+    {
+      "symbol": "RU",
+      "config": "Aggressive",
+      "trades": 101,
+      "win_rate": 0.5346534653465347,
+      "net_profit": 4650.0,
+      "profit_factor": 1.3675889328063242,
+      "sharpe": 1.8370167818457612,
+      "max_dd_pct": 0.26381284221005474,
+      "return_pct": 0.46499999999999997
+    },
+    {
+      "symbol": "ZN",
+      "config": "Conservative",
+      "trades": 29,
+      "win_rate": 0.4827586206896552,
+      "net_profit": 825.0,
+      "profit_factor": 1.3548387096774193,
+      "sharpe": 1.8383838479528136,
+      "max_dd_pct": 0.09498812648418949,
+      "return_pct": 0.0825
+    },
+    {
+      "symbol": "ZN",
+      "config": "Aggressive",
+      "trades": 97,
+      "win_rate": 0.5670103092783505,
+      "net_profit": 2275.0,
+      "profit_factor": 1.2327365728900255,
+      "sharpe": 1.2874425540053223,
+      "max_dd_pct": 0.19991004048178318,
+      "return_pct": 0.2275
+    },
+    {
+      "symbol": "RB",
+      "config": "Conservative",
+      "trades": 28,
+      "win_rate": 0.6428571428571429,
+      "net_profit": 1080.0,
+      "profit_factor": 3.769230769230769,
+      "sharpe": 6.428586425804439,
+      "max_dd_pct": 0.018983294700663414,
+      "return_pct": 0.108
+    },
+    {
+      "symbol": "RB",
+      "config": "Aggressive",
+      "trades": 91,
+      "win_rate": 0.4835164835164835,
+      "net_profit": 1110.0,
+      "profit_factor": 1.3978494623655915,
+      "sharpe": 1.941568293241691,
+      "max_dd_pct": 0.048998530044098675,
+      "return_pct": 0.11100000000000002
+    }
+  ]
+}

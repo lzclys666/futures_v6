@@ -1,0 +1,18 @@
+# AU_REAL_RATE - 美国实际利率因子
+factor_code: "AU_REAL_RATE"
+factor_name: "美国实际利率因子"
+commodity: "AU"
+
+factor_direction: "negative"
+weight: 0.22
+
+data_source: "akshare"
+api_params:
+  function: "bond_gb_us_sina"
+  symbol: "US10Y"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "美国10年期国债实际利率（已切换至Sina数据源）"
+pit_required: false
+dependencies: []

@@ -1,0 +1,17 @@
+# PP_PP_SPD_LAM_Copoly.yaml
+# 拉丝-共聚价差
+
+factor_code: PP_PP_SPD_LAM_Copoly
+symbol: PP
+category: spread
+name: 拉丝-共聚价差
+description: 拉丝-共聚价差
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - spread
+  - PP

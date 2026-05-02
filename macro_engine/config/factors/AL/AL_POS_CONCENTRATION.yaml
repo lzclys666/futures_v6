@@ -1,0 +1,17 @@
+# config/factors/AL/AL_POS_CONCENTRATION.yaml
+factor_code: "AL_POS_CONCENTRATION"
+factor_name: "持仓集中度"
+template: null
+econ_category: "POS"
+logic_category: "SEN"
+direction: 0            # 中性因子
+frequency: "daily"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 60
+base_weight: 0.04
+max_weight: 0.06
+is_active: true
+dependencies:
+  - "上期所官网/position_rank"
+description: "前5/10名会员持仓占总持仓比例，反映资金集中程度"

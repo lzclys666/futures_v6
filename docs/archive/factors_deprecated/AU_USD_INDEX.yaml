@@ -1,0 +1,18 @@
+# AU_USD_INDEX - 美元指数因子
+factor_code: "AU_USD_INDEX"
+factor_name: "美元指数因子"
+commodity: "AU"
+
+factor_direction: "negative"
+weight: 0.20
+
+data_source: "akshare"
+api_params:
+  function: "currency_hist_em"
+  symbol: "USDX"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "美元指数（USDX）走势，影响黄金反向"
+pit_required: false
+dependencies: []

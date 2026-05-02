@@ -1,0 +1,18 @@
+# AU_FUT_SPREAD - 黄金跨期价差因子
+factor_code: "AU_FUT_SPREAD"
+factor_name: "黄金跨期价差因子"
+commodity: "AU"
+
+factor_direction: "neutral"
+weight: 0.0
+
+data_source: "akshare"
+api_params:
+  function: "futures_zh_daily_sina"
+  symbol: "au0"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "沪金主力-次主力合约价差，期限结构信号"
+pit_required: false
+dependencies: []

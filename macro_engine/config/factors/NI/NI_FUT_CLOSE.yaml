@@ -1,0 +1,8 @@
+factor_code: NI_FUT_CLOSE
+name: "浙镍期货收盘价"
+category: free_data
+description: "浙镍期货收盘价"
+data_source: AKShare futures_main_sina('NI0')
+source_confidence: 1.0
+expected_range: [80000-250000]
+notes: "实测2026-04-17=144240元/吨"

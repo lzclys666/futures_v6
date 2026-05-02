@@ -1,0 +1,16 @@
+factor_code: "NR_SUP_RSS3_FOB"
+factor_name: "泰国RSS3 FOB报价"
+template: null
+econ_category: "SUP"
+logic_category: "PRC"
+direction: -1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 252
+base_weight: 0.10
+max_weight: 0.20
+is_active: true
+dependencies:
+  - "AKShare/futures_foreign_hist"
+description: "泰国RSS3烟胶片FOB报价（美元/吨），NR国际定价基准，AKShare仅支持RSS3暂不支持STR20"

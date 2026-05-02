@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>IC热力图</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #4CAF50; color: white; }
+        .variety { font-weight: bold; background-color: #f2f2f2; }
+        .value { font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h2>品种×因子 IC热力图</h2>
+    <p>颜色说明: 绿色=正IC, 红色=负IC, 白色=无数据</p>
+    <table>
+        <tr>
+            <th>品种</th>
+            <th>金银比</th>
+            <th>美元人民币</th>
+            <th>布伦特原油</th>
+        </tr>
+        <tr>
+            <td class='variety'>AG</td>
+            <td class='value' style='background-color: rgb(255, 241.00023816139404, 241.00023816139404); color: black;'>-0.070</td>
+            <td class='value' style='background-color: rgb(255, 238.0470368753225, 238.0470368753225); color: black;'>-0.085</td>
+            <td class='value' style='background-color: rgb(226.37998650418768, 255, 226.37998650418768); color: white;'>0.143</td>
+        </tr>
+        <tr>
+            <td class='variety'>AU</td>
+            <td class='value' style='background-color: rgb(255, 209.1637756519668, 209.1637756519668); color: white;'>-0.229</td>
+            <td class='value' style='background-color: rgb(239.33501369428015, 255, 239.33501369428015); color: black;'>0.078</td>
+            <td class='value' style='background-color: rgb(232.43468423768508, 255, 232.43468423768508); color: white;'>0.113</td>
+        </tr>
+        <tr>
+            <td class='variety'>CU</td>
+            <td class='value' style='background-color: rgb(255, 247.83801055848846, 247.83801055848846); color: black;'>-0.036</td>
+            <td class='value' style='background-color: rgb(255, 254.48049061247173, 254.48049061247173); color: black;'>-0.003</td>
+            <td class='value' style='background-color: rgb(223.01683007184536, 255, 223.01683007184536); color: white;'>0.160</td>
+        </tr>
+        <tr>
+            <td class='variety'>AL</td>
+            <td class='value' style='background-color: rgb(255, 239.28388838169332, 239.28388838169332); color: black;'>-0.079</td>
+            <td class='value' style='background-color: rgb(251.72925018854443, 255, 251.72925018854443); color: black;'>0.016</td>
+            <td class='value' style='background-color: rgb(236.6685587266304, 255, 236.6685587266304); color: black;'>0.092</td>
+        </tr>
+        <tr>
+            <td class='variety'>ZN</td>
+            <td class='value' style='background-color: rgb(244.5437621561545, 255, 244.5437621561545); color: black;'>0.052</td>
+            <td class='value' style='background-color: rgb(255, 200.52899614972412, 200.52899614972412); color: white;'>-0.272</td>
+            <td class='value' style='background-color: rgb(255, 246.01178898900488, 246.01178898900488); color: black;'>-0.045</td>
+        </tr>
+
+    </table>
+</body>
+</html>

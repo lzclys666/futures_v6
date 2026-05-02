@@ -1,0 +1,18 @@
+# AU_FUT_PRICE_MOMENTUM - 黄金期货价格动量因子
+factor_code: "AU_FUT_PRICE_MOMENTUM"
+factor_name: "黄金期货价格动量因子"
+commodity: "AU"
+
+factor_direction: "positive"
+weight: 0.0
+
+data_source: "akshare"
+api_params:
+  function: "futures_zh_daily_sina"
+  symbol: "au0"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "黄金期货N日价格动量，动能趋势延续"
+pit_required: false
+dependencies: []

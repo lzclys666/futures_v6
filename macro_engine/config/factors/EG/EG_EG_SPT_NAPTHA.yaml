@@ -1,0 +1,17 @@
+# EG_EG_SPT_NAPTHA.yaml
+# 石脑油裂解价差
+
+factor_code: EG_EG_SPT_NAPTHA
+symbol: EG
+category: cost
+name: 石脑油裂解价差
+description: 石脑油裂解价差
+frequency: daily
+unit: 美元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - cost
+  - EG

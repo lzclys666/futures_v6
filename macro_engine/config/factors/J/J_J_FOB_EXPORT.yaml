@@ -1,0 +1,17 @@
+# J_J_FOB_EXPORT.yaml
+# 焦炭出口FOB价
+
+factor_code: J_J_FOB_EXPORT
+symbol: J
+category: price
+name: 焦炭出口FOB价
+description: 焦炭出口FOB价
+frequency: daily
+unit: 美元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - J

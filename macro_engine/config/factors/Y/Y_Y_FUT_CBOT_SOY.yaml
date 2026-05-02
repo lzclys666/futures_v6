@@ -1,0 +1,17 @@
+# Y_Y_FUT_CBOT_SOY.yaml
+# CBOT大豆期货收盘价
+
+factor_code: Y_Y_FUT_CBOT_SOY
+symbol: Y
+category: price
+name: CBOT大豆期货收盘价
+description: CBOT大豆期货收盘价
+frequency: daily
+unit: 美分/蒲式耳
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - price
+  - Y

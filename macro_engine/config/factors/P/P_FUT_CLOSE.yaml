@@ -1,0 +1,8 @@
+factor_code: P_FUT_CLOSE
+name: "棕榈油期货收盘价"
+category: free_data
+description: "棕榈油期货收盘价"
+data_source: AKShare futures_main_sina('P0')
+source_confidence: 1.0
+expected_range: [5000-15000]
+notes: "实测2026-04-17=9492元/吨"

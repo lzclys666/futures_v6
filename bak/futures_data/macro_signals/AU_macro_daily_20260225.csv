@@ -1,0 +1,9 @@
+﻿symbol,date,row_type,composite_score,direction,factor_count,updated_at,engine_version,factor_code,factor_name,raw_value,normalized_score,weight,contribution,factor_direction,ic_value
+AU,2026-02-25,SUMMARY,0.2455,LONG,7,2026-04-21T02:55:41+08:00,backfill_v1.0,,,,,,,,
+AU,2026-02-25,FACTOR,0.2455,LONG,7,2026-04-21T02:55:41+08:00,backfill_v1.0,AU_REAL_RATE,美国实际利率因子,4.048,0.7579,0.22,0.166749,negative,0.0
+AU,2026-02-25,FACTOR,0.2455,LONG,7,2026-04-21T02:55:41+08:00,backfill_v1.0,AU_USD_INDEX,美元指数因子,7.2,-0.0,0.2,-0.0,negative,0.0
+AU,2026-02-25,FACTOR,0.2455,LONG,7,2026-04-21T02:55:41+08:00,backfill_v1.0,AU_GOLD_RSI,黄金RSI超买超卖因子,0.003135,0.515,0.12,0.061798,neutral,0.0
+AU,2026-02-25,FACTOR,0.2455,LONG,7,2026-04-21T02:55:41+08:00,backfill_v1.0,AU_VIX,VIX波动率/避险情绪因子,0.002612,0.1389,0.15,0.020834,positive,0.0
+AU,2026-02-25,FACTOR,0.2455,LONG,7,2026-04-21T02:55:41+08:00,backfill_v1.0,AU_CB_PURCHASE,全球央行购金因子,1097.62,0.7256,0.12,0.087072,positive,0.0
+AU,2026-02-25,FACTOR,0.2455,LONG,7,2026-04-21T02:55:41+08:00,backfill_v1.0,AU_INFLATION_EXP,通胀预期因子,4.048,-0.7579,0.12,-0.090954,positive,0.0
+AU,2026-02-25,FACTOR,0.2455,LONG,7,2026-04-21T02:55:41+08:00,backfill_v1.0,AU_DXY_MOMENTUM,美元动能因子,0.0,-0.0,0.07,-0.0,negative,0.0

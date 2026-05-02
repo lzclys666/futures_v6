@@ -1,0 +1,16 @@
+factor_code: "M_PRI_CBOT_SOYBEAN"
+factor_name: "CBOT大豆期货价格"
+template: null
+econ_category: "SUP"
+logic_category: "PRI"
+direction: 1
+frequency: "daily"
+norm_method: "mad"
+detrend_method: "none"
+norm_window: 756
+base_weight: 0.15
+max_weight: 0.30
+is_active: true
+dependencies:
+  - "AKShare/futures_foreign_commodity_realtime"
+description: "CBOT大豆主力合约收盘价（美分/蒲式耳），全球大豆定价基准，影响进口成本"

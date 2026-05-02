@@ -1,0 +1,17 @@
+# Y_Y_SPD_BASIS.yaml
+# 豆油期现基差
+
+factor_code: Y_Y_SPD_BASIS
+symbol: Y
+category: spread
+name: 豆油期现基差
+description: 豆油期现基差
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - spread
+  - Y

@@ -1,0 +1,401 @@
+# run.py
+"""
+期货智能交易系统 V6.0 启动脚本（最终稳定版）
+集成：数据源降级（CTP/缓存）、审计日志独立存储、多因子策略、风控插件
+"""
+
+import sys
+import os
+import json
+import shutil
+import sqlite3
+from datetime import datetime, timedelta
+from pathlib import Path
+from typing import Optional, Dict, Any, List
+
+# ==================== 环境与路径设置 ====================
+# Qt 无头模式：服务器无图形界面时使用 offscreen 渲染
+if not os.environ.get('DISPLAY') and not os.environ.get('QT_QPA_PLATFORM'):
+    os.environ['QT_QPA_PLATFORM'] = 'offscreen'
+    print("[环境] 已设置 QT_QPA_PLATFORM=offscreen（无头模式）")
+
+project_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(project_dir)
+print(f"当前工作目录已切换到: {os.getcwd()}")
+
+user_path = os.path.expanduser("~")
+vntrader_path = os.path.join(user_path, ".vntrader")
+os.environ["VNTRADER_DIR"] = vntrader_path
+os.makedirs(vntrader_path, exist_ok=True)
+
+# 删除嵌套目录
+nested_path = os.path.join(vntrader_path, ".vntrader")
+if os.path.exists(nested_path):
+    shutil.rmtree(nested_path)
+    print(f"[修复] 已删除嵌套目录: {nested_path}")
+
+# 添加自定义模块搜索路径
+custom_modules = [
+    os.path.join(project_dir, "adapters"),
+    os.path.join(project_dir, "services"),
+    os.path.join(project_dir, "strategies"),  # 项目内策略目录
+    os.path.join(user_path, "strategies"),  # 用户策略目录（兼容旧路径）
+    project_dir,  # 项目根目录（用于导入 api, services 等）
+]
+for path in custom_modules:
+    if os.path.exists(path) and path not in sys.path:
+        sys.path.insert(0, path)
+        print(f"[路径] 已添加模块搜索路径: {path}")
+
+# ==================== 导入 VNPY 模块 ====================
+from vnpy.event import EventEngine, Event
+from vnpy.trader.engine import MainEngine
+from vnpy.trader.setting import SETTINGS
+from vnpy.trader.utility import load_json, save_json, get_folder_path
+from vnpy.trader.constant import Status
+from vnpy.trader.object import OrderData, TradeData
+# from vnpy_riskmanager import RiskManagerApp  # P0-fix: 未安装，已注释（自写 FastAPI bridge 替代）
+from vnpy_ctp import CtpGateway
+from vnpy_ctastrategy import CtaStrategyApp
+# from vnpy_webtrader import WebTraderApp  # P0-fix: 未安装，已注释（自写 FastAPI bridge 替代）
+from vnpy_datamanager import DataManagerApp
+from vnpy_ctabacktester import CtaBacktesterApp
+from services.macro_risk_app import MacroRiskApp
+
+# ==================== 配置文件初始化 ====================
+setting_file = os.path.join(vntrader_path, "vt_setting.json")
+config = {
+    "datafeed.name": "xt",
+    "datafeed.username": "token",
+    "datafeed.password": "4545ed6ddce0c4071a9bc2695fd505afffc165eb",
+    "log.active": True,
+    "log.level": 10,
+    "log.console": True,
+    "log.file": True
+}
+with open(setting_file, "w", encoding="utf-8") as f:
+    json.dump(config, f, indent=4, ensure_ascii=False)
+SETTINGS.update(config)
+print(f"配置文件已更新: {setting_file}")
+
+# ==================== 自定义事件类型 ====================
+EVENT_DATA_SOURCE_ALERT = "eDataSourceAlert"
+
+# ==================== 数据适配器链（精简版，仅 CTP / 缓存） ====================
+class DataAdapterChain:
+    """数据源降级管理：CTP 优先，断开后切换至本地缓存"""
+
+    def __init__(self, event_engine: EventEngine, main_engine: MainEngine):
+        self.event_engine = event_engine
+        self.main_engine = main_engine
+        self.config_path = os.path.join(vntrader_path, "data_adapter_chain.json")
+        self.priority = self.load_priority()
+        self.current_source: Optional[str] = None
+        self.last_alert_level = None
+
+        self.event_engine.register("eGateway", self.on_gateway_event)
+        self._check_and_switch()
+
+    def load_priority(self) -> List[str]:
+        default = ["ctp", "cache"]
+        try:
+            if os.path.exists(self.config_path):
+                cfg = load_json(self.config_path)
+                return cfg.get("priority", default)
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+        return default
+
+    def save_priority(self):
+        save_json(self.config_path, {"priority": self.priority})
+
+    def _publish_alert(self, level: str, message: str):
+        event = Event(
+            type=EVENT_DATA_SOURCE_ALERT,
+            data={"level": level, "message": message, "timestamp": datetime.now().isoformat()}
+        )
+        self.event_engine.put(event)
+        self.last_alert_level = level
+
+    def on_gateway_event(self, event: Event):
+        data = event.data
+        if data.get("gateway_name") != "CTP":
+            return
+        if data.get("status") == "connected":
+            self.mark_source_healthy("ctp")
+        elif data.get("status") == "disconnected":
+            self.mark_source_unhealthy("ctp")
+
+    def _check_health(self, source_name: str) -> bool:
+        if source_name == "ctp":
+            gw = self.main_engine.get_gateway("CTP")
+            return gw is not None and gw.connected
+        elif source_name == "cache":
+            return True
+        return False
+
+    def _check_and_switch(self):
+        if self.current_source and self._check_health(self.current_source):
+            return
+        for src in self.priority:
+            if self._check_health(src):
+                new_source = src
+                break
+        else:
+            self._publish_alert("ERROR", "所有数据源均不可用")
+            self.current_source = None
+            return
+
+        old = self.current_source
+        self.current_source = new_source
+        if old and old != new_source:
+            self._publish_alert("WARNING", f"数据源降级：{old} -> {new_source}")
+        else:
+            self._publish_alert("INFO", f"当前数据源：{new_source}")
+
+    def mark_source_unhealthy(self, source_name: str):
+        self._check_and_switch()
+
+    def mark_source_healthy(self, source_name: str):
+        self._check_and_switch()
+
+    def get_current_source(self) -> str:
+        self._check_and_switch()
+        return self.current_source or "unknown"
+
+# ==================== 审计日志服务 ====================
+class AuditService:
+    """审计日志独立存储，分表保留 90 天 / 7 天"""
+
+    def __init__(self, event_engine: EventEngine):
+        self.event_engine = event_engine
+        db_dir = Path(vntrader_path)
+        db_dir.mkdir(exist_ok=True)
+        self.db_path = str(db_dir / "audit.db")
+        self._init_db()
+        self._register_events()
+
+    def _get_conn(self):
+        conn = sqlite3.connect(self.db_path, timeout=10.0, check_same_thread=False)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+    def _init_db(self):
+        with self._get_conn() as conn:
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS audit_log (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    operator TEXT,
+                    operation_type TEXT,
+                    target_type TEXT,
+                    target_id TEXT,
+                    old_value TEXT,
+                    new_value TEXT,
+                    extra_data TEXT,
+                    created_at TEXT DEFAULT (datetime('now','localtime'))
+                )
+            """)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS event_queue (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    event_type TEXT,
+                    event_data TEXT,
+                    created_at TEXT DEFAULT (datetime('now','localtime'))
+                )
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_audit_created ON audit_log(created_at)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_event_created ON event_queue(created_at)")
+
+    def _register_events(self):
+        self.event_engine.register("eStrategy", self.on_strategy_event)
+        self.event_engine.register("eOrder", self.on_order_event)
+        self.event_engine.register("eTrade", self.on_trade_event)
+        self.event_engine.register("eRiskRule", self.on_risk_rule_event)
+
+    def on_strategy_event(self, event: Event):
+        data = event.data
+        op_type = data.get("type")
+        if op_type in ("start", "stop"):
+            self.log_audit(
+                operator="system",
+                operation_type=f"strategy_{op_type}",
+                target_type="strategy",
+                target_id=data.get("strategy_name"),
+                extra_data={"vt_symbol": data.get("vt_symbol")}
+            )
+
+    def on_order_event(self, event: Event):
+        order: OrderData = event.data
+        if order.status == Status.SUBMITTING:
+            self.log_audit(
+                operator="strategy",
+                operation_type="send_order",
+                target_type="order",
+                target_id=order.vt_orderid,
+                new_value=f"{order.direction.value} {order.offset.value} {order.volume}@{order.price}",
+                extra_data={"symbol": order.symbol}
+            )
+
+    def on_trade_event(self, event: Event):
+        trade: TradeData = event.data
+        self.log_audit(
+            operator="strategy",
+            operation_type="trade",
+            target_type="trade",
+            target_id=trade.vt_tradeid,
+            new_value=f"{trade.direction.value} {trade.offset.value} {trade.volume}@{trade.price}",
+            extra_data={"symbol": trade.symbol}
+        )
+
+    def on_risk_rule_event(self, event: Event):
+        data = event.data
+        self.log_audit(
+            operator="system",
+            operation_type="risk_rule",
+            target_type="risk_rule",
+            target_id=data.get("rule_name"),
+            extra_data={"action": data.get("action")}
+        )
+
+    def log_audit(self, operator: str, operation_type: str, target_type: str = None,
+                  target_id: str = None, old_value: Any = None, new_value: Any = None,
+                  extra_data: Dict = None):
+        try:
+            with self._get_conn() as conn:
+                conn.execute("""
+                    INSERT INTO audit_log 
+                    (operator, operation_type, target_type, target_id, old_value, new_value, extra_data)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                """, (
+                    operator, operation_type, target_type, target_id,
+                    json.dumps(old_value, ensure_ascii=False) if old_value is not None else None,
+                    json.dumps(new_value, ensure_ascii=False) if new_value is not None else None,
+                    json.dumps(extra_data, ensure_ascii=False) if extra_data else None
+                ))
+        except sqlite3.OperationalError as e:
+            print(f"审计日志写入失败（数据库锁）: {e}")
+
+    def cleanup(self, audit_days=90, event_days=7):
+        audit_cut = (datetime.now() - timedelta(days=audit_days)).strftime("%Y-%m-%d %H:%M:%S")
+        event_cut = (datetime.now() - timedelta(days=event_days)).strftime("%Y-%m-%d %H:%M:%S")
+        with self._get_conn() as conn:
+            conn.execute("DELETE FROM audit_log WHERE created_at < ?", (audit_cut,))
+            conn.execute("DELETE FROM event_queue WHERE created_at < ?", (event_cut,))
+            conn.execute("VACUUM")
+
+# ==================== 主引擎初始化 ====================
+event_engine = EventEngine()
+main_engine = MainEngine(event_engine)
+
+# 数据适配器链
+data_chain = DataAdapterChain(event_engine, main_engine)
+print(f"数据适配器链已初始化，当前数据源：{data_chain.get_current_source()}")
+
+# 审计服务
+audit_svc = AuditService(event_engine)
+main_engine.audit_service = audit_svc
+print("审计服务已启动并挂载到主引擎")
+
+# VNpyBridge（FastAPI 桥接器）
+from services.vnpy_bridge import VNpyBridge
+vnpy_bridge = VNpyBridge()
+main_engine.vnpy_bridge = vnpy_bridge
+print("VNpyBridge 已初始化")
+
+# SignalBridge（宏观信号事件桥接器）
+from services.signal_bridge import SignalBridge
+signal_bridge = SignalBridge(event_engine, csv_dir=os.path.join(project_dir, "macro_engine", "output"))
+signal_bridge.start()
+main_engine.signal_bridge = signal_bridge
+print("SignalBridge 已启动")
+
+# 添加网关和应用
+main_engine.add_gateway(CtpGateway)
+
+# ==================== CTP SimNow 连接配置化 ====================
+# 账号配置（可写入 .env 或 config 文件，这里硬编码方便调试）
+# 注意: CtpGateway 期望中文 key: 用户名/密码/经纪商代码/交易服务器/行情服务器/产品名称/授权码
+CTP_USER_ID     = os.environ.get("VNPY_CTP_USER_ID", "260345")
+CTP_PASSWORD    = os.environ.get("VNPY_CTP_PASSWORD", "luzc19891222@")
+CTP_BROKER_ID   = os.environ.get("VNPY_CTP_BROKER_ID", "9999")
+CTP_TD_SERVER   = os.environ.get("VNPY_CTP_TD_SERVER", "182.254.243.31:30001")   # 交易服务器
+CTP_MD_SERVER   = os.environ.get("VNPY_CTP_MD_SERVER", "182.254.243.31:30011")   # 行情服务器
+CTP_APP_ID      = os.environ.get("VNPY_CTP_APP_ID", "simnow_client_test")        # 产品名称
+CTP_AUTH_CODE   = os.environ.get("VNPY_CTP_AUTH_CODE", "0000000000000000")        # 授权编码
+
+try:
+    gw = main_engine.get_gateway("CTP")
+    gw.connect({
+        "用户名": CTP_USER_ID,
+        "密码": CTP_PASSWORD,
+        "经纪商代码": CTP_BROKER_ID,
+        "交易服务器": CTP_TD_SERVER,
+        "行情服务器": CTP_MD_SERVER,
+        "产品名称": CTP_APP_ID,
+        "授权编码": CTP_AUTH_CODE,
+        "环境": "仿真",
+    })
+    print(f"[CTP] SimNow 连接: user={CTP_USER_ID}, broker={CTP_BROKER_ID}, "
+          f"td={CTP_TD_SERVER}, md={CTP_MD_SERVER}")
+except Exception as e:
+    print(f"[CTP] 连接失败: {e}")
+
+main_engine.add_app(CtaStrategyApp)
+# main_engine.add_app(WebTraderApp)  # P0-fix: 未安装，已注释
+main_engine.add_app(DataManagerApp)
+main_engine.add_app(CtaBacktesterApp)
+main_engine.add_app(MacroRiskApp)
+print("[App] MacroRiskApp 已加载")
+
+main_engine.init_engines()
+
+# ==================== 自动加载策略 ====================
+try:
+    cta_engine = main_engine.get_engine("CtaStrategy")
+    if cta_engine:
+        strategy_dir = Path(project_dir) / "strategies"
+        if strategy_dir.exists():
+            cta_engine.load_strategy_class_from_folder(strategy_dir, module_name="macro_engine.strategies")
+            class_names = cta_engine.get_all_strategy_class_names()
+            print(f"[策略] 已加载 {len(class_names)} 个策略类: {class_names}")
+        else:
+            print(f"[策略] 策略目录不存在: {strategy_dir}")
+    else:
+        print("[策略] CtaEngine 未找到，跳过策略加载")
+except Exception as e:
+    print(f"[策略] 自动加载策略失败: {e}")
+
+# ==================== 启动前注册桥接器到 API ====================
+try:
+    import api.macro_api_server as api_server
+    api_server.set_vnpy_bridge(vnpy_bridge)
+    print("VNpyBridge 已注册到 FastAPI")
+except Exception as e:
+    print(f"VNpyBridge 注册到 FastAPI 失败: {e}")
+
+# ==================== 启动模式判断 ====================
+# 强制无头模式：服务器无图形界面
+headless = True
+print("[模式] 无头模式启动（不加载GUI）")
+
+# ==================== 启动 GUI ====================
+if __name__ == "__main__" and not headless:
+    print("=" * 50)
+    print(f"VNPY 配置目录: {get_folder_path('.vntrader')}")
+    print("=" * 50)
+
+    from vnpy.trader.ui import create_qapp, MainWindow
+    qapp = create_qapp()
+    main_window = MainWindow(main_engine, event_engine)
+    main_window.show()
+    qapp.exec()
+else:
+    print("[模式] 引擎已启动，无头模式运行中...")
+    import time
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("[退出] 收到中断信号，正在关闭...")
+        main_engine.close()
+        event_engine.stop()

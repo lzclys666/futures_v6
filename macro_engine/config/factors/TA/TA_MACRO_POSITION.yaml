@@ -1,0 +1,19 @@
+# TA_MACRO_POSITION.yaml
+# PTA期货持仓量
+
+factor_code: TA_MACRO_POSITION
+symbol: TA
+category: macro
+name: PTA期货持仓量
+description: 前20席位净持仓（多单-空单），反映机构博弈方向
+frequency: daily
+unit: 手
+direction: neutral  # 需结合价格趋势判断
+confidence: 3  # ★★★
+source: 郑商所/AKShare
+calculation: 前20席位多单总和 - 前20席位空单总和
+tags:
+  - macro
+  - position
+  - sentiment
+  - institution

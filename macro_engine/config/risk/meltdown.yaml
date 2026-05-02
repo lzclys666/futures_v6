@@ -1,0 +1,10 @@
+# config/risk/meltdown.yaml
+meltdown:
+  yellow:
+    credit_spread_change: 0.3
+    vix_threshold: 30
+    volatility_percentile: 0.8
+  orange:
+    liquidity_drop: 0.5
+  red:
+    volatility_percentile: 0.95

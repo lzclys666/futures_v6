@@ -1,0 +1,16 @@
+﻿{
+    "trigger_time":  null,
+    "same_direction_pct":  0,
+    "confirm_deadline":  null,
+    "status":  "RUNNING",
+    "trigger_condition":  null,
+    "confirmed_by":  null,
+    "history":  [
+
+                ],
+    "trigger_detail":  {
+                           "long_count":  0,
+                           "short_count":  0,
+                           "total_count":  0
+                       }
+}

@@ -1,0 +1,18 @@
+# AU_DXY_MOMENTUM - 美元动能因子
+factor_code: "AU_DXY_MOMENTUM"
+factor_name: "美元动能因子"
+commodity: "AU"
+
+factor_direction: "negative"
+weight: 0.07
+
+data_source: "akshare"
+api_params:
+  function: "currency_hist_em"
+  symbol: "USDX"
+  start_date: "20200101"
+
+data_path: "data/raw_factors/AU/"
+description: "美元指数动量变化率，反映美元短期趋势"
+pit_required: false
+dependencies: ["AU_USD_INDEX"]

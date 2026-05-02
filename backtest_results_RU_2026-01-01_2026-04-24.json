@@ -1,0 +1,14 @@
+{
+  "symbol": "RU",
+  "period": "2026-01-01 ~ 2026-04-24",
+  "total_signals": 80,
+  "long_signals": 14,
+  "short_signals": 4,
+  "total_trades": 12,
+  "winning_trades": 7,
+  "win_rate": 0.5833333333333334,
+  "total_pnl": -1236.354871132371,
+  "final_capital": 98763.64512886762,
+  "returns": -0.01236354871132382,
+  "sharpe_ratio": -0.9160899503028666
+}

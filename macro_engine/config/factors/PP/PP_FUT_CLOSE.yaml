@@ -1,0 +1,8 @@
+factor_code: PP_FUT_CLOSE
+name: "PP聚丙烯期货收盘价"
+category: free_data
+description: "DCE聚丙烯期货主力合约日行情收盘价，反映塑料原料市场价格。"
+data_source: AKShare futures_main_sina(symbol="PP0")['收盘价']
+source_confidence: 1.0
+expected_range: [6000.0, 15000.0]
+notes: "L1: AKShare PP0主力合约 | L4: DB历史回补"

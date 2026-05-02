@@ -1,0 +1,32 @@
+# NR_DEM_TIRE_EXPORT.yaml
+# 中国轮胎出口量（万吨/月）
+
+factor_code: NR_DEM_TIRE_EXPORT
+symbol: NR
+frequency: monthly
+
+meaning: |
+  中国轮胎月度出口量，反映外需强度。
+  轮胎占全球天胶消费约70%，中国轮胎出口占全球贸易量约40%，
+  是NR需求端最重要的宏观指标之一。
+
+data_sources:
+  - name: 海关总署
+    url: http://www.customs.gov.cn/
+    confidence: 1.0
+    note: 官方权威数据，HS编码4011（新充气橡胶轮胎）
+  - name: 中国橡胶工业协会
+    url: http://www.cria.org.cn/
+    confidence: 0.9
+    note: 轮胎分会月度报告
+  - name: 隆众资讯轮胎月报
+    url: https://www.oilchem.net/
+    confidence: 0.8
+    note: 付费订阅，数据整理更及时
+
+unit: 万吨/月
+normal_range: [30, 80]
+
+update_schedule: "每月10-15日更新上月数据"
+manual_input_required: true
+note: "月频数据，需手动从海关或行业协会报告录入"

@@ -1,0 +1,58 @@
+.trading-panel {
+  padding: 8px 0;
+}
+
+.tp-order-card .ant-card-body {
+  padding-bottom: 8px;
+}
+
+.tp-order-card .ant-form-item {
+  margin-bottom: 8px;
+}
+
+.tp-order-card .ant-form-item-label {
+  padding-bottom: 2px;
+}
+
+.tp-order-card .ant-form-item-label > label {
+  font-size: 12px;
+  height: 20px;
+}
+
+.tp-orders-card .ant-table {
+  font-size: 12px;
+}
+
+.tp-positions-card .ant-statistic-title {
+  font-size: 12px;
+}
+
+.tp-positions-card .ant-statistic-content {
+  font-size: 20px;
+}
+
+.tp-pos-list {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.tp-pos-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 4px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.tp-pos-item:last-child {
+  border-bottom: none;
+}
+
+.tp-pos-item:hover {
+  background: #fafafa;
+  border-radius: 4px;
+}
+
+.tp-trades-card .ant-table {
+  font-size: 12px;
+}

@@ -1,0 +1,17 @@
+# PB_PB_MACRO_TC.yaml
+# 铅TC加工费
+
+factor_code: PB_PB_MACRO_TC
+symbol: PB
+category: cost
+name: 铅TC加工费
+description: 铅TC加工费
+frequency: daily
+unit: 元/金属吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - cost
+  - PB

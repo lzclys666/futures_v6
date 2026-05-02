@@ -1,0 +1,17 @@
+# P_DCE_INV.yaml
+# 棕榈油期货库存
+
+factor_code: P_DCE_INV
+symbol: P
+category: inventory
+name: 棕榈油期货库存
+description: 棕榈油期货库存
+frequency: daily
+unit: 手
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - P

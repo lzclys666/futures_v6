@@ -1,0 +1,8 @@
+factor_code: PB_FUT_CLOSE
+name: "PB沪铅期货收盘价"
+category: free_data
+description: "SHFE沪铅期货主力合约日行情收盘价，反映铅市场价格。"
+data_source: AKShare futures_main_sina(symbol="PB0")['收盘价']
+source_confidence: 1.0
+expected_range: [10000.0, 25000.0]
+notes: "L1: AKShare PB0主力合约 | L4: DB历史回补"

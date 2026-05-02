@@ -1,0 +1,16 @@
+.position-board {
+  padding: 0;
+}
+
+.position-board .ant-card {
+  border-radius: 6px;
+}
+
+.position-board .ant-statistic-title {
+  font-size: 13px;
+  color: #888;
+}
+
+.position-board .ant-statistic-content {
+  font-size: 20px;
+}

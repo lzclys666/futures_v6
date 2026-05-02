@@ -1,0 +1,17 @@
+# AO_FUT_OI.yaml
+# 豆一期货持仓量
+
+factor_code: AO_FUT_OI
+symbol: AO
+category: position
+name: 豆一期货持仓量
+description: 豆一期货持仓量
+frequency: daily
+unit: 手
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - position
+  - AO

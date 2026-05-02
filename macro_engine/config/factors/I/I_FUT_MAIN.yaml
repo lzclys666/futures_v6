@@ -1,0 +1,8 @@
+factor_code: I_FUT_MAIN
+name: "铁矿石期货收盘价"
+category: price
+description: "铁矿石期货收盘价"
+data_source: AKShare futures_main_sina
+source_confidence: 1.0
+expected_range: [500-1200]
+notes: "实测2026-04-17=778.5元/吨"

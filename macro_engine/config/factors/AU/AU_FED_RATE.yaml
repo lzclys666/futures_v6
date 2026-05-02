@@ -1,0 +1,8 @@
+factor_code: AU_FED_RATE
+name: "美联储联邦基金目标利率"
+category: free_data
+description: "美联储联邦基金目标利率（Federal Funds Rate Target），反映美联储货币政策立场。"
+data_source: AKShare macro_bank_usa_interest_rate()['数值']
+source_confidence: 1.0
+expected_range: [0.0, 10.0]
+notes: "月度数据，取最新非空值。数据可能滞后2-9个月（取决于AKShare数据更新频率）。最新值=4.5%（2025-07-31）。"

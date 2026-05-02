@@ -1,0 +1,17 @@
+# config/factors/AG/AG_MACRO_USD_INDEX.yaml
+factor_code: "AG_MACRO_DXY"
+factor_name: "美元指数"
+template: null
+econ_category: "MAC"
+logic_category: "FX"
+direction: -1           # 美元走强→以美元计价的白银价格承压→利空
+frequency: "daily"
+norm_method: "zscore"
+detrend_method: "none"
+norm_window: 252
+base_weight: 0.10
+max_weight: 0.15
+is_active: true
+dependencies:
+  - "AKShare/fx_usdx"
+description: "美元指数(DXY)，衡量美元相对一篮子货币强弱，反向影响贵金属价格"

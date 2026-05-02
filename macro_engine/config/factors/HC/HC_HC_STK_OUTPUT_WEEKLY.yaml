@@ -1,0 +1,17 @@
+# HC_HC_STK_OUTPUT_WEEKLY.yaml
+# 钢厂热卷库存周度
+
+factor_code: HC_HC_STK_OUTPUT_WEEKLY
+symbol: HC
+category: inventory
+name: 钢厂热卷库存周度
+description: 钢厂热卷库存周度
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - inventory
+  - HC

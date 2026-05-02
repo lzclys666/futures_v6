@@ -1,0 +1,17 @@
+# BU_BU_SPD_BU_BRENT.yaml
+# 沥青与布伦特原油价差
+
+factor_code: BU_BU_SPD_BU_BRENT
+symbol: BU
+category: spread
+name: 沥青与布伦特原油价差
+description: 沥青与布伦特原油价差
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+  - spread
+  - BU
