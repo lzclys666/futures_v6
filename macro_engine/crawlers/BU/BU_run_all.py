@@ -16,13 +16,17 @@ LOG_DIR.mkdir(exist_ok=True)
 
 scripts = [
     "BU_沥青期货收盘价.py",
-    "BU_沥青期货仓单.py",
     "BU_沥青期货净持仓.py",
     "BU_沥青期现基差.py",
     "BU_华东沥青市场价格.py",
     "BU_沥青与布伦特原油价差.py",
     "BU_美元兑人民币汇率.py",
     "BU_沥青社会库存.py",
+    # Permanent skips (无免费数据源)
+    "BU_沥青期货仓单.py",
+    "BU_炼厂沥青开工率.py",
+    "BU_全国高速公路整车流量.py",
+    "BU_消费者信心指数.py",
 ]
 
 def run_all():

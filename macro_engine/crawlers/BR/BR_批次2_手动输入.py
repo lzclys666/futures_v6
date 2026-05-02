@@ -1,22 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-批次2_手动输入
-因子: 待定义 = 批次2_手动输入
+"""批次2_手动输入
+因子: 批次2_手动输入 = BR_COST_BD/BR_COST_ETH/BR_DEM_TIRE_ALLST/BR_DEM_TIRE_SEMI/BR_DEM_AUTO/BR_SUP_RATE/BR_COST_MARGIN（派生）
 
 公式: 数据采集（无独立计算公式）
 
 当前状态: ⚠️待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
+- 数据源: 手动录入：SMM(年费)/隆众资讯(年费)/中国汽车工业协会(月度)
+- 采集逻辑: 手动录入（交互模式）或派生计算（auto模式）
+- bounds: 因因子而异
 
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+订阅优先级: ★★★
+替代付费源: SMM(年费)/隆众资讯(年费)/中国汽车工业协会
 """
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common.db_utils import ensure_table, save_to_db, get_latest_value
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
 
 SYMBOL = "BR"
 
@@ -105,8 +104,9 @@ def main():
     parser.add_argument("--auto", action="store_true")
     args = parser.parse_args()
 
-    today = date.today()
-    pub_date = today.isoformat()
+    pub_date, obs_date = get_pit_dates()
+    if pub_date is None:
+        print("-- 非交易日，跳过"); return 0
 
     print(f"=" * 56)
     print(f"  BR批次2 — 付费因子手动录入  @ {pub_date}")
@@ -114,11 +114,11 @@ def main():
 
     if args.auto:
         print("[AUTO模式] 跳过手动输入，仅计算派生因子\n")
-        margin = calculate_br_margin(pub_date, None)
+        margin = calculate_br_margin(pub_date, obs_date)
         if margin is not None:
-            save_to_db("BR_COST_MARGIN", SYMBOL, pub_date, pub_date, margin,
-                       source_confidence=0.9, source="派生(BR_SPOT_PRICE-BD×0.82-3000)")
-            print(f"  ✅ BR_COST_MARGIN={margin:.0f} 写入成功\n")
+            save_to_db("BR_COST_MARGIN", SYMBOL, pub_date, obs_date, margin,
+                       source="派生计算", source_confidence=0.9)
+            print(f"[OK] BR_COST_MARGIN={margin:.0f} 写入成功\n")
         print("[AUTO模式] 完成（付费因子需手动录入）")
         return 0
 
@@ -127,11 +127,11 @@ def main():
     for f in FACTORS:
         code = f["code"]
         if f.get("auto"):
-            val = calculate_br_margin(pub_date, None)
+            val = calculate_br_margin(pub_date, obs_date)
             if val is not None:
-                save_to_db(code, SYMBOL, pub_date, pub_date, val,
-                           source_confidence=0.9, source=f["source"])
-                print(f"  ✅ {code}={val:.0f} ({f['unit']}) 写入成功\n")
+                save_to_db(code, SYMBOL, pub_date, obs_date, val,
+                           source=f["source"], source_confidence=0.9)
+                print(f"[OK] {code}={val:.0f} ({f['unit']}) 写入成功\n")
             continue
 
         print(f"--- {code} ({f['name']}) ---")
@@ -157,7 +157,7 @@ def main():
 
         lo, hi = f["bounds"]
         if not (lo <= val <= hi):
-            print(f"  ⚠ 值 {val} 超出合理范围 [{lo}, {hi}]，确认是否正确[Y]: ", end="")
+            print(f"  [WARN] 值 {val} 超出合理范围 [{lo}, {hi}]，确认是否正确[Y]: ", end="")
             try:
                 confirm = input().strip().upper()
             except EOFError:
@@ -166,9 +166,9 @@ def main():
                 print("  跳过\n")
                 continue
 
-        save_to_db(code, SYMBOL, pub_date, pub_date, val,
-                   source_confidence=0.8, source=f["source"])
-        print(f"  ✅ {code}={val} ({f['unit']}) 写入成功\n")
+        save_to_db(code, SYMBOL, pub_date, obs_date, val,
+                   source=f["source"], source_confidence=0.8)
+        print(f"[OK] {code}={val} ({f['unit']}) 写入成功\n")
         written += 1
 
     print(f"=" * 56)
