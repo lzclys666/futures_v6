@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import subprocess, sys, os, time
 from datetime import datetime
@@ -11,7 +11,7 @@ SCRIPTS = [
     "NI_抓取期货持仓量.py",
     "NI_计算基差.py",
     "NI_抓取SHFE仓单.py",
-    "../CU_NI/CU_NI_抓取LME升贴水_EVENT.py",
+    "../CU_NI/CU_NI_LME升贴水.py",
 ]
 
 def run_script(name):
@@ -24,13 +24,13 @@ def run_script(name):
         r = subprocess.run([sys.executable, path, "--auto"], capture_output=True, timeout=30)
         try:
             out = r.stdout.decode("utf-8", errors="replace")
-        except:
+        except (ValueError, IndexError):
             out = str(r.stdout)
         for line in out.strip().split("\r\n")[-3:]:
             if line.strip():
                 try:
                     print("   %s" % line[:120])
-                except:
+                except (ValueError, IndexError):
                     pass
         return r.returncode == 0
     except Exception as e:

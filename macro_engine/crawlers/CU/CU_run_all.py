@@ -19,7 +19,7 @@ BATCH1 = [
     ("CU_抓取持仓排名.py",     "CU_POS_NET"),
     ("CU_抓取LME库存.py",     "CU_INV_LME"),
     ("CU_计算近远月价差.py",   "CU_SPD_CONTRACT"),
-    ("../CU_NI/CU_NI_抓取LME升贴水_EVENT.py", "CU_LME_SPREAD/CU_LME_SPREAD_DIFF/CU_LME_SPREAD_EVENT"),
+    ("../CU_NI/CU_NI_LME升贴水.py", "CU_LME_SPREAD/CU_LME_SPREAD_DIFF/CU_LME_SPREAD_EVENT"),
 ]
 
 # 批次2: 付费/无免费数据源

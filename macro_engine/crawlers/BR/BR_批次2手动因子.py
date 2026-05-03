@@ -1,11 +1,11 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """批次2手动因子
 因子: 批次2手动因子 = BR_SUP_RATE/BR_DEM_AUTO/BR_DEM_TIRE_ALLST/BR_DEM_TIRE_SEMI
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN]待修复
 - 数据源: 无免费源，仅L4回补（手动录入数据回填）
 - 采集逻辑: L4回补，仅当db有历史值时写入
 - bounds: 因因子而异

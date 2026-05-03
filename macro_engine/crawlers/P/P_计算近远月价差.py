@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 P_计算近远月价差.py
@@ -6,7 +6,7 @@ P_计算近远月价差.py
 
 公式: P_SPD_CONTRACT = 近月合约价 - 远月合约价
 
-当前状态: ⛔永久跳过
+当前状态: [SKIP]永久跳过
 - AKShare futures_spot_price(vars_list=['P']) 只返回到2024-04-30的历史数据，无当前数据
 - 无其他可靠免费源获取棕榈油近远月价差
 - 不写占位符

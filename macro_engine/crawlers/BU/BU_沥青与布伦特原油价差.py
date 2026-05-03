@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BU_沥青与布伦特原油价差.py
@@ -7,7 +7,7 @@ BU_沥青与布伦特原油价差.py
 公式: BU_BU_SPD_BU_BRENT = BU0结算价 ÷ SC0结算价
 （注：Brent无免费源，用SC上海原油替代；BU是CNY/吨，SC是CNY/桶，单位不同故为无量纲比值）
 
-当前状态: ⚠️待修复（单位换算问题）
+当前状态: [WARN]待修复（单位换算问题）
 - 数据源: AKShare futures_main_sina('BU0') + futures_main_sina('SC0')，L1+L2
 - 尝试过的数据源: SC替代Brent（无免费Brent API）
 - 问题: BU是元/吨，SC是元/桶，单位不统一，正确换算应为 BU/(SC×7.33/FX)

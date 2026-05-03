@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 批次2_月报爬虫
@@ -6,7 +6,7 @@
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN]待修复
 - 脚本已有数据获取逻辑，Header待完善
 - 尝试过的数据源及结果：需补充
 - 解决方案：需补充
@@ -66,7 +66,7 @@ def fetch_mpob():
                             if 500000 < val < 5000000:
                                 data['production'] = val
                                 break
-                        except:
+                        except (ValueError, IndexError):
                             pass
                 if 'export' in row_str or '\u51fa\u53e3' in row_str:
                     for v in row.values:
@@ -75,7 +75,7 @@ def fetch_mpob():
                             if 300000 < val < 5000000:
                                 data['exports'] = val
                                 break
-                        except:
+                        except (ValueError, IndexError):
                             pass
                 if 'stock' in row_str or '\u5e93\u5b58' in row_str or 'ending' in row_str:
                     for v in row.values:
@@ -84,7 +84,7 @@ def fetch_mpob():
                             if 500000 < val < 8000000:
                                 data['ending_stocks'] = val
                                 break
-                        except:
+                        except (ValueError, IndexError):
                             pass
     except Exception as e:
         raise ValueError('Table parse FAIL: ' + str(e)[:60])

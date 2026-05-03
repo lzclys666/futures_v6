@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_抓取净持仓.py
@@ -6,7 +6,7 @@ AL_抓取净持仓.py
 
 公式: Σ(多头持仓 - 空头持仓)，单位：手
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare get_shfe_rank_table()，L1权威（交易所官网数据）
 - 采集逻辑: 筛选variety=='AL'，取成交量列求和
 - bounds: [-500000, 500000]手

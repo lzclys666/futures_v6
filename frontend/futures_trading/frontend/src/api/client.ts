@@ -45,16 +45,22 @@ export function createClient(baseURL: string) {
       // 兼容 { status, data, message } 格式（FastAPI 默认格式）
       if (data && typeof data === 'object' && 'status' in data) {
         const wrapper = data as { status: string; data?: unknown; message?: string }
-        if (wrapper.status !== 'success') {
+        // 熔断器等业务状态字段（RUNNING/TRIGGERED/PENDING_CONFIRM）不是 API 错误，直接透传
+        const businessStatuses = ['RUNNING', 'TRIGGERED', 'PENDING_CONFIRM', 'PAUSED', 'RESUMED']
+        if (wrapper.status !== 'success' && !businessStatuses.includes(wrapper.status)) {
           const err = new Error(wrapper.message || `API 错误: ${wrapper.status}`)
           return Promise.reject(err)
         }
         // 两种子格式：
         // 1. { status, data: {...}, message } → 解包 data
-        // 2. { status, count, positions, ... } → data 在根级别，整个根对象作为 data
+        // 2. { status: 'RUNNING'|'TRIGGERED'|..., ...业务字段 } → 业务状态响应，整体透传
         if ('data' in wrapper && wrapper.data !== undefined) {
           return { ...response, data: wrapper.data }
         } else {
+          // 业务状态字段（如熔断器 status=RUNNING）是响应数据的一部分，整体透传
+          if (businessStatuses.includes(wrapper.status)) {
+            return { ...response, data: data }
+          }
           // data 不存在或为 undefined → 根级别数据（去掉 status 和 message 后其余全部透传）
           const { status: _s, message: _m, ...rootData } = data as Record<string, unknown>
           return { ...response, data: rootData }

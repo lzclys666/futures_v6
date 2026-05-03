@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AO_大连期货库存.py
@@ -6,7 +6,7 @@ AO_大连期货库存.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare futures_inventory_em(symbol='ao')，L1权威
 - 采集逻辑: 取'库存'列最新一行
 - obs_date: 数据实际日期（'日期'列）

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 抓取BRENT价格
@@ -6,7 +6,7 @@
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN]待修复
 - 脚本已有数据获取逻辑，Header待完善
 - 尝试过的数据源及结果：需补充
 - 解决方案：需补充
@@ -43,7 +43,7 @@ def fetch_fred_brent(obs_date):
                     d = pd.to_datetime(parts[0].strip())
                     v = float(parts[1].strip())
                     rows.append((d, v))
-                except:
+                except (ValueError, IndexError):
                     continue
         if not rows:
             return None

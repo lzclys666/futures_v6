@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 抓取期货日行情
@@ -6,7 +6,7 @@
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN]待修复
 - 脚本已有数据获取逻辑，Header待完善
 - 尝试过的数据源及结果：需补充
 - 解决方案：需补充
@@ -56,7 +56,7 @@ def main():
     vals = fetch()
     for fc, val in vals.items():
         save_to_db(fc, SYMBOL, pub_date, obs_date, val, source_confidence=1.0, source="akshare_futures_main_sina")
-        print(f"✅ {fc}={val} 写入成功")
+        print(f"[OK] {fc}={val} 写入成功")
     if not vals:
         print(f"[L4] 无数据，尝试L4回补...")
         for fc, _ in FACTORS:

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """AL_run_all.py - 沪铝爬虫总控"""
 import os, sys, subprocess, datetime
@@ -12,8 +12,8 @@ LOG_DIR = CURRENT_DIR / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 
 scripts = [
-    # ⛔永久跳过: AL_抓取上期所沪铝仓单.py (SHFE API 404)
-    # ⛔永久跳过: AL_计算期现基差.py (无免费铝现货价)
+    # [SKIP]永久跳过: AL_抓取上期所沪铝仓单.py (SHFE API 404)
+    # [SKIP]永久跳过: AL_计算期现基差.py (无免费铝现货价)
     "AL_抓取LME铝库存.py",
     "AL_抓取LME铝价_铝道网.py",
     "AL_抓取净持仓.py",

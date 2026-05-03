@@ -193,7 +193,7 @@ const CircuitBreakerPanel: React.FC = () => {
                 showIcon
                 icon={<WarningOutlined />}
                 message={`检测到 ${status.triggerCondition || '市场异常'}`}
-                description={`同向极端：${(status.sameDirectionPct * 100).toFixed(0)}% 品种同向`}
+                description={`同向极端：${(status.sameDirectionPct != null ? status.sameDirectionPct * 100 : 0).toFixed(0)}% 品种同向`}
                 style={{ marginBottom: 16 }}
               />
             )}
@@ -215,7 +215,7 @@ const CircuitBreakerPanel: React.FC = () => {
               <div>
                 <div style={{ fontSize: 12, color: '#8c8c8c' }}>同向比例</div>
                 <div style={{ fontSize: 24, fontWeight: 600 }}>
-                  {(status.sameDirectionPct * 100).toFixed(0)}%
+                  {(status.sameDirectionPct != null ? status.sameDirectionPct * 100 : 0).toFixed(0)}%
                 </div>
               </div>
               {status.sameDirectionData && (

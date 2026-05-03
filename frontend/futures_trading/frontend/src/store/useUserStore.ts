@@ -140,5 +140,5 @@ export const useUserStore = create<UserState>((set, get) => {
   },
 
   clearError: () => set({ error: null }),
-  }}
-))
+  }
+});

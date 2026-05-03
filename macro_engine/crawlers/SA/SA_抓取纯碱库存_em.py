@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 抓取纯碱库存_em
@@ -6,7 +6,7 @@
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN]待修复
 - 脚本已有数据获取逻辑，Header待完善
 - 尝试过的数据源及结果：需补充
 - 解决方案：需补充
@@ -43,7 +43,7 @@ def main():
     val = fetch()
     if val is not None:
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val, source_confidence=1.0, source="akshare_futures_inventory_em")
-        print(f"✅ {FACTOR_CODE}={val} 写入成功")
+        print(f"[OK] {FACTOR_CODE}={val} 写入成功")
     else:
         ok = save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
         if ok:

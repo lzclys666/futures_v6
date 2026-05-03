@@ -61,9 +61,13 @@ DailyScoring (工作日 14:30 CST)
 | HC | 14 | 🔴 |
 | Y | 14 | 🔴 |
 | EG | 19 | 🔴 |
-| J | 20 | 🔴 |
+| J[^1] | 20 | 🔴 |
+| AL[^2] | <30 | 🔴 |
 | BU | 24 | 🔴 |
 | M | 39 | 🔴 |
+
+[^1]: J：ic=0.02（IR<0.1），数据质量不达标，暂不纳入 ic_heatmap
+[^2]: AL：因子数据积累不足（<30个交易日），暂不纳入 ic_heatmap
 
 ### L4 run_all 集成测试
 - ⏳ 手动：P0 品种 ×5 全链路
@@ -85,9 +89,9 @@ DailyScoring (工作日 14:30 CST)
 |------|--------|------|------|
 | B1 代码审查工具 | 6 | 6 | ✅ 全部完成 |
 | B2 SPEC 修订 | 6 | 6 | ✅ 全部完成 |
-| B3 Schema + 联动 | 5 | 4/5 | ⚠️ B3-4 取消（API 不走 ic_heatmap） |
+| B3 Schema + 联动 | 5 | 4/5 | ✅ B3-4 取消（API 不走 ic_heatmap） |
 | B4 db_utils + 豁免 | 5 | 5 | ✅ 全部完成 |
-| B5 调度 + 最终验收 | 4 | 3/4 | 🔄 B5-3/B5-4 进行中 |
+| B5 调度 + 最终验收 | 4 | 4/4 | ✅ 全部完成 |
 
 **B4 详细**：
 - ✅ B4-1：db_utils.py 重试逻辑扩展（6 种错误类型）
@@ -129,7 +133,68 @@ DailyScoring (工作日 14:30 CST)
 
 ---
 
-## 七、快速验收命令
+## 七、ic_heatmap 表 schema
+
+> **数据库**：`D:\futures_v6\macro_engine\pit_data.db`
+> **用途**：存储每个因子×品种的 IC/IR 统计量，用于宏观打分引擎的因子质量过滤和 Dashboard 热图展示
+
+### 表结构
+
+```sql
+CREATE TABLE ic_heatmap (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    symbol          TEXT    NOT NULL,          -- 品种代码，如 AU/AG/CU/RU
+    factor_code     TEXT    NOT NULL,          -- 因子代码，如 DXY/USD_diff/CN10Y_diff
+    target_symbol   TEXT    NOT NULL,          -- 目标品种（跨品种 IC 计算用），如 AG
+    ic_mean         REAL    NOT NULL,          -- 60日滚动 IC 均值
+    ic_std          REAL    NOT NULL,          -- 60日滚动 IC 标准差
+    ir              REAL    NOT NULL,          -- IC 均值 / IC 标准差
+    p_value         REAL    NOT NULL,          -- t检验 p 值（FDR 校正后）
+    ic_sign_stability REAL,                    -- IC 符号稳定性（|IC|>0.01 的交易日占比）
+    sample_count    INTEGER NOT NULL,          -- 有效样本数（共同交易日）
+    last_updated    TEXT    NOT NULL,          -- 最后更新时间（ISO 8601）
+    created_at      TEXT    DEFAULT (datetime('now')),
+    UNIQUE(symbol, factor_code, target_symbol)
+);
+```
+
+### 字段说明
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `symbol` | TEXT | 品种代码（大写），如 AU/AG/CU/RU |
+| `factor_code` | TEXT | 因子代码，如 USD_diff / CN10Y_diff / LME_ZN_3M |
+| `target_symbol` | TEXT | 跨品种 IC 的目标品种；同品种 IC 时与 symbol 相同 |
+| `ic_mean` | REAL | 60日滚动 IC 均值；< 0.02 视为不健康 |
+| `ic_std` | REAL | 60日滚动 IC 标准差 |
+| `ir` | REAL | IC_IR = ic_mean / ic_std；≥0.5 优秀，0.3-0.5 警告，<0.3 不健康 |
+| `p_value` | REAL | t 检验 p 值；需经 FDR 校正，<0.05 视为统计显著 |
+| `ic_sign_stability` | REAL | IC 符号稳定性（0-1）；≥0.6 视为稳定 |
+| `sample_count` | INTEGER | 有效样本数；<30 共同交易日时数据不可信 |
+| `last_updated` | TEXT | 最后更新日期（YYYY-MM-DD），用于判断数据新鲜度 |
+
+### 计算方法
+
+- **IC 窗口**：60 个共同交易日（遇节假日顺延）
+- **胜率定义**：|IC| > 0.01 的交易日占比
+- **IR**：ic_mean / ic_std
+- **p_value**：双尾 t 检验，经 Benjamini-Hochberg FDR 校正
+- **更新频率**：每个交易日收盘后由 `compute_ic_heatmap.py` 增量更新
+
+### 健康度判断逻辑（引擎调用前必检）
+
+```python
+def is_healthy(row) -> bool:
+    return (
+        row["ir"] >= 0.3               # IR 门槛
+        and row["p_value"] < 0.05      # FDR 校正后显著
+        and row["sample_count"] >= 30  # 最小样本量
+    )
+```
+
+---
+
+## 八、快速验收命令
 
 ```powershell
 # L0 文件系统

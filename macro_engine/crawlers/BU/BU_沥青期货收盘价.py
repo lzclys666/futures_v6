@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BU_沥青期货收盘价.py
@@ -6,7 +6,7 @@ BU_沥青期货收盘价.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare futures_main_sina(symbol='BU0')，L1权威
 - 采集逻辑: 取BU0主力合约动态结算价
 - obs_date: 数据实际日期（'日期'列）

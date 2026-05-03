@@ -6,7 +6,7 @@
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN] 待修复
 - 脚本已有数据获取逻辑，Header待完善
 - 尝试过的数据源及结果：需补充
 - 解决方案：需补充
@@ -50,42 +50,35 @@ def main():
     args = parser.parse_args()
     today = date.today()
     pub_date = today.isoformat()
-
     print("=" * 60)
-    print(f"  JM批次2/3/4 — 付费因子录入  @ {pub_date}")
+    print(f"  JM批次2/3/4 - 付费因子录入  @ {pub_date}")
     print("=" * 60)
-
     if args.auto:
         print("[AUTO模式] JM批次2/3/4为付费因子或永久跳过，无免费采集路径")
         print("[AUTO模式] JM_SPD_BASIS已标记永久跳过（无可靠免费源）")
         print("[AUTO模式] 完成")
         return 0
-
     written = 0
     for f in FACTORS:
         print(f"\n--- {f['code']} ({f['name']}) [批次{f['batch']}] ---")
         print(f"  单位: {f['unit']}  |  合理范围: {f['bounds']}")
         print(f"  数据源: {f['source']}")
-
         try:
             val_str = input(f"  输入 {f['code']}（留空跳过）: ").strip()
         except EOFError:
             print("  （非交互环境，跳过）")
             continue
-
         if not val_str:
             print("  跳过")
             continue
-
         try:
             val = float(val_str)
         except ValueError:
             print("  输入无效（需为数字），跳过")
             continue
-
         lo, hi = f["bounds"]
         if not (lo <= val <= hi):
-            print(f"  ⚠ 值 {val} 超出合理范围 [{lo}, {hi}]，确认[Y]: ", end="")
+            print(f"  [WARN] 值 {val} 超出合理范围 [{lo}, {hi}]，确认[Y]: ", end="")
             try:
                 confirm = input().strip().upper()
             except EOFError:
@@ -93,12 +86,10 @@ def main():
             if confirm != "Y":
                 print("  跳过")
                 continue
-
         save_to_db(f["code"], SYMBOL, pub_date, pub_date, val,
                    source_confidence=0.8, source=f["source"])
-        print(f"  ✅ {f['code']}={val} {f['unit']} 写入成功")
+        print(f"  [OK] {f['code']}={val} {f['unit']} 写入成功")
         written += 1
-
     print(f"\n{'=' * 60}")
     print(f"完成，共写入 {written} 个因子")
     print(f"{'=' * 60}")

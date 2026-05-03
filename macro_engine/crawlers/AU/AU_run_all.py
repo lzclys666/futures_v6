@@ -9,17 +9,17 @@ os.chdir(SCRIPT_DIR)
 
 SCRIPTS = [
     # 行情+持仓（日度）
-    "AU_FUT_CLOSE.py",
-    "AU_FUT_OI.py",
+    "AU_期货收盘价.py",
+    "AU_期货持仓量.py",
     # 宏观因子（日度）
     "AU_美国10年期国债收益率（名义）.py",   # 美国10年期国债收益率（TIPS代理）
     "AU_美联储联邦基金目标利率.py",        # 美联储联邦基金利率
-    "AU_VIX.py",             # VIX恐慌指数（FRED VIXCLS）
+    "AU_恐慌指数.py",             # VIX恐慌指数（FRED VIXCLS）
     "AU_金银比_AUAG.py",        # 金银比（SGE黄金/白银现货）
-    "AU_COMEX_AU.py",        # COMEX黄金期货价格（USD/盎司）
+    "AU_COMEX白银.py",        # COMEX黄金期货价格（USD/盎司）
     # 美国宏观（月度）
-    "AU_US_NFP.py",          # 美国新增非农就业人数
-    "AU_US_CPI.py",          # 美国CPI同比增速
+    "AU_美国非农.py",          # 美国新增非农就业人数
+    "AU_美国CPI.py",          # 美国CPI同比增速
     # 期现/现货
     "AU_SGE现货基准价.py",
     "AU_期现基差.py",

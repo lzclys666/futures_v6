@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BR_抓取期货持仓.py
@@ -6,7 +6,7 @@ BR_抓取期货持仓.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare futures_main_sina(symbol='BR0')，L1权威
 - 采集逻辑: 取'持仓量'列最新一行
 - obs_date: 数据日期（'日期'列）

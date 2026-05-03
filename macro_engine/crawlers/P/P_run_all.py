@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 P_run_all.py - 棕榈油日度数据采集总调度
@@ -37,13 +37,13 @@ def run_script(name):
         )
         try:
             out = r.stdout.decode('utf-8', errors='replace')
-        except:
+        except (ValueError, IndexError):
             out = str(r.stdout)
         for line in out.strip().split('\r\n')[-3:]:
             if line.strip():
                 try:
                     print("   %s" % line[:120])
-                except:
+                except (ValueError, IndexError):
                     pass
         return r.returncode == 0
     except subprocess.TimeoutExpired:

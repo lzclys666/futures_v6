@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_抓取上期所沪铝仓单.py
@@ -6,7 +6,7 @@ AL_抓取上期所沪铝仓单.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⛔永久跳过
+当前状态: [SKIP]永久跳过
 - AKShare futures_shfe_warehouse_receipt() 接口仍可访问，但返回数据中AL列检测失败
 - SHFE官网所有数据接口返回404（网站已改版）
 - 无其他可靠免费源获取SHFE沪铝仓单数据

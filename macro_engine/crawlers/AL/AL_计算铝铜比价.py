@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_计算铝铜比价.py
@@ -6,7 +6,7 @@ AL_计算铝铜比价.py
 
 公式: 比价 = AL0收盘价 / CU0收盘价（无量纲）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - L1: 新浪nf_AL0/nf_CU0实时行情
 - L2: AKShare futures_zh_daily_sina
 - bounds: [0.1, 1.0]（铝价远低于铜价，正常区间0.2~0.5）

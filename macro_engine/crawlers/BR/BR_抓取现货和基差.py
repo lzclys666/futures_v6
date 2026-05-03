@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BR_抓取现货和基差.py
@@ -10,7 +10,7 @@ BR_抓取现货和基差.py
   BR_SPD_BASIS = BR_SPOT_PRICE - BR0结算价
   BR_COST_MARGIN = BR_SPOT_PRICE - BR_COST_BD × 0.82 - 3000
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare futures_spot_price(date, vars_list=['BR']) + futures_main_sina('BR0')，L1权威
 - 采集逻辑: BR取最近5个工作日；基差由现货-期货结算价计算
 - obs_date: 数据实际日期

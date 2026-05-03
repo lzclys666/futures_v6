@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BU_华东沥青市场价格.py
@@ -6,7 +6,7 @@ BU_华东沥青市场价格.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare futures_spot_price(vars_list=['BU'])，L1权威
 - 采集逻辑: BU取最近5个工作日现货价（华东/全国参考价）
 - obs_date: 数据实际日期

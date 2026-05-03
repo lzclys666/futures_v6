@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_计算SHFE_LME比价.py
@@ -7,7 +7,7 @@ AL_计算SHFE_LME比价.py
 公式: 比价 = SHFE沪铝主力价(元/吨) / (LME铝价(美元/吨) × 美元人民币汇率)
 说明: 跨市套利参考指标，剔除外汇影响后的沪伦铝比值，正常区间0.85~1.15
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - SHFE铝价: AKShare futures_settle_shfe（每日结算价，L1权威）
 - LME铝价: 数据库已有记录AL_LME_PRICE（铝道网爬虫写入，L2聚合）
 - 汇率: 实时获取新浪USDCNY（L2），避免硬编码

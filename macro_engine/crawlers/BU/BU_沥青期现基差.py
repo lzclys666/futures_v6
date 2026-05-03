@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BU_沥青期现基差.py
@@ -6,7 +6,7 @@ BU_沥青期现基差.py
 
 公式: BU_BU_SPD_BASIS = BU_BU_SPT_EAST_CHINA - BU0动态结算价
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare futures_spot_price(vars_list=['BU']) + futures_main_sina('BU0')，L1权威
 - 采集逻辑: BU取最近5个工作日现货价，基差由现货-期货结算价计算
 - obs_date: 数据实际日期

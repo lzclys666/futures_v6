@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import subprocess, sys, os, time
 from datetime import datetime
@@ -25,13 +25,13 @@ def main():
             r = subprocess.run([sys.executable, path, "--auto"], capture_output=True, timeout=30)
             try:
                 out = r.stdout.decode("utf-8", errors="replace")
-            except:
+            except (ValueError, IndexError):
                 out = str(r.stdout)
             for line in out.strip().split("\r\n")[-3:]:
                 if line.strip():
                     try:
                         print("   " + line[:120])
-                    except:
+                    except (ValueError, IndexError):
                         pass
             if r.returncode == 0:
                 ok += 1

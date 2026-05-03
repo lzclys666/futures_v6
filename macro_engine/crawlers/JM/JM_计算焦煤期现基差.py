@@ -6,7 +6,7 @@
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN] 待修复
 - 脚本已有数据获取逻辑，Header待完善
 - 尝试过的数据源及结果：需补充
 - 解决方案：需补充
@@ -48,13 +48,9 @@ def fetch_spot_price():
     print("[现货L1] 汾渭能源蒙5#折盘面价 - 付费订阅，跳过")
     # L2: Mysteel - 付费
     print("[现货L2] Mysteel蒙煤报价 - 付费订阅，跳过")
-    # L3: 隆众资讯/生意社 - 尝试免费
-    try:
-        print("[现货L3] 尝试隆众资讯...")
-        # TODO: 隆众 oilchem.net 焦煤现货价格页面爬取
-        # 需要解析网页，暂时不可用
-    except:
-        pass
+    # L3: 隆众资讯/生意社 - 待接入（暂无免费源）
+    # TODO: 隆众 oilchem.net 焦煤现货价格页面爬取
+    # 需要解析网页，暂时不可用
     return None
 
 def fetch_basis():

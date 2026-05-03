@@ -43,7 +43,7 @@ function _adaptFactor(o: Record<string, unknown>): FactorDetail {
 function _adaptSignal(o: Record<string, unknown>): MacroSignal {
   const rawConf = o.confidence as string | undefined
   const confidence = rawConf ? rawConf.toLowerCase() as 'high' | 'medium' | 'low' : undefined
-  const factorsRaw = (o.factorDetails ?? []) as Record<string, unknown>[]
+  const factorsRaw = (o.factorDetails ?? o.factors ?? []) as Record<string, unknown>[]
   return {
     symbol:          o.symbol as string,
     compositeScore:  (o.score ?? o.compositeScore) as number,
@@ -142,9 +142,9 @@ export async function fetchFactorDetail(symbol: string): Promise<FactorDetail[]>
   }
   const res = await http.get<unknown>(`/${symbol}/factors`)
   const data = res.data as Record<string, unknown>
-  const factors = data.factorDetails as Record<string, unknown>[] | undefined
+  const factors = (data.factorDetails ?? data.factors) as Record<string, unknown>[] | undefined
   if (!Array.isArray(factors)) {
-    throw new Error('因子明细格式错误：期望 factorDetails 数组')
+    throw new Error('因子明细格式错误：期望 factorDetails 或 factors 数组')
   }
   return factors.map(_adaptFactor)
 }

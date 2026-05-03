@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_批次2_手动输入.py
@@ -6,7 +6,7 @@ AL_批次2_手动输入.py
 
 公式: 各因子独立（见下方因子列表）
 
-当前状态: ✅手动录入（auto模式跳过，需人工输入）
+当前状态: [OK]手动录入（auto模式跳过，需人工输入）
 - 批次2: 氧化铝价格/电解铝产能/开工率/出口量/铝棒库存（付费）
 - 批次3: 电力成本/预焙阳极/氟化铝/冰晶石（付费）
 - 批次4: 社会库存/工业增加值/交割库/美元指数/PMI（部分免费）
@@ -85,7 +85,7 @@ def main():
 
         lo, hi = f["bounds"]
         if not (lo <= val <= hi):
-            print(f"  ⚠ 值 {val} 超出合理范围 [{lo}, {hi}]，确认[Y]: ", end="")
+            print(f"  [WARN] 值 {val} 超出合理范围 [{lo}, {hi}]，确认[Y]: ", end="")
             try:
                 confirm = input().strip().upper()
             except EOFError:

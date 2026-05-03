@@ -6,7 +6,7 @@
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN] 待修复
 - 脚本已有数据获取逻辑，Header待完善
 - 尝试过的数据源及结果：需补充
 - 解决方案：需补充
@@ -48,7 +48,7 @@ def fetch_contract_settle(contract):
             settle = float(df.iloc[-1]['settle'])
             hold = float(df.iloc[-1]['hold'])
             return settle, hold
-    except:
+    except (KeyError, IndexError, TypeError, ValueError):
         pass
     return None, None
 
@@ -123,6 +123,6 @@ if __name__ == "__main__":
     if value is not None:
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, 
                   source_confidence=confidence, source=source)
-        print(f"✅ 写入数据: {value}")
+        print(f"[OK] 写入数据: {value}")
     else:
         print(f"[失败] {FACTOR_CODE} 所有数据源均失败")

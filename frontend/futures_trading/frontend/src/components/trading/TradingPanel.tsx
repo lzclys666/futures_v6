@@ -72,9 +72,14 @@ const SYMBOLS = [
 async function fetchApiData<T>(url: string): Promise<T> {
   const res = await fetch(url)
   const json = await res.json()
+  // 格式1: { code: 0, data: ... }
   if (json.code === 0 && json.data !== undefined) return json.data as T
+  // 格式2: 纯数组
   if (Array.isArray(json)) return json as T
+  // 格式3: { status: 'success', data: ... }（有 data 字段则解包）
   if (json.data) return json.data as T
+  // 格式4: { status: 'success', orders: [...], trades: [...], positions: [...] } 等
+  //         无 data 字段，整体返回（组件自行提取子字段）
   return json as T
 }
 
@@ -107,7 +112,7 @@ const TradingPanel: React.FC = () => {
       ])
 
       if (ordersData.status === 'fulfilled') {
-        const raw = ordersData.value || []
+        const raw = (ordersData.value as any)?.orders ?? ((Array.isArray(ordersData.value) ? ordersData.value : []) || [])
         setOrders(raw.map((o: any, i: number) => ({
           vt_orderid: o.vt_orderid || o.order_id || `order-${i}`,
           symbol: (o.vt_symbol || o.symbol || '').split('.')[0],
@@ -122,7 +127,7 @@ const TradingPanel: React.FC = () => {
       }
 
       if (tradesData.status === 'fulfilled') {
-        const raw = tradesData.value || []
+        const raw = (tradesData.value as any)?.trades ?? ((Array.isArray(tradesData.value) ? tradesData.value : []) || [])
         setTrades(raw.map((t: any, i: number) => ({
           trade_id: t.trade_id || t.vt_tradeid || `trade-${i}`,
           symbol: (t.vt_symbol || t.symbol || '').split('.')[0],
@@ -423,7 +428,7 @@ const TradingPanel: React.FC = () => {
               <Form.Item
                 name="volume"
                 label="手数"
-                rules={[{ required: true, min: 1 }]}
+                rules={[{ required: true, type: 'number', min: 1, message: '手数须为≥1的整数' }]}
               >
                 <InputNumber min={1} max={100} style={{ width: '100%' }} />
               </Form.Item>
@@ -431,7 +436,7 @@ const TradingPanel: React.FC = () => {
               <Form.Item
                 name="price"
                 label="价格"
-                rules={[{ required: true }]}
+                rules={[{ required: true, type: 'number', message: '请输入有效价格' }]}
               >
                 <InputNumber
                   min={0}

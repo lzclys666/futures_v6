@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BR_抓取仓单.py
@@ -6,7 +6,7 @@ BR_抓取仓单.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare futures_inventory_em(symbol='丁二烯橡胶')，L1权威
 - 采集逻辑: 取'库存'列最新一行（仓单与库存同接口）
 - obs_date: 数据日期（'日期'列）

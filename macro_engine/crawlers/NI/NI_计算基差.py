@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 NI_计算基差.py
@@ -6,7 +6,7 @@ NI_计算基差.py
 
 公式: NI_SPD_BASIS = 沪镍现货价 - 沪镍期货收盘价
 
-当前状态: ⛔永久跳过
+当前状态: [SKIP]永久跳过
 - AKShare futures_spot_price(vars_list=['NI']) 只返回到2024-04-30的历史数据，无当前数据
 - 无其他可靠免费源获取沪镍现货价
 - 不写占位符（obs_date=2024-04-30的数据无参考价值）

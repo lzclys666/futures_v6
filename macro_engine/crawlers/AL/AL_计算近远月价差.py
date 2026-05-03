@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_计算近远月价差.py
@@ -6,7 +6,7 @@ AL_计算近远月价差.py
 
 公式: 近月合约收盘价 - 远月合约收盘价（正向市场近月升水，负值代表反向市场）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - L1: 新浪nf_实时API（nf_AL0等近远月合约）
 - L2: AKShare futures_zh_daily_sina
 - bounds: [-500, 500]元/吨（正常近远月价差区间）

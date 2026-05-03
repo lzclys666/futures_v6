@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BU_美元兑人民币汇率.py
@@ -6,7 +6,7 @@ BU_美元兑人民币汇率.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare fx_spot_quote()（L1）+ 新浪财经 hq.sinajs.cn/list=USDCNY（L2备用）
 - 采集逻辑: fx_spot_quote的USD/CNY买报价/卖报价取均值
 - obs_date: 数据日期（北京时间）

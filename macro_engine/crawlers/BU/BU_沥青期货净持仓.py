@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BU_沥青期货净持仓.py
@@ -6,7 +6,7 @@ BU_沥青期货净持仓.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN]待修复
 - 数据源: AKShare get_shfe_rank_table()（今日会员持仓排名），当前返回空dict
 - 尝试过的数据源及结果: get_shfe_rank_table() → 空dict
 - 解决方案: 需寻找替代数据源或确认API恢复时间
@@ -73,7 +73,7 @@ if __name__ == "__main__":
     raw_value = None
     try:
         raw_value, actual_date = fetch_rank()
-    except:
+    except (ValueError, IndexError):
         pass
 
     if raw_value is None:

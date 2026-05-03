@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BR_抓取汽车销量.py
@@ -6,7 +6,7 @@ BR_抓取汽车销量.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN]待修复
 - 数据源: AKShare car_market_total_cpca(symbol='狭义乘用车', indicator='销量')，当前返回空
 - 尝试过的数据源: car_market_total_cpca（空DataFrame）
 - 解决方案: 需寻找替代数据源或确认API恢复时间

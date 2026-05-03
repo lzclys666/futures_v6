@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_计算持仓集中度.py
@@ -6,7 +6,7 @@ AL_计算持仓集中度.py
 
 公式: CR10 = (前10名会员持仓量 / 总持仓量) × 100
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare get_shfe_rank_table()，L1权威
 - 采集逻辑: 筛选AL，计算前10名/总量×100
 - bounds: [0, 100]%

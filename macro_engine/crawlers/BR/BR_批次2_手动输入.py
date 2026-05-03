@@ -1,11 +1,11 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """批次2_手动输入
 因子: 批次2_手动输入 = BR_COST_BD/BR_COST_ETH/BR_DEM_TIRE_ALLST/BR_DEM_TIRE_SEMI/BR_DEM_AUTO/BR_SUP_RATE/BR_COST_MARGIN（派生）
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ⚠️待修复
+当前状态: [WARN]待修复
 - 数据源: 手动录入：SMM(年费)/隆众资讯(年费)/中国汽车工业协会(月度)
 - 采集逻辑: 手动录入（交互模式）或派生计算（auto模式）
 - bounds: 因因子而异

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BR_计算比价.py
@@ -6,7 +6,7 @@ BR_计算比价.py
 
 公式: BR_SPD_RU_BR = BR现货价 / RU现货价
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare futures_spot_price(date, vars_list=['BR', 'RU'])，L1权威
 - 采集逻辑: 取最近交易日BR和RU的spot_price相除
 - obs_date: 数据实际日期

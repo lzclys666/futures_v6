@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_抓取LME铝库存.py
@@ -6,7 +6,7 @@ AL_抓取LME铝库存.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - 数据源: AKShare macro_euro_lme_stock（欧洲LME库存，含铝分品种）
 - 采集逻辑: 查找列名含'aluminum'/'al'的列，取最新一行数值
 - bounds: [0, 5000000]吨（LME铝库存历史最高约500万吨）
