@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 FU_抓取期货持仓.py
@@ -6,7 +6,7 @@ FU_抓取期货持仓.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - L1: AKShare get_shfe_rank_table（SHFE持仓排行）
 - L2: SHFE官网直接爬取
 - L3: 备用
@@ -20,7 +20,7 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, _get_latest_record
 import akshare as ak
-import requests
+from common.web_utils import fetch_url
 import pandas as pd
 import re
 from datetime import datetime, timedelta
@@ -65,13 +65,13 @@ def fetch_shfe_rank_ak():
 
 def fetch_shfe_rank_direct():
     """L2: 直接爬取SHFE官网持仓排行"""
+    today = datetime.now().strftime("%Y%m%d")
+    url = f"http://www.shfe.com.cn/data/delay/RankDetail_{today}.js"
+    text, err = fetch_url(url, encoding='utf-8', timeout=15)
+    if err:
+        print(f"[L2] SHFE直爬失败: {err}")
+        return None, None
     try:
-        today = datetime.now().strftime("%Y%m%d")
-        url = f"http://www.shfe.com.cn/data/delay/RankDetail_{today}.js"
-        r = requests.get(url, timeout=15)
-        r.encoding = 'utf-8'
-        text = r.text
-        # 找FU相关数据
         match = re.search(r'"variety"\s*:\s*"FU"[^}]+', text)
         if match:
             fu_text = match.group()
@@ -82,7 +82,7 @@ def fetch_shfe_rank_direct():
                 print(f"[L2] SHFE直爬: 净持仓={net_pos}")
                 return net_pos, today
     except Exception as e:
-        print(f"[L2] SHFE直爬失败: {e}")
+        print(f"[L2] SHFE解析失败: {e}")
     return None, None
 
 

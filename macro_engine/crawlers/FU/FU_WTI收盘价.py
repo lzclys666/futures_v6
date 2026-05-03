@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 FU_WTI收盘价.py
@@ -6,7 +6,7 @@ FU_WTI收盘价.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - L1: AKShare energy_oil_hist（东方财富原油历史数据，非国际WTI但高度相关）
 - L2: Web scraping from public sources（EIA/金十数据）
 - L3: 备用免费数据源
@@ -20,7 +20,7 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value, _get_latest_record
 import akshare as ak
-import requests
+from common.web_utils import fetch_json
 import pandas as pd
 
 FACTOR_CODE = "FU_WTI_PRICE"
@@ -51,12 +51,12 @@ def fetch_wti_eastmoney():
 
 def fetch_wti_jin10():
     """L2: 金十数据 API（国际原油）"""
+    data, err = fetch_json("https://cdn.jin10.com/data_center/reports/usa_oil.json", timeout=10)
+    if err:
+        print(f"[L2] jin10失败: {err}")
+        return None, None
     try:
-        url = "https://cdn.jin10.com/data_center/reports/usa_oil.json"
-        r = requests.get(url, timeout=10)
-        data = r.json()
         values = data.get("values", {})
-        # WTI原油价格
         wti_price = values.get("美国WTI原油价格", [None, None])
         if wti_price and wti_price[0]:
             val = float(wti_price[0])
@@ -64,16 +64,20 @@ def fetch_wti_jin10():
             print(f"[L2] jin10 WTI: {date_str} -> {val}")
             return val, date_str
     except Exception as e:
-        print(f"[L2] jin10失败: {e}")
+        print(f"[L2] jin10解析失败: {e}")
     return None, None
 
 
 def fetch_wti_eia():
     """L3: EIA官网免费数据"""
+    url = ("https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=DEMO_KEY"
+           "&frequency=daily&data[0]=value&facets[product][]=EPCWTI"
+           "&sort[0][column]=period&sort[0][direction]=desc&length=2")
+    data, err = fetch_json(url, timeout=10)
+    if err:
+        print(f"[L3] EIA失败: {err}")
+        return None, None
     try:
-        url = "https://api.eia.gov/v2/petroleum/pri/spt/data/?api_key=DEMO_KEY&frequency=daily&data[0]=value&facets[product][]=EPCWTI&sort[0][column]=period&sort[0][direction]=desc&length=2"
-        r = requests.get(url, timeout=10)
-        data = r.json()
         if data.get("response", {}).get("data"):
             latest = data["response"]["data"][0]
             val = float(latest["value"])
@@ -81,7 +85,7 @@ def fetch_wti_eia():
             print(f"[L3] EIA WTI: {date_str} -> {val}")
             return val, date_str
     except Exception as e:
-        print(f"[L3] EIA失败: {e}")
+        print(f"[L3] EIA解析失败: {e}")
     return None, None
 
 

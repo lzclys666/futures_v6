@@ -6,9 +6,9 @@ FU_抓取现货和基差.py
 
 公式: 基差 = FU期货收盘价 - 舟山燃料油保税价
 
-当前状态: ✅正常
-- L1: AKShare（FU现货+期货）
-- L2: 东方财富FU现货数据
+当前状态: [OK]正常
+- L1: 东方财富FU现货/基差数据
+- L2: AKShare FU期货 + 东方财富现货（分别获取后计算基差）
 - L3: 备用
 - L4: DB回补
 - L5: NULL占位
@@ -19,88 +19,86 @@ FU_抓取现货和基差.py
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, _get_latest_record
+from common.web_utils import fetch_json
 import akshare as ak
-import requests
 import pandas as pd
-import re
 
 FACTOR_CODE = "FU_BASIS"
 SYMBOL = "FU"
 
 
-def fetch_fu_spot_ak():
-    """L1: AKShare获取FU现货价格（舟山）"""
+def fetch_basis_from_em():
+    """L1: 东方财富基差数据（直接基差字段）"""
+    url = "https://datacenter-web.eastmoney.com/api/data/v1/get"
+    params = {
+        "reportName": "RPTA_WEB_HS_HQ_HSP",
+        "columns": "ALL",
+        "filter": '(hq_typecode="FU")',
+        "sortColumns": "dim_date",
+        "sortTypes": "-1",
+        "pageSize": "1",
+    }
+    data, err = fetch_json(url, params=params, timeout=15)
+    if err:
+        print(f"[L1] 东方财富基差失败: {err}")
+        return None, None
     try:
-        # 东方财富FU现货价格
-        url = "https://datacenter-web.eastmoney.com/api/data/v1/get"
-        params = {
-            "reportName": "RPTA_WEB_HS_HQ_HSP",
-            "columns": "ALL",
-            "filter": '(hq_typecode="FU")',
-            "sortColumns": "dim_date",
-            "sortTypes": "-1",
-            "pageSize": "5",
-        }
-        headers = {"User-Agent": "Mozilla/5.0"}
-        r = requests.get(url, params=params, headers=headers, timeout=15)
-        data = r.json()
+        rows = data.get("result", {}).get("data", [])
+        if rows:
+            latest = rows[0]
+            basis = latest.get("basis", None) or latest.get("basis_price", None)
+            if basis:
+                val = float(basis)
+                date_str = str(latest.get("dim_date", ""))[:10]
+                print(f"[L1] 东方财富基差: {date_str} -> {val}")
+                return val, date_str
+    except Exception as e:
+        print(f"[L1] 东方财富解析失败: {e}")
+    return None, None
+
+
+def fetch_fu_spot_em():
+    """L2a: 东方财富FU现货价格"""
+    url = "https://datacenter-web.eastmoney.com/api/data/v1/get"
+    params = {
+        "reportName": "RPTA_WEB_HS_HQ_HSP",
+        "columns": "ALL",
+        "filter": '(hq_typecode="FU")',
+        "sortColumns": "dim_date",
+        "sortTypes": "-1",
+        "pageSize": "5",
+    }
+    data, err = fetch_json(url, params=params, timeout=15)
+    if err:
+        print(f"[L2a] 东方财富FU现货失败: {err}")
+        return None, None
+    try:
         rows = data.get("result", {}).get("data", [])
         if rows:
             latest = rows[0]
             spot_price = float(latest.get("spot_price", 0))
             date_str = str(latest.get("dim_date", ""))[:10]
-            print(f"[L1] 东方财富FU现货: {date_str} -> {spot_price}")
+            print(f"[L2a] 东方财富FU现货: {date_str} -> {spot_price}")
             return spot_price, date_str
     except Exception as e:
-        print(f"[L1] 东方财富FU现货失败: {e}")
+        print(f"[L2a] 东方财富现货解析失败: {e}")
     return None, None
 
 
 def fetch_fu_fut_ak():
-    """获取FU期货收盘价"""
+    """L2b: AKShare获取FU期货收盘价"""
     try:
-        # 用futures_main_sina获取FU0主力合约收盘价
         df = ak.futures_main_sina(symbol="FU0")
         if df is not None and len(df) > 0:
             col_map = {str(c).strip(): c for c in df.columns}
             close_col = col_map.get('收盘价', None) or col_map.get('最新价', None)
             if close_col:
                 val = float(df.iloc[-1][close_col])
-                print(f"[L1] AKShare FU期货: {val}")
+                print(f"[L2b] AKShare FU期货: {val}")
                 return val
     except Exception as e:
-        print(f"[L1] FU期货获取失败: {e}")
+        print(f"[L2b] FU期货获取失败: {e}")
     return None
-
-
-def fetch_basis_from_em():
-    """L2: 东方财富基差数据"""
-    try:
-        url = "https://datacenter-web.eastmoney.com/api/data/v1/get"
-        params = {
-            "reportName": "RPTA_WEB_HS_HQ_HSP",
-            "columns": "ALL",
-            "filter": '(hq_typecode="FU")',
-            "sortColumns": "dim_date",
-            "sortTypes": "-1",
-            "pageSize": "1",
-        }
-        headers = {"User-Agent": "Mozilla/5.0"}
-        r = requests.get(url, params=params, headers=headers, timeout=15)
-        data = r.json()
-        rows = data.get("result", {}).get("data", [])
-        if rows:
-            # 东方财富有基差字段
-            latest = rows[0]
-            basis = latest.get("basis", None) or latest.get("basis_price", None)
-            if basis:
-                val = float(basis)
-                date_str = str(latest.get("dim_date", ""))[:10]
-                print(f"[L2] 东方财富基差: {date_str} -> {val}")
-                return val, date_str
-    except Exception as e:
-        print(f"[L2] 东方财富基差失败: {e}")
-    return None, None
 
 
 def main():
@@ -108,7 +106,6 @@ def main():
     pub_date, obs_date = get_pit_dates()
     print(f"(auto) === {FACTOR_CODE} === obs={obs_date}")
 
-    # 尝试直接获取基差
     val, source = None, None
 
     # L1: 直接基差
@@ -119,7 +116,7 @@ def main():
         return
 
     # L2: 分别获取现货+期货计算基差
-    spot, spot_date = fetch_fu_spot_ak()
+    spot, spot_date = fetch_fu_spot_em()
     if spot is not None:
         fut = fetch_fu_fut_ak()
         if fut is not None:
@@ -129,7 +126,6 @@ def main():
                         source_confidence=0.9, source=f"L2-计算(期-现):{spot_date}")
             return
         else:
-            # 只有现货，写入现货价格作为代理
             save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, spot,
                         source_confidence=0.8, source=f"L2-东方财富现货:{spot_date}")
             return

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 FU_抓取仓单.py
@@ -6,7 +6,7 @@ FU_抓取仓单.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK]正常
 - L1: AKShare futures_shfe_warehouse_receipt（SHFE官网仓单数据）
 - L2: SHFE官网直接爬取
 - L3: 备用数据源
@@ -20,7 +20,7 @@ import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, _get_latest_record
 import akshare as ak
-import requests
+from common.web_utils import fetch_json
 import pandas as pd
 from datetime import datetime, timedelta
 
@@ -60,7 +60,7 @@ def fetch_shfe_warrant_ak():
                                     if v > 0:
                                         print(f"[L1] SHFE仓单({date_str}): {v}")
                                         return v, date_str
-                                except:
+                                    except (ValueError, IndexError):
                                     continue
             except Exception as inner_e:
                 print(f"[L1] {date_str} 尝试失败: {inner_e}")
@@ -72,16 +72,14 @@ def fetch_shfe_warrant_ak():
 
 def fetch_shfe_direct():
     """L2: 直接爬取SHFE官网仓单页面"""
+    url = "http://www.shfe.com.cn/data/delay/warehouse_receipt.js"
+    data, err = fetch_json(url, encoding='utf-8', timeout=15)
+    if err:
+        print(f"[L2] SHFE直爬失败: {err}")
+        return None, None
     try:
-        # SHFE仓单页面
-        url = "http://www.shfe.com.cn/data/delay/warehouse_receipt.js"
-        r = requests.get(url, timeout=15)
-        r.encoding = 'utf-8'
-        data = r.json()
-        # 格式: {"o": [...]}
         items = data.get("o", [])
         for item in items:
-            # item格式: [品种, 仓单数量, 变化]
             if item and len(item) >= 2:
                 name = str(item[0]).upper()
                 if 'FU' in name or '燃料' in str(item[0]):
@@ -90,7 +88,7 @@ def fetch_shfe_direct():
                     print(f"[L2] SHFE直爬: {name}={val}")
                     return val, date_str
     except Exception as e:
-        print(f"[L2] SHFE直爬失败: {e}")
+        print(f"[L2] SHFE解析失败: {e}")
     return None, None
 
 

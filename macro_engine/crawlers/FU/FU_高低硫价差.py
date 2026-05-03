@@ -6,10 +6,10 @@ FU_高低硫价差.py
 
 公式: 价差 = 高硫燃料油价格 - 低硫燃料油价格
 
-当前状态: ✅正常
-- L1: 东方财富/彭博免费页面（新加坡高硫/低硫FO价格）
-- L2: 新加坡MPA官网
-- L3: 备用
+当前状态: [SKIP]待验证
+- L1: 东方财富新加坡燃料油价格（待验证是否可用）
+- L2: SGX（URL损坏，未调用）
+- L3: Platts（HTML解析，待验证）
 - L4: DB回补
 - L5: NULL占位
 
@@ -19,7 +19,7 @@ FU_高低硫价差.py
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, _get_latest_record
-import requests
+from common.web_utils import fetch_json, fetch_url
 import re
 from datetime import datetime
 
@@ -29,22 +29,22 @@ SYMBOL = "FU"
 
 def fetch_hs_ls_spread_eastmoney():
     """L1: 东方财富新加坡燃料油价格"""
+    url = "https://datacenter-web.eastmoney.com/api/data/v1/get"
+    params = {
+        "reportName": "RPTA_WEB_HS_HQ_HSP",
+        "columns": "ALL",
+        "filter": '(hq_typecode in ("FU", "Bunker"))',
+        "sortColumns": "dim_date",
+        "sortTypes": "-1",
+        "pageSize": "20",
+    }
+    data, err = fetch_json(url, params=params, timeout=15)
+    if err:
+        print(f"[L1] 东方财富失败: {err}")
+        return None, None
     try:
-        url = "https://datacenter-web.eastmoney.com/api/data/v1/get"
-        params = {
-            "reportName": "RPTA_WEB_HS_HQ_HSP",
-            "columns": "ALL",
-            "filter": '(hq_typecode in ("FU", "Bunker"))',
-            "sortColumns": "dim_date",
-            "sortTypes": "-1",
-            "pageSize": "20",
-        }
-        headers = {"User-Agent": "Mozilla/5.0"}
-        r = requests.get(url, params=params, headers=headers, timeout=15)
-        data = r.json()
         rows = data.get("result", {}).get("data", [])
         if rows:
-            # 东方财富燃料油数据含HSFO/LSFO价格
             prices = {}
             date_str = None
             for row in rows:
@@ -53,7 +53,6 @@ def fetch_hs_ls_spread_eastmoney():
                 date_str = str(row.get("dim_date", ""))[:10]
                 if price_val:
                     prices[name] = float(price_val)
-            # 找HSFO和VLSFO/LSFO价格
             hsfo = None
             lsfo = None
             for k, v in prices.items():
@@ -66,34 +65,26 @@ def fetch_hs_ls_spread_eastmoney():
                 print(f"[L1] 东方财富HS-LS价差: {hsfo} - {lsfo} = {spread}")
                 return spread, date_str
     except Exception as e:
-        print(f"[L1] 东方财富失败: {e}")
+        print(f"[L1] 东方财富解析失败: {e}")
     return None, None
 
 
 def fetch_hs_ls_spread_sgx():
-    """L2: 新加坡交易所SGX数据"""
-    try:
-        # SGX燃料油掉期价格（公开页面）
-        url = "https://www.sgx.com/fercsoft/ commodityprice?symbol=FO"
-        headers = {"User-Agent": "Mozilla/5.0", "Referer": "https://www.sgx.com/"}
-        r = requests.get(url, headers=headers, timeout=15)
-        data = r.json()
-        # 解析...
-    except Exception as e:
-        print(f"[L2] SGX失败: {e}")
+    """L2: 新加坡交易所SGX数据（URL损坏，跳过）
+    原URL: https://www.sgx.com/fercsoft/ commodityprice?symbol=FO
+    包含空格，无法使用。需找替代源。"""
+    print("[L2] SGX URL损坏，跳过")
     return None, None
 
 
 def fetch_hs_ls_spread_platts():
-    """L3: Platts公开页面（部分免费）"""
+    """L3: Platts公开页面（HTML解析）"""
+    url = "https://www.spglobal.com/platts/en/market-data/unified-traffic/distinct/fuel/oil"
+    text, err = fetch_url(url, encoding='utf-8', timeout=15)
+    if err:
+        print(f"[L3] Platts失败: {err}")
+        return None, None
     try:
-        # Platts每天发布的高低硫价差在部分页面免费可见
-        url = "https://www.spglobal.com/platts/en/market-data/unified-traffic/distinct/ fuel/oil"
-        headers = {"User-Agent": "Mozilla/5.0"}
-        r = requests.get(url, headers=headers, timeout=15)
-        r.encoding = 'utf-8'
-        text = r.text
-        # 尝试提取HSFO和VLSFO价格
         patterns = [
             r"HSFO[^$]*?(\d+\.?\d*)",
             r"VLSFO[^$]*?(\d+\.?\d*)",
@@ -109,7 +100,7 @@ def fetch_hs_ls_spread_platts():
             print(f"[L3] Platts HS-LS: {spread}")
             return spread, date_str
     except Exception as e:
-        print(f"[L3] Platts失败: {e}")
+        print(f"[L3] Platts解析失败: {e}")
     return None, None
 
 
