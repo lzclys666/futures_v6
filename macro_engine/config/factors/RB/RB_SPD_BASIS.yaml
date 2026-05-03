@@ -1,18 +1,21 @@
-﻿# config/factors/RB/RB_SPD_BASIS.yaml
-factor_code: "RB_SPD_BASIS"
-factor_name: "沪螺纹钢期现基差"
+factor_code: RB_SPD_BASIS
+factor_name: 沪螺纹钢期现基差
 template: null
-econ_category: "SPD"
-logic_category: "STR"
-direction: 1            # 基差扩大→现货溢价→利多
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+econ_category: SPD
+logic_category: STR
+direction: 1
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 60
 base_weight: 0.08
 max_weight: 0.12
 is_active: true
 dependencies:
-  - "SMM现货/smm_RB_spot"
-  - "上期所/shfe_RB_main"
-description: "现货-期货价差，反映现货溢价/贴水程度"
+- SMM现货/smm_RB_spot
+- 上期所/shfe_RB_main
+description: 现货-期货价差，反映现货溢价/贴水程度
+category: free_data
+name: 沪螺纹钢期现基差
+source_confidence: 0.85
+data_source: SMM现货

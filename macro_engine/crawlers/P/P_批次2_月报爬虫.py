@@ -17,9 +17,9 @@
 import sys, os, re
 this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
+from common.web_utils import fetch_url, fetch_json
 from db_utils import save_to_db, get_latest_value
 from datetime import date
-import requests
 
 FACTOR_MAP = {
     'P_PROD_MPOB': 'production',
@@ -37,14 +37,12 @@ MPOB_URL = 'https://www.mpob.gov.my/index.php/economic/commodity/primary/103-pal
 def fetch_mpob():
     """从MPOB官网抓取月度棕榈油数据"""
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     }
     try:
-        r = requests.get(MPOB_URL, headers=headers, timeout=15)
-        if r.status_code != 200:
-            raise ValueError('HTTP ' + str(r.status_code))
-        html = r.text
+        html, err = fetch_url(MPOB_URL, headers=headers, timeout=15)
+        if err:
+            raise ValueError(err)
     except Exception as e:
         raise ValueError('MPOB fetch FAIL: ' + str(e)[:60])
 

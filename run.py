@@ -67,7 +67,7 @@ setting_file = os.path.join(vntrader_path, "vt_setting.json")
 config = {
     "datafeed.name": "xt",
     "datafeed.username": "token",
-    "datafeed.password": "4545ed6ddce0c4071a9bc2695fd505afffc165eb",
+    "datafeed.password": os.getenv("TUSHARE_TOKEN", "PLEASE_SET_ENV"),
     "log.active": True,
     "log.level": 10,
     "log.console": True,
@@ -315,8 +315,8 @@ main_engine.add_gateway(CtpGateway)
 # ==================== CTP SimNow 连接配置化 ====================
 # 账号配置（可写入 .env 或 config 文件，这里硬编码方便调试）
 # 注意: CtpGateway 期望中文 key: 用户名/密码/经纪商代码/交易服务器/行情服务器/产品名称/授权码
-CTP_USER_ID     = os.environ.get("VNPY_CTP_USER_ID", "260345")
-CTP_PASSWORD    = os.environ.get("VNPY_CTP_PASSWORD", "luzc19891222@")
+CTP_USER_ID     = os.environ.get("VNPY_CTP_USER_ID", "PLEASE_SET_ENV")
+CTP_PASSWORD    = os.environ.get("VNPY_CTP_PASSWORD", "PLEASE_SET_ENV")
 CTP_BROKER_ID   = os.environ.get("VNPY_CTP_BROKER_ID", "9999")
 CTP_TD_SERVER   = os.environ.get("VNPY_CTP_TD_SERVER", "182.254.243.31:30001")   # 交易服务器
 CTP_MD_SERVER   = os.environ.get("VNPY_CTP_MD_SERVER", "182.254.243.31:30011")   # 行情服务器

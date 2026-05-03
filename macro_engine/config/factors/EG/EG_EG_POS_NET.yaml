@@ -1,9 +1,6 @@
-# EG_EG_POS_NET.yaml
-# 乙二醇期货净持仓
-
 factor_code: EG_EG_POS_NET
 symbol: EG
-category: position
+category: free_data
 name: 乙二醇期货净持仓
 description: 乙二醇期货净持仓
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - position
-  - EG
+- position
+- EG
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

@@ -1,17 +1,19 @@
-# PB_PB_FX_USDCNY.yaml
-# 美元兑人民币汇率
-
 factor_code: PB_PB_FX_USDCNY
 symbol: PB
-category: fx
+category: free_data
 name: 美元兑人民币汇率
 description: 美元兑人民币汇率
 frequency: daily
-unit: 
+unit: null
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - fx
-  - PB
+- fx
+- PB
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

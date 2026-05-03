@@ -1,19 +1,23 @@
-# sa_sup_output_w.yaml
-# SA周度产量
-
-factor_code: "sa_sup_output_w"
-factor_name: "SA周度产量"
+factor_code: sa_sup_output_w
+factor_name: SA周度产量
 template: null
-econ_category: "SUP"
-logic_category: "SUP"
+econ_category: SUP
+logic_category: SUP
 direction: 1
-frequency: "weekly"
-norm_method: "mad"
-detrend_method: "none"
+frequency: weekly
+norm_method: mad
+detrend_method: none
 norm_window: 756
 base_weight: 0.12
-max_weight: 0.30
+max_weight: 0.3
 is_active: true
 dependencies:
-  - "akshare/futures_spot_price_daily"
-description: "SA周度产量，PIT数据"
+- akshare/futures_spot_price_daily
+description: SA周度产量，PIT数据
+category: free_data
+name: SA周度产量
+source_confidence: 0.85
+data_source: akshare
+expected_range:
+- -100000.0
+- 100000.0

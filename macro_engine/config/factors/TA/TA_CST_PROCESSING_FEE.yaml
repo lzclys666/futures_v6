@@ -1,9 +1,6 @@
-# TA_CST_PROCESSING_FEE.yaml
-# PTA加工费
-
 factor_code: TA_CST_PROCESSING_FEE
 symbol: TA
-category: cost
+category: free_data
 name: PTA加工费
 description: PTA加工费=PX价格×0.655+加工成本，付费数据源，暂无免费接口
 frequency: daily
@@ -13,6 +10,11 @@ confidence: 2
 source: 隆众资讯/Mysteel（付费）
 calculation: null
 tags:
-  - cost
-  - processing_fee
-  - paid
+- cost
+- processing_fee
+- paid
+source_confidence: 2
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

@@ -1,17 +1,23 @@
-﻿---
-factor_code: "JM_SUPPLY_WASHED_OUTPUT"
-factor_name: "甘其毛都口岸通关车数"
-econ_category: "SUPPLY"
-logic_category: "QTY"
+factor_code: JM_SUPPLY_WASHED_OUTPUT
+factor_name: 甘其毛都口岸通关车数
+econ_category: SUPPLY
+logic_category: QTY
 direction: 1
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 20
 base_weight: 0.06
 max_weight: 0.08
 is_active: false
 dependencies:
-  - "甘其毛都口岸管委会(免费)/通关统计"
-  - "Mysteel(年费)/煤焦>进口煤>蒙煤通关"
-description: "通关车数反映蒙煤进口节奏"
+- 甘其毛都口岸管委会(免费)/通关统计
+- Mysteel(年费)/煤焦>进口煤>蒙煤通关
+description: 通关车数反映蒙煤进口节奏
+category: paid_data
+name: 甘其毛都口岸通关车数
+source_confidence: 0.7
+data_source: 甘其毛都口岸管委会(免费)
+expected_range:
+- -100000.0
+- 100000.0

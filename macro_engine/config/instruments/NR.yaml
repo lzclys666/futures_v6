@@ -1,5 +1,8 @@
 symbol: NR
 extends: _base
+name: 20号胶
+name_en: NR
+sector: 农产品
 macro_lambda: 0.35
 weights:
   supply: 0.3

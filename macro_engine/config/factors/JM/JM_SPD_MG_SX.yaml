@@ -1,15 +1,19 @@
-factor_code: "JM_SPD_MG_SX"
-factor_name: "蒙煤-山西煤价差"
-econ_category: "SPD"
-logic_category: "STR"
+factor_code: JM_SPD_MG_SX
+factor_name: 蒙煤-山西煤价差
+econ_category: SPD
+logic_category: STR
 direction: 0
-frequency: "weekly"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: weekly
+norm_method: zscore
+detrend_method: none
 norm_window: 12
 base_weight: 0.04
 max_weight: 0.06
 is_active: false
 dependencies:
-  - "汾渭能源(年费)/煤焦>区域价差"
-description: "区域价差反映替代效应"
+- 汾渭能源(年费)/煤焦>区域价差
+description: 区域价差反映替代效应
+category: free_data
+name: 蒙煤-山西煤价差
+source_confidence: 0.85
+data_source: 汾渭能源(年费)

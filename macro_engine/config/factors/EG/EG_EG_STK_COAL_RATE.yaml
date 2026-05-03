@@ -1,17 +1,19 @@
-# EG_EG_STK_COAL_RATE.yaml
-# 煤制乙二醇开工率
-
 factor_code: EG_EG_STK_COAL_RATE
 symbol: EG
-category: operation
+category: derived
 name: 煤制乙二醇开工率
 description: 煤制乙二醇开工率
 frequency: daily
-unit: "%"
+unit: '%'
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - operation
-  - EG
+- operation
+- EG
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -100000.0
+- 100000.0

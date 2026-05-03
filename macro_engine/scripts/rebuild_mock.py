@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 重新生成其他品种的模拟因子数据（修正版）
 """
@@ -7,7 +8,7 @@ import sqlite3
 import numpy as np
 from pathlib import Path
 
-DB_PATH = Path('D:/futures_v6/macro_engine/pit_data.db')
+DB_PATH = Path('str(MACRO_ENGINE)/pit_data.db')
 
 SYMBOLS = ['RU', 'RB', 'ZN', 'NI']
 

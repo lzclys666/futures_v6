@@ -1,16 +1,22 @@
-﻿---
-factor_code: "JM_INV_THREE_PORTS"
-factor_name: "247家钢厂日均铁水产量"
-econ_category: "DEMAND"
-logic_category: "QTY"
+factor_code: JM_INV_THREE_PORTS
+factor_name: 247家钢厂日均铁水产量
+econ_category: DEMAND
+logic_category: QTY
 direction: 1
-frequency: "weekly"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: weekly
+norm_method: zscore
+detrend_method: none
 norm_window: 12
-base_weight: 0.10
+base_weight: 0.1
 max_weight: 0.15
 is_active: false
 dependencies:
-  - "Mysteel(年费)/黑色>钢厂>高炉开工率>铁水产量"
-description: "铁水产量是焦煤核心需求指标"
+- Mysteel(年费)/黑色>钢厂>高炉开工率>铁水产量
+description: 铁水产量是焦煤核心需求指标
+category: paid_data
+name: 247家钢厂日均铁水产量
+source_confidence: 0.7
+data_source: Mysteel(年费)
+expected_range:
+- -100000.0
+- 100000.0

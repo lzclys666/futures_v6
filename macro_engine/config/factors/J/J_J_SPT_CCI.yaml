@@ -1,9 +1,6 @@
-# J_J_SPT_CCI.yaml
-# CCI焦炭价格指数
-
 factor_code: J_J_SPT_CCI
 symbol: J
-category: price
+category: free_data
 name: CCI焦炭价格指数
 description: CCI焦炭价格指数
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - price
-  - J
+- price
+- J
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

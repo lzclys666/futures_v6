@@ -1,17 +1,19 @@
-# BU_BU_STK_REFINE_RATE.yaml
-# 炼厂沥青开工率
-
 factor_code: BU_BU_STK_REFINE_RATE
 symbol: BU
-category: operation
+category: derived
 name: 炼厂沥青开工率
 description: 炼厂沥青开工率
 frequency: daily
-unit: "%"
+unit: '%'
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - operation
-  - BU
+- operation
+- BU
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -100000.0
+- 100000.0

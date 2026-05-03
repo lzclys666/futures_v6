@@ -4,6 +4,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
+from config.paths import OUTPUT
 from vnpy_ctastrategy import CtaTemplate
 from vnpy.trader.constant import Direction, Offset, Status
 from vnpy.trader.object import BarData, TickData
@@ -55,7 +56,7 @@ class MacroDemoStrategy(CtaTemplate):
     fast_window = 10
     slow_window = 20
     use_macro = True
-    csv_path_str = "D:/futures_v6/macro_engine/output/{symbol}_macro_daily_{date}.csv"
+    csv_path_str = str(OUTPUT / "{symbol}_macro_daily_{date}.csv")
     
     # 风控开关
     enable_stop_loss = True      # 固定止损开关

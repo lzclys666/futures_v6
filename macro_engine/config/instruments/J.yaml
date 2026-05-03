@@ -1,5 +1,8 @@
 symbol: J
 extends: _base
+name: 焦炭
+name_en: J
+sector: 黑色
 macro_lambda: 0.4
 weights:
   supply: 0.25

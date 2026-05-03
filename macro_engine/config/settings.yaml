@@ -7,7 +7,7 @@ redis:
   host: localhost
   port: 6379
   db: 0
-  password: 123456
+  password: "PLEASE_SET_ENV"
   cache_ttl: 86400
 
 data_sources:
@@ -17,14 +17,14 @@ data_sources:
   - name: tushare
     priority: 2
     confidence: 0.8
-    token: ""
+    token: "${TUSHARE_TOKEN}"
 
 veighna:
   ctp:
-    broker_id: "9999"
-    user_id: "13127977293"
-    password: "luzc19891222@"
-    front_addr: "tcp://180.168.146.187:10130"
+    broker_id: "${VNPY_CTP_BROKER_ID}"
+    user_id: "${VNPY_CTP_USER_ID}"
+    password: "${VNPY_CTP_PASSWORD}"
+    front_addr: "${VNPY_CTP_MD_SERVER}"
 
 scoring:
   norm_window: 756

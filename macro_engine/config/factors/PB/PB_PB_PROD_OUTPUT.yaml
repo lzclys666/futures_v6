@@ -1,9 +1,6 @@
-# PB_PB_PROD_OUTPUT.yaml
-# 铅锭产量
-
 factor_code: PB_PB_PROD_OUTPUT
 symbol: PB
-category: supply
+category: free_data
 name: 铅锭产量
 description: 铅锭产量
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - supply
-  - PB
+- supply
+- PB
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

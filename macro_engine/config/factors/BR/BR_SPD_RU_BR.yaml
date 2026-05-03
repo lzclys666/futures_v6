@@ -1,17 +1,23 @@
-# config/factors/BR/BR_SPD_RU_BR.yaml
-factor_code: "BR_SPD_RU_BR"
-factor_name: "BR/RU比价"
+factor_code: BR_SPD_RU_BR
+factor_name: BR/RU比价
 template: null
-econ_category: "SPD"
-logic_category: "SPD"
-direction: 1           # 比价上升→BR相对RU走强→利多 BR
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+econ_category: SPD
+logic_category: SPD
+direction: 1
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 756
 base_weight: 0.08
 max_weight: 0.15
 is_active: true
 dependencies:
-  - "Calculation/br_ru_ratio"
-description: "BR期货价 / RU期货价，反映合成胶与天然橡胶的相对强弱"
+- Calculation/br_ru_ratio
+description: BR期货价 / RU期货价，反映合成胶与天然橡胶的相对强弱
+category: derived
+name: BR/RU比价
+source_confidence: 0.75
+data_source: Calculation
+expected_range:
+- -100000.0
+- 100000.0

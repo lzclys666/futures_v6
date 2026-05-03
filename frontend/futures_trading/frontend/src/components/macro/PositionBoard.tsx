@@ -31,9 +31,9 @@ const DIR_LABEL: Record<string, string> = {
 
 /** 风控状态 → Badge 状态 */
 const RISK_STATUS_MAP: Record<string, 'success' | 'warning' | 'error'> = {
-  '正常': 'success',
-  '告警': 'warning',
-  '触发': 'error',
+  'PASS': 'success',
+  'WARN': 'warning',
+  'BLOCK': 'error',
 }
 
 const PositionBoard: React.FC = () => {
@@ -239,7 +239,7 @@ const PositionBoard: React.FC = () => {
         <Spin spinning={riskLoading}>
           <Table<RiskLevelItem>
             columns={riskColumns}
-            dataSource={riskStatus?.levels ?? []}
+            dataSource={riskStatus?.rules ?? []}
             rowKey="level"
             size="small"
             pagination={false}

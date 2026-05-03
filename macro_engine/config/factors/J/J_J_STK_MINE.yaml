@@ -1,9 +1,6 @@
-# J_J_STK_MINE.yaml
-# 煤矿焦煤库存
-
 factor_code: J_J_STK_MINE
 symbol: J
-category: inventory
+category: free_data
 name: 煤矿焦煤库存
 description: 煤矿焦煤库存
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - inventory
-  - J
+- inventory
+- J
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

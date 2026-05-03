@@ -6,7 +6,7 @@ AG_计算期现基差.py
 
 公式: AG_SPD_BASIS = 沪银现货价(元/千克) - AG0主力期货结算价(元/千克)
 
-当前状态: ⚠️ 永久跳过
+当前状态: [SKIP] 永久跳过
   - AKShare futures_spot_price 对"沪银"品种返回历史数据（2016年），无当前可用数据
   - AKShare futures_zh_spot 接口故障（Sina数据格式变更）
   - 无其他可靠免费源

@@ -11,6 +11,12 @@ from macro_engine.core.analysis.ic_heatmap_service import IcHeatmapService
 
 router = APIRouter(prefix="/api/ic-heatmap", tags=["ic-heatmap"])
 
+
+def _wrap(data=None, message: str = "success", code: int = 0):
+    """统一 API 响应格式：{code, message, data}"""
+    return {"code": code, "message": message, "data": data}
+
+
 # 初始化服务
 ic_service = IcHeatmapService()
 
@@ -61,10 +67,7 @@ async def get_ic_heatmap(
             lookback_days=lookback_days
         )
         
-        return {
-            "status": "success",
-            "data": result
-        }
+        return _wrap(result)
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"IC 计算错误: {str(e)}")
@@ -118,10 +121,7 @@ async def get_ic_history(
             rolling_window=rolling_window
         )
         
-        return {
-            "status": "success",
-            "data": result
-        }
+        return _wrap(result)
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"IC 历史数据错误: {str(e)}")
@@ -133,13 +133,7 @@ async def get_available_factors(symbol: Optional[str] = Query(None, description=
     try:
         symbol_code = symbol  # 使用 query 参数
         factors = ic_service.get_factors(symbol=symbol_code)
-        return {
-            "status": "success",
-            "data": {
-                "factors": factors,
-                "count": len(factors)
-            }
-        }
+        return _wrap({"factors": factors, "count": len(factors)})
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取因子列表错误: {str(e)}")
 
@@ -161,10 +155,4 @@ async def get_available_symbols():
         {"code": "BU", "name": "沥青", "exchange": "SHFE"}
     ]
     
-    return {
-        "status": "success",
-        "data": {
-            "symbols": symbols,
-            "count": len(symbols)
-        }
-    }
+    return _wrap({"symbols": symbols, "count": len(symbols)})

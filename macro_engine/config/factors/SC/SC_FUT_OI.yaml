@@ -1,9 +1,6 @@
-# SC_FUT_OI.yaml
-# 原油期货持仓量
-
 factor_code: SC_FUT_OI
 symbol: SC
-category: position
+category: free_data
 name: 原油期货持仓量
 description: 原油期货持仓量
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - position
-  - SC
+- position
+- SC
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

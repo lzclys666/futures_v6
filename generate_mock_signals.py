@@ -1,10 +1,11 @@
+from config.paths import MACRO_ENGINE
 import csv
 from datetime import datetime, timedelta
 from pathlib import Path
 
 # Generate mock macro signals for backtesting
 def generate_mock_macro_signals():
-    output_dir = Path('D:/futures_v6/macro_engine/output')
+    output_dir = Path('str(MACRO_ENGINE)/output')
     output_dir.mkdir(parents=True, exist_ok=True)
     
     # Generate signals for RU (橡胶) - alternating LONG/SHORT for testing

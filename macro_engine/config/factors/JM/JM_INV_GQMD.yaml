@@ -1,16 +1,22 @@
-﻿---
-factor_code: "JM_INV_GQMD"
-factor_name: "蒙煤口岸成本(蒙5#折盘面)"
-econ_category: "COST"
-logic_category: "QTY"
+factor_code: JM_INV_GQMD
+factor_name: 蒙煤口岸成本(蒙5#折盘面)
+econ_category: COST
+logic_category: QTY
 direction: -1
-frequency: "weekly"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: weekly
+norm_method: zscore
+detrend_method: none
 norm_window: 12
 base_weight: 0.06
 max_weight: 0.08
 is_active: false
 dependencies:
-  - "汾渭能源(年费)/煤焦>蒙煤>口岸成本"
-description: "蒙煤成本是焦煤价格底部支撑"
+- 汾渭能源(年费)/煤焦>蒙煤>口岸成本
+description: 蒙煤成本是焦煤价格底部支撑
+category: paid_data
+name: 蒙煤口岸成本(蒙5#折盘面)
+source_confidence: 0.7
+data_source: 汾渭能源(年费)
+expected_range:
+- -100000.0
+- 100000.0

@@ -1,9 +1,6 @@
-# PB_PB_SPT_SMM.yaml
-# SMM沪铅现货价格
-
 factor_code: PB_PB_SPT_SMM
 symbol: PB
-category: price
+category: free_data
 name: SMM沪铅现货价格
 description: SMM沪铅现货价格
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - price
-  - PB
+- price
+- PB
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

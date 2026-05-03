@@ -1,7 +1,8 @@
+from config.paths import PROJECT_ROOT
 import sys
 from pathlib import Path
 
-project_dir = Path('D:/futures_v6')
+project_dir = PROJECT_ROOT
 if str(project_dir) not in sys.path:
     sys.path.insert(0, str(project_dir))
 

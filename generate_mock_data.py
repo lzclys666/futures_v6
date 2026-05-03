@@ -1,3 +1,4 @@
+from config.paths import DATA_DIR
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
@@ -55,7 +56,7 @@ def generate_mock_data(symbol='RU2505', days=60):
 
 # Generate data for multiple symbols
 symbols = ['RU2505', 'ZN2505', 'RB2510', 'NI2505']
-output_dir = Path('D:/futures_v6/data/historical')
+output_dir = DATA_DIR / 'historical'
 
 for symbol in symbols:
     df = generate_mock_data(symbol)

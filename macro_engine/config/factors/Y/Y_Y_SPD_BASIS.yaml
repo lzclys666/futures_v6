@@ -1,9 +1,6 @@
-# Y_Y_SPD_BASIS.yaml
-# 豆油期现基差
-
 factor_code: Y_Y_SPD_BASIS
 symbol: Y
-category: spread
+category: derived
 name: 豆油期现基差
 description: 豆油期现基差
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - spread
-  - Y
+- spread
+- Y
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -100000.0
+- 100000.0

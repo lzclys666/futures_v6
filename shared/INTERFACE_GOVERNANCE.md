@@ -118,12 +118,13 @@ D:\futures_v6\shared\API_CONTRACT.md  (待创建)
 | GET | `/api/vnpy/orders` | `List[Order]` | deep | ✅ Mock |
 | POST | `/api/trading/order` | `{vtOrderId: string}` | deep | ✅ Mock |
 | DELETE | `/api/trading/order/{vt_orderid}` | `{success: bool}` | deep | ✅ Mock |
+| GET | `/api/trading/portfolio` | `PortfolioData` | deep | ✅ Mock |
 
 **风控类**：
 
 | 方法 | 端点 | 响应类型 | Owner | 状态 |
 |------|------|---------|-------|------|
-| GET | `/api/trading/risk-status` | `RiskStatus` | deep | ✅ 已实现 |
+| GET | `/api/risk/status` | `RiskStatus` | deep | ✅ 已实现 |
 | GET | `/api/trading/risk-rules` | `List[RiskRuleConfig]` | deep | ✅ 已实现 |
 | PUT | `/api/trading/rules` | `List[RiskRuleConfig]` | deep | ✅ 已实现 |
 | POST | `/api/risk/simulate` | `List[StressTestResult]` | deep | ⚠️ Phase 3 |
@@ -209,7 +210,7 @@ D:\futures_v6\macro_engine\risk_rules.yaml
 | R1 | 仓位限制 | L2-账户风险 | deep |
 | R2 | 动态止损 | L2-账户风险 | deep |
 | R3 | 集中度限制 | L2-账户风险 | deep |
-| R4 | 时段交易限制 | L3-执行风险 | deep |
+| R4 | 总持仓市值限制 | L3-执行风险 | deep |
 | R5 | ATR仓位计算 | L2-账户风险 | deep |
 | R6 | 流动性限制 | L2-账户风险 | deep |
 | R7 | 波动率限仓 | L2-账户风险 | deep |
@@ -217,6 +218,7 @@ D:\futures_v6\macro_engine\risk_rules.yaml
 | R9 | 冻结资金管理 | L3-执行风险 | deep |
 | R10 | 熔断机制 | L1-市场风险 | deep |
 | R11 | 处置效应监控 | L2-账户风险 | deep |
+| R12 | 撤单次数限制 | L2-执行风险 | deep |
 
 #### 触发联动修改的场景
 
@@ -397,7 +399,7 @@ Owner修改接口
 | P0 | 创建 `shared/API_CONTRACT.md` | deep | 2026-05-02 | ❌ 待创建 |
 | P0 | 创建 `shared/TYPE_CONTRACT.md` 并对齐TS↔Python | deep+Lucy | 2026-05-03 | ❌ 待创建 |
 | P0 | 声明 `risk_rules.yaml` Owner规则 | deep | 2026-05-02 | ❌ 待创建 |
-| P1 | 创建 `shared/EVENTS_CONTRACT.md` | deep | 2026-05-05 | ❌ 待创建 |
+| P1 | 创建 `shared/EVENTS_CONTRACT.md` | deep | 2026-05-05 | ✅ 已创建（2026-05-03） |
 | P1 | 修复已知类型不一致（见3.4节） | deep+Lucy | 2026-05-05 | ❌ 待修复 |
 | P2 | 实现 PaperBridge 事件总线 | deep | Phase 3 | ❌ 未开始 |
 
@@ -445,4 +447,18 @@ D:\futures_v6\
 ---
 
 *本文档为初始版本，后续根据实际联调案例持续更新。*
-*最后更新：2026-05-01 by 项目经理*
+### ic_heatmap 数据流文档
+
+> **背景**：P2-3 补充（ic_heatmap 消费者未文档化）
+
+| 环节 | 组件 | 说明 |
+|------|------|------|
+| **写入** | `macro_engine/scripts/compute_ic_heatmap.py` | 每日 14:30 scoring 后运行，计算因子-品种 IC 相关系数 |
+| **存储** | `macro_engine/pit_data.db` → `ic_heatmap` 表 | SQLite，PK=(factor_code, symbol, pub_date) |
+| **读取服务** | `macro_engine/core/analysis/ic_heatmap_service.py` → `IcHeatmapService` | 提供 get_ic_heatmap() 等方法 |
+| **API 端点** | `GET /api/ic-heatmap/?symbols=RU&lookback_days=252` | 前端 IC 热力图数据来源（prefix=`/api/ic-heatmap`） |
+| **消费方** | `frontend/futures_trading/frontend/src/pages/FactorDashboardPage.tsx` | 展示 IC 热力图矩阵 |
+
+---
+
+*最后更新：2026-05-03 by 项目经理*

@@ -1,16 +1,20 @@
-factor_code: "JM_POS_OI"
-factor_name: "焦煤期货持仓量"
+factor_code: JM_POS_OI
+factor_name: 焦煤期货持仓量
 template: null
-econ_category: "POS"
-logic_category: "SEN"
+econ_category: POS
+logic_category: SEN
 direction: 0
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 60
 base_weight: 0.08
 max_weight: 0.12
 is_active: true
 dependencies:
-  - "AKShare/futures_main_sina"
-description: "焦煤期货主力合约持仓量，反映市场参与度"
+- AKShare/futures_main_sina
+description: 焦煤期货主力合约持仓量，反映市场参与度
+category: derived
+name: 焦煤期货持仓量
+source_confidence: 0.75
+data_source: AKShare

@@ -1,28 +1,34 @@
-# NR_SUP_HATYAI_CUP.yaml
-# 泰国合艾市场杯胶（Cup Lump）原料价格
-
+description: 泰国合艾市场杯胶（Cup Lump）原料价格
+category: paid_data
 factor_code: NR_SUP_HATYAI_CUP
 symbol: NR
 frequency: daily
+meaning: '泰国合艾市场杯胶（Cup Lump）原料价格。
 
-meaning: |
-  泰国合艾市场杯胶（Cup Lump）原料价格。
   杯胶是田间采集的凝固胶，是20号胶（STR20）的主要原料。
+
   杯胶价格直接影响STR20的生产成本。
 
+  '
 data_sources:
-  - name: 隆众资讯
-    url: https://www.oilchem.net/
-    confidence: 0.8
-    note: 付费订阅，日频更新
-  - name: 卓创资讯
-    url: https://rubb.chem99.com/
-    confidence: 0.8
-    note: 付费订阅，日频更新
-
+- name: 隆众资讯
+  url: https://www.oilchem.net/
+  confidence: 0.8
+  note: 付费订阅，日频更新
+- name: 卓创资讯
+  url: https://rubb.chem99.com/
+  confidence: 0.8
+  note: 付费订阅，日频更新
 unit: 泰铢/公斤
-normal_range: [35, 70]
-
-update_schedule: "每日更新"
+normal_range:
+- 35
+- 70
+update_schedule: 每日更新
 manual_input_required: true
-note: "需付费数据源或手动录入，NR_抓取合艾原料.py提供占位框架"
+note: 需付费数据源或手动录入，NR_抓取合艾原料.py提供占位框架
+source_confidence: 0.8
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0
+name: NR_SUP_HATYAI_CUP

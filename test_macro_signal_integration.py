@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from config.paths import PROJECT_ROOT
+from config.paths import MACRO_ENGINE
 """
 Test Real Macro Signal Integration
 验证策略能正确读取真实宏观信号CSV
@@ -10,7 +12,7 @@ from pathlib import Path
 from datetime import datetime
 
 # Add project path
-project_dir = Path('D:/futures_v6')
+project_dir = PROJECT_ROOT
 if str(project_dir) not in sys.path:
     sys.path.insert(0, str(project_dir))
 
@@ -55,7 +57,7 @@ def test_signal_loading():
             'fast_window': 5,
             'slow_window': 30,
             'use_macro': True,
-            'csv_path_str': 'D:/futures_v6/macro_engine/output/{symbol}_macro_daily_{date}.csv'
+            'csv_path_str': 'str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv'
         }
     )
     

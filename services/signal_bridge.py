@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 SignalBridge — 文件系统事件驱动桥接器
 
@@ -11,7 +12,7 @@ SignalBridge — 文件系统事件驱动桥接器
 使用方式：
     from services.signal_bridge import SignalBridge, EVENT_MACRO_SIGNAL
 
-    bridge = SignalBridge(event_engine, csv_dir="D:/futures_v6/macro_engine/output")
+    bridge = SignalBridge(event_engine, csv_dir="str(MACRO_ENGINE)/output")
     bridge.start()
     # ... 策略订阅 EVENT_MACRO_SIGNAL 事件 ...
     bridge.stop()

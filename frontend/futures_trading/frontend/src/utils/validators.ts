@@ -44,8 +44,8 @@ export function isMacroSignal(obj: unknown): obj is MacroSignal {
     (typeof s.compositeScore === 'number' || typeof s.score === 'number') &&
     ['LONG', 'NEUTRAL', 'SHORT'].includes(s.direction as string) &&
     typeof s.updatedAt === 'string' &&
-    Array.isArray(s.factors) &&
-    s.factors.every(isFactorDetail)
+    Array.isArray(s.factorDetails) &&
+    (s.factorDetails as unknown[]).every(isFactorDetail)
   )
 }
 
@@ -81,8 +81,8 @@ export function isRiskStatusData(obj: unknown): obj is RiskStatusData {
   const r = obj as Record<string, unknown>
   return (
     typeof r.date === 'string' &&
-    ['正常', '告警', '触发'].includes(r.overallStatus as string) &&
-    Array.isArray(r.levels) &&
+    ['PASS', 'WARN', 'BLOCK'].includes(r.overallStatus as string) &&
+    Array.isArray(r.rules) &&
     typeof r.equity === 'number' &&
     typeof r.drawdown === 'number' &&
     typeof r.updatedAt === 'string'
@@ -120,13 +120,13 @@ export function validateMacroSignal(data: unknown): ValidationResult<MacroSignal
     errors.push({ field: 'updatedAt', expected: 'ISO date string', actual: s.updatedAt, message: 'updatedAt 必须是 ISO 日期字符串' })
   }
 
-  // factors
-  if (!Array.isArray(s.factors)) {
-    errors.push({ field: 'factors', expected: 'FactorDetail[]', actual: s.factors, message: 'factors 必须是数组' })
+  // factorDetails
+  if (!Array.isArray(s.factorDetails)) {
+    errors.push({ field: 'factorDetails', expected: 'FactorDetail[]', actual: s.factorDetails, message: 'factorDetails 必须是数组' })
   } else {
-    s.factors.forEach((f, i) => {
+    s.factorDetails.forEach((f, i) => {
       if (!isFactorDetail(f)) {
-        errors.push({ field: `factors[${i}]`, expected: 'FactorDetail', actual: f, message: `factors[${i}] 格式不正确` })
+        errors.push({ field: `factorDetails[${i}]`, expected: 'FactorDetail', actual: f, message: `factorDetails[${i}] 格式不正确` })
       }
     })
   }

@@ -182,6 +182,9 @@ def generate_instrument_configs():
         yaml_data = {
             'symbol': symbol,
             'extends': '_base',
+            'name': config['name'],
+            'name_en': symbol,
+            'sector': config['sector'],
             'macro_lambda': config['macro_lambda'],
             'weights': weights,
             'factors': [

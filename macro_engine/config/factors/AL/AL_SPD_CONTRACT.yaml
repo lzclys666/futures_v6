@@ -1,17 +1,20 @@
-# config/factors/AL/AL_SPD_CONTRACT.yaml
-factor_code: "AL_SPD_CONTRACT"
-factor_name: "沪铝近远月价差"
+factor_code: AL_SPD_CONTRACT
+factor_name: 沪铝近远月价差
 template: null
-econ_category: "SPD"
-logic_category: "STR"
-direction: -1           # Contango正常，Backwardation利多
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+econ_category: SPD
+logic_category: STR
+direction: -1
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 60
 base_weight: 0.05
 max_weight: 0.08
 is_active: true
 dependencies:
-  - "上期所/shfe_al_main"
-description: "近月合约-远月合约价差，反映期限结构"
+- 上期所/shfe_al_main
+description: 近月合约-远月合约价差，反映期限结构
+category: free_data
+name: 沪铝近远月价差
+source_confidence: 0.85
+data_source: 上期所

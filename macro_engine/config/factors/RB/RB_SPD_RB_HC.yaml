@@ -1,18 +1,21 @@
-﻿# config/factors/RB/RB_SPD_RB_CU.yaml
-factor_code: "RB_SPD_RB_CU"
-factor_name: "螺纹钢/铜比价"
+factor_code: RB_SPD_RB_CU
+factor_name: 螺纹钢/铜比价
 template: null
-econ_category: "SPD"
-logic_category: "STR"
-direction: 0            # 中性因子
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+econ_category: SPD
+logic_category: STR
+direction: 0
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 60
 base_weight: 0.04
 max_weight: 0.06
 is_active: true
 dependencies:
-  - "上期所/shfe_RB_main"
-  - "上期所/shfe_cu_main"
-description: "螺纹钢价/铜价比值，反映商品间相对强弱"
+- 上期所/shfe_RB_main
+- 上期所/shfe_cu_main
+description: 螺纹钢价/铜价比值，反映商品间相对强弱
+category: free_data
+name: 螺纹钢/铜比价
+source_confidence: 0.85
+data_source: 上期所

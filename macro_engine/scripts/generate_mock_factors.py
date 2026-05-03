@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 修复 IC 计算器：使 factor_config 表名支持多品种动态映射
 并创建其他品种的基差/持仓量/波动率模拟数据
@@ -9,7 +10,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
-DB_PATH = Path('D:/futures_v6/macro_engine/pit_data.db')
+DB_PATH = Path('str(MACRO_ENGINE)/pit_data.db')
 
 SYMBOLS = ['JM', 'RU', 'RB', 'ZN', 'NI']
 FACTORS = {

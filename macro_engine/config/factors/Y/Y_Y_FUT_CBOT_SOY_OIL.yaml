@@ -1,9 +1,6 @@
-# Y_Y_FUT_CBOT_SOY_OIL.yaml
-# CBOT豆油主力合约
-
 factor_code: Y_Y_FUT_CBOT_SOY_OIL
 symbol: Y
-category: price
+category: free_data
 name: CBOT豆油主力合约
 description: CBOT豆油主力合约
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - price
-  - Y
+- price
+- Y
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

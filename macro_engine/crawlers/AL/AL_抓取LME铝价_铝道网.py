@@ -14,8 +14,8 @@ AL_抓取LME铝价_铝道网.py
 订阅优先级: ★★（铝道网免费数据）
 替代付费源: LME官网（免费但需解析）
 """
+from common.web_utils import fetch_url, fetch_json
 import sys, os, re, datetime
-import requests
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates
@@ -30,17 +30,13 @@ BOUNDS = (1500, 5000)
 def fetch_lme_price():
     try:
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
             "Accept": "text/html",
             "Accept-Language": "zh-CN,zh;q=0.9",
         }
-        resp = requests.get(URL, headers=headers, timeout=15)
-        resp.encoding = "gb2312"
-        if resp.status_code != 200:
-            print(f"[ERR] HTTP {resp.status_code}")
-            return None
-
-        html = resp.text
+        html, err = fetch_url(URL, headers=headers, timeout=15)
+        if err:
+            print(f"[ERR] 网络异常: {err}")
+            return None, None
 
         # 策略1: 标题解析
         # 格式: 2026年04月16日LME伦敦金属交易所现货行情价3618
@@ -75,11 +71,8 @@ def fetch_lme_price():
         print("[WARN] 页面中未解析出LME铝价数据")
         return None, None
 
-    except requests.exceptions.RequestException as e:
-        print(f"[ERR] 网络异常: {e}")
-        return None, None
     except Exception as e:
-        print(f"[ERR] 解析异常: {e}")
+        print(f"[ERR] 网络异常: {e}")
         return None, None
 
 

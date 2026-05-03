@@ -1,17 +1,21 @@
-factor_code: "JM_SPD_BASIS"
-factor_name: "焦煤期现基差"
+factor_code: JM_SPD_BASIS
+factor_name: 焦煤期现基差
 template: null
-econ_category: "SPD"
-logic_category: "STR"
+econ_category: SPD
+logic_category: STR
 direction: -1
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 60
-base_weight: 0.10
+base_weight: 0.1
 max_weight: 0.15
 is_active: true
 dependencies:
-  - "汾渭能源/蒙5#折盘面价"
-  - "AKShare/futures_main_sina"
-description: "蒙5#折盘面价-焦煤期货价，基差走弱预示下跌"
+- 汾渭能源/蒙5#折盘面价
+- AKShare/futures_main_sina
+description: 蒙5#折盘面价-焦煤期货价，基差走弱预示下跌
+category: free_data
+name: 焦煤期现基差
+source_confidence: 0.85
+data_source: 汾渭能源

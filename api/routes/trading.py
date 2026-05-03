@@ -3,9 +3,16 @@ from pydantic import BaseModel
 from typing import Optional, Literal, ClassVar
 from datetime import datetime
 
-from services.vnpy_bridge import bridge
+from services.vnpy_bridge import get_vnpy_bridge
 
 router = APIRouter(prefix="/api/trading", tags=["trading"])
+
+
+# ==================== 统一响应辅助 ====================
+
+def _wrap(data=None, message: str = "success", code: int = 0):
+    """统一 API 响应格式：{code, message, data}"""
+    return {"code": code, "message": message, "data": data}
 
 
 class OrderRequest(BaseModel):
@@ -114,14 +121,14 @@ async def create_order(request: OrderRequest):
     ```
     """
     # 检查引擎状态
-    if not bridge.status.value == "running":
+    if not get_vnpy_bridge().status.value == "running":
         raise HTTPException(
             status_code=503,
             detail="交易引擎未启动，请先启动VNpy引擎"
         )
     
     # 检查交易时间
-    if not bridge.is_trading_hours():
+    if not get_vnpy_bridge().is_trading_hours():
         return OrderResponse(
             success=False,
             message="当前不在交易时间内",
@@ -130,7 +137,7 @@ async def create_order(request: OrderRequest):
     
     # 发送订单
     vt_symbol = request.get_symbol()
-    vt_orderid = bridge.send_order(
+    vt_orderid = get_vnpy_bridge().send_order(
         vt_symbol=vt_symbol,
         direction=request.direction,
         offset=request.offset,
@@ -162,14 +169,14 @@ async def cancel_order(order_id: str):
     - order_id: 委托编号（如 "PaperAccount.12345"）
     """
     # 检查引擎状态
-    if not bridge.status.value == "running":
+    if not get_vnpy_bridge().status.value == "running":
         raise HTTPException(
             status_code=503,
             detail="交易引擎未启动"
         )
     
     # 执行撤单
-    success = bridge.cancel_order(vt_orderid=order_id)
+    success = get_vnpy_bridge().cancel_order(vt_orderid=order_id)
     
     if success:
         return CancelResponse(
@@ -188,28 +195,21 @@ async def cancel_order(order_id: str):
 @router.get("/positions")
 async def get_positions():
     """获取持仓列表"""
-    if not bridge.status.value == "running":
+    if not get_vnpy_bridge().status.value == "running":
         return {"status": "engine_not_running", "positions": []}
-    
-    positions = bridge.get_positions()
-    return {
-        "status": "success",
-        "count": len(positions),
-        "positions": positions
-    }
+
+    positions = get_vnpy_bridge().get_positions()
+    return _wrap({"count": len(positions), "positions": positions})
 
 
 @router.get("/account")
 async def get_account():
     """获取账户信息"""
-    if not bridge.status.value == "running":
-        return {"status": "engine_not_running", "account": None}
-    
-    account = bridge.get_account()
-    return {
-        "status": "success",
-        "account": account
-    }
+    if not get_vnpy_bridge().status.value == "running":
+        return _wrap(None, message="engine_not_running")
+
+    account = get_vnpy_bridge().get_account()
+    return _wrap({"account": account})
 
 
 @router.get("/portfolio")
@@ -218,39 +218,28 @@ async def get_portfolio():
     获取聚合组合数据（账户统计 + 持仓列表）
     用于前端 PortfolioData，支持 PositionBoard 完整展示
     """
-    if not bridge.status.value == "running":
-        return {"status": "engine_not_running", "portfolio": None}
+    if not get_vnpy_bridge().status.value == "running":
+        return _wrap(None, message="engine_not_running")
 
-    portfolio = bridge.get_portfolio()
-    return {
-        "status": "success",
-        "portfolio": portfolio
-    }
+    portfolio = get_vnpy_bridge().get_portfolio()
+    return _wrap({"portfolio": portfolio})
 
 
 @router.get("/orders")
 async def get_orders():
     """获取订单列表"""
-    if not bridge.status.value == "running":
-        return {"status": "engine_not_running", "orders": []}
-    
-    orders = bridge.get_orders()
-    return {
-        "status": "success",
-        "count": len(orders),
-        "orders": orders
-    }
+    if not get_vnpy_bridge().status.value == "running":
+        return _wrap(None, message="engine_not_running")
+
+    orders = get_vnpy_bridge().get_orders()
+    return _wrap({"count": len(orders), "orders": orders})
 
 
 @router.get("/trades")
 async def get_trades():
     """获取成交列表"""
-    if not bridge.status.value == "running":
-        return {"status": "engine_not_running", "trades": []}
-    
-    trades = bridge.get_trades()
-    return {
-        "status": "success",
-        "count": len(trades),
-        "trades": trades
-    }
+    if not get_vnpy_bridge().status.value == "running":
+        return _wrap(None, message="engine_not_running")
+
+    trades = get_vnpy_bridge().get_trades()
+    return _wrap({"count": len(trades), "trades": trades})

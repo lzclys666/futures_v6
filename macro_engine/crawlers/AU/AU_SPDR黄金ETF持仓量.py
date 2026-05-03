@@ -1,10 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-SPDR黄金ETF持仓量（吨）
+AU_SPDR黄金ETF持仓量.py
 因子: AU_SPD_GLD = SPDR黄金ETF持仓量（吨）
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: ✅正常
+当前状态: [OK] 正常
 - 数据源: L1a: 我的钢铁网 | L1b: 东方财富API | L1c: 新浪贵金属 | L4: DB回补
 - 采集逻辑: 见脚本内多源漏斗
 - bounds: 因因子而异
@@ -12,9 +14,10 @@ SPDR黄金ETF持仓量（吨）
 订阅优先级: 无需付费
 替代付费源: 无
 """
-import sys, os, re, requests
+import sys, os, re
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.web_utils import fetch_url, fetch_json
 
 FACTOR_CODE = "AU_SPD_GLD"
 SYMBOL = "AU"
@@ -22,17 +25,16 @@ SYMBOL = "AU"
 
 def fetch_spdr():
     """尝试从多个源获取SPDR黄金持仓（吨）"""
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'}
 
     # L1a: 我的钢铁网 SPDR黄金持仓
     try:
-        r = requests.get(
+        html, err = fetch_url(
             'https://news.mysteel.com/a/26041709/',
-            headers={'User-Agent': headers['User-Agent']},
             timeout=10
         )
-        r.encoding = 'utf-8'
-        text = r.text
+        if err:
+            raise Exception(err)
+        text = html
         # Pattern: SPDR Gold Trust持仓量为XXXX.XX吨
         m = re.search(r'SPD[Rr].*?持仓量[为]?(\d+\.?\d*)\s*吨', text)
         if not m:
@@ -45,15 +47,15 @@ def fetch_spdr():
     except Exception as e:
         print(f"[L1a] {e}")
 
-    # L1b: 东方财富 SPDR持仓快讯搜索（需要动态内容）
-    # 尝试东方财富数据API
+    # L1b: 东方财富 SPDR持仓数据API
     try:
-        r = requests.get(
+        data, err = fetch_json(
             'https://datacenter-web.eastmoney.com/api/data/v1/get?reportName=RPT_GOLD_ETF_HOLD&columns=ALL&pageNumber=1&pageSize=5',
-            headers={'User-Agent': headers['User-Agent'], 'Referer': 'https://data.eastmoney.com/'},
+            headers={'Referer': 'https://data.eastmoney.com/'},
             timeout=10
         )
-        data = r.json()
+        if err:
+            raise Exception(err)
         for item in data.get('result', {}).get('data', []):
             if 'SPDR' in str(item) or 'GLD' in str(item):
                 hold = item.get('F8') or item.get('hold')  # 持仓量
@@ -64,25 +66,25 @@ def fetch_spdr():
     except Exception as e:
         print(f"[L1b] {e}")
 
-    # L1c: 尝试爬取新浪贵金属
+    # L1c: 新浪贵金属
     try:
-        r = requests.get(
+        html, err = fetch_url(
             'https://hq.sinajs.cn/list=hf_GLD',
-            headers={'Referer': 'https://finance.sina.com.cn', 'User-Agent': headers['User-Agent']},
+            headers={'Referer': 'https://finance.sina.com.cn'},
             timeout=10
         )
-        r.encoding = 'gbk'
-        m = re.search(r'"([^"]+)"', r.text)
+        if err:
+            raise Exception(err)
+        m = re.search(r'"([^"]+)"', html)
         if m:
             parts = m.group(1).split(',')
-            # GLD data format: last price, change, etc.
             for p in parts:
                 try:
                     val = float(p)
                     if 500 <= val <= 2000:
                         print(f"[L1c] SPDR GLD={val} (Sina GLD)")
                         return val, 1.0, "sina_hq_hf_GLD"
-                except:
+                except (ValueError, IndexError):
                     pass
     except Exception as e:
         print(f"[L1c] {e}")

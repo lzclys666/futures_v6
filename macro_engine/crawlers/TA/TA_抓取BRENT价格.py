@@ -14,7 +14,8 @@
 订阅优先级: ★★（付费源才需要标注）
 替代付费源: 具体平台名称
 """
-import sys, os, requests
+import sys, os
+from common.web_utils import fetch_url, fetch_json
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
 import pandas as pd
@@ -30,10 +31,10 @@ def fetch_fred_brent(obs_date):
     """L1: FRED Brent Crude (MCOILBRENTEU) 月度数据"""
     try:
         url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id=MCOILBRENTEU&vintage_date={obs_date.strftime('%Y-%m-%d')}"
-        r = requests.get(url, timeout=10)
-        if r.status_code != 200:
+        html, err = fetch_url(url, timeout=10)
+        if err:
             return None
-        lines = r.text.strip().split('\n')
+        lines = html.strip().split('\n')
         rows = []
         for line in lines[1:]:
             parts = line.split(',')
@@ -74,8 +75,9 @@ def fetch_eia_brent():
             "&sort[0][column]=period&sort[0][direction]=desc"
             "&length=3"
         )
-        r = requests.get(url, timeout=10)
-        data = r.json()
+        data, err = fetch_json(url, timeout=10)
+        if err:
+            return None
         if 'response' in data and 'data' in data['response']:
             for item in data['response']['data'][:1]:
                 v = float(item['value'])
@@ -96,11 +98,9 @@ def fetch_yahoo_brent():
     try:
         url = "https://query1.finance.yahoo.com/v8/finance/chart/BZ=F"
         params = {"interval": "1d", "range": "5d", "includePrePost": "false"}
-        headers = {"User-Agent": "Mozilla/5.0"}
-        r = requests.get(url, params=params, headers=headers, timeout=10)
-        if r.status_code != 200 or not r.text.strip():
+        data, err = fetch_json(url, params=params, timeout=10)
+        if err:
             return None
-        data = r.json()
         result = data.get("chart", {}).get("result", [])
         if result:
             quotes = result[0].get("indicators", {}).get("quote", [{}])[0].get("close", [])

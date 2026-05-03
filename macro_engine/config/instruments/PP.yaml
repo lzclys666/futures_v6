@@ -1,5 +1,8 @@
 symbol: PP
 extends: _base
+name: 聚丙烯
+name_en: PP
+sector: 能化
 macro_lambda: 0.5
 weights:
   supply: 0.25

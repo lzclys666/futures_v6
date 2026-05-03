@@ -17,6 +17,9 @@ interface UserState {
   performance: { dates: string[]; returns: number[]; pnl: number[]; benchmarkReturns: number[] } | null
   performanceLoading: boolean
 
+  /** 是否跟随操作系统深色模式（自动主题） */
+  darkAlgorithm: boolean
+
   // ---- 动作 ----
   loadProfile: () => Promise<void>
   /** 更新偏好（本地 + 远程） */
@@ -30,12 +33,31 @@ interface UserState {
   clearError: () => void
 }
 
-export const useUserStore = create<UserState>((set, get) => ({
-  profile: null,
-  profileLoading: false,
-  performance: null,
-  performanceLoading: false,
-  error: null,
+// 监听 OS 深色模式变化
+function getSystemDarkMode(): boolean {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+}
+
+let _darkModeListener: MediaQueryList | null = null
+
+function setupDarkModeListener(set: (state: Partial<UserState>) => void) {
+  if (typeof window === 'undefined') return
+  _darkModeListener = window.matchMedia('(prefers-color-scheme: dark)')
+  _darkModeListener.addEventListener('change', (e) => {
+    set({ darkAlgorithm: e.matches })
+  })
+}
+
+export const useUserStore = create<UserState>((set, get) => {
+  setupDarkModeListener(set)
+  return {
+    profile: null,
+    profileLoading: false,
+    performance: null,
+    performanceLoading: false,
+    darkAlgorithm: getSystemDarkMode(),
+    error: null,
 
   loadProfile: async () => {
     set({ profileLoading: true })
@@ -118,4 +140,5 @@ export const useUserStore = create<UserState>((set, get) => ({
   },
 
   clearError: () => set({ error: null }),
-}))
+  }}
+))

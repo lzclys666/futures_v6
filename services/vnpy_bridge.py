@@ -1053,7 +1053,7 @@ class VNpyBridge:
         """
         return {
             "status": self.status.value,
-            "active_rules": list(range(1, 12)),  # R1-R11
+            "active_rules": list(range(1, 13)),  # R1-R12
             "recent_events": [{
                 "timestamp": e.timestamp,
                 "rule_id": e.rule_id,
@@ -1199,6 +1199,46 @@ class PaperBridge:
         self._starting_balance = 1000000.0  # 日初权益（用于计算 daily_pnl）
         self._ws_clients = []
         self._last_price = {}
+        # 加载统一风控规则（Layer + Severity 从 YAML 读取）
+        self._rules = self._load_risk_rules()
+
+    def _load_risk_rules(self):
+        """从 risk/rules/risk_rules.yaml 加载规则定义"""
+        try:
+            import yaml
+            from pathlib import Path
+            rules_path = Path(__file__).parent.parent / "risk" / "rules" / "risk_rules.yaml"
+            with open(rules_path, encoding="utf-8") as f:
+                return yaml.safe_load(f).get("rules", [])
+        except Exception:
+            return []
+
+    def get_risk_rules(self):
+        """
+        获取风控规则配置（前端 /api/risk/rules 使用）
+        layer 返回 numeric (1/2/3)，severity 返回 PASS/WARN/BLOCK
+        """
+        from datetime import datetime
+        now = datetime.now().isoformat()
+        LAYER_TO_SEVERITY = {1: "PASS", 2: "WARN", 3: "BLOCK"}
+        result = []
+        for r in self._rules:
+            rule_id = r.get("id", "")
+            layer = r.get("layer", 2)
+            severity = LAYER_TO_SEVERITY.get(layer, "WARN")
+            result.append({
+                "id": rule_id,
+                "ruleId": f"{rule_id}_{rule_id}",  # 前端兼容
+                "name": r.get("name", ""),
+                "layer": layer,
+                "threshold": r.get("threshold", 0),
+                "severity": severity,
+                "currentValue": 0,
+                "unit": "ratio",
+                "enabled": r.get("enabled", True),
+                "updatedAt": now,
+            })
+        return result
     
     def get_portfolio(self):
         """
@@ -1305,21 +1345,81 @@ class PaperBridge:
         返回格式与 RiskRuleItem Pydantic 模型一致
         """
         from datetime import datetime
+
+        # 定义12条风控规则状态
+        rules = [
+            {"ruleId": "R1_SINGLE_SYMBOL", "ruleName": "R1 单品种持仓限制(动态)", "layer": 3, "severity": "PASS", "currentValue": 0.18, "threshold": 0.30, "message": ""},
+            {"ruleId": "R2_DAILY_LOSS", "ruleName": "R2 单日最大亏损限制", "layer": 2, "severity": "PASS", "currentValue": 0.02, "threshold": 0.05, "message": ""},
+            {"ruleId": "R3_PRICE_LIMIT", "ruleName": "R3 涨跌停限制", "layer": 1, "severity": "PASS", "currentValue": 0.0, "threshold": 0.0, "message": "未触及涨跌停"},
+            {"ruleId": "R4_TOTAL_MARGIN", "ruleName": "R4 总保证金上限(分时段)", "layer": 3, "severity": "PASS", "currentValue": 0.45, "threshold": 0.70, "message": ""},
+            {"ruleId": "R5_VOLATILITY", "ruleName": "R5 波动率异常过滤", "layer": 1, "severity": "PASS", "currentValue": 0.03, "threshold": 0.05, "message": ""},
+            {"ruleId": "R6_LIQUIDITY", "ruleName": "R6 流动性检查", "layer": 1, "severity": "PASS", "currentValue": 5000, "threshold": 1000, "message": ""},
+            {"ruleId": "R7_CONSECUTIVE_LOSS", "ruleName": "R7 连续亏损暂停", "layer": 2, "severity": "PASS", "currentValue": 0, "threshold": 5, "message": "无连续亏损"},
+            {"ruleId": "R8_TRADING_HOURS", "ruleName": "R8 交易时间检查", "layer": 3, "severity": "PASS", "currentValue": 1.0, "threshold": 0.0, "message": "交易时段正常"},
+            {"ruleId": "R9_CAPITAL_SUFFICIENCY", "ruleName": "R9 资金充足性检查", "layer": 3, "severity": "PASS", "currentValue": 0.95, "threshold": 0.05, "message": "资金充足"},
+            {"ruleId": "R10_MACRO_CIRCUIT_BREAKER", "ruleName": "R10 宏观熔断", "layer": 1, "severity": "PASS", "currentValue": 0.45, "threshold": -0.5, "message": "宏观打分正常"},
+            {"ruleId": "R11_DISPOSITION_EFFECT", "ruleName": "R11 处置效应监控", "layer": 2, "severity": "PASS", "currentValue": 48, "threshold": 24, "message": ""},
+            {"ruleId": "R12_CANCEL_LIMIT", "ruleName": "R12 撤单次数限制", "layer": 2, "severity": "PASS", "currentValue": 0, "threshold": 10, "message": ""},
+        ]
+
+        now = datetime.now().isoformat()
+        return {
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "overallStatus": "PASS",
+            "rules": [
+                {**r, "triggered": r["severity"] != "PASS", "updatedAt": now}
+                for r in rules
+            ],
+            "triggeredCount": 0,
+            "circuitBreaker": False,
+            "updatedAt": now,
+        }
+
+    def update_risk_rule(self, rule_data: dict):
+        """
+        更新风控规则配置
+        前端调用链：PUT /api/risk/rules/{ruleId} → routes/risk.py → bridge.update_risk_rule()
+        rule_data 包含：ruleId, threshold, enabled, params 等字段
+        """
+        import logging
+        logger = logging.getLogger("PaperBridge")
+        rule_id = rule_data.get("ruleId", "")
+        logger.info(f"[PaperBridge] update_risk_rule: {rule_id} → {rule_data}")
+
+        # 更新内存中的规则配置
+        for rule in self._rules:
+            short_id = rule_id.split("_")[0] if "_" in rule_id else rule_id
+            if rule.get("id") == short_id or rule.get("id") == rule_id:
+                if "threshold" in rule_data:
+                    rule["threshold"] = rule_data["threshold"]
+                if "enabled" in rule_data:
+                    rule["enabled"] = rule_data["enabled"]
+                logger.info(f"[PaperBridge] 规则 {rule_id} 已更新: threshold={rule.get('threshold')}, enabled={rule.get('enabled')}")
+                break
+        else:
+            logger.warning(f"[PaperBridge] update_risk_rule: 规则 {rule_id} 未找到")
+
+    def get_risk_status(self):
+        """
+        获取风控状态
+        返回格式与 RiskRuleItem Pydantic 模型一致
+        """
+        from datetime import datetime
         
         # 定义11条风控规则状态
         rules = [
-            {"ruleId": "R1_SINGLE_SYMBOL", "ruleName": "R1 单品种持仓限制(动态)", "layer": "layer3", "severity": "PASS", "currentValue": 0.18, "threshold": 0.30, "message": ""},
-            {"ruleId": "R2_DAILY_LOSS", "ruleName": "R2 单日最大亏损限制", "layer": "layer2", "severity": "PASS", "currentValue": 0.02, "threshold": 0.05, "message": ""},
-            {"ruleId": "R3_PRICE_LIMIT", "ruleName": "R3 涨跌停限制", "layer": "layer1", "severity": "PASS", "currentValue": 0.0, "threshold": 0.0, "message": "未触及涨跌停"},
-            {"ruleId": "R4_TOTAL_MARGIN", "ruleName": "R4 总保证金上限(分时段)", "layer": "layer3", "severity": "PASS", "currentValue": 0.45, "threshold": 0.70, "message": ""},
-            {"ruleId": "R5_VOLATILITY", "ruleName": "R5 波动率异常过滤", "layer": "layer1", "severity": "PASS", "currentValue": 0.03, "threshold": 0.05, "message": ""},
-            {"ruleId": "R6_LIQUIDITY", "ruleName": "R6 流动性检查", "layer": "layer1", "severity": "PASS", "currentValue": 5000, "threshold": 1000, "message": ""},
-            {"ruleId": "R7_CONSECUTIVE_LOSS", "ruleName": "R7 连续亏损暂停", "layer": "layer2", "severity": "PASS", "currentValue": 0, "threshold": 5, "message": "无连续亏损"},
-            {"ruleId": "R8_TRADING_HOURS", "ruleName": "R8 交易时间检查", "layer": "layer3", "severity": "PASS", "currentValue": 1.0, "threshold": 0.0, "message": "交易时段正常"},
-            {"ruleId": "R9_CAPITAL_SUFFICIENCY", "ruleName": "R9 资金充足性检查", "layer": "layer3", "severity": "PASS", "currentValue": 0.95, "threshold": 0.05, "message": "资金充足"},
-            {"ruleId": "R10_MACRO_CIRCUIT_BREAKER", "ruleName": "R10 宏观熔断", "layer": "layer1", "severity": "PASS", "currentValue": 0.45, "threshold": -0.5, "message": "宏观打分正常"},
-            {"ruleId": "R11_DISPOSITION_EFFECT", "ruleName": "R11 处置效应监控", "layer": "layer2", "severity": "PASS", "currentValue": 48, "threshold": 24, "message": ""},
-            {"ruleId": "R12_CANCEL_LIMIT", "ruleName": "R12 撤单次数限制", "layer": "layer2", "severity": "PASS", "currentValue": 0, "threshold": 10, "message": ""},
+            {"ruleId": "R1_SINGLE_SYMBOL", "ruleName": "R1 单品种持仓限制(动态)", "layer": 3, "severity": "PASS", "currentValue": 0.18, "threshold": 0.30, "message": ""},
+            {"ruleId": "R2_DAILY_LOSS", "ruleName": "R2 单日最大亏损限制", "layer": 2, "severity": "PASS", "currentValue": 0.02, "threshold": 0.05, "message": ""},
+            {"ruleId": "R3_PRICE_LIMIT", "ruleName": "R3 涨跌停限制", "layer": 1, "severity": "PASS", "currentValue": 0.0, "threshold": 0.0, "message": "未触及涨跌停"},
+            {"ruleId": "R4_TOTAL_MARGIN", "ruleName": "R4 总保证金上限(分时段)", "layer": 3, "severity": "PASS", "currentValue": 0.45, "threshold": 0.70, "message": ""},
+            {"ruleId": "R5_VOLATILITY", "ruleName": "R5 波动率异常过滤", "layer": 1, "severity": "PASS", "currentValue": 0.03, "threshold": 0.05, "message": ""},
+            {"ruleId": "R6_LIQUIDITY", "ruleName": "R6 流动性检查", "layer": 1, "severity": "PASS", "currentValue": 5000, "threshold": 1000, "message": ""},
+            {"ruleId": "R7_CONSECUTIVE_LOSS", "ruleName": "R7 连续亏损暂停", "layer": 2, "severity": "PASS", "currentValue": 0, "threshold": 5, "message": "无连续亏损"},
+            {"ruleId": "R8_TRADING_HOURS", "ruleName": "R8 交易时间检查", "layer": 3, "severity": "PASS", "currentValue": 1.0, "threshold": 0.0, "message": "交易时段正常"},
+            {"ruleId": "R9_CAPITAL_SUFFICIENCY", "ruleName": "R9 资金充足性检查", "layer": 3, "severity": "PASS", "currentValue": 0.95, "threshold": 0.05, "message": "资金充足"},
+            {"ruleId": "R10_MACRO_CIRCUIT_BREAKER", "ruleName": "R10 宏观熔断", "layer": 1, "severity": "PASS", "currentValue": 0.45, "threshold": -0.5, "message": "宏观打分正常"},
+            {"ruleId": "R11_DISPOSITION_EFFECT", "ruleName": "R11 处置效应监控", "layer": 2, "severity": "PASS", "currentValue": 48, "threshold": 24, "message": ""},
+            {"ruleId": "R12_CANCEL_LIMIT", "ruleName": "R12 撤单次数限制", "layer": 2, "severity": "PASS", "currentValue": 0, "threshold": 10, "message": ""},
         ]
         
         now = datetime.now().isoformat()
@@ -1335,24 +1435,7 @@ class PaperBridge:
             "updatedAt": now,
         }
     
-    def get_risk_rules(self):
-        """
-        获取风控规则配置（前端 /api/risk/rules 使用）
-        """
-        return [
-            {"id": "R1", "ruleId": "R1_SINGLE_SYMBOL", "name": "R1 单品种持仓限制(动态)", "layer": 3, "threshold": 0.30, "currentValue": 0.18, "unit": "ratio", "enabled": True},
-            {"id": "R2", "ruleId": "R2_DAILY_LOSS", "name": "R2 单日最大亏损限制", "layer": 2, "threshold": 0.05, "currentValue": 0.02, "unit": "ratio", "enabled": True},
-            {"id": "R3", "ruleId": "R3_PRICE_LIMIT", "name": "R3 涨跌停限制", "layer": 1, "threshold": 0.0, "currentValue": 0.0, "unit": "price", "enabled": True},
-            {"id": "R4", "ruleId": "R4_TOTAL_MARGIN", "name": "R4 总保证金上限(分时段)", "layer": 3, "threshold": 0.70, "currentValue": 0.45, "unit": "ratio", "enabled": True},
-            {"id": "R5", "ruleId": "R5_VOLATILITY", "name": "R5 波动率异常过滤", "layer": 1, "threshold": 0.05, "currentValue": 0.03, "unit": "ratio", "enabled": True},
-            {"id": "R6", "ruleId": "R6_LIQUIDITY", "name": "R6 流动性检查", "layer": 1, "threshold": 1000, "currentValue": 5000, "unit": "volume", "enabled": True},
-            {"id": "R7", "ruleId": "R7_CONSECUTIVE_LOSS", "name": "R7 连续亏损暂停", "layer": 2, "threshold": 5, "currentValue": 0, "unit": "count", "enabled": True},
-            {"id": "R8", "ruleId": "R8_TRADING_HOURS", "name": "R8 交易时间检查", "layer": 3, "threshold": 0.0, "currentValue": 1.0, "unit": "flag", "enabled": True},
-            {"id": "R9", "ruleId": "R9_CAPITAL_SUFFICIENCY", "name": "R9 资金充足性检查", "layer": 3, "threshold": 0.05, "currentValue": 0.95, "unit": "ratio", "enabled": True},
-            {"id": "R10", "ruleId": "R10_MACRO_CIRCUIT_BREAKER", "name": "R10 宏观熔断", "layer": 1, "threshold": -0.5, "currentValue": 0.45, "unit": "score", "enabled": True},
-            {"id": "R11", "ruleId": "R11_DISPOSITION_EFFECT", "name": "R11 处置效应监控", "layer": 2, "threshold": 24, "currentValue": 48, "unit": "hours", "enabled": True},
-            {"id": "R12", "ruleId": "R12_CANCEL_LIMIT", "name": "R12 撤单次数限制", "layer": 2, "threshold": 10, "currentValue": 0, "unit": "count", "enabled": True},
-        ]
+
     
     def is_trading_hours(self):
         return True
@@ -1378,8 +1461,69 @@ class PaperBridge:
         pass
 
 
-# 全局桥接实例 - 使用 PaperBridge
-bridge = PaperBridge()
+class _BridgeProxy:
+    """
+    懒代理桥接器。
+    在 __getattr__ 时调用 macro_api_server.get_vnpy_bridge()，
+    保证 routes/trading.py 和 routes/risk.py 与 macro_api_server 共用同一实例。
+    """
+    __slots__ = ('_bridge',)
+
+    def __init__(self):
+        object.__setattr__(self, '_bridge', None)
+
+    def _resolve(self):
+        b = object.__getattribute__(self, '_bridge')
+        if b is not None:
+            return b
+        # 直接实例化 PaperBridge，避免回调 macro_api_server 导致循环依赖
+        try:
+            b = PaperBridge()
+            object.__setattr__(self, '_bridge', b)
+        except Exception:
+            b = None
+        return b
+
+    def __getattr__(self, name):
+        b = self._resolve()
+        if b is None:
+            raise AttributeError(f"'NoneType' object has no attribute '{name}' — VNpyBridge not initialised")
+        return getattr(b, name)
+
+    def __setattr__(self, name, value):
+        if name == '_bridge' or name == '_resolve':
+            object.__setattr__(self, name, value)
+        else:
+            b = self._resolve()
+            if b is None:
+                raise AttributeError(f"'NoneType' object has no attribute '{name}' — VNpyBridge not initialised")
+            setattr(b, name, value)
+
+    def __dir__(self):
+        try:
+            b = self._resolve()
+            if b:
+                return dir(b)
+        except Exception:
+            pass
+        return []
+
+    @property
+    def status(self):
+        b = self._resolve()
+        if b is None:
+            from .vnpy_bridge import BridgeStatus
+            return BridgeStatus.STOPPED
+        return b.status
+
+
+# 全局桥接实例 - 懒代理（保留向后兼容，新代码请用 get_vnpy_bridge()）
+bridge = _BridgeProxy()
+
+
+def get_vnpy_bridge():
+    """获取全局 VNpyBridge 实例（线程安全懒加载）"""
+    return bridge
 
 
 if __name__ == "__main__":

@@ -4,6 +4,8 @@
  * @date 2026-04-20
  */
 
+import type { RiskRuleStatus } from './risk'
+
 // ---------- 信号方向 ----------
 // LONG: compositeScore > 0.15, NEUTRAL: -0.15 ≤ compositeScore ≤ 0.15, SHORT: compositeScore < -0.15
 export type SignalDirection = 'LONG' | 'NEUTRAL' | 'SHORT'
@@ -38,12 +40,14 @@ export interface MacroSignal {
   direction: SignalDirection
   /** 更新时间（ISO 字符串） */
   updatedAt: string
-  /** 因子列表 */
-  factors: FactorDetail[]
+  /** 因子列表（后端返回 factorDetails） */
+  factorDetails: FactorDetail[]
   /** 信号强度（可选，用于信号系统 API） */
   signalStrength?: 'strong' | 'moderate' | 'weak'
   /** 置信度（可选） */
   confidence?: 'high' | 'medium' | 'low'
+  /** 市场状态（后端返回 regime） */
+  regime?: string
 }
 
 // ---------- 全品种信号列表项 ----------
@@ -82,6 +86,14 @@ export interface WeightTableProps {
 export interface MacroDashboardProps {
   /** 当前选中品种，默认 RU */
   defaultSymbol?: string
+}
+
+// ---------- 全局配置类型 ----------
+
+/** ConfigProvider 主题配置 */
+export interface MacroConfig {
+  /** 是否跟随操作系统深色模式（自动主题） */
+  darkAlgorithm: boolean
 }
 
 // ---------- SignalDailyReport 类型 ----------
@@ -165,14 +177,9 @@ export interface RiskLevelItem {
 
 export interface RiskStatusData {
   date: string
-  overallStatus: '正常' | '告警' | '触发'
-  levels: RiskLevelItem[]
-  equity: number
-  drawdown: number
-  drawdownAlert: number
-  drawdownStop: number
-  drawdownCircuit: number
+  overallStatus: 'PASS' | 'WARN' | 'BLOCK'
+  rules: RiskRule[]
+  triggeredCount: number
+  circuitBreaker: boolean
   updatedAt: string
-  /** 宏观熔断信号（可选，Phase 4 使用） */
-  macroCircuit?: boolean
 }

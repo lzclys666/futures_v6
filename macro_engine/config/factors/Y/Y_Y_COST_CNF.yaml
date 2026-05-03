@@ -1,9 +1,6 @@
-# Y_Y_COST_CNF.yaml
-# 进口大豆CNF价
-
 factor_code: Y_Y_COST_CNF
 symbol: Y
-category: cost
+category: free_data
 name: 进口大豆CNF价
 description: 进口大豆CNF价
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - cost
-  - Y
+- cost
+- Y
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

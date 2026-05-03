@@ -1,9 +1,6 @@
-# PP_PP_STK_PLANT.yaml
-# 聚丙烯石化库存
-
 factor_code: PP_PP_STK_PLANT
 symbol: PP
-category: inventory
+category: free_data
 name: 聚丙烯石化库存
 description: 聚丙烯石化库存
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - inventory
-  - PP
+- inventory
+- PP
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

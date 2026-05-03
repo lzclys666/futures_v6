@@ -1,5 +1,8 @@
 symbol: AU
 extends: _base
+name: 黄金
+name_en: AU
+sector: 贵金属
 macro_lambda: 0.7
 weights:
   supply: 0.1

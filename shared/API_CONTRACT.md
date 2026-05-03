@@ -21,7 +21,8 @@
 **响应** `200 OK`：
 ```json
 {
-  "success": true,
+  "code": 0,
+  "message": "success",
   "data": {
     "symbol": "RU",
     "compositeScore": 0.45,
@@ -62,12 +63,12 @@
 **响应** `200 OK`：
 ```json
 {
-  "success": true,
+  "code": 0,
+  "message": "success",
   "data": [
     { "symbol": "RU", "compositeScore": 0.45, "direction": "LONG", ... },
     { "symbol": "CU", "compositeScore": -0.32, "direction": "SHORT", ... }
-  ],
-  "message": "ok"
+  ]
 }
 ```
 
@@ -90,12 +91,12 @@
 **响应** `200 OK`：
 ```json
 {
-  "success": true,
+  "code": 0,
+  "message": "success",
   "data": [
     { "date": "2026-05-01", "score": 0.45, "direction": "LONG" },
     { "date": "2026-04-30", "score": 0.38, "direction": "LONG" }
-  ],
-  "message": "ok"
+  ]
 }
 ```
 
@@ -115,7 +116,8 @@
 **响应** `200 OK`：
 ```json
 {
-  "success": true,
+  "code": 0,
+  "message": "success",
   "data": [
     {
       "factorCode": "RU_TS_ROLL_YIELD",
@@ -126,8 +128,7 @@
       "contribution": 0.08,
       "factorIc": -0.12
     }
-  ],
-  "message": "ok"
+  ]
 }
 ```
 
@@ -142,7 +143,8 @@ VNpy网关状态。
 **响应** `200 OK`：
 ```json
 {
-  "success": true,
+  "code": 0,
+  "message": "success",
   "data": {
     "connected": true,
     "gateway": "CTP",
@@ -164,7 +166,8 @@ VNpy网关状态。
 **响应** `200 OK`：
 ```json
 {
-  "success": true,
+  "code": 0,
+  "message": "success",
   "data": [
     {
       "vtSymbol": "RB2505",
@@ -206,9 +209,9 @@ VNpy网关状态。
 **响应** `200 OK`：
 ```json
 {
-  "success": true,
-  "data": { "vtOrderId": "ord_001" },
-  "message": "ok"
+  "code": 0,
+  "message": "success",
+  "data": { "vtOrderId": "ord_001" }
 }
 ```
 
@@ -226,9 +229,9 @@ VNpy网关状态。
 **响应** `200 OK`：
 ```json
 {
-  "success": true,
-  "data": { "success": true },
-  "message": "ok"
+  "code": 0,
+  "message": "success",
+  "data": { "success": true }
 }
 ```
 
@@ -236,34 +239,49 @@ VNpy网关状态。
 
 ## 三、风控类端点
 
-### GET /api/trading/risk-status
+### GET /api/risk/status
 
 风控状态总览。
 
 **响应** `200 OK`：
 ```json
 {
-  "success": true,
+  "code": 0,
+  "message": "success",
   "data": {
-    "overallRiskLevel": "NORMAL",
-    "marginUtilization": 0.15,
-    "dailyPnL": 12500,
-    "openPositionCount": 3
-  },
-  "message": "ok"
+    "date": "2026-05-03",
+    "overallStatus": "PASS",
+    "rules": [
+      {
+        "ruleId": "R1_SINGLE_SYMBOL",
+        "ruleName": "R1 单品种持仓限制(动态)",
+        "severity": "PASS",
+        "currentValue": 0.18,
+        "threshold": 0.30,
+        "triggered": false,
+        "message": "",
+        "layer": 3,
+        "updatedAt": "2026-05-03T00:00:00"
+      }
+    ],
+    "triggeredCount": 0,
+    "circuitBreaker": false,
+    "updatedAt": "2026-05-03T00:00:00"
+  }
 }
 ```
 
 ---
 
-### GET /api/trading/risk-rules
+### GET /api/risk/rules
 
 风控规则列表。
 
 **响应** `200 OK`：
 ```json
 {
-  "success": true,
+  "code": 0,
+  "message": "success",
   "data": [
     {
       "ruleId": "R1",
@@ -322,7 +340,7 @@ VNpy网关状态。
 |------|-----------|
 | 信号页面 | `/api/macro/signal/{symbol}` |
 | 持仓页面 | `/api/vnpy/positions` |
-| 风控配置 | `/api/trading/risk-rules` |
+| 风控配置 | `/api/risk/rules` |
 | 下单面板 | `POST /api/trading/order` |
 
 ---

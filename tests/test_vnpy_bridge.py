@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 VNpyBridge测试脚本
 测试内容:
@@ -16,7 +17,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from services.vnpy_bridge import VNpyBridge, bridge, BridgeStatus
+from services.vnpy_bridge import VNpyBridge, get_vnpy_bridge, BridgeStatus
 
 
 def test_basic_lifecycle():
@@ -26,13 +27,13 @@ def test_basic_lifecycle():
     print("="*60)
     
     # 初始状态
-    print(f"\n[1.1] Initial status: {bridge.status.value}")
-    assert bridge.status == BridgeStatus.STOPPED, "Should be STOPPED initially"
+    print(f"\n[1.1] Initial status: {get_vnpy_bridge().status.value}")
+    assert get_vnpy_bridge().status == BridgeStatus.STOPPED, "Should be STOPPED initially"
     print("[OK] Initial state correct")
     
     # 启动
     print("\n[1.2] Starting VNpy...")
-    result = bridge.start()
+    result = get_vnpy_bridge().start()
     if result:
         print("[OK] VNpy started")
     else:
@@ -40,7 +41,7 @@ def test_basic_lifecycle():
     
     # 状态检查
     print("\n[1.3] Checking status...")
-    status = bridge.get_status()
+    status = get_vnpy_bridge().get_status()
     print(f"  Status: {status['status']}")
     print(f"  Running: {status['is_running']}")
     print(f"  Trading hours: {status['is_trading_hours']}")
@@ -61,13 +62,13 @@ def test_strategy_management():
     print("="*60)
     
     # 确保VNpy已启动
-    if bridge.status != BridgeStatus.RUNNING:
+    if get_vnpy_bridge().status != BridgeStatus.RUNNING:
         print("\n[2.0] Starting VNpy...")
-        bridge.start()
+        get_vnpy_bridge().start()
     
     # 添加策略
     print("\n[2.1] Adding strategy...")
-    result = bridge.add_strategy(
+    result = get_vnpy_bridge().add_strategy(
         class_name="MacroRiskStrategy",
         strategy_name="test_ru",
         vt_symbol="RU2505.SHFE",
@@ -77,7 +78,7 @@ def test_strategy_management():
             "risk_profile": "moderate",
             "enable_risk_engine": True,
             "use_macro": True,
-            "csv_path": "D:/futures_v6/macro_engine/output/{symbol}_macro_daily_{date}.csv"
+            "csv_path": "str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv"
         }
     )
     
@@ -88,14 +89,14 @@ def test_strategy_management():
     
     # 查看策略列表
     print("\n[2.2] Strategy list:")
-    strategies = bridge.get_strategies()
+    strategies = get_vnpy_bridge().get_strategies()
     for s in strategies:
         print(f"  - {s['name']} ({s['class_name']}): {s['status']}")
     
     # 初始化策略
     print("\n[2.3] Initializing strategy...")
     if "test_ru" in [s['name'] for s in strategies]:
-        result = bridge.init_strategy("test_ru")
+        result = get_vnpy_bridge().init_strategy("test_ru")
         if result:
             print("[OK] Strategy initialized")
         else:
@@ -105,7 +106,7 @@ def test_strategy_management():
     
     # 查看更新后的策略列表
     print("\n[2.4] Updated strategy list:")
-    strategies = bridge.get_strategies()
+    strategies = get_vnpy_bridge().get_strategies()
     for s in strategies:
         print(f"  - {s['name']} ({s['class_name']}): {s['status']}")
     
@@ -120,20 +121,20 @@ def test_data_queries():
     print("="*60)
     
     # 确保VNpy已启动
-    if bridge.status != BridgeStatus.RUNNING:
+    if get_vnpy_bridge().status != BridgeStatus.RUNNING:
         print("\n[3.0] Starting VNpy...")
-        bridge.start()
+        get_vnpy_bridge().start()
     
     # 查询持仓
     print("\n[3.1] Positions:")
-    positions = bridge.get_positions()
+    positions = get_vnpy_bridge().get_positions()
     print(f"  Count: {len(positions)}")
     for p in positions:
         print(f"  - {p['symbol']}: {p['volume']} @ {p['price']}")
     
     # 查询账户
     print("\n[3.2] Account:")
-    account = bridge.get_account()
+    account = get_vnpy_bridge().get_account()
     if account:
         print(f"  Balance: {account['balance']}")
         print(f"  Available: {account['available']}")
@@ -143,12 +144,12 @@ def test_data_queries():
     
     # 查询订单
     print("\n[3.3] Orders:")
-    orders = bridge.get_orders()
+    orders = get_vnpy_bridge().get_orders()
     print(f"  Count: {len(orders)}")
     
     # 查询成交
     print("\n[3.4] Trades:")
-    trades = bridge.get_trades()
+    trades = get_vnpy_bridge().get_trades()
     print(f"  Count: {len(trades)}")
     
     print("\n[OK] Test 3 PASSED")
@@ -163,14 +164,14 @@ def test_risk_management():
     
     # 查询风控状态
     print("\n[4.1] Risk status:")
-    risk = bridge.get_risk_status()
+    risk = get_vnpy_bridge().get_risk_status()
     print(f"  Status: {risk['status']}")
     print(f"  Active rules: {len(risk['active_rules'])}")
     print(f"  Recent events: {len(risk['recent_events'])}")
     
     # 查询风控事件
     print("\n[4.2] Risk events:")
-    events = bridge.get_risk_events(limit=10)
+    events = get_vnpy_bridge().get_risk_events(limit=10)
     print(f"  Count: {len(events)}")
     for e in events:
         print(f"  - [{e['timestamp']}] {e['rule_id']}: {e['action']} - {e['reason']}")
@@ -196,13 +197,13 @@ def test_event_callbacks():
     
     # 注册回调
     print("\n[5.1] Registering callbacks...")
-    bridge.register_risk_callback(on_risk_event)
-    bridge.register_ws_callback(on_ws_event)
+    get_vnpy_bridge().register_risk_callback(on_risk_event)
+    get_vnpy_bridge().register_ws_callback(on_ws_event)
     print("[OK] Callbacks registered")
     
     # 模拟风控事件（通过解析日志）
     print("\n[5.2] Simulating risk event...")
-    bridge._parse_risk_event("[RISK BLOCK] R8: 非交易时间禁止下单")
+    get_vnpy_bridge()._parse_risk_event("[RISK BLOCK] R8: 非交易时间禁止下单")
     
     # 检查回调是否被触发
     time.sleep(0.1)  # 等待回调执行
@@ -243,8 +244,8 @@ def run_all_tests():
     print("\n" + "="*60)
     print("Cleanup")
     print("="*60)
-    if bridge.status == BridgeStatus.RUNNING:
-        bridge.stop()
+    if get_vnpy_bridge().status == BridgeStatus.RUNNING:
+        get_vnpy_bridge().stop()
         print("[OK] VNpy stopped")
     else:
         print("[INFO] VNpy not running, skip cleanup")

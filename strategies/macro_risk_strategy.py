@@ -1,5 +1,6 @@
 # strategies/macro_risk_strategy.py
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 宏观CTA策略 - 集成风控引擎版本
 基于 MacroDemoStrategy，增加 RiskEngine 风控检查
@@ -64,7 +65,7 @@ class MacroRiskStrategy(CtaTemplate):
     fast_window = 10
     slow_window = 20
     use_macro = True
-    csv_path_str = "D:/futures_v6/macro_engine/output/{symbol}_macro_daily_{date}.csv"
+    csv_path_str = "str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv"
     
     # 风控开关（原有）
     enable_stop_loss = True

@@ -1,16 +1,23 @@
-factor_code: "RU_DEM_TIRE_SEMI"
-factor_name: "半钢胎开工率"
+factor_code: RU_DEM_TIRE_SEMI
+factor_name: 半钢胎开工率
 template: null
-econ_category: "DEM"
-logic_category: "DEM"
+econ_category: DEM
+logic_category: DEM
 direction: 1
-frequency: "weekly"
-norm_method: "mad"
-detrend_method: "none"
+frequency: weekly
+norm_method: mad
+detrend_method: none
 norm_window: 156
 base_weight: 0.08
-max_weight: 0.20
+max_weight: 0.2
 is_active: true
 dependencies:
-  - "WebScraper/tire_operating_rate"
-description: "山东地区半钢胎开工率（%）"
+- WebScraper/tire_operating_rate
+description: 山东地区半钢胎开工率（%）
+category: paid_data
+name: 半钢胎开工率
+source_confidence: 0.7
+data_source: WebScraper
+expected_range:
+- -100000.0
+- 100000.0

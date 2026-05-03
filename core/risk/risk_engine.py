@@ -16,6 +16,16 @@ from datetime import datetime, time
 from enum import Enum
 from typing import Dict, List, Optional, Any
 import numpy as np
+import yaml
+from pathlib import Path
+
+
+# =============================================================================
+# 统一风控模型
+# Layer: 1 (PASS) / 2 (WARN) / 3 (BLOCK)  — numeric
+# Severity: PASS / WARN / BLOCK           — 统一字符串
+# =============================================================================
+LAYER_TO_SEVERITY = {1: "PASS", 2: "WARN", 3: "BLOCK"}
 
 
 class RiskAction(Enum):
@@ -924,6 +934,39 @@ class RiskEngine:
         self.config = self._load_config(profile)
         self.rules = self._init_rules()
         self.rule_instances = {r.rule_id: r for r in self.rules}
+        # 加载统一 YAML 规则定义（Layer + Severity 映射）
+        self._rules = self._load_risk_rules()
+
+    def _load_risk_rules(self) -> List[Dict[str, Any]]:
+        """从 risk/rules/risk_rules.yaml 加载规则定义"""
+        try:
+            rules_path = Path(__file__).parent.parent.parent / "risk" / "rules" / "risk_rules.yaml"
+            with open(rules_path, encoding="utf-8") as f:
+                return yaml.safe_load(f).get("rules", [])
+        except Exception:
+            return []
+
+    def get_layer(self, rule_id: str) -> int:
+        """返回 numeric layer (1/2/3)，替代字符串 L1/L2/L3/L4/L5"""
+        for r in self._rules:
+            if r.get("id") == rule_id:
+                return r.get("layer", 2)  # 默认 Layer 2
+        return 2
+
+    def get_severity(self, rule_id: str) -> str:
+        """返回统一 severity: PASS / WARN / BLOCK"""
+        for r in self._rules:
+            if r.get("id") == rule_id:
+                layer = r.get("layer", 2)
+                return LAYER_TO_SEVERITY.get(layer, "WARN")
+        return "WARN"
+
+    def get_r10_threshold(self) -> float:
+        """返回 R10 宏观熔断阈值（从 YAML 读取）"""
+        for r in self._rules:
+            if r.get("id") == "R10":
+                return float(r.get("threshold", -0.5))
+        return -0.5
         
     def _load_config(self, profile: str) -> Dict[str, Any]:
         """加载风控配置"""

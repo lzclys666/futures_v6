@@ -1,9 +1,6 @@
-# BU_BU_SPT_EAST_CHINA.yaml
-# 华东沥青市场价格
-
 factor_code: BU_BU_SPT_EAST_CHINA
 symbol: BU
-category: price
+category: free_data
 name: 华东沥青市场价格
 description: 华东沥青市场价格
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - price
-  - BU
+- price
+- BU
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

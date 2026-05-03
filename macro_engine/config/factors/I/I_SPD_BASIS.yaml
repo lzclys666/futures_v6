@@ -1,8 +1,10 @@
 factor_code: I_SPD_BASIS
-name: "铁矿石期现基差"
-category: basis
-description: "铁矿石期现基差"
+name: 铁矿石期现基差
+category: derived
+description: 铁矿石期现基差
 data_source: AKShare futures_spot_price
 source_confidence: 1.0
-expected_range: [-50-50]
-notes: "near_basis=spot-near_contract"
+expected_range:
+- -50.0
+- 50.0
+notes: near_basis=spot-near_contract

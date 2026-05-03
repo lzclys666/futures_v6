@@ -14,14 +14,15 @@
 订阅优先级: ★★（付费源才需要标注）
 替代付费源: 具体平台名称
 """
+from common.web_utils import fetch_url
+def fetch_usd_cny_qq():
+    """腾讯财经 USDCNY 汇率"""
     try:
-        r = requests.get(
+        html, err = fetch_url(
             'https://qt.gtimg.cn/q=USDCNY,USDCNH',
-            headers={'User-Agent': 'Mozilla/5.0'},
             timeout=10
         )
-        r.encoding = 'gbk'
-        for line in r.text.strip().split('\n'):
+        for line in html.strip().split('\n'):
             if 'USDCNY' in line and 'pv_none' not in line:
                 parts = line.split('"')[1].split(',')
                 if len(parts) > 1:

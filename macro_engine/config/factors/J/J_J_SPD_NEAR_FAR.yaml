@@ -1,9 +1,6 @@
-# J_J_SPD_NEAR_FAR.yaml
-# 焦炭期货近远月价差
-
 factor_code: J_J_SPD_NEAR_FAR
 symbol: J
-category: spread
+category: derived
 name: 焦炭期货近远月价差
 description: 焦炭期货近远月价差
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - spread
-  - J
+- spread
+- J
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -100000.0
+- 100000.0

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from config.paths import PROJECT_ROOT
 """
 Parameter Optimization System - Grid Search for Best Configurations
 """
@@ -12,7 +13,7 @@ import json
 import itertools
 
 # Add project path
-project_dir = Path('D:/futures_v6')
+project_dir = PROJECT_ROOT
 if str(project_dir) not in sys.path:
     sys.path.insert(0, str(project_dir))
 
@@ -179,7 +180,7 @@ def run_optimization_demo():
     optimizer.print_top_results(n=10, metric='sharpe_ratio')
     
     # 保存结果
-    optimizer.save_results("D:/futures_v6/optimization_results.json")
+    optimizer.save_results(str(PROJECT_ROOT / "optimization_results.json"))
     
     print("\n" + "="*70)
     print("Optimization Demo Complete!")

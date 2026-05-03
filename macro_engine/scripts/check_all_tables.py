@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 检查数据库表结构
 """
 import sqlite3
 from pathlib import Path
 
-DB_PATH = Path('D:/futures_v6/macro_engine/pit_data.db')
+DB_PATH = Path('str(MACRO_ENGINE)/pit_data.db')
 conn = sqlite3.connect(DB_PATH)
 cursor = conn.cursor()
 

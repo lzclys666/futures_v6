@@ -1,8 +1,10 @@
+from config.paths import DATA_DIR
+from config.paths import PROJECT_ROOT
 import sys
 import time
 from pathlib import Path
 
-project_dir = Path('D:/futures_v6')
+project_dir = PROJECT_ROOT
 if str(project_dir) not in sys.path:
     sys.path.insert(0, str(project_dir))
 
@@ -70,7 +72,7 @@ cta_engine.add_strategy(
     strategy_name='macro_ru',
     vt_symbol='RU2505.SHFE',
     setting={
-        'signal_file': 'D:/futures_v6/data/signals/macro_signals.csv',
+        'signal_file': str(DATA_DIR / "signals/macro_signals.csv"),
         'bar_window': 5,
     }
 )

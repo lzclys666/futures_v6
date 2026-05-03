@@ -1,71 +1,50 @@
-# config/instruments/BR.yaml
-# 合成橡胶（丁二烯橡胶）品种配置
-
 symbol: BR
 extends: _base
-
-# 品种名称（可选）
-name: "合成橡胶"
-name_en: "BR"
-
-# 可覆盖基础模板中的字段
-macro_lambda: 0.40          # BR 品种的宏观驱动权重略高
-sentiment_weight: 0.10      # 与基础模板保持一致，或按需调整
-
-# 大类权重（覆盖 _base 中的默认值）
+name: 丁二烯橡胶
+name_en: BR
+sector: 能化
+macro_lambda: 0.4
+sentiment_weight: 0.1
 weights:
-  supply: 0.30
+  supply: 0.3
   demand: 0.25
-  inventory: 0.20
+  inventory: 0.2
   spread: 0.15
-  macro: 0.10
-
-# 因子列表（覆盖 _base 中的空列表）
+  macro: 0.1
 factors:
-  # 成本端
-  - code: BR_COST_BD
-    enabled: true
-    weight_override: null
-  - code: BR_COST_MARGIN
-    enabled: true
-    weight_override: null
-  - code: BR_COST_ETH
-    enabled: true
-    weight_override: null
-
-  # 供给端
-  - code: BR_SUP_RATE
-    enabled: true
-    weight_override: null
-
-  # 需求端
-  - code: BR_DEM_TIRE_ALLSTEEL
-    enabled: true
-    weight_override: null
-  - code: BR_DEM_TIRE_SEMI
-    enabled: true
-    weight_override: null
-  - code: BR_DEM_AUTO
-    enabled: true
-    weight_override: null
-
-  # 库存端
-  - code: BR_INV_TOTAL
-    enabled: true
-    weight_override: null
-  - code: BR_STK_WARRANT
-    enabled: true
-    weight_override: null
-
-  # 价差结构
-  - code: BR_SPD_BASIS
-    enabled: true
-    weight_override: null
-  - code: BR_SPD_RU_BR
-    enabled: true
-    weight_override: null
-
-  # 市场情绪
-  - code: BR_POS_NET
-    enabled: true
-    weight_override: null
+- code: BR_COST_BD
+  enabled: true
+  weight_override: null
+- code: BR_COST_MARGIN
+  enabled: true
+  weight_override: null
+- code: BR_COST_ETH
+  enabled: true
+  weight_override: null
+- code: BR_SUP_RATE
+  enabled: true
+  weight_override: null
+- code: BR_DEM_TIRE_ALLSTEEL
+  enabled: true
+  weight_override: null
+- code: BR_DEM_TIRE_SEMI
+  enabled: true
+  weight_override: null
+- code: BR_DEM_AUTO
+  enabled: true
+  weight_override: null
+- code: BR_INV_TOTAL
+  enabled: true
+  weight_override: null
+- code: BR_STK_WARRANT
+  enabled: true
+  weight_override: null
+- code: BR_SPD_BASIS
+  enabled: true
+  weight_override: null
+- code: BR_SPD_RU_BR
+  enabled: true
+  weight_override: null
+- code: BR_POS_NET
+  enabled: true
+  weight_override: null

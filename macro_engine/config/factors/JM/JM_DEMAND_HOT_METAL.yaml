@@ -1,16 +1,22 @@
-﻿---
-factor_code: "JM_DEMAND_HOT_METAL"
-factor_name: "230家焦企产能利用率"
-econ_category: "DEMAND"
-logic_category: "QTY"
+factor_code: JM_DEMAND_HOT_METAL
+factor_name: 230家焦企产能利用率
+econ_category: DEMAND
+logic_category: QTY
 direction: 1
-frequency: "weekly"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: weekly
+norm_method: zscore
+detrend_method: none
 norm_window: 12
 base_weight: 0.06
 max_weight: 0.08
 is_active: false
 dependencies:
-  - "Mysteel(年费)/黑色>焦化>焦企>产能利用率"
-description: "焦企开工率高需求旺盛利多"
+- Mysteel(年费)/黑色>焦化>焦企>产能利用率
+description: 焦企开工率高需求旺盛利多
+category: paid_data
+name: 230家焦企产能利用率
+source_confidence: 0.7
+data_source: Mysteel(年费)
+expected_range:
+- -100000.0
+- 100000.0

@@ -18,9 +18,9 @@
 import sys, os as _os
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.web_utils import fetch_url
 
 import akshare as ak
-import requests
 
 FACTOR_CODE = "RB_SPD_RB_HC"
 SYMBOL = "RB"
@@ -29,12 +29,10 @@ def fetch_ratio():
     # L1: 新浪实时API - RB0 和 HC0
     try:
         print("[L1] 新浪实时API RB0 & HC0...")
-        headers = {'User-Agent': 'Mozilla/5.0'}
         url = "http://hq.sinajs.cn/list=nf_RB0,nf_HC0"
-        resp = requests.get(url, headers=headers, timeout=10)
-        resp.encoding = 'gbk'
-        if resp.status_code == 200 and resp.text:
-            lines = resp.text.strip().split('\n')
+        html, err = fetch_url(url, timeout=10)
+        if not err and html:
+            lines = html.strip().split('\n')
             prices = []
             for line in lines:
                 if '"' in line:

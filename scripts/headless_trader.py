@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 V6.0 Headless CTP Trader - connects Simnow and runs MacroDemoStrategy
 Usage: python scripts/headless_trader.py [--symbol AU] [--no-macro]
@@ -192,7 +193,7 @@ def main():
         "fast_window": args.fast,
         "slow_window": args.slow,
         "use_macro": not args.no_macro,
-        "csv_path_str": "D:/futures_v6/macro_engine/output/{symbol}_macro_daily_{date}.csv",
+        "csv_path_str": "str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv",
     }
 
     try:

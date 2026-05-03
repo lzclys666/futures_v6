@@ -1,17 +1,23 @@
-# config/factors/AG/AG_MACRO_TIPS_REAL_RATE.yaml
-factor_code: "AG_MACRO_US_TIPS_10Y"
-factor_name: "美国TIPS实际利率"
+factor_code: AG_MACRO_US_TIPS_10Y
+factor_name: 美国TIPS实际利率
 template: null
-econ_category: "MAC"
-logic_category: "RAT"
-direction: -1           # 实际利率上升→持有白银机会成本增加→利空
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+econ_category: MAC
+logic_category: RAT
+direction: -1
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 252
 base_weight: 0.12
-max_weight: 0.20
+max_weight: 0.2
 is_active: true
 dependencies:
-  - "AKShare/fred_series"
-description: "美国10年期TIPS收益率，反映实际利率水平，是白银核心定价因子"
+- AKShare/fred_series
+description: 美国10年期TIPS收益率，反映实际利率水平，是白银核心定价因子
+category: free_data
+name: 美国TIPS实际利率
+source_confidence: 0.85
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

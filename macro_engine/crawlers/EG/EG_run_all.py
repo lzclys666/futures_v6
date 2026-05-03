@@ -12,9 +12,16 @@ LOG_DIR = CURRENT_DIR.parent / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
 scripts = [
-    "EG_乙二醇期货收盘价.py",
-    "EG_乙二醇期货持仓量.py",
     "EG_乙二醇工厂库存.py",
+    "EG_乙二醇期现基差.py",
+    "EG_乙二醇期货净持仓.py",
+    "EG_乙二醇期货持仓量.py",
+    "EG_乙二醇期货收盘价.py",
+    "EG_乙二醇装置开工率.py",
+    "EG_华东乙二醇港口库存.py",
+    "EG_煤制乙二醇开工率.py",
+    "EG_石脑油裂解价差.py",
+    "EG_聚酯企业乙二醇库存.py",
 ]
 
 def run_all():

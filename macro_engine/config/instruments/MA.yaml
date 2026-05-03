@@ -1,5 +1,8 @@
 symbol: MA
 extends: _base
+name: 甲醇
+name_en: MA
+sector: 能化
 macro_lambda: 0.5
 weights:
   supply: 0.25

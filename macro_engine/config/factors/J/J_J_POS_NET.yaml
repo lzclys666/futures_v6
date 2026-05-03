@@ -1,9 +1,6 @@
-# J_J_POS_NET.yaml
-# 焦炭期货净持仓
-
 factor_code: J_J_POS_NET
 symbol: J
-category: position
+category: free_data
 name: 焦炭期货净持仓
 description: 焦炭期货净持仓
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - position
-  - J
+- position
+- J
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

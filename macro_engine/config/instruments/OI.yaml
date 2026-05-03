@@ -1,5 +1,8 @@
 symbol: OI
 extends: _base
+name: 菜籽油
+name_en: OI
+sector: 农产品
 macro_lambda: 0.35
 weights:
   supply: 0.3

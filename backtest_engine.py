@@ -11,9 +11,10 @@ from datetime import datetime, timedelta
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 import json
+from config.paths import PROJECT_ROOT
 
 # Add project path
-project_dir = Path('D:/futures_v6')
+project_dir = PROJECT_ROOT
 if str(project_dir) not in sys.path:
     sys.path.insert(0, str(project_dir))
 
@@ -440,7 +441,7 @@ def test_multi_symbol():
     )
     
     # 生成报告
-    backtester.generate_report("D:/futures_v6/backtest_report.json")
+    backtester.generate_report(str(PROJECT_ROOT / "backtest_report.json"))
 
 
 if __name__ == "__main__":

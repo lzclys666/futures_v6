@@ -1,16 +1,23 @@
-factor_code: "NR_CST_USDCNY"
-factor_name: "美元兑人民币汇率"
+factor_code: NR_CST_USDCNY
+factor_name: 美元兑人民币汇率
 template: null
-econ_category: "CST"
-logic_category: "FX"
+econ_category: CST
+logic_category: FX
 direction: -1
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 252
 base_weight: 0.12
 max_weight: 0.25
 is_active: true
 dependencies:
-  - "AKShare/fx_spot_quote"
-description: "美元兑人民币即期汇率，NR 100%进口依赖，汇率直接改写进口成本"
+- AKShare/fx_spot_quote
+description: 美元兑人民币即期汇率，NR 100%进口依赖，汇率直接改写进口成本
+category: free_data
+name: 美元兑人民币汇率
+source_confidence: 0.85
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

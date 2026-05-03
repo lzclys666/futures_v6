@@ -13,8 +13,13 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 
-sys.path.insert(0, 'D:/futures_v6/macro_engine')
-os.chdir('D:/futures_v6/macro_engine')
+# 动态计算项目根目录
+_PROJECT_ROOT = Path(__file__).resolve().parent
+while not (_PROJECT_ROOT / "macro_engine").exists() and _PROJECT_ROOT != _PROJECT_ROOT.parent:
+    _PROJECT_ROOT = _PROJECT_ROOT.parent
+
+sys.path.insert(0, str(_PROJECT_ROOT / "macro_engine"))
+os.chdir(str(_PROJECT_ROOT / "macro_engine"))
 
 try:
     import akshare as ak
@@ -23,10 +28,10 @@ except ImportError:
     AKSHARE_OK = False
     print("[WARN] AKShare not installed")
 
-DB_PATH = 'D:/futures_v6/macro_engine/pit_data.db'
-SHARED_DIR = Path('D:/futures_v6/macro_engine/data/crawlers/_shared/exchange')
+DB_PATH = str(_PROJECT_ROOT / "macro_engine" / "pit_data.db")
+SHARED_DIR = _PROJECT_ROOT / "macro_engine" / "data" / "crawlers" / "_shared" / "exchange"
 SHARED_DIR.mkdir(parents=True, exist_ok=True)
-LOG_DIR = Path('D:/futures_v6/macro_engine/crawlers/logs')
+LOG_DIR = _PROJECT_ROOT / "macro_engine" / "crawlers" / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 # ============================================================

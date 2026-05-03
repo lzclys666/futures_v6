@@ -1,5 +1,8 @@
 symbol: SA
 extends: _base
+name: 纯碱
+name_en: SA
+sector: 能化
 macro_lambda: 0.5
 weights:
   supply: 0.25
@@ -7,20 +10,16 @@ weights:
   inventory: 0.2
   spread: 0.15
   macro: 0.15
-
-# Phase 1: 期货日线
 factors:
 - code: sa_futures_daily_close
   enabled: true
   weight_override: 0.15
 - code: sa_futures_sub_daily_close
   enabled: true
-  weight_override: 0.10
+  weight_override: 0.1
 - code: sa_futures_daily_hold
   enabled: true
   weight_override: 0.08
-
-# Phase 1: 持仓排名
 - code: sa_positions_long5
   enabled: true
   weight_override: 0.12
@@ -30,33 +29,27 @@ factors:
 - code: sa_positions_net5
   enabled: true
   weight_override: 0.08
-
-# Phase 1: 仓单
 - code: sa_inventory_w
   enabled: true
   weight_override: 0.15
 - code: sa_warrant_daily
   enabled: true
   weight_override: 0.12
-
-# Phase 2: 现货报价
 - code: sa_spot_price
   enabled: true
   weight_override: 0.15
 - code: sa_spot_price_shahe
   enabled: true
-  weight_override: 0.10
+  weight_override: 0.1
 - code: sa_spot_price_east
   enabled: true
-  weight_override: 0.10
+  weight_override: 0.1
 - code: sa_spot_price_l
   enabled: true
   weight_override: 0.08
 - code: sa_futures_near_price
   enabled: true
   weight_override: 0.08
-
-# Phase 2: 开工率
 - code: sa_sup_op_rate
   enabled: true
   weight_override: 0.15
@@ -66,11 +59,9 @@ factors:
 - code: sa_sup_inventory_w
   enabled: true
   weight_override: 0.12
-
-# Phase 2: 比价
 - code: sa_ratio_glass
   enabled: true
   weight_override: 0.12
 - code: sa_ratio_glass_futures
   enabled: true
-  weight_override: 0.10
+  weight_override: 0.1

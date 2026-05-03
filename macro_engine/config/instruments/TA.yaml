@@ -1,5 +1,8 @@
 symbol: TA
 extends: _base
+name: PTA
+name_en: TA
+sector: 能化
 macro_lambda: 0.5
 weights:
   supply: 0.25

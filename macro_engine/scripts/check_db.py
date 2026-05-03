@@ -1,5 +1,6 @@
+from config.paths import MACRO_ENGINE
 import sqlite3
-conn = sqlite3.connect('D:/futures_v6/macro_engine/pit_data.db')
+conn = sqlite3.connect('str(MACRO_ENGINE)/pit_data.db')
 cursor = conn.cursor()
 
 cursor.execute("SELECT obs_date, contract, open, high, low, close, volume FROM jm_futures_ohlcv WHERE contract LIKE 'JM%' ORDER BY obs_date DESC LIMIT 5")

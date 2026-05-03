@@ -1,5 +1,8 @@
 symbol: RB
 extends: _base
+name: 螺纹钢
+name_en: RB
+sector: 黑色
 macro_lambda: 0.45
 weights:
   supply: 0.25

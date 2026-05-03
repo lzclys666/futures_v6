@@ -1,17 +1,21 @@
-factor_code: "JM_SPD_ZC"
-factor_name: "焦煤/动力煤比价"
+factor_code: JM_SPD_ZC
+factor_name: 焦煤/动力煤比价
 template: null
-econ_category: "SPD"
-logic_category: "STR"
+econ_category: SPD
+logic_category: STR
 direction: 0
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 60
 base_weight: 0.05
 max_weight: 0.08
 is_active: true
 dependencies:
-  - "AKShare/JM0"
-  - "AKShare/ZC0"
-description: "焦煤/动力煤价格比，反映煤种间相对强弱"
+- AKShare/JM0
+- AKShare/ZC0
+description: 焦煤/动力煤价格比，反映煤种间相对强弱
+category: free_data
+name: 焦煤/动力煤比价
+source_confidence: 0.85
+data_source: AKShare

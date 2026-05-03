@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 因子数据审计脚本
 Factor Data Audit Script
@@ -14,8 +15,8 @@ Factor Data Audit Script
   python audit_factor_data.py
 
 输出：
-  D:/futures_v6/macro_engine/reports/audit_factor_data_YYYYMMDD.csv
-  D:/futures_v6/macro_engine/reports/Factor_Data_Readiness_Report_YYYYMMDD.md
+  str(MACRO_ENGINE)/reports/audit_factor_data_YYYYMMDD.csv
+  str(MACRO_ENGINE)/reports/Factor_Data_Readiness_Report_YYYYMMDD.md
 """
 
 import os

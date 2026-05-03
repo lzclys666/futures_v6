@@ -18,9 +18,9 @@
 import sys, os as _os
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.web_utils import fetch_url
 
 import akshare as ak
-import requests
 
 FACTOR_CODE = "RB_POS_NET"
 SYMBOL = "RB"
@@ -29,7 +29,7 @@ def fetch_net_position():
     # L1: AKShare 上期所持仓排名
     try:
         print("[L1] AKShare get_shfe_rank_table...")
-        df = ak.get_shfe_rank_table()
+        df = ak.get_shfe_rank_table(date=obs_date)
         if df is not None and len(df) > 0:
             # 筛选螺纹钢(RB)
             rb_df = df[df['variety'] == 'RB']
@@ -45,12 +45,10 @@ def fetch_net_position():
     # L2: 新浪实时API
     try:
         print("[L2] 新浪实时API...")
-        headers = {'User-Agent': 'Mozilla/5.0'}
         url = "http://hq.sinajs.cn/list=nf_RB0"
-        resp = requests.get(url, headers=headers, timeout=10)
-        resp.encoding = 'gbk'
-        if resp.status_code == 200 and resp.text:
-            data = resp.text.split('"')[1].split(',') if '"' in resp.text else []
+        html, err = fetch_url(url, timeout=10)
+        if not err and html:
+            data = html.split('"')[1].split(',') if '"' in html else []
             if len(data) >= 5:
                 vol = float(data[8]) if len(data) > 8 else float(data[4])
                 print(f"[L2] 成功: {vol:.0f} 手")

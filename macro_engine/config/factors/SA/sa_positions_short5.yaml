@@ -1,19 +1,23 @@
-# sa_positions_short5.yaml
-# SA前5空头合计持仓
-
-factor_code: "sa_positions_short5"
-factor_name: "SA前5空头合计持仓"
+factor_code: sa_positions_short5
+factor_name: SA前5空头合计持仓
 template: null
-econ_category: "POS"
-logic_category: "POS"
+econ_category: POS
+logic_category: POS
 direction: -1
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 756
 base_weight: 0.12
-max_weight: 0.30
+max_weight: 0.3
 is_active: true
 dependencies:
-  - "akshare/futures_spot_price_daily"
-description: "SA前5空头合计持仓，PIT数据"
+- akshare/futures_spot_price_daily
+description: SA前5空头合计持仓，PIT数据
+category: free_data
+name: SA前5空头合计持仓
+source_confidence: 0.85
+data_source: akshare
+expected_range:
+- -100000.0
+- 100000.0

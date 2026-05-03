@@ -63,25 +63,26 @@ export interface ResumeParams {
   confirmed_by: string
 }
 
-/** 风控规则 ID（大写，与后端对齐） */
+/** 风控规则 ID（与后端 routes/risk.py RULE_ID_MAP 完全对齐） */
 export type RiskRuleId =
   | 'R1_SINGLE_SYMBOL'
   | 'R2_DAILY_LOSS'
-  | 'R3_TOTAL_POSITION'
-  | 'R4_MARGIN_RATIO'
+  | 'R3_PRICE_LIMIT'
+  | 'R4_TOTAL_MARGIN'
   | 'R5_VOLATILITY'
   | 'R6_LIQUIDITY'
   | 'R7_CONSECUTIVE_LOSS'
-  | 'R8_DRAWDOWN'
-  | 'R9_CONCENTRATION'
-  | 'R10_CIRCUIT_BREAKER'
-  | 'R11_DISPOSITION'
+  | 'R8_TRADING_HOURS'
+  | 'R9_CAPITAL_SUFFICIENCY'
+  | 'R10_MACRO_CIRCUIT_BREAKER'
+  | 'R11_DISPOSITION_EFFECT'
+  | 'R12_CANCEL_LIMIT'
 
-/** 风控严重级别 */
-export type RiskSeverity = 'PASS' | 'LOW' | 'MEDIUM' | 'HIGH'
+/** 风控严重级别（与后端 routes/risk.py + risk_rules.yaml 一致） */
+export type RiskSeverity = 'PASS' | 'WARN' | 'BLOCK'
 
-/** 风控层级分组 */
-export type RiskLayerKey = 'layer1' | 'layer2' | 'layer3'
+/** 风控层级分组（1=最严，2=中等，3=宽松，与后端 Int32 一致） */
+export type RiskLayerKey = 1 | 2 | 3
 
 /** 单条风控规则状态 */
 export interface RiskRuleStatus {

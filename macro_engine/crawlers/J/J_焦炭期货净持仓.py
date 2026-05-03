@@ -58,4 +58,6 @@ if __name__ == "__main__":
     if value is not None:
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=confidence, source=source)
     else:
-        print(f"[FAIL] {FACTOR_CODE} all sources failed")
+        # Null 占位写入
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None, source_confidence=0.0, source="all_sources_failed")
+        print(f"[DB] 因子 {FACTOR_CODE} NULL 占位写入")

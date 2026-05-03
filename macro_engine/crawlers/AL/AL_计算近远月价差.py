@@ -20,7 +20,7 @@ sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
 
 import akshare as ak
-import requests
+from common.web_utils import fetch_url
 import datetime
 
 FACTOR_CODE = "AL_SPD_CONTRACT"
@@ -52,14 +52,12 @@ def fetch_spread():
     # L1: 新浪
     try:
         print("[L1] 新浪实时API...")
-        resp = requests.get(
+        html, err = fetch_url(
             f"http://hq.sinajs.cn/list=nf_{near_code},nf_{far_code}",
-            headers={"User-Agent": "Mozilla/5.0"},
             timeout=10
         )
-        resp.encoding = "gbk"
-        if resp.status_code == 200 and resp.text:
-            lines = resp.text.strip().split("\n")
+        if not err and html:
+            lines = html.strip().split("\n")
             prices = []
             for line in lines:
                 if '"' in line:

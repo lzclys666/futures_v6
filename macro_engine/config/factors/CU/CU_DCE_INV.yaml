@@ -1,9 +1,6 @@
-# CU_DCE_INV.yaml
-# 沪铜期货库存
-
 factor_code: CU_DCE_INV
 symbol: CU
-category: inventory
+category: free_data
 name: 沪铜期货库存
 description: 沪铜期货库存
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - inventory
-  - CU
+- inventory
+- CU
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

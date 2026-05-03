@@ -3,6 +3,7 @@
 解决零成交问题，使用优化参数进行模拟盘测试
 """
 
+from config.paths import MACRO_ENGINE, PROJECT_ROOT
 import os
 import sys
 import csv
@@ -63,7 +64,7 @@ class PaperTradeEngine:
     def _load_signals(self) -> dict:
         """加载历史信号"""
         signals = {}
-        output_dir = Path("D:/futures_v6/macro_engine/output")
+        output_dir = Path("str(MACRO_ENGINE)/output")
         
         for csv_file in sorted(output_dir.glob(f"{self.symbol}_macro_daily_*.csv")):
             date_str = csv_file.stem.split('_')[-1]
@@ -239,7 +240,7 @@ class PaperTradeEngine:
         if filename is None:
             filename = f"paper_trade_{self.symbol}_{datetime.now().strftime('%Y%m%d')}.json"
         
-        output_file = Path(f"D:/futures_v6/{filename}")
+        output_file = PROJECT_ROOT / filename
         results = {
             'symbol': self.symbol,
             'params': self.params,

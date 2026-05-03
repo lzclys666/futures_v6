@@ -43,10 +43,10 @@ export function validateRiskStatusData(data: unknown): { valid: boolean; errors:
   const r = data as Record<string, unknown>
 
   if (typeof r.date !== 'string') errors.push('date 必须是字符串')
-  if (!['正常', '告警', '触发'].includes(r.overallStatus as string)) {
-    errors.push('overallStatus 必须是 正常|告警|触发')
+  if (!['PASS', 'WARN', 'BLOCK'].includes(r.overallStatus as string)) {
+    errors.push('overallStatus 必须是 PASS|WARN|BLOCK')
   }
-  if (!Array.isArray(r.levels)) errors.push('levels 必须是数组')
+  if (!Array.isArray(r.rules)) errors.push('rules 必须是数组')
 
   if (errors.length > 0) {
     return { valid: false, errors }

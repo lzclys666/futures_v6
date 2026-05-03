@@ -1,5 +1,6 @@
+from config.paths import MACRO_ENGINE
 import sqlite3
-conn = sqlite3.connect('D:/futures_v6/macro_engine/pit_data.db')
+conn = sqlite3.connect('str(MACRO_ENGINE)/pit_data.db')
 cursor = conn.cursor()
 
 cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")

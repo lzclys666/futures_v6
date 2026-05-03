@@ -1,8 +1,11 @@
+from config.paths import API_DIR
+from config.paths import PROJECT_ROOT
+from config.paths import MACRO_ENGINE
 import sys
 # 模拟 API server 的 sys.path
-sys.path.insert(0, 'D:/futures_v6/macro_engine')  # 先加 macro_engine
-sys.path.insert(0, 'D:/futures_v6/api')
-sys.path.insert(0, 'D:/futures_v6')
+sys.path.insert(0, 'str(MACRO_ENGINE)')  # 先加 macro_engine
+sys.path.insert(0, str(API_DIR))
+sys.path.insert(0, str(PROJECT_ROOT))
 
 # 尝试显式导入 macro_engine.core
 try:

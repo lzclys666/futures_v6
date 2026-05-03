@@ -1,16 +1,23 @@
-factor_code: "M_FREIGHT_BDI"
-factor_name: "波罗的海干散货运价指数"
+factor_code: M_FREIGHT_BDI
+factor_name: 波罗的海干散货运价指数
 template: null
-econ_category: "MAC"
-logic_category: "FRT"
+econ_category: MAC
+logic_category: FRT
 direction: -1
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 756
 base_weight: 0.05
-max_weight: 0.10
+max_weight: 0.1
 is_active: true
 dependencies:
-  - "AKShare/macro_shipping_bdi"
-description: "BDI指数，航运成本指标，影响大豆进口物流成本"
+- AKShare/macro_shipping_bdi
+description: BDI指数，航运成本指标，影响大豆进口物流成本
+category: free_data
+name: 波罗的海干散货运价指数
+source_confidence: 0.85
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

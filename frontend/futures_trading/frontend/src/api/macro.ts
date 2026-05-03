@@ -43,14 +43,15 @@ function _adaptFactor(o: Record<string, unknown>): FactorDetail {
 function _adaptSignal(o: Record<string, unknown>): MacroSignal {
   const rawConf = o.confidence as string | undefined
   const confidence = rawConf ? rawConf.toLowerCase() as 'high' | 'medium' | 'low' : undefined
-  const factorsRaw = (o.factors ?? []) as Record<string, unknown>[]
+  const factorsRaw = (o.factorDetails ?? []) as Record<string, unknown>[]
   return {
     symbol:          o.symbol as string,
     compositeScore:  (o.score ?? o.compositeScore) as number,
     direction:       o.direction as 'LONG' | 'NEUTRAL' | 'SHORT',
     updatedAt:       (o.updatedAt ?? o.updated_at ?? '') as string,
-    factors:         factorsRaw.map(_adaptFactor),
+    factorDetails:   factorsRaw.map(_adaptFactor),
     confidence,
+    regime:          o.regime as string | undefined,
   }
 }
 
@@ -74,12 +75,13 @@ const MOCK_SIGNAL: MacroSignal = {
   compositeScore: 0.45,
   confidence: 'high',
   updatedAt: new Date().toISOString(),
-  factors: [
+  factorDetails: [
     { factorCode: 'F1', factorName: '基差因子', rawValue: 120, normalizedScore: 0.6, weight: 0.15, contribution: 0.09, direction: 'positive' },
     { factorCode: 'F2', factorName: '动量因子', rawValue: 0.8, normalizedScore: 0.4, weight: 0.2, contribution: 0.08, direction: 'positive' },
     { factorCode: 'F3', factorName: '波动率因子', rawValue: 15, normalizedScore: -0.3, weight: 0.1, contribution: -0.03, direction: 'negative' },
     { factorCode: 'AU_AG_ratio_diff', factorName: '金银比因子', rawValue: 85.5, normalizedScore: 0.5, weight: 0.12, contribution: 0.06, direction: 'positive' },
   ],
+  regime: 'TRENDING',
 }
 
 const MOCK_ALL_SIGNALS: MacroSignalSummary[] = [
@@ -136,13 +138,13 @@ export async function fetchAllSignals(): Promise<MacroSignalSummary[]> {
 export async function fetchFactorDetail(symbol: string): Promise<FactorDetail[]> {
   if (USE_MOCK) {
     await new Promise((r) => setTimeout(r, 250))
-    return MOCK_SIGNAL.factors
+    return MOCK_SIGNAL.factorDetails
   }
   const res = await http.get<unknown>(`/${symbol}/factors`)
   const data = res.data as Record<string, unknown>
-  const factors = data.factors as Record<string, unknown>[] | undefined
+  const factors = data.factorDetails as Record<string, unknown>[] | undefined
   if (!Array.isArray(factors)) {
-    throw new Error('因子明细格式错误：期望 factors 数组')
+    throw new Error('因子明细格式错误：期望 factorDetails 数组')
   }
   return factors.map(_adaptFactor)
 }

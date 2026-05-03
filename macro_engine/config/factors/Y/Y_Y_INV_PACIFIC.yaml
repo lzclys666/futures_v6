@@ -1,9 +1,6 @@
-# Y_Y_INV_PACIFIC.yaml
-# 太平洋大豆到港量
-
 factor_code: Y_Y_INV_PACIFIC
 symbol: Y
-category: supply
+category: free_data
 name: 太平洋大豆到港量
 description: 太平洋大豆到港量
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - supply
-  - Y
+- supply
+- Y
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

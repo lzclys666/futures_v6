@@ -1,5 +1,8 @@
 symbol: SN
 extends: _base
+name: 沪锡
+name_en: SN
+sector: 有色
 macro_lambda: 0.6
 weights:
   supply: 0.2

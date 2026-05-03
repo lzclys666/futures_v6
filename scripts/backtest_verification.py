@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from config.paths import PROJECT_ROOT
+from config.paths import MACRO_ENGINE
 """
 宏观信号回测验证系统 (Phase 4: 回测验证)
 ============================================
@@ -194,7 +196,7 @@ class MacroSignalLoader:
 class BacktestVerification:
     """回测验证引擎"""
 
-    def __init__(self, signal_dir: str = "D:/futures_v6/macro_engine/output",
+    def __init__(self, signal_dir: str = "str(MACRO_ENGINE)/output",
                  initial_capital: float = 1_000_000, risk_profile: str = "moderate"):
         self.signal_loader = MacroSignalLoader(signal_dir)
         self.initial_capital = initial_capital
@@ -631,7 +633,7 @@ def main():
     args = parser.parse_args()
 
     if args.all:
-        signal_dir = Path("D:/futures_v6/macro_engine/output")
+        signal_dir = Path("str(MACRO_ENGINE)/output")
         symbols = set()
         for f in signal_dir.glob("*_macro_daily_*.csv"):
             sym = f.stem.split('_')[0]
@@ -649,7 +651,7 @@ def main():
     print("=" * 60)
 
     engine = BacktestVerification(
-        signal_dir="D:/futures_v6/macro_engine/output",
+        signal_dir="str(MACRO_ENGINE)/output",
         initial_capital=args.capital,
         risk_profile=args.profile,
     )
@@ -666,7 +668,7 @@ def main():
         output_path = args.output
     else:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        output_path = f"D:/futures_v6/backtest_report_{args.profile}_{timestamp}.json"
+        output_path = str(PROJECT_ROOT / f"backtest_report_{args.profile}_{timestamp}.json")
 
     generate_report(results, output_path)
 

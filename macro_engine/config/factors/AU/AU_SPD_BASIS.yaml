@@ -1,8 +1,10 @@
 factor_code: AU_SPD_BASIS
-name: "黑币期现基差=SGE玻净-SHFE期货"
+name: 黑币期现基差=SGE玻净-SHFE期货
 category: free_data
-description: "黑币期现基差=SGE玻净-SHFE期货"
+description: 黑币期现基差=SGE玻净-SHFE期货
 data_source: AKShare futures_main_sina + spot_golden_benchmark_sge
 source_confidence: 1.0
-expected_range: [-100-100]
-notes: "周度数据。最新=4.6(2026-04-17)"
+expected_range:
+- -100.0
+- 100.0
+notes: 周度数据。最新=4.6(2026-04-17)

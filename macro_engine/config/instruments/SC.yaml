@@ -1,5 +1,8 @@
 symbol: SC
 extends: _base
+name: 原油
+name_en: SC
+sector: 能化
 macro_lambda: 0.65
 weights:
   supply: 0.25

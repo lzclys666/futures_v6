@@ -27,7 +27,7 @@ from api.routes import ic_heatmap as ic_routes
 from api.routes import signal as signal_routes
 from api.routes.circuit_breaker import router as circuit_breaker_router
 from api.websocket.vnpy_ws import init_websocket
-from services.vnpy_bridge import bridge
+from services.vnpy_bridge import get_vnpy_bridge
 
 
 @asynccontextmanager
@@ -35,13 +35,13 @@ async def lifespan(app: FastAPI):
     """应用生命周期管理"""
     # 启动时自动启动VNpy
     print("Starting VNpy engine...")
-    bridge.start()
+    get_vnpy_bridge().start()
     
     yield
     
     # 关闭时停止VNpy
     print("Stopping VNpy engine...")
-    bridge.stop()
+    get_vnpy_bridge().stop()
 
 
 # 创建FastAPI应用
@@ -69,7 +69,7 @@ app.include_router(signal_routes.router)
 app.include_router(circuit_breaker_router)
 
 # 初始化WebSocket
-init_websocket(bridge, app)
+init_websocket(get_vnpy_bridge(), app)
 
 
 @app.get("/")

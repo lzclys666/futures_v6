@@ -1,17 +1,23 @@
-# config/factors/AG/AG_DEM_ETF_HOLDING.yaml
-factor_code: "AG_DEM_ETF_HOLDING"
-factor_name: "全球白银ETF持仓"
+factor_code: AG_DEM_ETF_HOLDING
+factor_name: 全球白银ETF持仓
 template: null
-econ_category: "DEM"
-logic_category: "INV"
-direction: 1           # ETF持仓增加→投资需求上升→利多
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+econ_category: DEM
+logic_category: INV
+direction: 1
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 252
 base_weight: 0.08
 max_weight: 0.12
 is_active: true
 dependencies:
-  - "iShares/SLV_holdings"
-description: "iShares白银ETF(SLV)持仓量，全球最大白银ETF，反映投资性需求变化"
+- iShares/SLV_holdings
+description: iShares白银ETF(SLV)持仓量，全球最大白银ETF，反映投资性需求变化
+category: free_data
+name: 全球白银ETF持仓
+source_confidence: 0.85
+data_source: iShares
+expected_range:
+- -100000.0
+- 100000.0

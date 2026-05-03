@@ -29,7 +29,7 @@ def fetch_rank():
     """L1: AKShare SHFE会员持仓排名（今日）"""
     print("[L1] AKShare get_shfe_rank_table()...")
     try:
-        result = ak.get_shfe_rank_table()
+        result = ak.get_shfe_rank_table(date=obs_date)
         if isinstance(result, dict) and len(result) > 0:
             for date_key, df in result.items():
                 if isinstance(df, pd.DataFrame) and len(df) > 0:

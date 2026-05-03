@@ -18,10 +18,10 @@ BU_美元兑人民币汇率.py
 import sys, os as _os
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.web_utils import fetch_url, fetch_json
 
 import akshare as ak
 import pandas as pd
-import requests
 
 FACTOR_CODE = "BU_BU_FX_USDCNY"
 SYMBOL = "BU"
@@ -50,12 +50,12 @@ def fetch_sina():
     """L2: 新浪财经实时汇率"""
     print("[L2] 新浪 hq.sinajs.cn/list=USDCNY...")
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
         "Referer": "https://finance.sina.com.cn"
     }
-    r = requests.get("https://hq.sinajs.cn/list=USDCNY", headers=headers, timeout=10)
-    r.encoding = "gbk"
-    text = r.text
+    html, err = fetch_url("https://hq.sinajs.cn/list=USDCNY", headers=headers, timeout=10)
+    if err:
+        raise ValueError(err)
+    text = html
     # 格式: var hq_str_USDCNY="02:58:07,6.8268,6.8278,6.8279,11,6.8278,6.8279,6.8268,6.8273,美元人民币,2026-05-02";
     import re
     m = re.search(r'hq_str_USDCNY="[^,]+,([^,]+),([^,]+)', text)

@@ -1,16 +1,23 @@
-factor_code: "NR_CST_SEA_FREIGHT"
-factor_name: "波罗的海干散货指数BDI"
+factor_code: NR_CST_SEA_FREIGHT
+factor_name: 波罗的海干散货指数BDI
 template: null
-econ_category: "CST"
-logic_category: "FRT"
+econ_category: CST
+logic_category: FRT
 direction: 1
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 252
 base_weight: 0.05
 max_weight: 0.15
 is_active: true
 dependencies:
-  - "AKShare/macro_shipping_bdi"
-description: "BDI波罗的海干散货指数，海运成本代理指标，极端行情下波动可达30%+"
+- AKShare/macro_shipping_bdi
+description: BDI波罗的海干散货指数，海运成本代理指标，极端行情下波动可达30%+
+category: free_data
+name: 波罗的海干散货指数BDI
+source_confidence: 0.85
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

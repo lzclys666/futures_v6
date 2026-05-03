@@ -1,9 +1,6 @@
-# BU_BU_STK_INVENTORY.yaml
-# 全国沥青总库存
-
 factor_code: BU_BU_STK_INVENTORY
 symbol: BU
-category: inventory
+category: free_data
 name: 全国沥青总库存
 description: 全国沥青总库存
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - inventory
-  - BU
+- inventory
+- BU
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

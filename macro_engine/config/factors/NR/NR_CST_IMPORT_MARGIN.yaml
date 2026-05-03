@@ -1,16 +1,23 @@
-factor_code: "NR_CST_IMPORT_MARGIN"
-factor_name: "NR进口利润"
+factor_code: NR_CST_IMPORT_MARGIN
+factor_name: NR进口利润
 template: null
-econ_category: "CST"
-logic_category: "MGN"
+econ_category: CST
+logic_category: MGN
 direction: 1
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 252
-base_weight: 0.10
-max_weight: 0.20
+base_weight: 0.1
+max_weight: 0.2
 is_active: true
 dependencies:
-  - "AKShare/futures_main_sina"
-description: "NR进口利润（元/吨）= NR期货价 - (STR20_FOB + 海运费) * 汇率 * (1+关税+增值税+杂费)，贸易流方向的开关"
+- AKShare/futures_main_sina
+description: NR进口利润（元/吨）= NR期货价 - (STR20_FOB + 海运费) * 汇率 * (1+关税+增值税+杂费)，贸易流方向的开关
+category: derived
+name: NR进口利润
+source_confidence: 0.75
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

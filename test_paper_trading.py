@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from config.paths import PROJECT_ROOT
 """
 Local Paper Trading Test - 本地模拟交易测试
 无需CTP连接，验证订单流转、持仓计算、风控触发
@@ -10,7 +11,7 @@ from pathlib import Path
 from datetime import datetime
 
 # Add project path
-project_dir = Path('D:/futures_v6')
+project_dir = PROJECT_ROOT
 if str(project_dir) not in sys.path:
     sys.path.insert(0, str(project_dir))
 

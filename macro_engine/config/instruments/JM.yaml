@@ -1,5 +1,8 @@
 symbol: JM
 extends: _base
+name: 焦煤
+name_en: JM
+sector: 黑色
 macro_lambda: 0.4
 weights:
   supply: 0.25

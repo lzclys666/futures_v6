@@ -1,33 +1,39 @@
-# NR_SUP_ANRPC_PROD.yaml
-# ANRPC全球天然橡胶产量（万吨/月）
-
+description: ANRPC全球天然橡胶产量（万吨/月）
+category: paid_data
 factor_code: NR_SUP_ANRPC_PROD
 symbol: NR
 frequency: monthly
+meaning: 'ANRPC（天然橡胶生产国协会）成员国月度产量合计。
 
-meaning: |
-  ANRPC（天然橡胶生产国协会）成员国月度产量合计。
   包含泰国、印尼、马来西亚、越南、中国、印度、柬埔寨、菲律宾、斯里兰卡等9国。
+
   产量数据是供给端最核心的指标，季节性极强（2-4月低产期，8-10月旺产期）。
 
+  '
 data_sources:
-  - name: ANRPC官方月报
-    url: http://www.anrpc.org/
-    confidence: 1.0
-    note: 官方权威数据，但发布滞后约2个月
-  - name: 隆众资讯橡胶月报
-    url: https://www.oilchem.net/
-    confidence: 0.8
-    note: 付费订阅，数据整理更及时
-  - name: 卓创资讯橡胶月报
-    url: https://rubb.chem99.com/
-    confidence: 0.8
-    note: 付费订阅
-
+- name: ANRPC官方月报
+  url: http://www.anrpc.org/
+  confidence: 1.0
+  note: 官方权威数据，但发布滞后约2个月
+- name: 隆众资讯橡胶月报
+  url: https://www.oilchem.net/
+  confidence: 0.8
+  note: 付费订阅，数据整理更及时
+- name: 卓创资讯橡胶月报
+  url: https://rubb.chem99.com/
+  confidence: 0.8
+  note: 付费订阅
 unit: 万吨/月
-normal_range: [50, 120]
-seasonality: high  # 2-4月低产期，8-10月旺产期
-
-update_schedule: "每月15-20日更新上月数据"
+normal_range:
+- 50
+- 120
+seasonality: high
+update_schedule: 每月15-20日更新上月数据
 manual_input_required: true
-note: "月频数据，需手动从ANRPC官网或付费月报录入"
+note: 月频数据，需手动从ANRPC官网或付费月报录入
+source_confidence: 0.8
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0
+name: NR_SUP_ANRPC_PROD

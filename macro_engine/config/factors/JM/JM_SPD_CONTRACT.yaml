@@ -1,16 +1,20 @@
-factor_code: "JM_SPD_CONTRACT"
-factor_name: "焦煤月差"
+factor_code: JM_SPD_CONTRACT
+factor_name: 焦煤月差
 template: null
-econ_category: "SPD"
-logic_category: "STR"
+econ_category: SPD
+logic_category: STR
 direction: 0
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 60
 base_weight: 0.06
 max_weight: 0.08
 is_active: true
 dependencies:
-  - "AKShare/futures_settle_dce"
-description: "焦煤近月-远月价差，反映市场期限结构"
+- AKShare/futures_settle_dce
+description: 焦煤近月-远月价差，反映市场期限结构
+category: free_data
+name: 焦煤月差
+source_confidence: 0.85
+data_source: AKShare

@@ -11,7 +11,20 @@ CURRENT_DIR = Path(__file__).parent
 LOG_DIR = CURRENT_DIR.parent / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
-scripts = ["PB_沪铅期货收盘价.py", "PB_沪铅期货持仓量.py"]
+scripts = [
+    "PB_SMM沪铅现货价格.py",
+    "PB_原生铅与再生铅价差.py",
+    "PB_沪铅期现基差.py",
+    "PB_沪铅期货净持仓.py",
+    "PB_沪铅期货持仓量.py",
+    "PB_沪铅期货收盘价.py",
+    "PB_沪铅期货近远月价差.py",
+    "PB_美元兑人民币汇率.py",
+    "PB_铅TC加工费.py",
+    "PB_铅酸电池用铅占比.py",
+    "PB_铅锭仓单库存.py",
+    "PB_铅锭社会库存.py",
+]
 
 def run_all():
     now = datetime.datetime.now()

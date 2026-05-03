@@ -228,9 +228,12 @@ const TradingPanel: React.FC = () => {
 
   const handleCancel = async (vtOrderId: string) => {
     try {
-      const res = await fetch(`/api/trading/order/${vtOrderId}`, { method: 'DELETE' })
+      const res = await fetch(`/api/trading/order/${vtOrderId}/cancel`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      })
       const json = await res.json()
-      if (json.code === 0) {
+      if (json.success || json.code === 0) {
         message.success('撤单成功')
         fetchAll()
       } else {

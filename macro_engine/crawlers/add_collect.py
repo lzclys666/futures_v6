@@ -3,13 +3,19 @@
 import sys
 import os
 import datetime
+from pathlib import Path
 import pandas as pd
 
-sys.path.insert(0, 'D:/futures_v6/macro_engine/crawlers/common')
+# 动态计算项目根目录
+_PROJECT_ROOT = Path(__file__).resolve().parent
+while not (_PROJECT_ROOT / "macro_engine").exists() and _PROJECT_ROOT != _PROJECT_ROOT.parent:
+    _PROJECT_ROOT = _PROJECT_ROOT.parent
+
+sys.path.insert(0, str(_PROJECT_ROOT / "macro_engine" / "crawlers" / "common"))
 from db_utils import save_to_db, ensure_table
 import akshare as ak
 
-os.chdir('D:/futures_v6/macro_engine')
+os.chdir(str(_PROJECT_ROOT / "macro_engine"))
 ensure_table()
 
 def get_obs_date():

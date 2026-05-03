@@ -1,7 +1,8 @@
+from config.paths import MACRO_ENGINE
 import sys, sqlite3
-sys.path.insert(0, 'D:/futures_v6/macro_engine')
+sys.path.insert(0, 'str(MACRO_ENGINE)')
 
-db = 'D:/futures_v6/macro_engine/pit_data.db'
+db = 'str(MACRO_ENGINE)/pit_data.db'
 conn = sqlite3.connect(db)
 cur = conn.cursor()
 

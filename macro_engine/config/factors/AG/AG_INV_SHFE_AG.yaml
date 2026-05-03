@@ -1,17 +1,23 @@
-# config/factors/AG/AG_INV_SHFE_WARRANT.yaml
-factor_code: "AG_INV_SHFE_AG"
-factor_name: "上期所沪银仓单"
+factor_code: AG_INV_SHFE_AG
+factor_name: 上期所沪银仓单
 template: null
-econ_category: "INV"
-logic_category: "STK"
-direction: -1           # 仓单增加→交割货源充足→利空
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+econ_category: INV
+logic_category: STK
+direction: -1
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 252
 base_weight: 0.08
 max_weight: 0.12
 is_active: true
 dependencies:
-  - "AKShare/shfe_warrant"
-description: "上期所白银期货仓单数量，反映国内白银现货可交割量"
+- AKShare/shfe_warrant
+description: 上期所白银期货仓单数量，反映国内白银现货可交割量
+category: free_data
+name: 上期所沪银仓单
+source_confidence: 0.85
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

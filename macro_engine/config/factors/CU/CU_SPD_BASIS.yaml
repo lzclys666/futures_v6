@@ -1,8 +1,10 @@
 factor_code: CU_SPD_BASIS
-name: "浙铜期现基差"
-category: basis
-description: "浙铜期现基差"
+name: 浙铜期现基差
+category: derived
+description: 浙铜期现基差
 data_source: AKShare futures_spot_price
 source_confidence: 1.0
-expected_range: [-500-500]
-notes: "near_basis=spot-near_contract"
+expected_range:
+- -500.0
+- 500.0
+notes: near_basis=spot-near_contract

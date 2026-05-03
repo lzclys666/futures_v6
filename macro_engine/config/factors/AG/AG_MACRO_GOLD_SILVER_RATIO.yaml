@@ -1,18 +1,24 @@
-# config/factors/AG/AG_MACRO_GOLD_SILVER_RATIO.yaml
-factor_code: "AG_MACRO_GOLD_SILVER_RATIO"
-factor_name: "金银比"
+factor_code: AG_MACRO_GOLD_SILVER_RATIO
+factor_name: 金银比
 template: null
-econ_category: "MAC"
-logic_category: "VAL"
-direction: -1           # IR=-1.819，负向：金银比↑→AG价格↓，均值回归信号反向
-frequency: "daily"
-norm_method: "percentile"
-detrend_method: "none"
+econ_category: MAC
+logic_category: VAL
+direction: -1
+frequency: daily
+norm_method: percentile
+detrend_method: none
 norm_window: 504
 base_weight: 0.08
 max_weight: 0.12
 is_active: true
 dependencies:
-  - "AKShare/spot_gold_price"
-  - "AKShare/spot_silver_price"
-description: "伦敦金价/伦敦银价，反映白银相对估值水平，高位回落往往伴随白银补涨"
+- AKShare/spot_gold_price
+- AKShare/spot_silver_price
+description: 伦敦金价/伦敦银价，反映白银相对估值水平，高位回落往往伴随白银补涨
+category: derived
+name: 金银比
+source_confidence: 0.75
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

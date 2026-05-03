@@ -1,32 +1,38 @@
-# NR_SUP_HATYAI_RSS3.yaml
-# 泰国合艾市场RSS3烟片胶原料价格
-
+description: 泰国合艾市场RSS3烟片胶原料价格
+category: paid_data
 factor_code: NR_SUP_HATYAI_RSS3
 symbol: NR
 frequency: daily
+meaning: '泰国合艾（Hat Yai）市场RSS3烟片胶原料价格。
 
-meaning: |
-  泰国合艾（Hat Yai）市场RSS3烟片胶原料价格。
   合艾是泰国最大的橡胶集散地，原料价格是成本端最敏感的指标。
+
   RSS3是高品质烟片胶，与STR20期货价格联动性强。
 
+  '
 data_sources:
-  - name: 隆众资讯
-    url: https://www.oilchem.net/
-    confidence: 0.8
-    note: 付费订阅，日频更新
-  - name: 卓创资讯
-    url: https://rubb.chem99.com/
-    confidence: 0.8
-    note: 付费订阅，日频更新
-  - name: 泰国橡胶协会
-    url: https://www.thairubber.org/
-    confidence: 0.7
-    note: 官网不定期发布
-
+- name: 隆众资讯
+  url: https://www.oilchem.net/
+  confidence: 0.8
+  note: 付费订阅，日频更新
+- name: 卓创资讯
+  url: https://rubb.chem99.com/
+  confidence: 0.8
+  note: 付费订阅，日频更新
+- name: 泰国橡胶协会
+  url: https://www.thairubber.org/
+  confidence: 0.7
+  note: 官网不定期发布
 unit: 泰铢/公斤
-normal_range: [40, 80]
-
-update_schedule: "每日更新"
+normal_range:
+- 40
+- 80
+update_schedule: 每日更新
 manual_input_required: true
-note: "需付费数据源或手动从行业网站录入，NR_抓取合艾原料.py提供占位框架"
+note: 需付费数据源或手动从行业网站录入，NR_抓取合艾原料.py提供占位框架
+source_confidence: 0.8
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0
+name: NR_SUP_HATYAI_RSS3

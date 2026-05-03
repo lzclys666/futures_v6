@@ -1,16 +1,23 @@
-factor_code: "M_RATIO_OIL_MEAL"
-factor_name: "油粕比"
+factor_code: M_RATIO_OIL_MEAL
+factor_name: 油粕比
 template: null
-econ_category: "SPD"
-logic_category: "SPD"
+econ_category: SPD
+logic_category: SPD
 direction: 1
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 756
 base_weight: 0.05
 max_weight: 0.15
 is_active: true
 dependencies:
-  - "AKShare/futures_main_sina"
-description: "豆油主力收盘价 / 豆粕主力收盘价，比值升高通常反映豆油相对强势"
+- AKShare/futures_main_sina
+description: 豆油主力收盘价 / 豆粕主力收盘价，比值升高通常反映豆油相对强势
+category: derived
+name: 油粕比
+source_confidence: 0.75
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

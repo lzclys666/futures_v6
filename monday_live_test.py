@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from config.paths import PROJECT_ROOT
 """
 Monday Live Trading Test Script
 周一实盘测试脚本 - 用于验证真实交易环境
@@ -25,7 +26,7 @@ from pathlib import Path
 from datetime import datetime
 
 # Add project path
-project_dir = Path('D:/futures_v6')
+project_dir = PROJECT_ROOT
 if str(project_dir) not in sys.path:
     sys.path.insert(0, str(project_dir))
 

@@ -1,9 +1,6 @@
-# J_J_STK_SEPARATE.yaml
-# 独立焦企焦炭库存
-
 factor_code: J_J_STK_SEPARATE
 symbol: J
-category: inventory
+category: free_data
 name: 独立焦企焦炭库存
 description: 独立焦企焦炭库存
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - inventory
-  - J
+- inventory
+- J
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

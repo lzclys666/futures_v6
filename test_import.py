@@ -1,6 +1,8 @@
+from config.paths import PROJECT_ROOT
+from config.paths import MACRO_ENGINE
 import sys
-sys.path.insert(0, 'D:/futures_v6/macro_engine')
-sys.path.insert(0, 'D:/futures_v6')
+sys.path.insert(0, 'str(MACRO_ENGINE)')
+sys.path.insert(0, str(PROJECT_ROOT))
 
 from macro_engine.core.analysis.ic_heatmap_service import IcHeatmapService
 

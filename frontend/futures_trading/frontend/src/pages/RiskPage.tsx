@@ -16,15 +16,14 @@ const { Title } = Typography
 
 const severityConfig = {
   PASS: { color: '#52c41a', icon: <CheckCircleOutlined />, label: '通过' },
-  LOW: { color: '#1677ff', icon: <CheckCircleOutlined />, label: '低' },
-  MEDIUM: { color: '#faad14', icon: <WarningOutlined />, label: '中' },
-  HIGH: { color: '#ff4d4f', icon: <CloseCircleOutlined />, label: '高' },
+  WARN: { color: '#faad14', icon: <WarningOutlined />, label: '警告' },
+  BLOCK: { color: '#ff4d4f', icon: <CloseCircleOutlined />, label: '阻断' },
 }
 
 const layerConfig: Record<RiskLayerKey, { title: string; color: string }> = {
-  layer1: { title: 'Layer 1 · 基础风控', color: '#52c41a' },
-  layer2: { title: 'Layer 2 · 进阶风控', color: '#faad14' },
-  layer3: { title: 'Layer 3 · 熔断风控', color: '#ff4d4f' },
+  1: { title: 'Layer 1 · 基础风控', color: '#52c41a' },
+  2: { title: 'Layer 2 · 进阶风控', color: '#faad14' },
+  3: { title: 'Layer 3 · 熔断风控', color: '#ff4d4f' },
 }
 
 const RiskPage: React.FC = () => {
@@ -88,9 +87,9 @@ const RiskPage: React.FC = () => {
 
   // 按层级分组
   const layerRules: Record<RiskLayerKey, RiskRuleStatus[]> = {
-    layer1: status?.rules?.filter((r: RiskRuleStatus) => r.layer === 'layer1') ?? [],
-    layer2: status?.rules?.filter((r: RiskRuleStatus) => r.layer === 'layer2') ?? [],
-    layer3: status?.rules?.filter((r: RiskRuleStatus) => r.layer === 'layer3') ?? [],
+    1: status?.rules?.filter((r: RiskRuleStatus) => r.layer === 1) ?? [],
+    2: status?.rules?.filter((r: RiskRuleStatus) => r.layer === 2) ?? [],
+    3: status?.rules?.filter((r: RiskRuleStatus) => r.layer === 3) ?? [],
   }
 
   return (
@@ -125,7 +124,7 @@ const RiskPage: React.FC = () => {
       </Row>
 
       {/* 各层级规则表 */}
-      {(['layer1', 'layer2', 'layer3'] as RiskLayerKey[]).map((layer) => (
+      {([1, 2, 3] as RiskLayerKey[]).map((layer) => (
         <Card
           key={layer}
           size="small"

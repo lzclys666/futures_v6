@@ -1,16 +1,23 @@
-factor_code: "RU_SUP_THAI_LATEX"
-factor_name: "泰国胶水价格"
+factor_code: RU_SUP_THAI_LATEX
+factor_name: 泰国胶水价格
 template: null
-econ_category: "SUP"
-logic_category: "STK"
-direction: 1           # 原料价格高位→成本支撑→利多
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+econ_category: SUP
+logic_category: STK
+direction: 1
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 756
-base_weight: 0.10
+base_weight: 0.1
 max_weight: 0.25
 is_active: true
 dependencies:
-  - "AKShare/spot_price"
-description: "泰国胶水收购价格（泰铢/公斤）"
+- AKShare/spot_price
+description: 泰国胶水收购价格（泰铢/公斤）
+category: free_data
+name: 泰国胶水价格
+source_confidence: 0.85
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

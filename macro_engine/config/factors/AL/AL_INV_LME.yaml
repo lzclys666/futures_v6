@@ -1,17 +1,23 @@
-# config/factors/AL/AL_INV_LME.yaml
-factor_code: "AL_INV_LME"
-factor_name: "LME铝库存"
+factor_code: AL_INV_LME
+factor_name: LME铝库存
 template: null
-econ_category: "INV"
-logic_category: "STK"
-direction: -1           # 全球库存增加→供应增加→利空
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+econ_category: INV
+logic_category: STK
+direction: -1
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 252
 base_weight: 0.06
 max_weight: 0.09
 is_active: true
 dependencies:
-  - "LME官网/lme_aluminium"
-description: "LME铝库存（含注销仓单），反映全球铝显性库存变化"
+- LME官网/lme_aluminium
+description: LME铝库存（含注销仓单），反映全球铝显性库存变化
+category: free_data
+name: LME铝库存
+source_confidence: 0.85
+data_source: LME官网
+expected_range:
+- -100000.0
+- 100000.0

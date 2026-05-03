@@ -22,7 +22,7 @@
 | 方法 | 端点 | 说明 | 状态 |
 |------|------|------|------|
 | GET | `/api/trading/positions` | 当前持仓 | ✅ 200（Mock 数据） |
-| GET | `/api/trading/risk-status` | 风控状态 | ✅ 200（Mock 数据） |
+| GET | `/api/risk/status` | 风控状态 | ✅ 200（Mock 数据） |
 | GET | `/api/trading/orders` | 当日订单 | ✅ 200（空数组） |
 | GET | `/api/trading/trades` | 当日成交 | ✅ 200（空数组） |
 | GET | `/api/trading/account` | 账户资金 | ✅ 200（null） |

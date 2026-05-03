@@ -18,8 +18,8 @@ import sys, os as _os
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
 
+from common.web_utils import fetch_url, fetch_json
 import akshare as ak
-import requests
 import pandas as pd
 from datetime import timedelta
 
@@ -29,14 +29,12 @@ SYMBOL = "J"
 def fetch_mysteel_price():
     url = "https://index.mysteel.com/api/market/price/getMarketPrice.html?itemCode=13570276448&date="
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
         'Referer': 'https://index.mysteel.com/',
         'Accept': 'application/json, text/plain, */*'
     }
     try:
-        resp = requests.get(url, headers=headers, timeout=10)
-        if resp.status_code == 200:
-            data = resp.json()
+        data, err = fetch_json(url, headers=headers, timeout=10)
+        if not err:
             if isinstance(data, dict) and 'data' in data:
                 price = float(data['data'].get('price', 0))
                 if price > 0:

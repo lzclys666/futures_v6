@@ -11,7 +11,18 @@ CURRENT_DIR = Path(__file__).parent
 LOG_DIR = CURRENT_DIR.parent / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
-scripts = ["Y_棕榈油期货收盘价.py", "Y_棕榈油期货持仓量.py"]
+scripts = [
+    "Y_CBOT大豆期货收盘价.py",
+    "Y_CBOT豆油期货收盘价.py",
+    "Y_棕榈油期货持仓量.py",
+    "Y_棕榈油期货收盘价.py",
+    "Y_豆油与棕榈油价差.py",
+    "Y_豆油商业库存.py",
+    "Y_豆油期现基差.py",
+    "Y_豆油期货仓单.py",
+    "Y_豆油期货净持仓.py",
+    "Y_进口大豆CNF价.py",
+]
 
 def run_all():
     now = datetime.datetime.now()

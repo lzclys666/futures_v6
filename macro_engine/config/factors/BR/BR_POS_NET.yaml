@@ -1,17 +1,23 @@
-# config/factors/BR/BR_POS_NET.yaml
-factor_code: "BR_POS_NET"
-factor_name: "BR前20净持仓"
+factor_code: BR_POS_NET
+factor_name: BR前20净持仓
 template: null
-econ_category: "SEN"
-logic_category: "POS"
-direction: 1           # 净多单增加→主力看多→利多
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+econ_category: SEN
+logic_category: POS
+direction: 1
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 756
 base_weight: 0.05
-max_weight: 0.10
+max_weight: 0.1
 is_active: true
 dependencies:
-  - "AKShare/get_shfe_rank_table"
-description: "上期所合成橡胶期货前20名会员净多单，反映主力资金情绪"
+- AKShare/get_shfe_rank_table
+description: 上期所合成橡胶期货前20名会员净多单，反映主力资金情绪
+category: free_data
+name: BR前20净持仓
+source_confidence: 0.85
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

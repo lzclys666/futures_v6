@@ -1,16 +1,22 @@
-﻿---
-factor_code: "JM_INV_COKING_PLANT"
-factor_name: "钢厂炼焦煤库存(247家)"
-econ_category: "INV"
-logic_category: "QTY"
+factor_code: JM_INV_COKING_PLANT
+factor_name: 钢厂炼焦煤库存(247家)
+econ_category: INV
+logic_category: QTY
 direction: 1
-frequency: "weekly"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: weekly
+norm_method: zscore
+detrend_method: none
 norm_window: 12
 base_weight: 0.05
 max_weight: 0.07
 is_active: false
 dependencies:
-  - "Mysteel(年费)/黑色>钢厂>原料库存>炼焦煤库存"
-description: "钢厂原料库存高采购意愿下降"
+- Mysteel(年费)/黑色>钢厂>原料库存>炼焦煤库存
+description: 钢厂原料库存高采购意愿下降
+category: paid_data
+name: 钢厂炼焦煤库存(247家)
+source_confidence: 0.7
+data_source: Mysteel(年费)
+expected_range:
+- -100000.0
+- 100000.0

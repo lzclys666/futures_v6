@@ -60,7 +60,9 @@ def main():
             save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, v, source="db_回补", source_confidence=0.5)
             print(f"[OK] {FACTOR_CODE}={v} L4回补成功")
         else:
-            print(f"[WARN] {FACTOR_CODE} 无数据")
+            # Null 占位写入
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None, source="all_sources_failed", source_confidence=0.0)
+            print(f"[DB] 因子 {FACTOR_CODE} NULL 占位写入")
 
 if __name__ == "__main__":
     fix_encoding()

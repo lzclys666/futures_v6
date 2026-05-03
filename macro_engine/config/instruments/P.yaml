@@ -1,5 +1,8 @@
 symbol: P
 extends: _base
+name: 棕榈油
+name_en: P
+sector: 农产品
 macro_lambda: 0.35
 weights:
   supply: 0.3

@@ -1,5 +1,8 @@
 symbol: RM
 extends: _base
+name: 菜粕
+name_en: RM
+sector: 农产品
 macro_lambda: 0.3
 weights:
   supply: 0.3

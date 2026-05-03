@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 测试脚本：验证 CtaEngine 是否能成功加载并实例化 macro_demo_strategy
 """
@@ -74,7 +75,7 @@ if "MacroDemoStrategy" in class_names:
                 "fast_window": 10,
                 "slow_window": 20,
                 "use_macro": True,
-                "csv_path_str": "D:/futures_v6/macro_engine/output/{symbol}_macro_daily_{date}.csv"
+                "csv_path_str": "str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv"
             }
             
             # 模拟创建策略实例

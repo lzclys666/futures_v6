@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 Paper Trade 首次下单验证脚本
 在非交易时间模拟完整交易流程
@@ -83,7 +84,7 @@ def test_paper_trade_full_chain():
                     "risk_profile": "moderate",
                     "enable_risk_engine": True,
                     "use_macro": True,
-                    "csv_path": "D:/futures_v6/macro_engine/output/{symbol}_macro_daily_{date}.csv",
+                    "csv_path": "str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv",
                 }
             )
             print("[OK] MacroRiskStrategy added")

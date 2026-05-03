@@ -2,6 +2,15 @@ import sys, os, time
 sys.path.insert(0, r'D:\futures_v6')
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 
+# 凭据从环境变量读取（永不硬编码）
+VNPY_CTP_USER_ID     = os.getenv("VNPY_CTP_USER_ID",     "PLEASE_SET_ENV")
+VNPY_CTP_PASSWORD    = os.getenv("VNPY_CTP_PASSWORD",    "PLEASE_SET_ENV")
+VNPY_CTP_BROKER_ID   = os.getenv("VNPY_CTP_BROKER_ID",   "PLEASE_SET_ENV")
+VNPY_CTP_TD_SERVER   = os.getenv("VNPY_CTP_TD_SERVER",   "PLEASE_SET_ENV")
+VNPY_CTP_MD_SERVER   = os.getenv("VNPY_CTP_MD_SERVER",   "PLEASE_SET_ENV")
+VNPY_CTP_APP_ID      = os.getenv("VNPY_CTP_APP_ID",      "PLEASE_SET_ENV")
+VNPY_CTP_AUTH_CODE   = os.getenv("VNPY_CTP_AUTH_CODE",   "PLEASE_SET_ENV")
+
 results = []
 
 try:
@@ -14,13 +23,13 @@ try:
 
     # Try connecting with Chinese keys
     conn_params = {
-        '用户名': '260345',
-        '密码': 'luzc19891222@',
-        '经纪商代码': '9999',
-        '交易服务器': '182.254.243.31:30001',
-        '行情服务器': '182.254.243.31:30011',
-        '产品名称': 'simnow_client_test',
-        '授权编码': '0000000000000000',
+        '用户名': VNPY_CTP_USER_ID,
+        '密码': VNPY_CTP_PASSWORD,
+        '经纪商代码': VNPY_CTP_BROKER_ID,
+        '交易服务器': VNPY_CTP_TD_SERVER,
+        '行情服务器': VNPY_CTP_MD_SERVER,
+        '产品名称': VNPY_CTP_APP_ID,
+        '授权编码': VNPY_CTP_AUTH_CODE,
         '环境': '仿真',
     }
     gw.connect(conn_params)

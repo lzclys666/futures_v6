@@ -1,9 +1,6 @@
-# PB_PB_SPD_NEAR_FAR.yaml
-# 沪铅期货近远月价差
-
 factor_code: PB_PB_SPD_NEAR_FAR
 symbol: PB
-category: spread
+category: derived
 name: 沪铅期货近远月价差
 description: 沪铅期货近远月价差
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - spread
-  - PB
+- spread
+- PB
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -100000.0
+- 100000.0

@@ -20,7 +20,7 @@ sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value, DB_PATH
 
 import sqlite3
-import requests
+from common.web_utils import fetch_url
 import re
 import datetime
 
@@ -32,12 +32,10 @@ def fetch_from_customs_gov():
     try:
         print("[L1] 海关总署...")
         url = "http://www.customs.gov.cn/customs/302249/zfxxgk/2799825/302274/302275/index.html"
-        headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
-        resp = requests.get(url, headers=headers, timeout=15)
-        resp.encoding = 'utf-8'
-        if resp.status_code == 200 and len(resp.text) > 500:
-            print(f"[L1] 页面获取成功({len(resp.text)}字符)，解析中...")
-            links = re.findall(r'href=["\']([^"\']*)["\']', resp.text)
+        html, err = fetch_url(url, timeout=15)
+        if not err and len(html) > 500:
+            print(f"[L1] 页面获取成功({len(html)}字符)，解析中...")
+            links = re.findall(r'href=["\']([^"\']*)["\']', html)
             print(f"[L1] 发现{len(links)}个链接")
             # 海关数据通常在PDF或二级页面中
     except Exception as e:

@@ -1,18 +1,20 @@
-# TA_CST_USDCNY.yaml
-# 美元兑人民币汇率
-
 factor_code: TA_CST_USDCNY
 symbol: TA
-category: cost
+category: free_data
 name: 美元兑人民币汇率
 description: 美元兑人民币汇率，影响PX进口成本和PTA出口竞争力
 frequency: daily
 unit: 元/美元
-direction: neutral  # 贬值利多进口成本，升值利空
-confidence: 3  # ★★★
+direction: neutral
+confidence: 3
 source: 中国外汇交易中心/AKShare
 calculation: null
 tags:
-  - cost
-  - forex
-  - import
+- cost
+- forex
+- import
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

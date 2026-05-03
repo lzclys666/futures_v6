@@ -19,7 +19,7 @@ sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
 
 import akshare as ak
-import requests
+from common.web_utils import fetch_url
 
 FACTOR_CODE = "AL_POS_NET"
 SYMBOL = "AL"
@@ -30,7 +30,7 @@ def fetch_net_position():
     # L1: AKShare 交易所排名
     try:
         print("[L1] AKShare get_shfe_rank_table...")
-        df = ak.get_shfe_rank_table()
+        df = ak.get_shfe_rank_table(date=obs_date)
         if df is not None and len(df) > 0:
             al_df = df[df["variety"] == "AL"]
             if len(al_df) > 0:
@@ -52,14 +52,12 @@ def fetch_net_position():
     # L2: 新浪nf_AL0
     try:
         print("[L2] 新浪nf_AL0...")
-        resp = requests.get(
+        html, err = fetch_url(
             "http://hq.sinajs.cn/list=nf_AL0",
-            headers={"User-Agent": "Mozilla/5.0"},
             timeout=10
         )
-        resp.encoding = "gbk"
-        if resp.status_code == 200 and '"' in resp.text:
-            data = resp.text.split('"')[1].split(",")
+        if not err and '"' in html:
+            data = html.split('"')[1].split(",")
             if len(data) >= 13:
                 vol = float(data[11]) if data[11] else float(data[4])
                 print(f"[L2] 成功: {vol:.0f} 手")

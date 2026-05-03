@@ -1,13 +1,17 @@
 # -*- coding: utf-8 -*-
 """
 用户相关 API 路由
-覆盖: /api/user/profile, /api/user/performance, /api/user/equity-curve
+覆盖: /api/user/profile, /api/user/preferences, /api/user/risk-profile,
+      /api/user/performance, /api/user/equity-curve
 """
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Literal
 from datetime import datetime, timedelta
 import random
+import logging
+
+logger = logging.getLogger("user_api")
 
 router = APIRouter(prefix="/api/user", tags=["user"])
 
@@ -133,3 +137,141 @@ async def get_equity_curve(days: int = 90):
         ))
 
     return EquityCurveResponse(status="success", data=points)
+
+
+# ==================== 偏好设置 ====================
+
+# 内存中的偏好存储（后续对接真实数据库）
+_user_preferences: dict = {
+    "defaultSymbol": "RU",
+    "theme": "light",
+    "language": "zh-CN",
+    "refreshInterval": 10,
+    "notifications": {
+        "riskAlert": True,
+        "tradeFilled": True,
+        "circuitBreaker": True,
+        "dailyReport": False,
+        "channels": ["web"],
+    },
+}
+
+
+class NotificationSettings(BaseModel):
+    riskAlert: bool = True
+    tradeFilled: bool = True
+    circuitBreaker: bool = True
+    dailyReport: bool = False
+    channels: list[str] = ["web"]
+
+
+class UserPreferences(BaseModel):
+    defaultSymbol: str = "RU"
+    theme: Literal["light", "dark"] = "light"
+    language: Literal["zh-CN", "en-US"] = "zh-CN"
+    refreshInterval: int = 10
+    notifications: NotificationSettings = NotificationSettings()
+
+
+@router.put("/preferences")
+async def update_preferences(prefs: UserPreferences):
+    """
+    更新用户偏好设置
+    前端调用：PUT /api/user/preferences
+    """
+    global _user_preferences
+    _user_preferences = prefs.model_dump()
+    logger.info(f"用户偏好已更新: theme={prefs.theme}, language={prefs.language}")
+    return {
+        "code": 0,
+        "message": "success",
+        "data": _user_preferences,
+    }
+
+
+@router.get("/preferences")
+async def get_preferences():
+    """
+    获取用户偏好设置
+    """
+    return {
+        "code": 0,
+        "message": "success",
+        "data": _user_preferences,
+    }
+
+
+# ==================== 风控画像 ====================
+
+# 内存中的风控画像存储
+_user_risk_profile: dict = {
+    "riskTolerance": "moderate",
+    "maxDrawdown": 15.0,
+    "maxDailyLoss": 50000,
+    "maxSingleSymbolPct": 30.0,
+    "maxTotalPositionPct": 80.0,
+    "maxLeverage": 5.0,
+}
+
+
+class RiskProfile(BaseModel):
+    riskTolerance: Literal["conservative", "moderate", "aggressive"] = "moderate"
+    maxDrawdown: float = 15.0
+    maxDailyLoss: float = 50000
+    maxSingleSymbolPct: float = 30.0
+    maxTotalPositionPct: float = 80.0
+    maxLeverage: float = 5.0
+
+
+@router.put("/risk-profile")
+async def update_risk_profile(profile: RiskProfile):
+    """
+    更新用户风控画像
+    前端调用：PUT /api/user/risk-profile
+    同时从 config/risk_rules.yaml 加载对应 profile 的阈值参数
+    """
+    global _user_risk_profile
+    _user_risk_profile = profile.model_dump()
+    logger.info(f"风控画像已更新: tolerance={profile.riskTolerance}, maxDrawdown={profile.maxDrawdown}%")
+
+    # 同步更新 vnpy bridge 的风控画像（如果可用）
+    try:
+        from services.vnpy_bridge import get_vnpy_bridge
+        bridge = get_vnpy_bridge()
+        if hasattr(bridge, 'set_risk_profile'):
+            bridge.set_risk_profile(profile.riskTolerance)
+    except Exception as e:
+        logger.warning(f"同步风控画像到 bridge 失败: {e}")
+
+    # 同步更新 RiskEngine 的 profile（读取 config/risk_rules.yaml）
+    try:
+        import yaml
+        from pathlib import Path
+        config_path = Path(__file__).parent.parent.parent / "config" / "risk_rules.yaml"
+        if config_path.exists():
+            with open(config_path, "r", encoding="utf-8") as f:
+                config_data = yaml.safe_load(f)
+            profiles = config_data.get("profiles", {})
+            profile_params = profiles.get(profile.riskTolerance, {})
+            if profile_params:
+                logger.info(f"从 config/risk_rules.yaml 加载 profile '{profile.riskTolerance}' 参数: {list(profile_params.keys())}")
+    except Exception as e:
+        logger.warning(f"读取风控画像配置失败: {e}")
+
+    return {
+        "code": 0,
+        "message": "success",
+        "data": _user_risk_profile,
+    }
+
+
+@router.get("/risk-profile")
+async def get_risk_profile():
+    """
+    获取用户风控画像
+    """
+    return {
+        "code": 0,
+        "message": "success",
+        "data": _user_risk_profile,
+    }

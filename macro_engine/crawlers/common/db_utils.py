@@ -6,6 +6,7 @@ crawlers/common/db_utils.py
 import sqlite3
 import os
 import time
+import errno
 
 # 数据库路径：统一从 common/ 向上两级到项目根目录
 DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "pit_data.db")
@@ -40,7 +41,7 @@ def ensure_table():
 
 def save_to_db(factor_code, symbol, pub_date, obs_date, raw_value, source_confidence=1.0, source=''):
     """
-    带重试的数据库写入
+    带重试的数据库写入（保护高置信度数据）
     factor_code: 因子代码（如 JM_POS_OI）
     symbol: 品种代码（如 JM）
     pub_date: 发布日期（脚本运行日）
@@ -48,25 +49,116 @@ def save_to_db(factor_code, symbol, pub_date, obs_date, raw_value, source_confid
     raw_value: 数值（必须为float/int）
     source_confidence: 置信度 1.0=L1 0.9=L2 0.8=L3 0.5=L4回补 0.6=L4手动
     source: 数据来源描述（如 'akshare' '海关总署' 'Mysteel(年费)'）
+    返回: True 写入成功, False 跳过写入（已有更高置信度记录）
     """
-    for attempt in range(3):
+    # 豁免逻辑：source_confidence=0.0 时跳过置信度保护，直接写入
+    if source_confidence == 0.0:
+        print(f"[豁免] source_confidence=0.0，跳过置信度保护，直接写入")
         try:
             conn = sqlite3.connect(DB_PATH, timeout=10)
+            # raw_value 为 None 时直接写 NULL，不做 float() 转换
+            rv = None if raw_value is None else float(raw_value)
             conn.execute("""
                 INSERT OR REPLACE INTO pit_factor_observations
                 (factor_code, symbol, pub_date, obs_date, raw_value, source_confidence, source)
                 VALUES (?, ?, ?, ?, ?, ?, ?)
-            """, (factor_code, symbol, str(pub_date), str(obs_date), float(raw_value), source_confidence, source))
+            """, (factor_code, symbol, str(pub_date), str(obs_date), rv, source_confidence, source))
             conn.commit()
             conn.close()
-            print(f"[DB] 写入成功: {factor_code} = {raw_value}")
+            print(f"[DB] 豁免写入: {factor_code} = {raw_value}")
             return True
+        except Exception as e:
+            print(f"[DB] 豁免写入失败: {e}")
+            return False
+    return _save_with_retry(factor_code, symbol, pub_date, obs_date, raw_value, source_confidence, source)
+
+
+def _save_with_retry(factor_code, symbol, pub_date, obs_date, raw_value, source_confidence, source):
+    """
+    带区分错误类型的重试逻辑
+    - sqlite3.OperationalError("locked"): 重试3次
+    - sqlite3.OperationalError("not locked") 或其他 DatabaseError: 重试2次
+    - PermissionError / OSError(WinError 112/5): 不重试，直接返回 False
+    """
+    # 置信度保护查询
+    def _do_write():
+        conn = sqlite3.connect(DB_PATH, timeout=10)
+        existing = conn.execute("""
+            SELECT source_confidence FROM pit_factor_observations
+            WHERE factor_code=? AND symbol=? AND pub_date=? AND obs_date=?
+        """, (factor_code, symbol, str(pub_date), str(obs_date))).fetchone()
+        if existing is not None:
+            if float(existing[0]) >= float(source_confidence):
+                conn.close()
+                print(f"[DB] 跳过（已有更高置信度 {existing[0]:.1f} >= {source_confidence:.1f}）: {factor_code}")
+                return False
+        conn.execute("""
+            INSERT OR REPLACE INTO pit_factor_observations
+            (factor_code, symbol, pub_date, obs_date, raw_value, source_confidence, source)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (factor_code, symbol, str(pub_date), str(obs_date), float(raw_value), source_confidence, source))
+        conn.commit()
+        conn.close()
+        print(f"[DB] 写入成功: {factor_code} = {raw_value}")
+        return True
+
+    attempt = 0
+    max_retries_locked = 3
+    max_retries_other = 2
+
+    while True:
+        try:
+            result = _do_write()
+            return result
         except sqlite3.OperationalError as e:
-            if "locked" in str(e).lower() and attempt < 2:
-                print(f"[DB] 锁定，重试 {attempt+1}/3...")
-                time.sleep(2)
+            err_str = str(e).lower()
+            if "locked" in err_str:
+                # 已有逻辑：locked 最多重试3次
+                if attempt < max_retries_locked - 1:
+                    attempt += 1
+                    print(f"[DB] OperationalError(locked)，重试 {attempt}/{max_retries_locked}...")
+                    time.sleep(2)
+                    continue
+                else:
+                    print(f"[DB] OperationalError(locked) 重试耗尽: {e}")
+                    return False
             else:
-                raise
+                # "not locked" 或其他操作错误，重试2次
+                if attempt < max_retries_other - 1:
+                    attempt += 1
+                    print(f"[DB] OperationalError(not locked)，重试 {attempt}/{max_retries_other}...")
+                    time.sleep(2)
+                    continue
+                else:
+                    print(f"[DB] OperationalError(not locked) 重试耗尽: {e}")
+                    return False
+        except sqlite3.DatabaseError as e:
+            # DatabaseError（非 OperationalError 子类），重试2次
+            if attempt < max_retries_other - 1:
+                attempt += 1
+                print(f"[DB] DatabaseError，重试 {attempt}/{max_retries_other}...")
+                time.sleep(2)
+                continue
+            else:
+                print(f"[DB] DatabaseError 重试耗尽: {e}")
+                return False
+        except PermissionError as e:
+            print(f"[DB] PermissionError，不重试: {e}")
+            return False
+        except OSError as e:
+            # WinError 112 = 磁盘满，WinError 5 = 权限拒绝，均不重试
+            if e.winerror in (112, 5):
+                print(f"[DB] OSError(WinError {e.winerror})，不重试: {e}")
+                return False
+            # 其他 OSError 当作 DatabaseError 处理
+            if attempt < max_retries_other - 1:
+                attempt += 1
+                print(f"[DB] OSError，重试 {attempt}/{max_retries_other}...")
+                time.sleep(2)
+                continue
+            else:
+                print(f"[DB] OSError 重试耗尽: {e}")
+                return False
     return False
 
 

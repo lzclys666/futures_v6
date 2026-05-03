@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from config.paths import PROJECT_ROOT
 """
 Production Backtest System - Correct Statistics Calculation
 """
@@ -14,7 +15,7 @@ import math
 import random
 
 # Add project path
-project_dir = Path('D:/futures_v6')
+project_dir = PROJECT_ROOT
 if str(project_dir) not in sys.path:
     sys.path.insert(0, str(project_dir))
 
@@ -417,7 +418,7 @@ def run_production_test():
             backtester.results.append(result)
     
     # Generate report
-    backtester.generate_report("D:/futures_v6/production_report.json")
+    backtester.generate_report(str(PROJECT_ROOT / "production_report.json"))
     
     print("\n" + "="*70)
     print("Backtest Complete!")

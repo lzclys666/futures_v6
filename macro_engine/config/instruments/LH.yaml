@@ -1,5 +1,8 @@
 symbol: LH
 extends: _base
+name: 生猪
+name_en: LH
+sector: 农产品
 macro_lambda: 0.3
 weights:
   supply: 0.3

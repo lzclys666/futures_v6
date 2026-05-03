@@ -10,8 +10,13 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 
-sys.path.insert(0, 'D:/futures_v6/macro_engine')
-os.chdir('D:/futures_v6/macro_engine')
+# 动态计算项目根目录
+_PROJECT_ROOT = Path(__file__).resolve().parent
+while not (_PROJECT_ROOT / "macro_engine").exists() and _PROJECT_ROOT != _PROJECT_ROOT.parent:
+    _PROJECT_ROOT = _PROJECT_ROOT.parent
+
+sys.path.insert(0, str(_PROJECT_ROOT / "macro_engine"))
+os.chdir(str(_PROJECT_ROOT / "macro_engine"))
 
 try:
     import akshare as ak
@@ -20,8 +25,8 @@ except ImportError:
     AKSHARE_OK = False
     print("[WARN] AKShare not installed")
 
-DB_PATH = 'D:/futures_v6/macro_engine/pit_data.db'
-SHARED_DIR = Path('D:/futures_v6/macro_engine/data/crawlers/_shared/exchange')
+DB_PATH = str(_PROJECT_ROOT / "macro_engine" / "pit_data.db")
+SHARED_DIR = _PROJECT_ROOT / "macro_engine" / "data" / "crawlers" / "_shared" / "exchange"
 SHARED_DIR.mkdir(parents=True, exist_ok=True)
 
 def get_db_conn():
@@ -341,16 +346,15 @@ def collect_slv_etf():
     
     # 尝试从iShares官网获取
     try:
-        import requests
+        from common.web_utils import fetch_json
         url = "https://www.ishares.com/us/2515485436/1467261812594.ajax?tab=performance&fileType=json&url=1436932140244.ajax"
-        headers = {'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json'}
-        r = requests.get(url, headers=headers, timeout=15)
-        if r.status_code == 200:
-            data = r.json()
+        headers = {'Accept': 'application/json'}
+        data, err = fetch_json(url, headers=headers, timeout=15)
+        if not err and data:
             # 解析SLV持仓数据...
             log("SLV ETF数据获取成功(待解析)", "OK")
         else:
-            log(f"SLV ETF请求失败: status={r.status_code}", "WARN")
+            log(f"SLV ETF请求失败: {err}", "WARN")
     except Exception as e:
         log(f"SLV ETF采集失败: {e}", "WARN")
     

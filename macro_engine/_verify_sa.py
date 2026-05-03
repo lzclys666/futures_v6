@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 import os
 
 scripts = [
@@ -10,7 +11,7 @@ scripts = [
 ]
 
 for name in scripts:
-    path = f'D:/futures_v6/macro_engine/crawlers/SA/{name}'
+    path = f'str(MACRO_ENGINE)/crawlers/SA/{name}'
     with open(path, encoding='utf-8') as f:
         content = f.read()
     has_s4 = 'save_l4_fallback(' in content

@@ -1,5 +1,8 @@
 symbol: FU
 extends: _base
+name: 燃料油
+name_en: FU
+sector: 能化
 macro_lambda: 0.55
 weights:
   supply: 0.25

@@ -1,17 +1,23 @@
-﻿---
-factor_code: "JM_DEMAND_COKING_RATE"
-factor_name: "吨焦利润"
-econ_category: "COST"
-logic_category: "QTY"
+factor_code: JM_DEMAND_COKING_RATE
+factor_name: 吨焦利润
+econ_category: COST
+logic_category: QTY
 direction: 1
-frequency: "weekly"
-norm_method: "zscore"
-detrend_method: "none"
+frequency: weekly
+norm_method: zscore
+detrend_method: none
 norm_window: 12
 base_weight: 0.06
 max_weight: 0.08
 is_active: false
 dependencies:
-  - "Mysteel(年费)/黑色>煤焦>利润监测"
-  - "汾渭能源(年费)/煤焦>利润"
-description: "焦化利润高刺激生产增加焦煤需求"
+- Mysteel(年费)/黑色>煤焦>利润监测
+- 汾渭能源(年费)/煤焦>利润
+description: 焦化利润高刺激生产增加焦煤需求
+category: paid_data
+name: 吨焦利润
+source_confidence: 0.7
+data_source: Mysteel(年费)
+expected_range:
+- -100000.0
+- 100000.0

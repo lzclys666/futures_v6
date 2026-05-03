@@ -1,7 +1,6 @@
-# RU_FUT_OI.yaml
 factor_code: RU_FUT_OI
 symbol: RU
-category: position
+category: free_data
 name: RU期货持仓量
 description: RU橡胶期货主力合约总持仓量
 frequency: daily
@@ -11,5 +10,10 @@ confidence: 3
 source: AKShare futures_main_sina
 calculation: null
 tags:
-  - position
-  - RU
+- position
+- RU
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

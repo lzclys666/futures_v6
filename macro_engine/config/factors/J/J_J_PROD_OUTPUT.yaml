@@ -1,9 +1,6 @@
-# J_J_PROD_OUTPUT.yaml
-# 焦炭产量
-
 factor_code: J_J_PROD_OUTPUT
 symbol: J
-category: supply
+category: free_data
 name: 焦炭产量
 description: 焦炭产量
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - supply
-  - J
+- supply
+- J
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

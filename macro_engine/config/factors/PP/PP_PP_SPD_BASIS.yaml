@@ -1,9 +1,6 @@
-# PP_PP_SPD_BASIS.yaml
-# 聚丙烯期现基差
-
 factor_code: PP_PP_SPD_BASIS
 symbol: PP
-category: spread
+category: derived
 name: 聚丙烯期现基差
 description: 聚丙烯期现基差
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - spread
-  - PP
+- spread
+- PP
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -100000.0
+- 100000.0

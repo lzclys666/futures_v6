@@ -3,6 +3,8 @@
 集成 vnpy_ctabacktester，加载宏观信号 CSV 进行策略回测
 """
 
+from config.paths import PROJECT_ROOT
+from config.paths import MACRO_ENGINE
 import os
 import sys
 import csv
@@ -74,7 +76,7 @@ class MacroBacktestEngine:
         self.end = datetime.strptime(end, "%Y-%m-%d")
         
         # Load signals
-        self.signal_loader = MacroSignalLoader("D:/futures_v6/macro_engine/output")
+        self.signal_loader = MacroSignalLoader("str(MACRO_ENGINE)/output")
         
         print(f"[Backtest] {symbol} | {start} ~ {end}")
     
@@ -226,7 +228,7 @@ def main():
     engine.print_report(results)
     
     # Save results
-    output_file = Path(f"D:/futures_v6/backtest_results_{args.symbol}_{args.start}_{args.end}.json")
+    output_file = PROJECT_ROOT / f"backtest_results_{args.symbol}_{args.start}_{args.end}.json"
     output_file.parent.mkdir(parents=True, exist_ok=True)
     with open(output_file, 'w', encoding='utf-8') as f:
         # Remove trades from JSON (too large)

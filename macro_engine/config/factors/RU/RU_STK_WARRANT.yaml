@@ -1,7 +1,6 @@
-# RU_STK_WARRANT.yaml
 factor_code: RU_STK_WARRANT
 symbol: RU
-category: inventory
+category: free_data
 name: RU橡胶仓单
 description: RU橡胶SHFE注册仓单量
 frequency: daily
@@ -11,6 +10,11 @@ confidence: 3
 source: SHFE官网
 calculation: null
 tags:
-  - inventory
-  - warrant
-  - RU
+- inventory
+- warrant
+- RU
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

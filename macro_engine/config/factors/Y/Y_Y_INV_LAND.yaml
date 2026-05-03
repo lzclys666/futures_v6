@@ -1,9 +1,6 @@
-# Y_Y_INV_LAND.yaml
-# 进口大豆港口库存
-
 factor_code: Y_Y_INV_LAND
 symbol: Y
-category: inventory
+category: free_data
 name: 进口大豆港口库存
 description: 进口大豆港口库存
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - inventory
-  - Y
+- inventory
+- Y
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

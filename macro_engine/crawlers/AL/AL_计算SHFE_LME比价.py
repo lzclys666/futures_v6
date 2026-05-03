@@ -20,7 +20,7 @@ sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value, DB_PATH
 
 import akshare as ak
-import requests
+from common.web_utils import fetch_url
 import datetime
 import sqlite3
 
@@ -33,14 +33,12 @@ FX_FACTOR_CODE = "AL_COST_USDCNY"
 def fetch_fx_rate():
     """获取实时美元人民币汇率（L2新浪）"""
     try:
-        resp = requests.get(
+        html, err = fetch_url(
             "http://hq.sinajs.cn/list=USDCNY",
-            headers={"User-Agent": "Mozilla/5.0"},
             timeout=10
         )
-        resp.encoding = "gbk"
-        if resp.status_code == 200 and '"' in resp.text:
-            val = resp.text.split('"')[1].split(",")[0]
+        if not err and '"' in html:
+            val = html.split('"')[1].split(",")[0]
             fx = float(val)
             if 6.0 < fx < 8.0:
                 return fx

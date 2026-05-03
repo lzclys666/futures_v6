@@ -11,9 +11,10 @@ from dataclasses import dataclass
 from typing import List, Dict
 import json
 import math
+from config.paths import PROJECT_ROOT
 
 # Add project path
-project_dir = Path('D:/futures_v6')
+project_dir = PROJECT_ROOT
 if str(project_dir) not in sys.path:
     sys.path.insert(0, str(project_dir))
 

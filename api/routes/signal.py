@@ -7,12 +7,21 @@ from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional, Dict, Any
 from datetime import date, datetime, timedelta
 from pathlib import Path
+from config.paths import OUTPUT
 import logging
 
 # PitDataService 暂未实现，移除导入
 # from core.data.pit_service import PitDataService
 
 router = APIRouter(prefix="/api/signal", tags=["signal"])
+
+
+# ==================== 统一响应辅助 ====================
+
+def _wrap(data=None, message: str = "success", code: int = 0):
+    """统一 API 响应格式：{code, message, data}"""
+    return {"code": code, "message": message, "data": data}
+
 
 # 懒加载 SignalBridge（避免启动时依赖）
 _signal_bridge = None
@@ -43,10 +52,10 @@ def get_signal_bridge():
                 vnpy_bridge = None
             
             if vnpy_bridge and hasattr(vnpy_bridge, 'event_engine'):
-                _signal_bridge = SignalBridge(vnpy_bridge.event_engine, "D:/futures_v6/macro_engine/output")
+                _signal_bridge = SignalBridge(vnpy_bridge.event_engine, str(OUTPUT))
             else:
                 # 无 event_engine 时使用 None（仅文件轮询）
-                _signal_bridge = SignalBridge(None, "D:/futures_v6/macro_engine/output")
+                _signal_bridge = SignalBridge(None, str(OUTPUT))
         except Exception as e:
             logging.getLogger("signal_api").warning(f"SignalBridge init failed: {e}")
     return _signal_bridge
@@ -123,7 +132,7 @@ def _parse_csv_signal(csv_path: Path) -> Optional[Dict[str, Any]]:
 
 def _scan_all_signals() -> Dict[str, Any]:
     """Scan directory for all symbols latest signal"""
-    output_dir = Path("D:/futures_v6/macro_engine/output")
+    output_dir = OUTPUT
     if not output_dir.exists():
         return {}
     
@@ -165,7 +174,8 @@ async def get_signal(symbol: str):
     响应:
     ```json
     {
-        "status": "success",
+        "code": 0,
+        "message": "success",
         "data": {
             "symbol": "RU",
             "date": "2026-04-27",
@@ -184,7 +194,7 @@ async def get_signal(symbol: str):
                     "icValue": 0.05
                 }
             ],
-            "source_file": "D:/futures_v6/macro_engine/output/RU_macro_daily_20260427.csv",
+            "source_file": str(OUTPUT / "RU_macro_daily_20260427.csv"),
             "updated_at": "2026-04-27T00:00:00+08:00"
         }
     }
@@ -196,12 +206,12 @@ async def get_signal(symbol: str):
         
         if signal is None:
             # 尝试直接读取 CSV 文件
-            csv_path = Path(f"D:/futures_v6/macro_engine/output/{symbol.upper()}_macro_daily_{date.today().strftime('%Y%m%d')}.csv")
+            csv_path = OUTPUT / f"{symbol.upper()}_macro_daily_{date.today().strftime('%Y%m%d')}.csv"
             if csv_path.exists():
                 signal = _parse_csv_signal(csv_path)
             else:
                 # 查找最新的 CSV 文件
-                output_dir = Path("D:/futures_v6/macro_engine/output")
+                output_dir = OUTPUT
                 if output_dir.exists():
                     csv_files = sorted(output_dir.glob(f"{symbol.upper()}_macro_daily_*.csv"), reverse=True)
                     if csv_files:
@@ -210,10 +220,7 @@ async def get_signal(symbol: str):
         if signal is None:
             raise HTTPException(status_code=404, detail=f"未找到品种 {symbol} 的信号数据")
             
-        return {
-            "status": "success",
-            "data": signal
-        }
+        return _wrap(signal)
         
     except HTTPException:
         raise
@@ -234,7 +241,8 @@ async def get_signal_direction(symbol: str):
     响应:
     ```json
     {
-        "status": "success",
+        "code": 0,
+        "message": "success",
         "data": {
             "symbol": "RU",
             "direction": "LONG",
@@ -252,10 +260,10 @@ async def get_signal_direction(symbol: str):
         
         # 如果缓存为空，尝试直接读取 CSV
         if direction is None:
-            csv_path = Path(f"D:/futures_v6/macro_engine/output/{symbol.upper()}_macro_daily_{date.today().strftime('%Y%m%d')}.csv")
+            csv_path = OUTPUT / f"{symbol.upper()}_macro_daily_{date.today().strftime('%Y%m%d')}.csv"
             if not csv_path.exists():
                 # 查找最新的 CSV 文件
-                output_dir = Path("D:/futures_v6/macro_engine/output")
+                output_dir = OUTPUT
                 if output_dir.exists():
                     csv_files = sorted(output_dir.glob(f"{symbol.upper()}_macro_daily_*.csv"), reverse=True)
                     if csv_files:
@@ -270,15 +278,12 @@ async def get_signal_direction(symbol: str):
         if direction is None:
             raise HTTPException(status_code=404, detail=f"未找到品种 {symbol} 的方向数据")
             
-        return {
-            "status": "success",
-            "data": {
+        return _wrap({
                 "symbol": symbol.upper(),
                 "direction": direction,
                 "score": score,
                 "timestamp": datetime.now().isoformat()
-            }
-        }
+            })
         
     except HTTPException:
         raise
@@ -304,7 +309,8 @@ async def get_signal_history(
     响应:
     ```json
     {
-        "status": "success",
+        "code": 0,
+        "message": "success",
         "data": {
             "symbol": "RU",
             "history": [
@@ -332,7 +338,7 @@ async def get_signal_history(
         if start_date is None:
             start_date = end_date - timedelta(days=30)
             
-        output_dir = Path("D:/futures_v6/macro_engine/output")
+        output_dir = OUTPUT
         history = []
         
         if output_dir.exists():
@@ -351,16 +357,13 @@ async def get_signal_history(
                         })
                 current_date -= timedelta(days=1)
                 
-        return {
-            "status": "success",
-            "data": {
+        return _wrap({
                 "symbol": symbol.upper(),
                 "history": history,
                 "count": len(history),
                 "start_date": start_date.isoformat(),
                 "end_date": end_date.isoformat()
-            }
-        }
+            })
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取历史信号错误: {str(e)}")
@@ -379,7 +382,8 @@ async def get_signal_factors(symbol: str):
     响应:
     ```json
     {
-        "status": "success",
+        "code": 0,
+        "message": "success",
         "data": {
             "symbol": "RU",
             "date": "2026-04-27",
@@ -406,10 +410,10 @@ async def get_signal_factors(symbol: str):
         
         if signal is None:
             # 尝试直接读取 CSV
-            csv_path = Path(f"D:/futures_v6/macro_engine/output/{symbol.upper()}_macro_daily_{date.today().strftime('%Y%m%d')}.csv")
+            csv_path = OUTPUT / f"{symbol.upper()}_macro_daily_{date.today().strftime('%Y%m%d')}.csv"
             if not csv_path.exists():
                 # 查找最新的 CSV 文件
-                output_dir = Path("D:/futures_v6/macro_engine/output")
+                output_dir = OUTPUT
                 if output_dir.exists():
                     csv_files = sorted(output_dir.glob(f"{symbol.upper()}_macro_daily_*.csv"), reverse=True)
                     if csv_files:
@@ -423,15 +427,12 @@ async def get_signal_factors(symbol: str):
             
         factors = signal.get("factors", [])
         
-        return {
-            "status": "success",
-            "data": {
+        return _wrap({
                 "symbol": symbol.upper(),
                 "date": signal.get("date", ""),
                 "factors": factors,
                 "factor_count": len(factors)
-            }
-        }
+            })
         
     except HTTPException:
         raise
@@ -452,7 +453,8 @@ async def get_all_latest_signals():
     响应:
     ```json
     {
-        "status": "success",
+        "code": 0,
+        "message": "success",
         "data": {
             "signals": [
                 {
@@ -500,14 +502,11 @@ async def get_all_latest_signals():
         # 按分数绝对值排序
         signals_list.sort(key=lambda x: abs(x["score"]), reverse=True)
         
-        return {
-            "status": "success",
-            "data": {
+        return _wrap({
                 "signals": signals_list,
                 "count": len(signals_list),
                 "timestamp": datetime.now().isoformat()
-            }
-        }
+            })
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取所有信号错误: {str(e)}")
@@ -526,7 +525,8 @@ async def get_signals_summary():
     响应:
     ```json
     {
-        "status": "success",
+        "code": 0,
+        "message": "success",
         "data": {
             "total_symbols": 10,
             "long_count": 3,
@@ -550,9 +550,7 @@ async def get_signals_summary():
             all_signals = bridge.get_all_signals()
         
         if not all_signals:
-            return {
-                "status": "success",
-                "data": {
+            return _wrap({
                     "total_symbols": 0,
                     "long_count": 0,
                     "short_count": 0,
@@ -561,15 +559,12 @@ async def get_signals_summary():
                     "max_score": 0.0,
                     "min_score": 0.0,
                     "timestamp": datetime.now().isoformat()
-                }
-            }
+                })
             
         scores = [s.get("score", 0.0) for s in all_signals.values()]
         directions = [s.get("direction", "NEUTRAL") for s in all_signals.values()]
         
-        return {
-            "status": "success",
-            "data": {
+        return _wrap({
                 "total_symbols": len(all_signals),
                 "long_count": directions.count("LONG"),
                 "short_count": directions.count("SHORT"),
@@ -578,8 +573,7 @@ async def get_signals_summary():
                 "max_score": max(scores) if scores else 0.0,
                 "min_score": min(scores) if scores else 0.0,
                 "timestamp": datetime.now().isoformat()
-            }
-        }
+            })
         
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取信号汇总错误: {str(e)}")

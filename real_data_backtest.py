@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from config.paths import DATA_DIR
+from config.paths import PROJECT_ROOT
 """
 Real Historical Data Backtest - Download and test with real market data
 """
@@ -10,7 +12,7 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 
 # Add project path
-project_dir = Path('D:/futures_v6')
+project_dir = PROJECT_ROOT
 if str(project_dir) not in sys.path:
     sys.path.insert(0, str(project_dir))
 
@@ -24,7 +26,7 @@ class HistoricalDataLoader:
     """历史数据加载器"""
     
     def __init__(self):
-        self.data_dir = Path('D:/futures_v6/data')
+        self.data_dir = DATA_DIR
         self.data_dir.mkdir(exist_ok=True)
     
     def generate_realistic_ohlc(self, symbol: str, start_date: datetime, 
@@ -152,7 +154,7 @@ class RealDataBacktest:
         print(f"Price range: {bars[0].close_price:.2f} -> {bars[-1].close_price:.2f}")
         
         # 保存数据
-        data_file = f"D:/futures_v6/data/{symbol}_1min.csv"
+        data_file = str(DATA_DIR / f"{symbol}_1min.csv")
         self.loader.save_to_csv(bars, data_file)
         
         # 运行回测
@@ -296,7 +298,7 @@ def run_real_data_test():
     
     # 保存汇总
     import json
-    with open('D:/futures_v6/real_data_results.json', 'w', encoding='utf-8') as f:
+    with open(str(PROJECT_ROOT / "real_data_results.json"), 'w', encoding='utf-8') as f:
         json.dump(all_results, f, ensure_ascii=False, indent=2)
     
     print("\n" + "="*70)

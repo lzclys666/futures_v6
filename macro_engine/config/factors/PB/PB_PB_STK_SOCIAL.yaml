@@ -1,9 +1,6 @@
-# PB_PB_STK_SOCIAL.yaml
-# 铅锭社会库存
-
 factor_code: PB_PB_STK_SOCIAL
 symbol: PB
-category: inventory
+category: free_data
 name: 铅锭社会库存
 description: 铅锭社会库存
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - inventory
-  - PB
+- inventory
+- PB
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

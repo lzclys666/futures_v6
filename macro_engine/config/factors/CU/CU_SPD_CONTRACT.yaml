@@ -1,8 +1,10 @@
 factor_code: CU_SPD_CONTRACT
-name: "浙铜近远月价差"
-category: spread
-description: "浙铜近远月价差"
+name: 浙铜近远月价差
+category: derived
+description: 浙铜近远月价差
 data_source: AKShare futures_spot_price
 source_confidence: 1.0
-expected_range: [-300-300]
-notes: "近月-远月结算价差"
+expected_range:
+- -300.0
+- 300.0
+notes: 近月-远月结算价差

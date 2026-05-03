@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+from config.paths import CRAWLERS
 """2年历史回填脚本 - 12个新品种 2023-01-01至今"""
 import sys, os, datetime
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-sys.path.insert(0, 'd:/futures_v6/macro_engine/crawlers/common')
+sys.path.insert(0, str(CRAWLERS / 'common'))
 from db_utils import save_to_db
 import akshare as ak
 import pandas as pd

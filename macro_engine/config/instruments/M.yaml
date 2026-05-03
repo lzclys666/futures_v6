@@ -1,5 +1,8 @@
 symbol: M
 extends: _base
+name: 豆粕
+name_en: M
+sector: 农产品
 macro_lambda: 0.3
 weights:
   supply: 0.3

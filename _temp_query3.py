@@ -1,9 +1,11 @@
+from config.paths import PIT_DB
+from config.paths import MACRO_ENGINE
 import sqlite3
 for db_path in [
-    'D:/futures_v6/macro_engine/data/pit_factors.db',
-    'D:/futures_v6/macro_engine/data/macro_factors.db',
-    'D:/futures_v6/macro_engine/data/futures_data.db',
-    'D:/futures_v6/pit_data.db',
+    'str(MACRO_ENGINE)/data/pit_factors.db',
+    'str(MACRO_ENGINE)/data/macro_factors.db',
+    'str(MACRO_ENGINE)/data/futures_data.db',
+    str(PIT_DB),
 ]:
     print(f"\n=== {db_path} ===")
     try:

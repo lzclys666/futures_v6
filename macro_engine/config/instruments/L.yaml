@@ -1,5 +1,8 @@
 symbol: L
 extends: _base
+name: 聚乙烯
+name_en: L
+sector: 能化
 macro_lambda: 0.5
 weights:
   supply: 0.25

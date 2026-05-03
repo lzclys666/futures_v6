@@ -1,9 +1,6 @@
-# TA_SPD_BASIS.yaml
-# TA基差（PTA现货-PTA期货主力）
-
 factor_code: TA_SPD_BASIS
 symbol: TA
-category: basis
+category: derived
 name: PTA基差
 description: PTA现货价减去TA主力合约收盘价，正值表示升水
 frequency: daily
@@ -13,6 +10,11 @@ confidence: 3
 source: AKShare futures_spot_price
 calculation: PTA_spot_price - TA_futures_dom_price
 tags:
-  - basis
-  - spot
-  - futures
+- basis
+- spot
+- futures
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -100000.0
+- 100000.0

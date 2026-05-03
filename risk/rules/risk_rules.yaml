@@ -1,0 +1,116 @@
+# =============================================================================
+# 风控规则统一配置 V6.1
+# 规范：
+#   Layer: 1 (PASS) / 2 (WARN) / 3 (BLOCK)
+#   Severity: PASS / WARN / BLOCK
+#   R10 宏观熔断阈值: -0.5
+# =============================================================================
+
+rules:
+  # ---------------------------------------------------------------------------
+  # Layer 1 - 市场系统性风险防御 (severity = PASS)
+  #   触发时：市场极端行情，需通过检查才能下单
+  # ---------------------------------------------------------------------------
+  - id: "R3"
+    name: "涨跌停限制"
+    layer: 1
+    threshold: 0.0
+    severity: "PASS"
+    enabled: true
+    description: "买入开仓价格不能超过涨停价，卖出开仓价格不能低于跌停价"
+
+  - id: "R5"
+    name: "波动率异常过滤"
+    layer: 1
+    threshold: 0.05
+    severity: "PASS"
+    enabled: true
+    description: "ATR/价格 > 阈值时过滤订单"
+
+  - id: "R6"
+    name: "流动性检查"
+    layer: 1
+    threshold: 1000
+    severity: "PASS"
+    enabled: true
+    description: "订单量/20日日均成交量 < 5%，低于阈值拒绝"
+
+  - id: "R8"
+    name: "交易时间检查"
+    layer: 1
+    threshold: 0.0
+    severity: "PASS"
+    enabled: true
+    description: "非交易时段禁止开仓，集合竞价期间禁止开仓"
+
+  - id: "R10"
+    name: "宏观熔断"
+    layer: 1
+    threshold: -0.5
+    severity: "PASS"
+    enabled: true
+    description: "宏观评分 < -0.5 禁止做多，> 0.7 禁止做空"
+
+  # ---------------------------------------------------------------------------
+  # Layer 2 - 账户级风险防御 (severity = WARN)
+  #   触发时：账户风险累积，给出警告或限制
+  # ---------------------------------------------------------------------------
+  - id: "R2"
+    name: "单日最大亏损限制"
+    layer: 2
+    threshold: 0.05
+    severity: "WARN"
+    enabled: true
+    description: "当日累计亏损超过账户权益的2.5%或5000元（取较大值）时禁止开仓"
+
+  - id: "R7"
+    name: "连续亏损暂停"
+    layer: 2
+    threshold: 5
+    severity: "WARN"
+    enabled: true
+    description: "连续亏损 >= 5次暂停交易，连续盈利 >= 3次恢复"
+
+  - id: "R11"
+    name: "处置效应监控"
+    layer: 2
+    threshold: 24
+    severity: "WARN"
+    enabled: true
+    description: "亏损持仓占比 >= 50% 且试图反向开仓时警告"
+
+  - id: "R12"
+    name: "撤单次数限制"
+    layer: 2
+    threshold: 10
+    severity: "WARN"
+    enabled: true
+    description: "日内撤单次数超过阈值限制新委托"
+
+  # ---------------------------------------------------------------------------
+  # Layer 3 - 交易执行风险防御 (severity = BLOCK)
+  #   触发时：直接拦截订单
+  # ---------------------------------------------------------------------------
+  - id: "R1"
+    name: "单品种持仓限制(动态)"
+    layer: 3
+    threshold: 0.30
+    severity: "BLOCK"
+    enabled: true
+    description: "基于20日波动率动态调整持仓上限：波动率<15%时30%，>35%时15%"
+
+  - id: "R4"
+    name: "总保证金上限(分时段)"
+    layer: 3
+    threshold: 0.70
+    severity: "BLOCK"
+    enabled: true
+    description: "交易时段保证金占用上限70%，收盘前15分钟60%"
+
+  - id: "R9"
+    name: "资金充足性检查"
+    layer: 3
+    threshold: 0.05
+    severity: "BLOCK"
+    enabled: true
+    description: "可用资金需 >= 冻结资金 + 预冻结 + 5%安全缓冲"

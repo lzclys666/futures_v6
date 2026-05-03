@@ -6,9 +6,14 @@ from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import Dict, List, Optional, Any
 from datetime import datetime
-from services.vnpy_bridge import bridge, VNpyBridge
+from services.vnpy_bridge import get_vnpy_bridge, VNpyBridge
 
 router = APIRouter(prefix="/api/vnpy", tags=["vnpy"])
+
+
+def _wrap(data=None, message: str = "success", code: int = 0):
+    """统一 API 响应格式：{code, message, data}"""
+    return {"code": code, "message": message, "data": data}
 
 
 # ==================== 数据模型 ====================
@@ -56,7 +61,7 @@ class OrderResponse(BaseModel):
 
 def get_bridge() -> VNpyBridge:
     """获取VNpyBridge实例"""
-    return bridge
+    return get_vnpy_bridge()
 
 
 def require_running(bridge: VNpyBridge = Depends(get_bridge)):
@@ -70,14 +75,14 @@ def require_running(bridge: VNpyBridge = Depends(get_bridge)):
 @router.get("/status")
 async def get_status(b: VNpyBridge = Depends(get_bridge)):
     """获取桥接状态"""
-    return b.get_status()
+    return _wrap(b.get_status())
 
 
 @router.post("/start")
 async def start_vnpy(b: VNpyBridge = Depends(get_bridge)):
     """启动VNpy引擎"""
     if b.start():
-        return {"status": "success", "message": "VNpy started"}
+        return _wrap(None, message="VNpy started")
     raise HTTPException(status_code=500, detail="Failed to start VNpy")
 
 
@@ -85,7 +90,7 @@ async def start_vnpy(b: VNpyBridge = Depends(get_bridge)):
 async def stop_vnpy(b: VNpyBridge = Depends(get_bridge)):
     """停止VNpy引擎"""
     if b.stop():
-        return {"status": "success", "message": "VNpy stopped"}
+        return _wrap(None, message="VNpy stopped")
     raise HTTPException(status_code=500, detail="Failed to stop VNpy")
 
 
@@ -94,11 +99,8 @@ async def stop_vnpy(b: VNpyBridge = Depends(get_bridge)):
 @router.get("/positions")
 async def get_positions(b: VNpyBridge = Depends(require_running)):
     """获取所有持仓"""
-    return {
-        "status": "success",
-        "data": b.get_positions(),
-        "count": len(b.get_positions())
-    }
+    positions = b.get_positions()
+    return _wrap({"items": positions, "count": len(positions)})
 
 
 @router.get("/positions/{symbol}")
@@ -107,7 +109,7 @@ async def get_position(symbol: str, b: VNpyBridge = Depends(require_running)):
     positions = b.get_positions()
     for pos in positions:
         if pos["symbol"] == symbol:
-            return {"status": "success", "data": pos}
+            return _wrap(pos)
     raise HTTPException(status_code=404, detail=f"Position not found: {symbol}")
 
 
@@ -118,7 +120,7 @@ async def get_account(b: VNpyBridge = Depends(require_running)):
     """获取账户信息"""
     account = b.get_account()
     if account:
-        return {"status": "success", "data": account}
+        return _wrap(account)
     raise HTTPException(status_code=404, detail="Account data not available")
 
 
@@ -145,9 +147,7 @@ async def get_account_risk(b: VNpyBridge = Depends(require_running)):
     # 可用资金比例
     available_ratio = (available / balance * 100) if balance > 0 else 0
 
-    return {
-        "status": "success",
-        "data": {
+    return _wrap({
             "balance": balance,
             "available": available,
             "margin": margin,
@@ -156,8 +156,7 @@ async def get_account_risk(b: VNpyBridge = Depends(require_running)):
             "total_pnl": round(total_pnl, 2),
             "positions_count": len(positions),
             "risk_level": "HIGH" if margin_ratio > 80 else "MEDIUM" if margin_ratio > 50 else "LOW"
-        }
-    }
+        })
 
 
 # ==================== 订单接口 ====================
@@ -165,11 +164,8 @@ async def get_account_risk(b: VNpyBridge = Depends(require_running)):
 @router.get("/orders")
 async def get_orders(b: VNpyBridge = Depends(require_running)):
     """获取所有订单"""
-    return {
-        "status": "success",
-        "data": b.get_orders(),
-        "count": len(b.get_orders())
-    }
+    orders = b.get_orders()
+    return _wrap({"items": orders, "count": len(orders)})
 
 
 @router.post("/place-order", response_model=OrderResponse)
@@ -219,12 +215,11 @@ async def place_order(order: OrderCreate, b: VNpyBridge = Depends(require_runnin
 async def cancel_order_endpoint(vt_orderid: str, b: VNpyBridge = Depends(require_running)):
     """撤销委托订单"""
     if b.cancel_order(vt_orderid):
-        return {
-            "status": "success",
+        return _wrap({
             "vt_orderid": vt_orderid,
             "message": "Cancel request sent",
             "timestamp": datetime.now().isoformat()
-        }
+        })
     raise HTTPException(status_code=500, detail="Failed to cancel order")
 
 
@@ -243,11 +238,8 @@ async def create_order_legacy(order: OrderCreate, b: VNpyBridge = Depends(requir
 @router.get("/trades")
 async def get_trades(b: VNpyBridge = Depends(require_running)):
     """获取所有成交"""
-    return {
-        "status": "success",
-        "data": b.get_trades(),
-        "count": len(b.trades)
-    }
+    trades = b.get_trades()
+    return _wrap({"items": trades, "count": len(b.trades)})
 
 
 # ==================== 策略接口 ====================
@@ -255,11 +247,8 @@ async def get_trades(b: VNpyBridge = Depends(require_running)):
 @router.get("/strategies")
 async def get_strategies(b: VNpyBridge = Depends(require_running)):
     """获取所有策略"""
-    return {
-        "status": "success",
-        "data": b.get_strategies(),
-        "count": len(b.strategies)
-    }
+    strategies = b.get_strategies()
+    return _wrap({"items": strategies, "count": len(b.strategies)})
 
 
 @router.post("/strategies")
@@ -271,10 +260,7 @@ async def add_strategy(strategy: StrategyCreate, b: VNpyBridge = Depends(require
         vt_symbol=strategy.vt_symbol,
         setting=strategy.setting
     ):
-        return {
-            "status": "success",
-            "message": f"Strategy {strategy.strategy_name} added"
-        }
+        return _wrap(None, message=f"Strategy {strategy.strategy_name} added")
     raise HTTPException(status_code=500, detail="Failed to add strategy")
 
 
@@ -282,7 +268,7 @@ async def add_strategy(strategy: StrategyCreate, b: VNpyBridge = Depends(require
 async def init_strategy(name: str, b: VNpyBridge = Depends(require_running)):
     """初始化策略"""
     if b.init_strategy(name):
-        return {"status": "success", "message": f"Strategy {name} initialized"}
+        return _wrap(None, message=f"Strategy {name} initialized")
     raise HTTPException(status_code=500, detail="Failed to initialize strategy")
 
 
@@ -290,7 +276,7 @@ async def init_strategy(name: str, b: VNpyBridge = Depends(require_running)):
 async def start_strategy(name: str, b: VNpyBridge = Depends(require_running)):
     """启动策略"""
     if b.start_strategy(name):
-        return {"status": "success", "message": f"Strategy {name} started"}
+        return _wrap(None, message=f"Strategy {name} started")
     raise HTTPException(status_code=500, detail="Failed to start strategy")
 
 
@@ -298,7 +284,7 @@ async def start_strategy(name: str, b: VNpyBridge = Depends(require_running)):
 async def stop_strategy(name: str, b: VNpyBridge = Depends(require_running)):
     """停止策略"""
     if b.stop_strategy(name):
-        return {"status": "success", "message": f"Strategy {name} stopped"}
+        return _wrap(None, message=f"Strategy {name} stopped")
     raise HTTPException(status_code=500, detail="Failed to stop strategy")
 
 
@@ -306,7 +292,7 @@ async def stop_strategy(name: str, b: VNpyBridge = Depends(require_running)):
 async def edit_strategy(name: str, edit: StrategyEdit, b: VNpyBridge = Depends(require_running)):
     """编辑策略参数"""
     if b.edit_strategy(name, edit.setting):
-        return {"status": "success", "message": f"Strategy {name} updated"}
+        return _wrap(None, message=f"Strategy {name} updated")
     raise HTTPException(status_code=500, detail="Failed to edit strategy")
 
 
@@ -314,7 +300,7 @@ async def edit_strategy(name: str, edit: StrategyEdit, b: VNpyBridge = Depends(r
 async def remove_strategy(name: str, b: VNpyBridge = Depends(require_running)):
     """移除策略"""
     if b.remove_strategy(name):
-        return {"status": "success", "message": f"Strategy {name} removed"}
+        return _wrap(None, message=f"Strategy {name} removed")
     raise HTTPException(status_code=500, detail="Failed to remove strategy")
 
 
@@ -340,20 +326,13 @@ def _get_risk_engine():
 @router.get("/risk/status")
 async def get_risk_status(b: VNpyBridge = Depends(require_running)):
     """获取风控状态"""
-    return {
-        "status": "success",
-        "data": b.get_risk_status()
-    }
+    return _wrap(b.get_risk_status())
 
 
 @router.get("/risk/events")
 async def get_risk_events(limit: int = 50, b: VNpyBridge = Depends(require_running)):
     """获取风控事件历史"""
-    return {
-        "status": "success",
-        "data": b.get_risk_events(limit),
-        "count": len(b.risk_events)
-    }
+    return _wrap({"items": b.get_risk_events(limit), "count": len(b.risk_events)})
 
 
 @router.get("/risk/rules")
@@ -402,7 +381,7 @@ async def get_risk_rules():
         for rule_def in rules_def:
             rule_def["enabled"] = True
             rule_def["status"] = "normal"
-    return {"status": "success", "data": rules_def}
+    return _wrap(rules_def)
 
 
 @router.put("/risk/profile")
@@ -414,21 +393,16 @@ async def set_risk_profile(profile: str = 'moderate'):
     _risk_engine_profile = profile
     _risk_engine = None  # 重建
     engine = _get_risk_engine()
-    return {
-        "status": "success",
-        "message": f"风险画像切换为: {profile}",
+    return _wrap({
         "profile": profile,
         "rules": [r.rule_id for r in engine.rules] if engine else []
-    }
+    }, message=f"风险画像切换为: {profile}")
 
 
 @router.get("/risk/profile")
 async def get_risk_profile():
     """获取当前风险画像"""
-    return {
-        "status": "success",
-        "profile": _risk_engine_profile
-    }
+    return _wrap({"profile": _risk_engine_profile})
 
 
 # ==================== CTP接口 ====================
@@ -447,7 +421,7 @@ async def connect_ctp(config: CtpConnect, b: VNpyBridge = Depends(require_runnin
     }
 
     if b.connect_ctp(setting):
-        return {"status": "success", "message": "CTP connection initiated"}
+        return _wrap(None, message="CTP connection initiated")
     raise HTTPException(status_code=500, detail="Failed to connect CTP")
 
 
@@ -455,7 +429,7 @@ async def connect_ctp(config: CtpConnect, b: VNpyBridge = Depends(require_runnin
 async def disconnect_ctp(b: VNpyBridge = Depends(require_running)):
     """断开CTP"""
     b.disconnect_ctp()
-    return {"status": "success", "message": "CTP disconnected"}
+    return _wrap(None, message="CTP disconnected")
 
 
 # ==================== 健康检查 ====================
@@ -463,8 +437,8 @@ async def disconnect_ctp(b: VNpyBridge = Depends(require_running)):
 @router.get("/health")
 async def health_check(b: VNpyBridge = Depends(get_bridge)):
     """健康检查"""
-    return {
+    return _wrap({
         "status": "healthy",
         "vnpy_status": b.status.value,
         "timestamp": datetime.now().isoformat()
-    }
+    })

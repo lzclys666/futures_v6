@@ -1,8 +1,9 @@
+from config.paths import MACRO_ENGINE
 import sys
 print('sys.path[0]:', sys.path[0])
 print('sys.path[1]:', sys.path[1] if len(sys.path) > 1 else 'N/A')
 
-sys.path.insert(0, 'D:/futures_v6/macro_engine')
+sys.path.insert(0, 'str(MACRO_ENGINE)')
 print()
 print('After inserting macro_engine:')
 print('sys.path[0]:', sys.path[0])

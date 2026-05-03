@@ -1,5 +1,8 @@
 symbol: EG
 extends: _base
+name: 乙二醇
+name_en: EG
+sector: 能化
 macro_lambda: 0.5
 weights:
   supply: 0.25

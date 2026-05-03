@@ -15,16 +15,15 @@ import type { RiskRuleStatus, RiskLayerKey } from '../../types/risk'
 import './RiskControlPanel.css'
 
 const LAYER_CONFIG: Record<RiskLayerKey, { label: string; color: string; desc: string }> = {
-  layer1: { label: 'Layer 1 · 基础风控', color: '#1890ff', desc: '宏观熔断 · 波动率 · 流动性' },
-  layer2: { label: 'Layer 2 · 进阶风控', color: '#722ed1', desc: '亏损限制 · 连续亏损 · 处置效应' },
-  layer3: { label: 'Layer 3 · 仓位风控', color: '#13c2c2', desc: '持仓 · 保证金 · 集中度' },
+  1: { label: 'Layer 1 · 基础风控', color: '#1890ff', desc: '宏观熔断 · 波动率 · 流动性' },
+  2: { label: 'Layer 2 · 进阶风控', color: '#722ed1', desc: '亏损限制 · 连续亏损 · 处置效应' },
+  3: { label: 'Layer 3 · 仓位风控', color: '#13c2c2', desc: '持仓 · 保证金 · 集中度' },
 }
 
 const SEVERITY_TAG: Record<string, { color: string; text: string }> = {
   PASS: { color: 'success', text: '通过' },
-  LOW: { color: 'processing', text: '低风险' },
-  MEDIUM: { color: 'warning', text: '中风险' },
-  HIGH: { color: 'error', text: '高风险' },
+  WARN: { color: 'warning', text: '警告' },
+  BLOCK: { color: 'error', text: '阻断' },
 }
 
 const RiskControlPanel: React.FC = () => {
@@ -47,7 +46,7 @@ const RiskControlPanel: React.FC = () => {
   const renderLayerPanel = (layer: RiskLayerKey) => {
     const cfg = LAYER_CONFIG[layer]
     const rules = getLayerRules(layer)
-    const blockedCount = rules.filter((r) => r.severity === 'HIGH').length
+    const blockedCount = rules.filter((r) => r.severity === 'BLOCK').length
 
     return (
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -128,8 +127,8 @@ const RiskControlPanel: React.FC = () => {
         <Empty description="风控数据未加载" />
       ) : (
         <div className="rcp-layers" style={{ marginTop: 16 }}>
-          <Collapse defaultActiveKey={['layer1', 'layer2', 'layer3']} ghost>
-            {(['layer1', 'layer2', 'layer3'] as RiskLayerKey[]).map((layer) => (
+          <Collapse defaultActiveKey={[1, 2, 3]} ghost>
+            {([1, 2, 3] as RiskLayerKey[]).map((layer) => (
               <Collapse.Panel header={renderLayerPanel(layer)} key={layer}>
                 {getLayerRules(layer).map((rule) => (
                   <div

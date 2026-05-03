@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE, PROJECT_ROOT
 """
 SignalBridge Integration Test
 Verify macro signal flow from CSV -> SignalBridge -> RiskEngine
 """
 
 import sys
-sys.path.insert(0, 'D:/futures_v6')
+sys.path.insert(0, str(PROJECT_ROOT))
 
 from services.signal_bridge import SignalBridge, EVENT_MACRO_SIGNAL
 from services.macro_risk_app import RiskEngine, get_symbol_config
@@ -44,7 +45,7 @@ def test_signal_bridge_integration():
     main_engine = MagicMock()
     
     # 3. Create SignalBridge
-    csv_dir = "D:/futures_v6/macro_engine/output"
+    csv_dir = "str(MACRO_ENGINE)/output"
     signal_bridge = SignalBridge(event_engine, csv_dir=csv_dir)
     
     # Manually set signals for testing

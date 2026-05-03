@@ -1,17 +1,23 @@
-# config/factors/AG/AG_INV_COMEX_SILVER.yaml
-factor_code: "AG_INV_COMEX_SILVER"
-factor_name: "COMEX白银库存"
+factor_code: AG_INV_COMEX_SILVER
+factor_name: COMEX白银库存
 template: null
-econ_category: "INV"
-logic_category: "STK"
-direction: -1           # 库存增加→供给宽松→利空
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+econ_category: INV
+logic_category: STK
+direction: -1
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 252
 base_weight: 0.08
 max_weight: 0.12
 is_active: true
 dependencies:
-  - "Web/COMEX silver inventory"
-description: "COMEX白银库存，反映海外白银现货市场供需状况"
+- Web/COMEX silver inventory
+description: COMEX白银库存，反映海外白银现货市场供需状况
+category: free_data
+name: COMEX白银库存
+source_confidence: 0.85
+data_source: Web
+expected_range:
+- -100000.0
+- 100000.0

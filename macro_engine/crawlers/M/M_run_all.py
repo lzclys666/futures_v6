@@ -17,6 +17,10 @@ SCRIPTS = [
     "M_抓取库存.py",
     "M_抓取仓单.py",
     "M_计算近远月价差.py",
+    "M_压榨利润.py",
+    "M_油厂开机率.py",
+    "M_油厂库存.py",
+    "M_大豆到港量.py",
 ]
 
 def run_script(name):

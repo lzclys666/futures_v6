@@ -1,18 +1,24 @@
-# config/factors/AG/AG_SPD_SHFE_COMEX.yaml
-factor_code: "AG_SPD_SHFE_COMEX"
-factor_name: "沪银-COMEX银比价"
+factor_code: AG_SPD_SHFE_COMEX
+factor_name: 沪银-COMEX银比价
 template: null
-econ_category: "SPD"
-logic_category: "ARB"
-direction: 1            # 比价>1→国内溢价→利多国内价格（套利资金流入）
-frequency: "daily"
-norm_method: "zscore"
-detrend_method: "none"
+econ_category: SPD
+logic_category: ARB
+direction: 1
+frequency: daily
+norm_method: zscore
+detrend_method: none
 norm_window: 252
 base_weight: 0.06
-max_weight: 0.10
+max_weight: 0.1
 is_active: true
 dependencies:
-  - "AKShare/futures_zh_spot"
-  - "AKShare/futures_investing_base"
-description: "沪银价格/COMEX银价(经汇率换算同单位)，反映内外盘价差"
+- AKShare/futures_zh_spot
+- AKShare/futures_investing_base
+description: 沪银价格/COMEX银价(经汇率换算同单位)，反映内外盘价差
+category: derived
+name: 沪银-COMEX银比价
+source_confidence: 0.75
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

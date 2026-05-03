@@ -26,8 +26,8 @@ interface SimResult {
 const RULE_TEMPLATES: Array<{ ruleId: string; name: string; unit: string; defaultThreshold: number }> = [
   { ruleId: 'R1_SINGLE_SYMBOL', name: '单品种仓位上限', unit: '%', defaultThreshold: 30 },
   { ruleId: 'R2_DAILY_LOSS', name: '日内最大亏损', unit: '元', defaultThreshold: 50000 },
-  { ruleId: 'R3_TOTAL_POSITION', name: '总仓位上限', unit: '%', defaultThreshold: 80 },
-  { ruleId: 'R4_MARGIN_RATIO', name: '保证金比例上限', unit: '%', defaultThreshold: 30 },
+  { ruleId: 'R3_PRICE_LIMIT', name: '总仓位上限', unit: '%', defaultThreshold: 80 },
+  { ruleId: 'R4_TOTAL_MARGIN', name: '保证金比例上限', unit: '%', defaultThreshold: 30 },
   { ruleId: 'R5_VOLATILITY', name: '波动率阈值', unit: '%', defaultThreshold: 5 },
   { ruleId: 'R6_LEVERAGE', name: '杠杆倍数上限', unit: 'x', defaultThreshold: 5 },
   { ruleId: 'R7_CORRELATION', name: '品种相关性上限', unit: '', defaultThreshold: 0.8 },
@@ -72,12 +72,12 @@ const RuleSimulatorPage: React.FC = () => {
           triggered = currentValue > 50000
           message = triggered ? `日内亏损 ¥${currentValue.toLocaleString()} 触发熔断` : `日内亏损在容忍范围内`
           break
-        case 'R3_TOTAL_POSITION':
+        case 'R3_PRICE_LIMIT':
           currentValue = (positionParams.totalMargin / positionParams.totalCapital) * 100
           triggered = currentValue > 80
           message = triggered ? `总仓位 ${currentValue.toFixed(1)}% 超过上限 80%` : `总仓位 ${currentValue.toFixed(1)}% 正常`
           break
-        case 'R4_MARGIN_RATIO':
+        case 'R4_TOTAL_MARGIN':
           currentValue = (positionParams.totalMargin / positionParams.totalCapital) * 100
           triggered = currentValue > 30
           message = triggered ? `保证金比例 ${currentValue.toFixed(1)}% 超过上限 30%` : `保证金比例正常`

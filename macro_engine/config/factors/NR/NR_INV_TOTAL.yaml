@@ -1,9 +1,6 @@
-# NR_INV_TOTAL.yaml
-# NR橡胶库存代理
-
 factor_code: NR_INV_TOTAL
 symbol: NR
-category: inventory
+category: free_data
 name: NR橡胶库存代理
 description: NR橡胶库存/持仓量代理指标，反映市场库存压力
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 2
 source: AKShare futures_main_sina
 calculation: NR期货持仓量作为库存代理
 tags:
-  - inventory
-  - NR
+- inventory
+- NR
+source_confidence: 2
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

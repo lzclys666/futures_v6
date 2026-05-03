@@ -1,5 +1,8 @@
 symbol: BU
 extends: _base
+name: 沥青
+name_en: BU
+sector: 能化
 macro_lambda: 0.55
 weights:
   supply: 0.25

@@ -1,5 +1,8 @@
 symbol: Y
 extends: _base
+name: 豆油
+name_en: Y
+sector: 农产品
 macro_lambda: 0.35
 weights:
   supply: 0.3

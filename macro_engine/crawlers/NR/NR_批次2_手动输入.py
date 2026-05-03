@@ -83,15 +83,15 @@ FACTORS = [
 def try_free_fx():
     """L1: 新浪财经免费获取 USDCNY"""
     try:
-        import requests
-        r = requests.get(
+        from common.web_utils import fetch_url
+        html, err = fetch_url(
             "https://hq.sinajs.cn/list=fx_susdcny",
-            headers={"Referer": "https://finance.sina.com.cn",
-                     "User-Agent": "Mozilla/5.0"},
+            headers={"Referer": "https://finance.sina.com.cn"},
             timeout=5
         )
-        r.encoding = "gbk"
-        m = re.search(r'"([^"]+)"', r.text)
+        if err:
+            return None
+        m = re.search(r'"([^"]+)"', html)
         if m:
             parts = m.group(1).split(',')
             if len(parts) > 0:

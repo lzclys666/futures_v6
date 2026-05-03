@@ -1,17 +1,19 @@
-# PB_PB_STK_BATTERY_RATE.yaml
-# 铅酸电池用铅占比
-
 factor_code: PB_PB_STK_BATTERY_RATE
 symbol: PB
-category: inventory
+category: free_data
 name: 铅酸电池用铅占比
 description: 铅酸电池用铅占比
 frequency: daily
-unit: "%"
+unit: '%'
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - inventory
-  - PB
+- inventory
+- PB
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

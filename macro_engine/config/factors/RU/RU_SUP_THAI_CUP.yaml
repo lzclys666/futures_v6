@@ -1,18 +1,23 @@
-# config/factors/RU_SUP_THAI_CUP.yaml
-factor_code: "RU_SUP_THAI_CUP"
-factor_name: "泰国杯胶价格"
-template: null  # 不使用模板，直接使用原始值
-econ_category: "SUP"
-logic_category: "STK"
-direction: -1          # 成本上升→利空（对期货价格而言，原料越贵，生产成本越高，但短期可能利多，这里按供需逻辑：原料贵→供给可能减少→利多。根据文档，原料价格高位是成本支撑，利多胶价。建议修正为 +1）
-direction: 1           # 修正：原料价格高位利多
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+factor_code: RU_SUP_THAI_CUP
+factor_name: 泰国杯胶价格
+template: null
+econ_category: SUP
+logic_category: STK
+direction: 1
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 756
-base_weight: 0.10
+base_weight: 0.1
 max_weight: 0.25
 is_active: true
 dependencies:
-  - "AKShare/spot_price"
-description: "泰国杯胶收购价格（泰铢/公斤），反映上游原料成本"
+- AKShare/spot_price
+description: 泰国杯胶收购价格（泰铢/公斤），反映上游原料成本
+category: free_data
+name: 泰国杯胶价格
+source_confidence: 0.85
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

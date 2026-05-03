@@ -1,16 +1,23 @@
-factor_code: "M_WEATHER_ENSO"
-factor_name: "ENSO指数"
+factor_code: M_WEATHER_ENSO
+factor_name: ENSO指数
 template: null
-econ_category: "SUP"
-logic_category: "WTH"
+econ_category: SUP
+logic_category: WTH
 direction: 1
-frequency: "weekly"
-norm_method: "mad"
-detrend_method: "none"
+frequency: weekly
+norm_method: mad
+detrend_method: none
 norm_window: 156
-base_weight: 0.10
-max_weight: 0.20
+base_weight: 0.1
+max_weight: 0.2
 is_active: true
 dependencies:
-  - "NOAA/ENSO_report"
-description: "厄尔尼诺/拉尼娜指数，正值=厄尔尼诺，影响南美大豆产量"
+- NOAA/ENSO_report
+description: 厄尔尼诺/拉尼娜指数，正值=厄尔尼诺，影响南美大豆产量
+category: free_data
+name: ENSO指数
+source_confidence: 0.85
+data_source: NOAA
+expected_range:
+- -100000.0
+- 100000.0

@@ -28,7 +28,7 @@ def fetch_concentration():
     # L1: AKShare 上期所持仓排名
     try:
         print("[L1] AKShare get_shfe_rank_table...")
-        df = ak.get_shfe_rank_table()
+        df = ak.get_shfe_rank_table(date=obs_date)
         if df is not None and len(df) > 0:
             rb_df = df[df['variety'] == 'RB']
             if len(rb_df) > 0:

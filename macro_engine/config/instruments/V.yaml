@@ -1,5 +1,8 @@
 symbol: V
 extends: _base
+name: PVC
+name_en: V
+sector: 能化
 macro_lambda: 0.5
 weights:
   supply: 0.25

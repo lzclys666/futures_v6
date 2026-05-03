@@ -1,10 +1,11 @@
 # scripts/scheduler.py
 import schedule
 import time
+import os
 from datetime import date
 from core.data.collector import FuturesDataCollector
 
-TUSHARE_TOKEN = "d7b74b288b4b71ffc603950f62b236b62d79f07af2da26ae87ab225d"
+TUSHARE_TOKEN = os.getenv("TUSHARE_TOKEN", "PLEASE_SET_ENV")
 # 多品种支持：可配置化扩展
 SYMBOLS = ["RU", "AU"]  # 支持 RU 橡胶 + AU 黄金双品种
 

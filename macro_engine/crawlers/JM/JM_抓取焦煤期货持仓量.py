@@ -20,6 +20,7 @@ sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value, DB_PATH
 
 import akshare as ak
+from common.web_utils import fetch_url
 
 FACTOR_CODE = "JM_POS_OI"
 SYMBOL = "JM"
@@ -63,13 +64,10 @@ def fetch_oi():
     # L3: 新浪实时API
     try:
         print("[L3] 新浪实时API...")
-        import requests
         url = "http://hq.sinajs.cn/list=nf_JM0"
-        headers = {'User-Agent': 'Mozilla/5.0'}
-        resp = requests.get(url, headers=headers, timeout=10)
-        resp.encoding = 'gbk'
-        if resp.status_code == 200 and resp.text:
-            data = resp.text.split('"')[1].split(',') if '"' in resp.text else []
+        html, err = fetch_url(url, timeout=10)
+        if not err and html:
+            data = html.split('"')[1].split(',') if '"' in html else []
             if len(data) >= 13:
                 val = float(data[11])
                 if 0 <= val <= 1000000:

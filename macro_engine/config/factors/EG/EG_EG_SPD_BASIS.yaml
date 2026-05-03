@@ -1,9 +1,6 @@
-# EG_EG_SPD_BASIS.yaml
-# 乙二醇期现基差
-
 factor_code: EG_EG_SPD_BASIS
 symbol: EG
-category: spread
+category: derived
 name: 乙二醇期现基差
 description: 乙二醇期现基差
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - spread
-  - EG
+- spread
+- EG
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -100000.0
+- 100000.0

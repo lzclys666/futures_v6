@@ -1,17 +1,19 @@
-# J_J_STK_COKE_RATE.yaml
-# 焦化企业开工率
-
 factor_code: J_J_STK_COKE_RATE
 symbol: J
-category: operation
+category: derived
 name: 焦化企业开工率
 description: 焦化企业开工率
 frequency: daily
-unit: "%"
+unit: '%'
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - operation
-  - J
+- operation
+- J
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -100000.0
+- 100000.0

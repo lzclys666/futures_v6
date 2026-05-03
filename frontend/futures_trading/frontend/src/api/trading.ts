@@ -4,13 +4,13 @@
  */
 
 import { createClient } from './client'
-import type { PortfolioData, RiskStatusData } from '../types/macro'
+import type { PortfolioData } from '../types/macro'
 import type { PositionItem } from '../types/macro'
-import { validateRiskStatusData } from '../utils/tradingValidators'
+import { fetchRiskStatus } from './risk'
 
-const USE_MOCK = false // 后端 /api/trading/* 就绪后改�?false
+const USE_MOCK = false // 后端 /api/trading/* 就绪后改为 false
 
-// ---------- Mock 数据（对�?types/macro.ts �?snake_case 字段�?----------
+// ---------- Mock 数据（对应 types/macro.ts 的 snake_case 字段） ----------
 
 const MOCK_PORTFOLIO: PortfolioData = {
   date: new Date().toISOString().slice(0, 10),
@@ -55,23 +55,7 @@ const MOCK_PORTFOLIO: PortfolioData = {
   maxDrawdown: 0.05,
 }
 
-const MOCK_RISK_STATUS: RiskStatusData = {
-  date: new Date().toISOString().slice(0, 10),
-  overallStatus: '正常',
-  levels: [
-    { level: 'layer1', name: 'Layer 1 熔断', status: '正常', value: null, threshold: null, message: null },
-    { level: 'layer2', name: 'Layer 2 限亏', status: '正常', value: null, threshold: null, message: null },
-    { level: 'layer3', name: 'Layer 3 仓位', status: '正常', value: null, threshold: null, message: null },
-  ],
-  equity: 1000000,
-  drawdown: 0.02,
-  drawdownAlert: 0.05,
-  drawdownStop: 0.10,
-  drawdownCircuit: 0.15,
-  updatedAt: new Date().toISOString(),
-}
-
-// ---------- Axios 实例（复�?client.ts 统一拦截器） ----------
+// ---------- Axios 实例（复用 client.ts 统一拦截器） ----------
 
 const http = createClient('/api/trading')
 
@@ -111,16 +95,6 @@ export async function fetchPortfolio(): Promise<PortfolioData> {
 }
 
 /**
- * GET /api/trading/risk-status �?风控状�? */
-export async function fetchRiskStatus(): Promise<RiskStatusData> {
-  if (USE_MOCK) {
-    await new Promise((r) => setTimeout(r, 200))
-    return MOCK_RISK_STATUS
-  }
-  const res = await http.get<unknown>('/risk-status')
-  const result = validateRiskStatusData(res.data)
-  if (!result.valid || !result.data) {
-    throw new Error(result.errors.join('; '))
-  }
-  return result.data
-}
+ * GET /api/risk/status — 风控状态（委托自 @/api/risk）
+ */
+export { fetchRiskStatus } from './risk'

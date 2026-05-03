@@ -1,17 +1,19 @@
-# HC_HC_MACRO_PMI_MFG.yaml
-# 制造业PMI
-
 factor_code: HC_HC_MACRO_PMI_MFG
 symbol: HC
-category: macro
+category: free_data
 name: 制造业PMI
 description: 制造业PMI
 frequency: daily
-unit: 
+unit: null
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - macro
-  - HC
+- macro
+- HC
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

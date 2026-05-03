@@ -1,4 +1,5 @@
 # strategies/macro_demo_strategy.py
+from config.paths import MACRO_ENGINE
 import csv
 import os
 import sys
@@ -55,7 +56,7 @@ class MacroDemoStrategy(CtaTemplate):
     fast_window = 10
     slow_window = 20
     use_macro = True
-    csv_path_str = "D:/futures_v6/macro_engine/output/{symbol}_macro_daily_{date}.csv"
+    csv_path_str = "str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv"
     
     # 风控开关
     enable_stop_loss = True      # 固定止损开关

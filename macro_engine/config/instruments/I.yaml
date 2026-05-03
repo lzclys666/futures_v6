@@ -1,5 +1,8 @@
 symbol: I
 extends: _base
+name: 铁矿石
+name_en: I
+sector: 黑色
 macro_lambda: 0.4
 weights:
   supply: 0.25

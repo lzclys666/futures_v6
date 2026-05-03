@@ -1,5 +1,8 @@
 symbol: AG
 extends: _base
+name: 白银
+name_en: AG
+sector: 贵金属
 macro_lambda: 0.7
 weights:
   supply: 0.1

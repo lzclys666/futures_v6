@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+from config.paths import MACRO_ENGINE
 """
 因子 IC 有效性验证框架
 Factor IC Validation System
@@ -22,7 +23,7 @@ Factor IC Validation System
   python validate_factor_ic.py --symbol all --factors shared --start 2020-01-01
 
 数据输入路径：
-  D:/futures_v6/macro_engine/data/crawlers/
+  str(MACRO_ENGINE)/data/crawlers/
 """
 
 import os

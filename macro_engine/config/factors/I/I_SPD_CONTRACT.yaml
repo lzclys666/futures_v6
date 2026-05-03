@@ -1,8 +1,10 @@
 factor_code: I_SPD_CONTRACT
-name: "铁矿石近远月价差"
-category: spread
-description: "铁矿石近远月价差"
+name: 铁矿石近远月价差
+category: derived
+description: 铁矿石近远月价差
 data_source: AKShare futures_spot_price
 source_confidence: 1.0
-expected_range: [-50-100]
-notes: "近月-远月结算价差"
+expected_range:
+- -50.0
+- 100.0
+notes: 近月-远月结算价差

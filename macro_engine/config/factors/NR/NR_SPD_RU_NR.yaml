@@ -1,16 +1,23 @@
-factor_code: "NR_SPD_RU_NR"
-factor_name: "RU-NR深浅色价差"
+factor_code: NR_SPD_RU_NR
+factor_name: RU-NR深浅色价差
 template: null
-econ_category: "SPD"
-logic_category: "CROSS"
+econ_category: SPD
+logic_category: CROSS
 direction: 1
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 252
-base_weight: 0.10
-max_weight: 0.20
+base_weight: 0.1
+max_weight: 0.2
 is_active: true
 dependencies:
-  - "AKShare/futures_main_sina"
-description: "RU主力-NR主力价差（元/吨），替代关系+交割品矛盾的量化表达"
+- AKShare/futures_main_sina
+description: RU主力-NR主力价差（元/吨），替代关系+交割品矛盾的量化表达
+category: derived
+name: RU-NR深浅色价差
+source_confidence: 0.75
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

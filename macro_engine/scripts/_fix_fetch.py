@@ -1,0 +1,9 @@
+content = open(r'D:\futures_v6\macro_engine\scripts\check_fetch_unpack.py', 'r', encoding='utf-8').read()
+old = '                        call_node = self._get_call(node.value)\n                        if call_node and call_node.id in ("fetch_url", "fetch_json"):\n                            # 找到 fetch 调用，检查是否有 err 处理\n                            data_var = left_vars[0]\n                            err_var = left_vars[1] if len(left_vars) > 1 else None\n                            has_err_check = self._has_err_check_after(node)\n                            status = "OK" if has_err_check else "MISS_ERR"\n                            self.findings.append((node.lineno, status, f"{call_node.id}() -> {data_var}, {err_var}"))'
+new = '                        call_node = self._get_call(node.value)\n                        if call_node and isinstance(call_node.func, ast.Name):\n                            func_name = call_node.func.id\n                            if func_name in ("fetch_url", "fetch_json"):\n                                data_var = left_vars[0]\n                                err_var = left_vars[1] if len(left_vars) > 1 else None\n                                has_err_check = self._has_err_check_after(node)\n                                status = "OK" if has_err_check else "MISS_ERR"\n                                self.findings.append((node.lineno, status, f"{func_name}() -> {data_var}, {err_var}"))'
+if old in content:
+    content = content.replace(old, new)
+    open(r'D:\futures_v6\macro_engine\scripts\check_fetch_unpack.py', 'w', encoding='utf-8').write(content)
+    print('REPLACED')
+else:
+    print('NOT FOUND')

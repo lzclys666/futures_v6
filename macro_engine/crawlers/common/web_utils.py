@@ -9,6 +9,9 @@ crawlers/common/web_utils.py
     from common.web_utils import fetch_url, fetch_json
     value, err = fetch_url(url, encoding="gbk")
     value, err = fetch_json(url)
+    # 自定义请求头:
+    html, err = fetch_url(url, headers={'Referer': 'https://example.com'})
+    data, err = fetch_json(url, headers={'Accept': 'application/json'})
 """
 import requests
 import time
@@ -37,7 +40,7 @@ ENCODING_MAP = {
 }
 
 
-def fetch_url(url, encoding=None, timeout=15, retries=2, params=None):
+def fetch_url(url, encoding=None, timeout=15, retries=2, params=None, headers=None):
     """
     获取网页内容，统一编码处理。
 
@@ -47,6 +50,7 @@ def fetch_url(url, encoding=None, timeout=15, retries=2, params=None):
         timeout:  超时秒数（默认15）
         retries:  重试次数（默认2）
         params:   URL 查询参数 dict
+        headers:  自定义请求头 dict（合并到 session 默认头之上，同名字段覆盖）
 
     返回:
         (html_string, None)  成功
@@ -64,7 +68,11 @@ def fetch_url(url, encoding=None, timeout=15, retries=2, params=None):
     last_err = None
     for attempt in range(retries + 1):
         try:
-            r = _SESSION.get(url, params=params, timeout=timeout)
+            # 合并自定义 headers（覆盖 session 默认头）
+            req_headers = _SESSION.headers.copy()
+            if headers:
+                req_headers.update(headers)
+            r = _SESSION.get(url, params=params, timeout=timeout, headers=req_headers)
             r.raise_for_status()
             # 检测编码（部分网站header不准确）
             content_type = r.headers.get("Content-Type", "")
@@ -90,9 +98,16 @@ def fetch_url(url, encoding=None, timeout=15, retries=2, params=None):
     return None, last_err
 
 
-def fetch_json(url, timeout=15, retries=2, params=None):
+def fetch_json(url, timeout=15, retries=2, params=None, headers=None):
     """
     获取 JSON 数据（自动处理 API 响应）。
+
+    参数:
+        url:      目标 URL
+        timeout:  超时秒数（默认15）
+        retries:  重试次数（默认2）
+        params:   URL 查询参数 dict
+        headers:  自定义请求头 dict（合并到 session 默认头之上）
 
     返回:
         (dict/list, None)  成功
@@ -101,7 +116,10 @@ def fetch_json(url, timeout=15, retries=2, params=None):
     last_err = None
     for attempt in range(retries + 1):
         try:
-            r = _SESSION.get(url, params=params, timeout=timeout)
+            req_headers = _SESSION.headers.copy()
+            if headers:
+                req_headers.update(headers)
+            r = _SESSION.get(url, params=params, timeout=timeout, headers=req_headers)
             r.raise_for_status()
             data = r.json()
             return data, None

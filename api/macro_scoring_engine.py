@@ -126,7 +126,8 @@ def _normalize_row(row: dict) -> dict:
         "normalized_score": "normalizedScore",
         "weight": "weight",
         "contribution": "contribution",
-        "factor_direction": "contributionPolarity",
+        "factor_value": "factor_value",
+        "contribution_polarity": "contribution_polarity",
         "ic_value": "icValue",
     }
     normalized = {}
@@ -328,7 +329,8 @@ def get_latest_signal(symbol: str, trade_date: Optional[str] = None) -> dict:
         # 不重新计算，避免因子原始值 (normalized_score=0) 覆盖已算好的综合得分
         updated_at = summary_row["updatedAt"].strip()
         factors = _build_factor_details_from_csv(symbol, today_str)
-        composite_score = float(summary_row.get("compositeScore", "").strip())
+        raw_score = float(summary_row.get("compositeScore", "").strip())
+        composite_score = (raw_score - 0.5) * 2  # [0,1] → [-1,1]
         direction = summary_row.get("direction", "NEUTRAL").strip().upper()
     else:
         # Fallback: 找最近可用的 CSV，不使用 _current_scores（避免 Brownian motion 漂移）
@@ -338,7 +340,8 @@ def get_latest_signal(symbol: str, trade_date: Optional[str] = None) -> dict:
             if summary_row is not None:
                 updated_at = summary_row["updatedAt"].strip() + " (非今日数据)"
                 factors = _build_factor_details_from_csv(symbol, latest_date)
-                composite_score = float(summary_row.get("compositeScore", "").strip())
+                raw_score = float(summary_row.get("compositeScore", "").strip())
+                composite_score = (raw_score - 0.5) * 2  # [0,1] → [-1,1]
                 direction = summary_row.get("direction", "NEUTRAL").strip().upper()
             else:
                 composite_score = _current_scores[symbol]
@@ -377,7 +380,8 @@ def get_all_signals(trade_date: Optional[str] = None) -> List[dict]:
         if summary_row is not None:
             updated_at = summary_row["updatedAt"].strip()
             factors = _build_factor_details_from_csv(symbol, today_str)
-            composite_score = float(summary_row.get("compositeScore", "").strip())
+            raw_score = float(summary_row.get("compositeScore", "").strip())
+            composite_score = (raw_score - 0.5) * 2  # [0,1] → [-1,1]
             direction = summary_row.get("direction", "NEUTRAL").strip().upper()
         else:
             # Fallback: 找最近可用的 CSV，不使用 _current_scores（避免 Brownian motion 漂移）
@@ -386,7 +390,8 @@ def get_all_signals(trade_date: Optional[str] = None) -> List[dict]:
                 summary_row = _read_csv_row(symbol, "SUMMARY", latest_date)
                 if summary_row is not None:
                     updated_at = summary_row["updatedAt"].strip() + " (非今日数据)"
-                    composite_score = float(summary_row.get("compositeScore", "").strip())
+                    raw_score = float(summary_row.get("compositeScore", "").strip())
+                    composite_score = (raw_score - 0.5) * 2  # [0,1] → [-1,1]
                     direction = summary_row.get("direction", "NEUTRAL").strip().upper()
                 else:
                     composite_score = _current_scores[symbol]

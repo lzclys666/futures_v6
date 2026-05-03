@@ -1,16 +1,23 @@
-factor_code: "NR_SPD_BASIS"
-factor_name: "NR期现基差"
+factor_code: NR_SPD_BASIS
+factor_name: NR期现基差
 template: null
-econ_category: "SPD"
-logic_category: "BASIS"
+econ_category: SPD
+logic_category: BASIS
 direction: 1
-frequency: "daily"
-norm_method: "mad"
-detrend_method: "none"
+frequency: daily
+norm_method: mad
+detrend_method: none
 norm_window: 252
 base_weight: 0.08
 max_weight: 0.15
 is_active: true
 dependencies:
-  - "AKShare/futures_main_sina"
-description: "NR现货价-NR期货主力合约价差（元/吨），套利盘介入触发条件"
+- AKShare/futures_main_sina
+description: NR现货价-NR期货主力合约价差（元/吨），套利盘介入触发条件
+category: derived
+name: NR期现基差
+source_confidence: 0.75
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

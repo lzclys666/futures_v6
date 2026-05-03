@@ -1,5 +1,8 @@
 symbol: RU
 extends: _base
+name: 天然橡胶
+name_en: RU
+sector: 农产品
 macro_lambda: 0.35
 weights:
   supply: 0.3

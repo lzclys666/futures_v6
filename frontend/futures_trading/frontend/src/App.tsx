@@ -19,7 +19,11 @@ import ReportPage from './pages/ReportPage'
 import { useUserStore } from './store/useUserStore'
 
 const App: React.FC = () => {
-  const isDark = useUserStore((s) => s.profile?.preferences?.theme === 'dark')
+  const isDark = useUserStore((s) =>
+    s.darkAlgorithm
+      ? window.matchMedia('(prefers-color-scheme: dark)').matches
+      : s.profile?.preferences?.theme === 'dark'
+  )
 
   return (
     <ConfigProvider

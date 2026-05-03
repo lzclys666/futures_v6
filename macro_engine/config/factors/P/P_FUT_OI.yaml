@@ -1,8 +1,10 @@
 factor_code: P_FUT_OI
-name: "棕榈油期货持仓量"
+name: 棕榈油期货持仓量
 category: free_data
-description: "棕榈油期货持仓量"
+description: 棕榈油期货持仓量
 data_source: AKShare futures_main_sina('P0')
 source_confidence: 1.0
-expected_range: [100000-1000000]
-notes: "实测2026-04-17=404382手"
+expected_range:
+- 100000.0
+- 1000000.0
+notes: 实测2026-04-17=404382手

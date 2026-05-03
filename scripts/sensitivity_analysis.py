@@ -3,6 +3,7 @@
 分析不同参数组合对回测结果的影响
 """
 
+from config.paths import MACRO_ENGINE, PROJECT_ROOT
 import os
 import sys
 import csv
@@ -59,7 +60,7 @@ class SensitivityEngine:
         self.symbol = symbol
         self.start = start
         self.end = end
-        self.loader = MacroSignalLoader("D:/futures_v6/macro_engine/output")
+        self.loader = MacroSignalLoader("str(MACRO_ENGINE)/output")
         
         # Get date range
         self.dates = []
@@ -229,7 +230,7 @@ class SensitivityEngine:
     
     def save_results(self, scenarios: List[Dict]):
         """保存分析结果"""
-        output_file = Path(f"D:/futures_v6/sensitivity_{self.symbol}_{self.start}_{self.end}.json")
+        output_file = PROJECT_ROOT / f"sensitivity_{self.symbol}_{self.start}_{self.end}.json"
         output_file.parent.mkdir(parents=True, exist_ok=True)
         with open(output_file, 'w', encoding='utf-8') as f:
             json.dump(scenarios, f, indent=2, ensure_ascii=False)

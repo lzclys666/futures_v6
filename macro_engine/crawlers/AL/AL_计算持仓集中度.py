@@ -28,7 +28,7 @@ BOUNDS = (0, 100)
 def fetch_concentration():
     try:
         print("[L1] AKShare get_shfe_rank_table...")
-        df = ak.get_shfe_rank_table()
+        df = ak.get_shfe_rank_table(date=obs_date)
         if df is not None and len(df) > 0:
             al_df = df[df["variety"] == "AL"]
             if len(al_df) > 0:

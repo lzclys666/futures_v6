@@ -1,0 +1,355 @@
+# =============================================================================
+# 风控规则配置 — Profile 版本
+# 注意：此文件定义三套风控画像的阈值参数（conservative / moderate / aggressive），
+# 以及板块分组和交易时段配置。
+#
+# 关系说明：
+#   - 运行时 RiskEngine 加载的是 risk/rules/risk_rules.yaml（简化版，仅含规则列表）
+#   - 本文件中的 profiles 部分由 routes/user.py 的 PUT /api/user/risk-profile 引用
+#   - 当用户切换风控画像时，从此文件读取对应 profile 的参数，动态应用到 RiskEngine
+# =============================================================================
+
+profiles:
+  conservative:
+    description: 保守型 - 适用于高波动市场或新手阶段
+    R1:
+      enabled: true
+      base_ratio: 0.15
+      cluster_limit: 0.3
+    R2:
+      limit: 0.015
+      absolute_min: 3000
+    R4:
+      trading_limit: 0.5
+      closing_limit: 0.4
+      total_value_limit: 0.6
+    R7:
+      base: 3
+      recover_after: 2
+    R11:
+      correlation_threshold: 0.6
+      reduction_ratio: 0.3
+    R12:
+      max_cancel_per_symbol: 20
+      max_cancel_per_day: 50
+  moderate:
+    description: 均衡型 - 适用于正常市场环境
+    R1:
+      enabled: false
+      base_ratio: 0.25
+      cluster_limit: 0.4
+    R2:
+      limit: 0.025
+      absolute_min: 5000
+    R4:
+      trading_limit: 0.7
+      closing_limit: 0.6
+      total_value_limit: 0.8
+    R7:
+      base: 5
+      recover_after: 3
+    R11:
+      correlation_threshold: 0.7
+      reduction_ratio: 0.25
+    R12:
+      max_cancel_per_symbol: 30
+      max_cancel_per_day: 80
+  aggressive:
+    description: 激进型 - 适用于低波动趋势市场
+    R1:
+      enabled: false
+      base_ratio: 0.35
+      cluster_limit: 0.5
+    R2:
+      limit: 0.04
+      absolute_min: 10000
+    R4:
+      trading_limit: 0.85
+      closing_limit: 0.75
+      total_value_limit: 0.95
+    R7:
+      base: 7
+      recover_after: 4
+    R11:
+      correlation_threshold: 0.8
+      reduction_ratio: 0.2
+    R12:
+      max_cancel_per_symbol: 50
+      max_cancel_per_day: 120
+rules:
+  R10:
+    name: 宏观熔断
+    layer: 1
+    description: '宏观评分 < 30分：禁止做多
+
+      宏观评分 > 70分：禁止做空
+
+      滞后区间：5分（防止临界点频繁触发）
+
+      '
+    enabled: true
+    fuse_low: -0.5
+    fuse_high: 0.5
+    hysteresis: 0.05
+    actions:
+    - BLOCK
+    - LOG
+  R5:
+    name: 波动率异常过滤
+    layer: 1
+    description: 'ATR(14)/价格 > 2倍近期均值 → WARN
+
+      ATR(14)/价格 > 3倍近期均值 → BLOCK
+
+      '
+    enabled: true
+    warn_multiplier: 2.0
+    block_multiplier: 3.0
+    lookback_days: 20
+    actions:
+    - WARN
+    - BLOCK
+    - LOG
+  R6:
+    name: 流动性检查
+    layer: 1
+    description: '订单量 / 20日日均成交量 > 5% → BLOCK
+
+      订单量 > 盘口深度 * 30% → WARN
+
+      '
+    enabled: true
+    volume_ratio_limit: 0.05
+    depth_ratio_limit: 0.3
+    actions:
+    - WARN
+    - BLOCK
+    - LOG
+  R8:
+    name: 交易时间检查
+    layer: 1
+    description: '非交易时段禁止下单
+
+      集合竞价期间禁止开仓
+
+      '
+    enabled: true
+    enable_night_session: true
+    forbidden_periods:
+    - start: 08:55
+      end: 09:00
+    - start: '10:15'
+      end: '10:30'
+    - start: '11:30'
+      end: '13:30'
+    - start: '15:00'
+      end: '21:00'
+    actions:
+    - BLOCK
+    - LOG
+  R3:
+    name: 涨跌停限制
+    layer: 1
+    description: '买入开仓：委托价格 >= 涨停价 → 拒绝
+
+      卖出开仓：委托价格 <= 跌停价 → 拒绝
+
+      '
+    enabled: true
+    limit_ratio: 0.05
+    warning_ratio: 0.03
+    actions:
+    - BLOCK
+    - LOG
+  R2:
+    name: 单日最大亏损限制
+    layer: 2
+    description: '当日累计亏损 >= 账户权益的2.5% 或 >= 5000元（取较大值）→ 禁止开仓
+
+      仅检查开仓订单，平仓不受限制
+
+      '
+    enabled: true
+    limit: 0.025
+    absolute_min: 5000
+    actions:
+    - BLOCK
+    - LOG
+  R7:
+    name: 连续亏损次数限制
+    layer: 2
+    description: '连续亏损 >= 5次 → 暂停交易（禁止开仓）
+
+      连续盈利 >= 3次 → 恢复交易
+
+      仅检查开仓订单
+
+      '
+    enabled: true
+    base: 5
+    recover_after: 3
+    actions:
+    - WARN
+    - BLOCK
+    - LOG
+  R11:
+    name: 品种相关性熔断
+    layer: 2
+    description: '跨品种持仓相关性超阈值自动减仓
+
+      基于滚动20日收益率相关性矩阵
+
+      相关性 > 0.70 时触发Warn
+
+      相关性 > 0.85 时触发Block并自动减仓25%
+
+      '
+    enabled: true
+    correlation_threshold: 0.7
+    high_correlation_threshold: 0.85
+    reduction_ratio: 0.25
+    lookback_days: 20
+    actions:
+    - WARN
+    - BLOCK
+    - REDUCE
+    - LOG
+  R12:
+    name: 撤单次数限制
+    layer: 2
+    description: '单品种单交易日撤单次数上限：30次
+
+      全账户单日撤单次数上限：80次
+
+      超限后禁止该品种/全账户开仓直至次一交易日
+
+      '
+    enabled: true
+    max_cancel_per_symbol: 30
+    max_cancel_per_day: 80
+    reset_time: '15:30'
+    actions:
+    - WARN
+    - BLOCK
+    - LOG
+  R1:
+    name: 单品种持仓限制
+    layer: 3
+    description: '基于20日波动率动态调整:
+
+      - 波动率 < 15%: 30%
+
+      - 波动率 15-25%: 25%
+
+      - 波动率 25-35%: 20%
+
+      - 波动率 > 35%: 15%
+
+      同板块品种聚类上限：40%
+
+      '
+    enabled: false
+    base_ratio: 0.25
+    cluster_limit: 0.4
+    volatility_thresholds:
+    - threshold: 0.15
+      ratio: 0.3
+    - threshold: 0.25
+      ratio: 0.25
+    - threshold: 0.35
+      ratio: 0.2
+    - threshold: 1.0
+      ratio: 0.15
+    actions:
+    - BLOCK
+    - LOG
+  R4:
+    name: 总持仓市值限制
+    layer: 3
+    description: '单一账户所有合约总市值上限
+
+      交易时段：80%
+
+      收盘前15分钟：75%
+
+      隔夜缓冲：历史最大跳空 + 5%
+
+      '
+    enabled: true
+    trading_limit: 0.7
+    closing_limit: 0.6
+    closing_window: 15
+    total_value_limit: 0.8
+    safety_buffer: 0.05
+    actions:
+    - WARN
+    - BLOCK
+    - LOG
+  R9:
+    name: 资金充足性检查
+    layer: 3
+    description: '可用资金 >= 冻结资金 + 预冻结 + 5%安全缓冲
+
+      '
+    enabled: true
+    safety_buffer: 0.05
+    actions:
+    - BLOCK
+    - LOG
+sector_clusters:
+  energy:
+  - SC
+  - FU
+  - LU
+  - BU
+  - MA
+  - TA
+  metal:
+  - CU
+  - AL
+  - ZN
+  - NI
+  - SN
+  - AU
+  - AG
+  black:
+  - RB
+  - HC
+  - I
+  - J
+  - JM
+  agri:
+  - M
+  - Y
+  - P
+  - OI
+  - RM
+  - A
+  - RU
+  - NR
+trading_sessions:
+  day:
+  - start: 09:00
+    end: '10:15'
+  - start: '10:30'
+    end: '11:30'
+  - start: '13:30'
+    end: '15:00'
+  night:
+  - start: '21:00'
+    end: '23:00'
+    symbols:
+    - SC
+    - FU
+    - AU
+    - AG
+    - RU
+    - RB
+    - HC
+auction_sessions:
+  morning:
+    start: 08:55
+    end: 09:00
+  night:
+    start: '20:55'
+    end: '21:00'

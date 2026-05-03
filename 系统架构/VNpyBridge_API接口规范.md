@@ -69,7 +69,7 @@ DELETE /api/trading/order/{vt_orderid}
 - /ws/vnpy 订阅 position + account 实时更新
 
 ### 风控面板 (远期 Phase 4/5)
-- /api/trading/risk-status 状态
+- /api/risk/status 风控状态
 - /ws/vnpy 订阅 risk_event 预警
 
 ---

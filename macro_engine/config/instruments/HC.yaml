@@ -1,5 +1,8 @@
 symbol: HC
 extends: _base
+name: 热卷
+name_en: HC
+sector: 黑色
 macro_lambda: 0.45
 weights:
   supply: 0.25

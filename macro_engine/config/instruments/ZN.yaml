@@ -1,5 +1,8 @@
 symbol: ZN
 extends: _base
+name: 沪锌
+name_en: ZN
+sector: 有色
 macro_lambda: 0.6
 weights:
   supply: 0.2

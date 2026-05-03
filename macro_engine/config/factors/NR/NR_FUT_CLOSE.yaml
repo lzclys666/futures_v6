@@ -1,9 +1,6 @@
-# NR_FUT_CLOSE.yaml
-# 天然橡胶期货收盘价
-
 factor_code: NR_FUT_CLOSE
 symbol: NR
-category: price
+category: free_data
 name: 天然橡胶期货收盘价
 description: 天然橡胶期货收盘价
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - price
-  - NR
+- price
+- NR
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

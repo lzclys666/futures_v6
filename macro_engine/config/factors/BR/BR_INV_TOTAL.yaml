@@ -1,17 +1,23 @@
-# config/factors/BR/BR_INV_TOTAL.yaml
-factor_code: "BR_INV_TOTAL"
-factor_name: "BR全国总库存"
+factor_code: BR_INV_TOTAL
+factor_name: BR全国总库存
 template: null
-econ_category: "INV"
-logic_category: "STK"
-direction: -1          # 库存增加→利空
-frequency: "weekly"
-norm_method: "mad"
-detrend_method: "none"
+econ_category: INV
+logic_category: STK
+direction: -1
+frequency: weekly
+norm_method: mad
+detrend_method: none
 norm_window: 156
 base_weight: 0.12
 max_weight: 0.25
 is_active: true
 dependencies:
-  - "WebScraper/br_inventory"
-description: "合成橡胶全国总库存（万吨），反映供需平衡状态"
+- WebScraper/br_inventory
+description: 合成橡胶全国总库存（万吨），反映供需平衡状态
+category: free_data
+name: BR全国总库存
+source_confidence: 0.85
+data_source: WebScraper
+expected_range:
+- -100000.0
+- 100000.0

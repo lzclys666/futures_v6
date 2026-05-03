@@ -1,9 +1,6 @@
-# HC_HC_STK_SOCIAL.yaml
-# 热卷社会库存总量
-
 factor_code: HC_HC_STK_SOCIAL
 symbol: HC
-category: inventory
+category: free_data
 name: 热卷社会库存总量
 description: 热卷社会库存总量
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - inventory
-  - HC
+- inventory
+- HC
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

@@ -1,5 +1,6 @@
+from config.paths import PIT_DB
 import sqlite3
-conn = sqlite3.connect('D:/futures_v6/pit_data.db')
+conn = sqlite3.connect(str(PIT_DB))
 c = conn.cursor()
 c.execute("SELECT name FROM sqlite_master WHERE type='table'")
 tables = [r[0] for r in c.fetchall()]

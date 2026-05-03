@@ -5,7 +5,9 @@ Verify core calculation logic after fixes
 """
 
 import sys
-sys.path.insert(0, 'D:/futures_v6')
+from pathlib import Path
+from config.paths import PROJECT_ROOT
+sys.path.insert(0, str(PROJECT_ROOT))
 
 from services.macro_risk_app import get_symbol_config, get_contract_size, get_margin_ratio, get_trading_hours, is_in_trading_hours
 from datetime import time as dt_time

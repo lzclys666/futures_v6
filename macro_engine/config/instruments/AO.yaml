@@ -1,5 +1,8 @@
 symbol: AO
 extends: _base
+name: 氧化铝
+name_en: AO
+sector: 有色
 macro_lambda: 0.55
 weights:
   supply: 0.2

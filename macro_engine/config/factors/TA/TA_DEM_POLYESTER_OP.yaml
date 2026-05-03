@@ -1,20 +1,22 @@
-# TA_DEM_POLYESTER_OP.yaml
-# 聚酯行业开工率
-
 factor_code: TA_DEM_POLYESTER_OP
 symbol: TA
-category: demand
+category: paid_data
 name: 聚酯行业开工率
 description: 聚酯装置产能利用率，PTA需求的核心锚定（聚酯占PTA消费约95%）
 frequency: weekly
 unit: '%'
-direction: positive  # 开工率高=需求增加=利多
-confidence: 3  # ★★★
+direction: positive
+confidence: 3
 source: 隆众资讯/CCF（付费）
 calculation: null
 tags:
-  - demand
-  - operation_rate
-  - polyester
-  - downstream
+- demand
+- operation_rate
+- polyester
+- downstream
 notes: 需要订阅隆众资讯或CCF数据服务
+source_confidence: 3
+data_source: Mysteel
+expected_range:
+- -100000.0
+- 100000.0

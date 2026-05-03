@@ -1,9 +1,6 @@
-# PP_PP_POS_NET.yaml
-# 聚丙烯期货净持仓
-
 factor_code: PP_PP_POS_NET
 symbol: PP
-category: position
+category: free_data
 name: 聚丙烯期货净持仓
 description: 聚丙烯期货净持仓
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - position
-  - PP
+- position
+- PP
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 import sqlite3
-conn = sqlite3.connect('D:/futures_v6/macro_engine/pit_data.db')
+from pathlib import Path
+
+# 动态计算项目根目录
+_PROJECT_ROOT = Path(__file__).resolve().parent
+while not (_PROJECT_ROOT / "macro_engine").exists() and _PROJECT_ROOT != _PROJECT_ROOT.parent:
+    _PROJECT_ROOT = _PROJECT_ROOT.parent
+
+conn = sqlite3.connect(str(_PROJECT_ROOT / "macro_engine" / "pit_data.db"))
 cur = conn.cursor()
 
 # Check all AU factors

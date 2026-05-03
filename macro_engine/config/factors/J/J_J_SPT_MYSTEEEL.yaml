@@ -1,9 +1,6 @@
-# J_J_SPT_MYSTEEEL.yaml
-# 我的钢铁网焦炭现货价格
-
 factor_code: J_J_SPT_MYSTEEEL
 symbol: J
-category: price
+category: free_data
 name: 我的钢铁网焦炭现货价格
 description: 我的钢铁网焦炭现货价格
 frequency: daily
@@ -13,5 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-  - price
-  - J
+- price
+- J
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

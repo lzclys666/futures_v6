@@ -11,7 +11,21 @@ CURRENT_DIR = Path(__file__).parent
 LOG_DIR = CURRENT_DIR.parent / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
-scripts = ["HC_热轧卷板期货收盘价.py", "HC_热轧卷板期货持仓量.py"]
+scripts = [
+    "HC_制造业PMI.py",
+    "HC_我的钢铁网热卷现货价格.py",
+    "HC_汽车产量.py",
+    "HC_热卷-螺纹钢跨品种价差.py",
+    "HC_热卷仓单库存.py",
+    "HC_热卷期现基差.py",
+    "HC_热卷期货净持仓.py",
+    "HC_热卷期货合约间价差.py",
+    "HC_热卷期货近远月价差.py",
+    "HC_热卷社会库存总量.py",
+    "HC_热轧卷板期货持仓量.py",
+    "HC_热轧卷板期货收盘价.py",
+    "HC_钢厂热卷库存周度.py",
+]
 
 def run_all():
     now = datetime.datetime.now()

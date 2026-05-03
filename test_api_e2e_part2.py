@@ -58,14 +58,14 @@ print()
 
 # 11. 风控状态
 print('=== 11. Risk Status ===')
-r = client.get('/api/trading/risk-status')
+r = client.get('/api/risk/status')
 print(f'  Status: {r.status_code}')
 if r.status_code == 200:
     data = r.json()
     print(f'  Code: {data.get("code")}')
     d = data.get('data', {})
-    print(f'  Overall: {d.get("overall_status")}')
-    print(f'  Levels count: {len(d.get("levels", []))}')
+    print(f'  Overall: {d.get("overallStatus")}')
+    print(f'  Rules count: {len(d.get("rules", []))}')
 print()
 
 print('=== E2E Test Complete ===')

@@ -9,6 +9,7 @@ from datetime import datetime, date
 from pathlib import Path
 from typing import Callable, Any
 from collections import defaultdict
+from config.paths import DOCS_DIR
 
 
 class EventBus:
@@ -18,7 +19,8 @@ class EventBus:
     - 事件持久化到 docs/events/YYYYMMDD.json
     """
 
-    def __init__(self, events_dir: str | Path = "D:/futures_v6/docs/events"):
+    def __init__(self, events_dir: str | Path = None):
+        events_dir = events_dir or str(DOCS_DIR / "events")
         self._events_dir = Path(events_dir)
         self._events_dir.mkdir(parents=True, exist_ok=True)
 
