@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BU_沥青期现基差.py
@@ -6,18 +6,20 @@ BU_沥青期现基差.py
 
 公式: BU_BU_SPD_BASIS = BU_BU_SPT_EAST_CHINA - BU0动态结算价
 
-当前状态: [OK]正常
-- 数据源: AKShare futures_spot_price(vars_list=['BU']) + futures_main_sina('BU0')，L1权威
-- 采集逻辑: BU取最近5个工作日现货价，基差由现货-期货结算价计算
-- obs_date: 数据实际日期
+当前状态: [✅正常]
+- L1: AKShare futures_spot_price(vars_list=['BU']) + futures_main_sina('BU0')，source_confidence=1.0
+- L2: 无备选源（沥青现货价/期货结算价仅有AKShare聚合）
+- L3: save_l4_fallback() 兜底
 - bounds: [-500, 1000]元/吨（沥青期现基差合理区间）
 
 订阅优先级: 无需付费
 替代付费源: 无
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
 
 import akshare as ak
 import pandas as pd
@@ -49,6 +51,8 @@ def fetch_spot(obs_date):
             return spot, actual_date
         except Exception as e:
             print(f"[L1] {date_str}: {e}")
+    # L2: 无备选源
+    print("[L2] 无备选源（沥青现货价仅有AKShare聚合，无直接免费API）")
     return None, None
 
 
@@ -66,7 +70,9 @@ def fetch_fut_settle(obs_date):
         return settle
     except Exception as e:
         print(f"[L1] BU0结算价失败: {e}")
-        return None
+    # L2: 无备选源
+    print("[L2] 无备选源（沥青期货结算价仅有AKShare，无备选接口）")
+    return None
 
 
 if __name__ == "__main__":
@@ -84,11 +90,10 @@ if __name__ == "__main__":
 
     spot, actual_date = fetch_spot(obs_date)
     if spot is None:
-        val = get_latest_value(FACTOR_CODE, SYMBOL)
-        if val is not None:
-            print(f"[L4] 兜底: {val}")
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                       source="db_回补", source_confidence=0.5)
+        # L3: save_l4_fallback
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(沥青期现基差)"):
+            pass
         else:
             print(f"[WARN] {FACTOR_CODE} 所有数据源均失败")
         sys.exit(0)
@@ -101,6 +106,9 @@ if __name__ == "__main__":
     basis = round(spot - fut, 2)
     if not (BOUNDS[0] <= basis <= BOUNDS[1]):
         print(f"[WARN] {FACTOR_CODE}={basis} 超出bounds{BOUNDS}，跳过")
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(沥青期现基差)"):
+            pass
         sys.exit(0)
 
     save_to_db(FACTOR_CODE, SYMBOL, pub_date, actual_date, basis,

@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BU_消费者信心指数.py
@@ -6,20 +6,43 @@ BU_消费者信心指数.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: [SKIP]永久跳过
-- 数据源: 无免费API，消费者信心指数由国家统计局月度发布
-- 尝试过的数据源: 无有效免费源
-- 解决方案: 订阅国家统计局数据或彭博/路透宏观终端
+当前状态: [⛔永久跳过]
+- L1: 无免费API（消费者信心指数由国家统计局月度发布，无公开接口）
+- L2: 无备选源
+- L3: save_l4_fallback() 兜底（仅当db有历史值时写入）
+- 不写占位符
 
 订阅优先级: ★★★
 替代付费源: 国家统计局 / 彭博终端 / Wind
 """
-import sys
+import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from common.db_utils import ensure_table, save_l4_fallback, get_pit_dates
+
+FACTOR_CODE = "BU_BU_MACRO_CCI"
+SYMBOL = "BU"
+
 
 def main():
-    print("[SKIP] 消费者信心指数无免费数据源（国家统计局月度发布）")
-    print("[SKIP] 不写占位符")
+    pub_date, obs_date = get_pit_dates()
+    if pub_date is None:
+        print("-- 非交易日，跳过"); return 0
+
+    ensure_table()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
+
+    # L1-L2: 无免费数据源
+    print("[L1] 无免费API（消费者信心指数由国家统计局月度发布）")
+    print("[L2] 无备选源")
+
+    # L3: save_l4_fallback
+    if not save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(消费者信心指数)"):
+        print(f"[SKIP] {FACTOR_CODE} 无免费数据源，不写占位符")
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

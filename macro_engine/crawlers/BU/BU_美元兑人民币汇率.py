@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BU_美元兑人民币汇率.py
@@ -6,19 +6,21 @@ BU_美元兑人民币汇率.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: [OK]正常
-- 数据源: AKShare fx_spot_quote()（L1）+ 新浪财经 hq.sinajs.cn/list=USDCNY（L2备用）
-- 采集逻辑: fx_spot_quote的USD/CNY买报价/卖报价取均值
-- obs_date: 数据日期（北京时间）
+当前状态: [✅正常]
+- L1: AKShare fx_spot_quote()（买报价/卖报价取均值），source_confidence=1.0
+- L2: 新浪财经 hq.sinajs.cn/list=USDCNY（实时汇率），source_confidence=0.9
+- L3: save_l4_fallback() 兜底
 - bounds: [6.5, 7.5]（USD/CNY合理区间）
 
 订阅优先级: 无需付费
 替代付费源: 无
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
-from common.web_utils import fetch_url, fetch_json
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
+from common.web_utils import fetch_url
 
 import akshare as ak
 import pandas as pd
@@ -34,7 +36,6 @@ def fetch_akshare():
     df = ak.fx_spot_quote()
     if df is None or df.empty:
         raise ValueError("empty")
-    # 列名: ['货币对', '买报价', '卖报价']
     usd_row = df[df["货币对"].astype(str).str.contains("USD")]
     if usd_row.empty:
         raise ValueError("no USD pair")
@@ -49,16 +50,12 @@ def fetch_akshare():
 def fetch_sina():
     """L2: 新浪财经实时汇率"""
     print("[L2] 新浪 hq.sinajs.cn/list=USDCNY...")
-    headers = {
-        "Referer": "https://finance.sina.com.cn"
-    }
+    headers = {"Referer": "https://finance.sina.com.cn"}
     html, err = fetch_url("https://hq.sinajs.cn/list=USDCNY", headers=headers, timeout=10)
     if err:
         raise ValueError(err)
-    text = html
-    # 格式: var hq_str_USDCNY="02:58:07,6.8268,6.8278,6.8279,11,6.8278,6.8279,6.8268,6.8273,美元人民币,2026-05-02";
     import re
-    m = re.search(r'hq_str_USDCNY="[^,]+,([^,]+),([^,]+)', text)
+    m = re.search(r'hq_str_USDCNY="[^,]+,([^,]+),([^,]+)', html)
     if not m:
         raise ValueError("无法解析Sina响应")
     bid = float(m.group(1))
@@ -82,25 +79,34 @@ if __name__ == "__main__":
     print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
     raw_value = None
-    for fetch_fn, tag in [(fetch_akshare, "[L1]"), (fetch_sina, "[L2]")]:
-        try:
-            raw_value = fetch_fn()
-            break
-        except Exception as e:
-            print(f"{tag} 失败: {e}")
 
+    # L1
+    try:
+        raw_value = fetch_akshare()
+    except Exception as e:
+        print(f"[L1] 失败: {e}")
+
+    # L2
     if raw_value is None:
-        val = get_latest_value(FACTOR_CODE, SYMBOL)
-        if val is not None:
-            print(f"[L4] 兜底: {val}")
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                       source="db_回补", source_confidence=0.5)
+        try:
+            raw_value = fetch_sina()
+        except Exception as e:
+            print(f"[L2] 失败: {e}")
+
+    # L3
+    if raw_value is None:
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(美元兑人民币汇率)"):
+            pass
         else:
             print(f"[WARN] {FACTOR_CODE} 所有数据源均失败")
         sys.exit(0)
 
     if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
         print(f"[WARN] {FACTOR_CODE}={raw_value} 超出bounds{BOUNDS}，跳过")
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(美元兑人民币汇率)"):
+            pass
         sys.exit(0)
 
     save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value,

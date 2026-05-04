@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BU_沥青期货收盘价.py
@@ -6,18 +6,20 @@ BU_沥青期货收盘价.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: [OK]正常
-- 数据源: AKShare futures_main_sina(symbol='BU0')，L1权威
-- 采集逻辑: 取BU0主力合约动态结算价
-- obs_date: 数据实际日期（'日期'列）
+当前状态: [✅正常]
+- L1: AKShare futures_main_sina(symbol='BU0')，取动态结算价，source_confidence=1.0
+- L2: 无备选源（沥青期货仅有AKShare聚合，无直接免费API）
+- L3: save_l4_fallback() 兜底
 - bounds: [3000, 6000]元/吨（沥青期货合理区间）
 
 订阅优先级: 无需付费
 替代付费源: 无
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
 
 import akshare as ak
 import pandas as pd
@@ -34,7 +36,6 @@ def fetch():
     if df is None or df.empty:
         raise ValueError("no data")
     latest = df.sort_values("日期").iloc[-1]
-    # 优先动态结算价，其次收盘价
     close = float(latest.get("动态结算价") or latest.get("收盘价") or 0)
     if close <= 0:
         raise ValueError(f"结算价异常: {close}")
@@ -55,21 +56,32 @@ if __name__ == "__main__":
     ensure_table()
     print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
+    raw_value, actual_date = None, None
+
+    # L1
     try:
         raw_value, actual_date = fetch()
     except Exception as e:
         print(f"[L1] 失败: {e}")
-        val = get_latest_value(FACTOR_CODE, SYMBOL)
-        if val is not None:
-            print(f"[L4] 兜底: {val}")
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                       source="db_回补", source_confidence=0.5)
+
+    # L2: 无备选源
+    if raw_value is None:
+        print("[L2] 无备选源（沥青期货仅有AKShare聚合，无直接免费API）")
+
+    # L3
+    if raw_value is None:
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(沥青期货收盘价)"):
+            pass
         else:
             print(f"[WARN] {FACTOR_CODE} 所有数据源均失败")
         sys.exit(0)
 
     if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
         print(f"[WARN] {FACTOR_CODE}={raw_value} 超出bounds{BOUNDS}，跳过")
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(沥青期货收盘价)"):
+            pass
         sys.exit(0)
 
     save_to_db(FACTOR_CODE, SYMBOL, pub_date, actual_date, raw_value,
