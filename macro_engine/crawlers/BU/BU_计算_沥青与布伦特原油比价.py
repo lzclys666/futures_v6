@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 BU_沥青与布伦特原油价差.py
-因子: BU_BU_SPD_BU_BRENT = 沥青与布伦特原油比价（CNY/吨 ÷ CNY/桶 = 无量纲比值）
+因子: BU_SPD_BU_BRENT = 沥青与布伦特原油比价（CNY/吨 ÷ CNY/桶 = 无量纲比值）
 
-公式: BU_BU_SPD_BU_BRENT = BU0结算价 ÷ SC0结算价
+公式: BU_SPD_BU_BRENT = BU0结算价 ÷ SC0结算价
 （注：Brent无免费源，用SC上海原油替代；BU是CNY/吨，SC是CNY/桶，单位不同故为无量纲比值）
 
 当前状态: [⚠️待修复]（单位换算问题）
@@ -26,7 +26,7 @@ from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_
 import akshare as ak
 import pandas as pd
 
-FACTOR_CODE = "BU_BU_SPD_BU_BRENT"
+FACTOR_CODE = "BU_SPD_BU_BRENT"
 SYMBOL = "BU"
 BOUNDS = (4.0, 10.0)
 

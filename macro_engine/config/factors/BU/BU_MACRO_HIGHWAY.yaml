@@ -1,16 +1,16 @@
-factor_code: BU_BU_POS_NET
+factor_code: BU_MACRO_HIGHWAY
 symbol: BU
 category: free_data
-name: 沥青期货净持仓
-description: 沥青期货净持仓
+name: 全国高速公路整车流量
+description: 全国高速公路整车流量
 frequency: daily
-unit: 手
+unit: null
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- position
+- macro
 - BU
 source_confidence: 3
 data_source: AKShare

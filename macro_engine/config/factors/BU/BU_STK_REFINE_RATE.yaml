@@ -1,16 +1,16 @@
-factor_code: BU_BU_SPD_BU_BRENT
+factor_code: BU_STK_REFINE_RATE
 symbol: BU
 category: derived
-name: 沥青与布伦特原油价差
-description: 沥青与布伦特原油价差
+name: 炼厂沥青开工率
+description: 炼厂沥青开工率
 frequency: daily
-unit: 元/吨
+unit: '%'
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- spread
+- operation
 - BU
 source_confidence: 3
 data_source: Calculated

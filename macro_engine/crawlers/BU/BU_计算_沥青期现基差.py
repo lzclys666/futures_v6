@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 """
 BU_沥青期现基差.py
-因子: BU_BU_SPD_BASIS = 沥青期现基差（元/吨）= 华东现货价 - BU0期货结算价
+因子: BU_SPD_BASIS = 沥青期现基差（元/吨）= 华东现货价 - BU0期货结算价
 
-公式: BU_BU_SPD_BASIS = BU_BU_SPT_EAST_CHINA - BU0动态结算价
+公式: BU_SPD_BASIS = BU_BU_SPT_EAST_CHINA - BU0动态结算价
 
 当前状态: [✅正常]
 - L1: AKShare futures_spot_price(vars_list=['BU']) + futures_main_sina('BU0')，source_confidence=1.0
@@ -25,7 +25,7 @@ import akshare as ak
 import pandas as pd
 from datetime import timedelta
 
-FACTOR_CODE = "BU_BU_SPD_BASIS"
+FACTOR_CODE = "BU_SPD_BASIS"
 SYMBOL = "BU"
 BOUNDS = (-500.0, 1000.0)
 

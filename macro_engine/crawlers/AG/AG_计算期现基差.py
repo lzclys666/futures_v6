@@ -49,7 +49,9 @@ def fetch_spot():
                     if len(ag_row) == 0:
                         continue
                     val = float(ag_row.iloc[0]['spot_price'])
-                    obs_str = str(ag_row.iloc[0]['date'])[:10]
+                    # date 格式为 YYYYMMDD，需转为 YYYY-MM-DD
+                    d = str(ag_row.iloc[0]['date'])
+                    obs_str = f"{d[:4]}-{d[4:6]}-{d[6:8]}"
                     print(f"[L1] futures_spot_price(date='{date_str}', vars_list=['{sym}']) = {val}, obs={obs_str}")
                     return val, obs_str
             except Exception as e:
@@ -87,8 +89,10 @@ def main():
 
     if spot_val is not None and fut_val is not None:
         basis = round(spot_val - fut_val, 4)
+        # obs_date 使用现货的实际观测日期（spot_obs），因为今日为节假日时数据来自前一交易日
+        actual_obs = spot_obs if spot_obs else obs_date
         print(f"[L1] 期现基差={spot_val} - {fut_val} = {basis} 元/kg")
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, basis,
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, actual_obs, basis,
                    source_confidence=1.0, source="akshare_spot+future")
         print(f"[OK] {FACTOR_CODE}={basis} 写入成功")
         return

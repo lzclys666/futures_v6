@@ -1,19 +1,19 @@
-factor_code: BU_BU_STK_REFINE_RATE
+factor_code: BU_FX_USDCNY
 symbol: BU
-category: derived
-name: 炼厂沥青开工率
-description: 炼厂沥青开工率
+category: free_data
+name: 美元兑人民币汇率
+description: 美元兑人民币汇率
 frequency: daily
-unit: '%'
+unit: null
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- operation
+- fx
 - BU
 source_confidence: 3
-data_source: Calculated
+data_source: AKShare
 expected_range:
 - -100000.0
 - 100000.0

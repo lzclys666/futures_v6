@@ -1,8 +1,8 @@
-factor_code: BU_BU_FUT_CLOSE
+factor_code: BU_SPD_BU_BRENT
 symbol: BU
-category: free_data
-name: 沥青期货收盘价
-description: 沥青期货收盘价
+category: derived
+name: 沥青与布伦特原油价差
+description: 沥青与布伦特原油价差
 frequency: daily
 unit: 元/吨
 direction: neutral
@@ -10,10 +10,10 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-- price
+- spread
 - BU
 source_confidence: 3
-data_source: AKShare
+data_source: Calculated
 expected_range:
 - -100000.0
 - 100000.0

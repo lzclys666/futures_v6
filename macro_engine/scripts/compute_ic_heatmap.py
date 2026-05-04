@@ -30,7 +30,12 @@ from scipy import stats
 DB_PATH = Path(__file__).parent.parent / "pit_data.db"
 
 # 已知有独立 OHLCV 表的品种（其他品种从 jm_futures_ohlcv 获取价格）
-OWN_OHLCV_SYMBOLS = {"AG", "AU", "CU", "NI", "RB", "RU", "ZN", "JM"}
+OWN_OHLCV_SYMBOLS = {"AG", "AU", "CU", "NI", "RB", "RU", "ZN", "JM", "AL"}
+
+# OHLCV 表的日期列名映射（al_futures_ohlcv 用 "date"，其余用 "obs_date"）
+OHLCV_DATE_COL = {
+    "al_futures_ohlcv": "date",
+}
 
 
 def get_ohlcv_table(symbol: str) -> str | None:
@@ -76,10 +81,11 @@ def get_main_contract(cursor, symbol: str, ohlcv_table: str) -> str | None:
             main = contracts[-1]
         return main
 
-    # 回退：取 obs_date 最大的那条
+    # 回退：取日期列最大的那条
+    date_col = OHLCV_DATE_COL.get(ohlcv_table, 'obs_date')
     cursor.execute(f"""
         SELECT contract FROM {ohlcv_table}
-        ORDER BY obs_date DESC LIMIT 1
+        ORDER BY {date_col} DESC LIMIT 1
     """)
     row = cursor.fetchone()
     return row[0] if row else None
@@ -116,11 +122,12 @@ def get_price_returns(symbol: str) -> pd.Series:
         return pd.Series(dtype=float)
 
     # 查询价格数据（按合约过滤）
+    date_col = OHLCV_DATE_COL.get(ohlcv_table, 'obs_date')
     df = pd.read_sql_query(f"""
-        SELECT obs_date, close
+        SELECT {date_col} as obs_date, close
         FROM {ohlcv_table}
         WHERE contract = ?
-        ORDER BY obs_date
+        ORDER BY {date_col}
     """, conn, params=(contract,))
     conn.close()
 

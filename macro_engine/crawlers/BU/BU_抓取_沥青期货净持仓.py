@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 BU_沥青期货净持仓.py
-因子: BU_BU_POS_NET = 沥青期货净持仓（手）
+因子: BU_POS_NET = 沥青期货净持仓（手）
 
 公式: 数据采集（无独立计算公式）
 
@@ -25,7 +25,7 @@ from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_
 import akshare as ak
 import pandas as pd
 
-FACTOR_CODE = "BU_BU_POS_NET"
+FACTOR_CODE = "BU_POS_NET"
 SYMBOL = "BU"
 BOUNDS = (-50000.0, 50000.0)
 

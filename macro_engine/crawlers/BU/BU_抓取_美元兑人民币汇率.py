@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 BU_美元兑人民币汇率.py
-因子: BU_BU_FX_USDCNY = 美元兑人民币汇率
+因子: BU_FX_USDCNY = 美元兑人民币汇率
 
 公式: 数据采集（无独立计算公式）
 
@@ -25,7 +25,7 @@ from common.web_utils import fetch_url
 import akshare as ak
 import pandas as pd
 
-FACTOR_CODE = "BU_BU_FX_USDCNY"
+FACTOR_CODE = "BU_FX_USDCNY"
 SYMBOL = "BU"
 BOUNDS = (6.5, 7.5)
 

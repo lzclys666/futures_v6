@@ -1,8 +1,8 @@
-factor_code: BU_BU_STK_REFINERY
+factor_code: BU_STK_INVENTORY
 symbol: BU
 category: free_data
-name: 炼厂沥青库存
-description: 炼厂沥青库存
+name: 全国沥青总库存
+description: 全国沥青总库存
 frequency: daily
 unit: 万吨
 direction: neutral

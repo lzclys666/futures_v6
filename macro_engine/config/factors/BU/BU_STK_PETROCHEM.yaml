@@ -1,8 +1,8 @@
-factor_code: BU_BU_STK_WARRANT
+factor_code: BU_STK_PETROCHEM
 symbol: BU
 category: free_data
-name: 沥青期货仓单
-description: 沥青期货仓单
+name: 石化企业沥青库存
+description: 石化企业沥青库存
 frequency: daily
 unit: 万吨
 direction: neutral

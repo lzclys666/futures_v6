@@ -1,98 +1,111 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-AO_run_all.py - 大连豆一期货数据采集调度脚本
-调度顺序: 豆一收盘价 → 豆一持仓量 → 大连期货库存
-"""
-import subprocess, sys, os, time
-from datetime import datetime
+AO_run_all.py - 氧化铝期货数据采集调度脚本
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-os.chdir(SCRIPT_DIR)
-sys.path.insert(0, os.path.join(SCRIPT_DIR, ".."))
+支持 --auto/--manual 双模式:
+- --auto: 只跑活跃脚本（免费源）
+- --manual: 只跑需付费/手动录入的脚本
+- 默认: --auto
+"""
+import os, sys, subprocess, datetime, argparse
+from pathlib import Path
+
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
+CURRENT_DIR = Path(__file__).parent
+LOG_DIR = CURRENT_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+sys.path.insert(0, str(CURRENT_DIR.parent))
 from common.db_utils import ensure_table, get_pit_dates
 
-# 自动模式脚本（免费源）
-AUTO_SCRIPTS = [
-    'AO_抓取_豆一期货收盘价.py',
-    'AO_抓取_豆一期货持仓量.py',
-    'AO_抓取_大连期货库存.py',
+# === 活跃脚本（免费源）===
+# 执行顺序：价格类 → OHLCV → 持仓类 → 计算类 → 月度数据
+auto_scripts = [
+    ("AO_抓取期货日行情.py", "AO期货行情(OHLCV)"),
+    ("AO_抓取沪铝期货价格.py", "沪铝主力价格"),
+    ("AO_抓取氧化铝主力价格.py", "氧化铝主力价格"),
+    ("AO_抓取上期所仓单.py", "SHFE氧化铝仓单"),
+    ("AO_抓取期货持仓.py", "氧化铝期货持仓"),
+    ("AO_抓取前20净持仓.py", "氧化铝前20净持仓"),
+    ("AO_计算电解铝行业利润.py", "电解铝行业利润"),
+    ("AO_计算跨品种价差.py", "铝-氧化铝跨品种价差"),
+    ("AO_计算期现基差.py", "氧化铝期现基差"),
+    ("AO_抓取铝土矿CIF价.py", "几内亚铝土矿CIF价"),
+    ("AO_抓取氧化铝进口量.py", "中国氧化铝进口量"),
+    ("AO_抓取铝土矿进口量.py", "中国铝土矿进口量"),
 ]
 
-# 手动模式脚本（付费/手动录入）
-MANUAL_SCRIPTS = []
 
+def run_script(name, desc):
+    script_path = CURRENT_DIR / name
+    if not script_path.exists():
+        print(f"[WARN] {name} not found"); return None
+    print(f">>> {desc} ({name})...")
 
-def run_script(name):
-    path = os.path.join(SCRIPT_DIR, name)
-    if not os.path.exists(path):
-        return False, f"{name} not found"
+    env = os.environ.copy()
+    env["PYTHONIOENCODING"] = "utf-8"
+
     try:
         r = subprocess.run(
-            [sys.executable, '-X', 'utf8=1', path, '--auto'],
-            capture_output=True, timeout=60
+            [sys.executable, "-X", "utf8=1", str(script_path)],
+            capture_output=True, text=True,
+            encoding="utf-8", errors="replace",
+            timeout=120, cwd=str(CURRENT_DIR), env=env
         )
-        try:
-            out = r.stdout.decode("utf-8", errors="replace")
-        except Exception:
-            out = str(r.stdout)
-        ok = r.returncode == 0
-        return ok, out[-200:] if out else ""
+        out = (r.stdout or "").strip()
+        if out:
+            for line in out.splitlines()[-3:]:
+                print(f"    {line}")
+        if r.returncode == 0:
+            print(f"[OK] {desc} done"); return True
+        else:
+            print(f"[WARN] {desc} exit:{r.returncode}"); return False
+    except subprocess.TimeoutExpired:
+        print(f"[WARN] {name} TIMEOUT (>120s)"); return False
     except Exception as e:
-        return False, str(e)[:80]
+        print(f"[ERR] {name} exception: {e}"); return False
 
 
 def main():
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--auto", action="store_true", help="免费源自动采集")
-    parser.add_argument("--manual", action="store_true", help="手动录入脚本")
+    parser = argparse.ArgumentParser(description="AO数据采集")
+    parser.add_argument('--auto', action='store_true', help='只跑免费源脚本（默认）')
+    parser.add_argument('--manual', action='store_true', help='只跑付费源/手动录入脚本')
     args = parser.parse_args()
 
     ensure_table()
     pub_date, obs_date = get_pit_dates()
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    sep = "=" * 60
-    print(sep)
-    print(f"AO Data Collection @ {now}")
+    print("=" * 60)
+    print(f"AO Data Collection @ {datetime.datetime.now()}")
     print(f"日期: pub={pub_date} obs={obs_date}")
-    print(sep)
+    print("=" * 60)
 
-    scripts = []
-    mode = "unknown"
-    if args.auto:
-        scripts = AUTO_SCRIPTS
-        mode = f"auto - {len(scripts)} 个免费源脚本"
-    elif args.manual:
-        scripts = MANUAL_SCRIPTS
-        mode = f"manual - {len(scripts)} 个付费/手动录入脚本"
+    if args.manual:
+        scripts = []
+        print(f"[MODE] manual - 暂无付费/手动录入脚本")
     else:
-        # 默认auto
-        scripts = AUTO_SCRIPTS
-        mode = f"auto - {len(scripts)} 个免费源脚本（默认）"
+        scripts = auto_scripts
+        print(f"[MODE] auto - {len(scripts)} 个免费源脚本")
 
-    print(f"[MODE] {mode}")
     print("-" * 60)
+    t0 = datetime.datetime.now()
+    ok, fail = 0, 0
 
-    t0 = time.time()
-    ok = 0
-    for s in scripts:
-        print(f">>> {s}...")
-        success, detail = run_script(s)
-        if detail:
-            for line in detail.split('\n'):
-                if line.strip():
-                    print(f"    {line[:100]}")
-        if success:
-            print(f"[OK] {s} done")
+    for name, desc in scripts:
+        r = run_script(name, desc)
+        if r:
             ok += 1
         else:
-            print(f"[ERR] {s} failed")
-    print(sep)
-    elapsed = time.time() - t0
-    print(f"完成: {ok}/{len(scripts)} 成功, 耗时 {elapsed:.1f}s")
-    print(sep)
+            fail += 1
+        import time; time.sleep(1)
+
+    duration = (datetime.datetime.now() - t0).total_seconds()
+    print("=" * 60)
+    print(f"完成: {ok}/{ok+fail} 成功, 耗时 {duration:.1f}s")
+    print("=" * 60)
 
 
 if __name__ == "__main__":

@@ -1,16 +1,16 @@
-factor_code: BU_BU_MACRO_HIGHWAY
+factor_code: BU_STK_PORT
 symbol: BU
 category: free_data
-name: 全国高速公路整车流量
-description: 全国高速公路整车流量
+name: 港口沥青库存
+description: 港口沥青库存
 frequency: daily
-unit: null
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- macro
+- inventory
 - BU
 source_confidence: 3
 data_source: AKShare

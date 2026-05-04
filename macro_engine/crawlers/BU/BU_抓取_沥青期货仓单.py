@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 BU_沥青期货仓单.py
-因子: BU_BU_STK_WARRANT = 沥青期货仓单（万吨）
+因子: BU_STK_WARRANT = 沥青期货仓单（万吨）
 
 公式: 数据采集（无独立计算公式）
 
@@ -23,7 +23,7 @@ from common.db_utils import ensure_table, save_l4_fallback, get_pit_dates
 
 import akshare as ak
 
-FACTOR_CODE = "BU_BU_STK_WARRANT"
+FACTOR_CODE = "BU_STK_WARRANT"
 SYMBOL = "BU"
 
 

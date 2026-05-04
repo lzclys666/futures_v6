@@ -1,19 +1,19 @@
-factor_code: BU_BU_SPD_BASIS
+factor_code: BU_STK_REFINERY
 symbol: BU
-category: derived
-name: 沥青期现基差
-description: 沥青期现基差
+category: free_data
+name: 炼厂沥青库存
+description: 炼厂沥青库存
 frequency: daily
-unit: 元/吨
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- spread
+- inventory
 - BU
 source_confidence: 3
-data_source: Calculated
+data_source: AKShare
 expected_range:
 - -100000.0
 - 100000.0

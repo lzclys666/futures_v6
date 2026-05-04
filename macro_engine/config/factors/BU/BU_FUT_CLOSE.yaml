@@ -1,16 +1,16 @@
-factor_code: BU_BU_STK_PORT
+factor_code: BU_FUT_CLOSE
 symbol: BU
 category: free_data
-name: 港口沥青库存
-description: 港口沥青库存
+name: 沥青期货收盘价
+description: 沥青期货收盘价
 frequency: daily
-unit: 万吨
+unit: 元/吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- inventory
+- price
 - BU
 source_confidence: 3
 data_source: AKShare
