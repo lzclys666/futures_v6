@@ -16,8 +16,7 @@ AL_批次2_手动输入.py
 """
 import sys, os as _os
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_latest_value
-from datetime import date
+from common.db_utils import ensure_table, save_to_db, get_pit_dates
 
 SYMBOL = "AL"
 
@@ -45,13 +44,12 @@ FACTORS = [
 
 
 def main():
-    ensure_table()
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--auto", action="store_true")
     args = parser.parse_args()
-    today = date.today()
-    pub_date = today.isoformat()
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
 
     print("=" * 60)
     print(f"  AL批次2/3/4 — 付费因子录入  @ {pub_date}")
@@ -61,6 +59,9 @@ def main():
         print("[AUTO] 付费因子无免费采集路径，请登录Mysteel/SMM手动录入")
         return 0
 
+    # 用于默认值显示（转为字符串）
+    pub_date_str = pub_date.isoformat() if hasattr(pub_date, 'isoformat') else str(pub_date)
+
     written = 0
     for f in FACTORS:
         print(f"\n--- {f['code']} ({f['name']}) [批次{f['batch']}] ---")
@@ -68,8 +69,8 @@ def main():
         print(f"  数据源: {f['source']}")
 
         # obs_date（数据观测日期），默认为今天（pub_date）
-        obs_date_input = input(f"  输入 {f['code']} 的obs_date（留空默认={pub_date}）: ").strip()
-        obs_date = obs_date_input if obs_date_input else pub_date
+        obs_date_input = input(f"  输入 {f['code']} 的obs_date（留空默认={pub_date_str}）: ").strip()
+        obs_date = obs_date_input if obs_date_input else pub_date_str
 
         try:
             val_str = input(f"  输入 {f['code']}（留空跳过）: ").strip()

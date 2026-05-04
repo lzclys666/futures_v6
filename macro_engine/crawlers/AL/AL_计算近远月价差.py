@@ -7,8 +7,8 @@ AL_计算近远月价差.py
 公式: 近月合约收盘价 - 远月合约收盘价（正向市场近月升水，负值代表反向市场）
 
 当前状态: [✅正常]
-- L1: 新浪nf_实时API（nf_AL0等近远月合约）
-- L2: AKShare futures_zh_daily_sina
+- L1: 新浪nf_实时API（nf_AL0等近远月合约），source_confidence=1.0
+- L2: AKShare futures_zh_daily_sina，source_confidence=0.9
 - bounds: [-500, 500]元/吨
 - 注: L3层已修正为save_l4_fallback（2026-05-05）
 
@@ -71,7 +71,7 @@ def fetch_spread():
                 spread = round(prices[0] - prices[1], 2)
                 if BOUNDS[0] <= spread <= BOUNDS[1]:
                     print(f"[L1] 成功: {spread} 元/吨")
-                    return spread, "sina", 0.9
+                    return spread, "sina", 1.0
     except Exception as e:
         print(f"[L1] 失败: {e}")
 

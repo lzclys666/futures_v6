@@ -7,13 +7,14 @@ AL_抓取LME铝价_铝道网.py
 公式: 数据采集（无独立计算公式）
 
 当前状态: [✅正常]
-- L1: 铝道网(hq.alu.cn)，L2免费聚合，解析页面中的LME铝现货价格
-- L2: LME官网备用
+- L1: 铝道网(hq.alu.cn)，source_confidence=0.9（免费源，无L2备选）
+- L2: 无备选源（铝道网为唯一免费LME铝价来源）
 - bounds: [1500, 5000]美元/吨（2020年来LME铝价区间）
 - 注: L3回补已添加（2026-05-05）
 
 订阅优先级: ★★（铝道网免费数据）
 替代付费源: LME官网（免费但需解析）
+注: 铝道网页面解析失败时走L3回补（2026-05-05）
 """
 import sys, os, re, datetime
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')

@@ -7,8 +7,8 @@ AL_抓取LME铝库存.py
 公式: 数据采集（无独立计算公式）
 
 当前状态: [✅正常]
-- L1: AKShare macro_euro_lme_stock（欧洲LME库存，含铝分品种）
-- L2: 无备选源（LME库存仅此接口）
+- L1: AKShare macro_euro_lme_stock（欧洲LME库存，含铝分品种），source_confidence=1.0
+- L2: 无备选源（LME库存仅此接口），source_confidence=0.9
 - bounds: [0, 5000000]吨
 - 注: L3层已修正为save_l4_fallback（2026-05-05）
 
@@ -57,7 +57,7 @@ def fetch_lme_inventory():
             val = float(val)
             if BOUNDS[0] <= val <= BOUNDS[1]:
                 print(f"[L1] 成功: {val:.0f} 吨")
-                return val, "akshare", 0.9
+                return val, "akshare", 1.0
             else:
                 print(f"[L1] 值{val}超出bounds{BOUNDS}，跳过")
     except Exception as e:
