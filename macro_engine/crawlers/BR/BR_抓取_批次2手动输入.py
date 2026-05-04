@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 BR_批次2_手动输入.py
-因子: BR_COST_BD/BR_COST_ETH/BR_COST_MARGIN（派生）/BR_DEM_TIRE_ALLST/BR_DEM_TIRE_SEMI/BR_DEM_AUTO/BR_SUP_RATE
+因子: BR_COST_BD/BR_COST_ETH/BR_COST_MARGIN（派生）/BR_DEM_TIRE_ALLSTEEL/BR_DEM_TIRE_SEMI/BR_DEM_AUTO/BR_SUP_RATE
 
 公式: 数据采集（无独立计算公式）
 
@@ -49,7 +49,7 @@ FACTORS = [
         "auto": True,
     },
     {
-        "code": "BR_DEM_TIRE_ALLST",
+        "code": "BR_DEM_TIRE_ALLSTEEL",
         "name": "全钢胎开工率",
         "unit": "%",
         "bounds": (30, 100),
