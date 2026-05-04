@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_计算近远月价差.py
@@ -6,18 +6,21 @@ AL_计算近远月价差.py
 
 公式: 近月合约收盘价 - 远月合约收盘价（正向市场近月升水，负值代表反向市场）
 
-当前状态: [OK]正常
+当前状态: [✅正常]
 - L1: 新浪nf_实时API（nf_AL0等近远月合约）
 - L2: AKShare futures_zh_daily_sina
-- bounds: [-500, 500]元/吨（正常近远月价差区间）
-- 注: 价差=近月-远月，正数=近月升水（正向市场），负数=近月贴水
+- bounds: [-500, 500]元/吨
+- 注: L3层已修正为save_l4_fallback（2026-05-05）
 
 订阅优先级: 无需付费
 替代付费源: 无
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
 
 import akshare as ak
 from common.web_utils import fetch_url
@@ -85,24 +88,33 @@ def fetch_spread():
     except Exception as e:
         print(f"[L2] 失败: {e}")
 
-    # L4回补
-    print("[L4] DB历史回补...")
-    val = get_latest_value(FACTOR_CODE, SYMBOL)
-    if val is not None:
-        print(f"[L4] 兜底: {val}")
-        return val, "db_回补", 0.5
     return None, None, None
 
 
-if __name__ == "__main__":
+def main():
+    ensure_table()
     pub_date, obs_date = get_pit_dates()
     if pub_date is None:
-        print("-- 非交易日"); exit(0)
-    ensure_table()
+        print("-- 非交易日"); return
     print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
+
     value, source, confidence = fetch_spread()
+
     if value is not None:
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value,
                    source=source, source_confidence=confidence)
+        print(f"[OK] {FACTOR_CODE}={value} 写入成功")
+        return
+
+    # L3: 兜底保障
+    if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                         extra_msg="(近远月价差)"):
+        pass
     else:
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                   source_confidence=0.0, source="all_sources_failed")
         print(f"[ERR] {FACTOR_CODE} 所有数据源均失败")
+
+
+if __name__ == "__main__":
+    main()

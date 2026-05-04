@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_计算持仓集中度.py
@@ -6,17 +6,20 @@ AL_计算持仓集中度.py
 
 公式: CR10 = (前10名会员持仓量 / 总持仓量) × 100
 
-当前状态: [OK]正常
-- 数据源: AKShare get_shfe_rank_table()，L1权威
-- 采集逻辑: 筛选AL，计算前10名/总量×100
+当前状态: [✅正常]
+- L1: AKShare get_shfe_rank_table()（L1权威）
 - bounds: [0, 100]%
+- 注: obs_date Bug已修复（2026-05-05）
 
 订阅优先级: 无需付费
 替代付费源: 无
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
 
 import akshare as ak
 
@@ -25,10 +28,10 @@ SYMBOL = "AL"
 BOUNDS = (0, 100)
 
 
-def fetch_concentration():
+def fetch_concentration(obs_date):
     try:
         print("[L1] AKShare get_shfe_rank_table...")
-        df = ak.get_shfe_rank_table(date=obs_date)
+        df = ak.get_shfe_rank_table(date=obs_date.strftime("%Y%m%d"))
         if df is not None and len(df) > 0:
             al_df = df[df["variety"] == "AL"]
             if len(al_df) > 0:
@@ -49,24 +52,33 @@ def fetch_concentration():
     except Exception as e:
         print(f"[L1] 失败: {e}")
 
-    # L4回补
-    print("[L4] DB历史回补...")
-    val = get_latest_value(FACTOR_CODE, SYMBOL)
-    if val is not None:
-        print(f"[L4] 兜底: {val}")
-        return val, "db_回补", 0.5
     return None, None, None
 
 
-if __name__ == "__main__":
+def main():
+    ensure_table()
     pub_date, obs_date = get_pit_dates()
     if pub_date is None:
-        print("-- 非交易日"); exit(0)
-    ensure_table()
+        print("-- 非交易日"); return
     print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
-    value, source, confidence = fetch_concentration()
+
+    value, source, confidence = fetch_concentration(obs_date)
+
     if value is not None:
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value,
                    source=source, source_confidence=confidence)
+        print(f"[OK] {FACTOR_CODE}={value} 写入成功")
+        return
+
+    # L3: 兜底保障
+    if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                         extra_msg="(持仓集中度)"):
+        pass
     else:
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                   source_confidence=0.0, source="all_sources_failed")
         print(f"[ERR] {FACTOR_CODE} 所有数据源均失败")
+
+
+if __name__ == "__main__":
+    main()

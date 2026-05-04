@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_计算铝铜比价.py
@@ -6,17 +6,21 @@ AL_计算铝铜比价.py
 
 公式: 比价 = AL0收盘价 / CU0收盘价（无量纲）
 
-当前状态: [OK]正常
-- L2: 新浪nf_AL0/nf_CU0实时行情（免费聚合）
+当前状态: [✅正常]
 - L1: AKShare futures_zh_daily_sina（免费权威）
+- L2: 新浪nf_AL0/nf_CU0实时行情（免费聚合）
 - bounds: [0.1, 1.0]（铝价远低于铜价，正常区间0.2~0.5）
+- 注: L3层已修正为save_l4_fallback（2026-05-05）
 
 订阅优先级: 无需付费
 替代付费源: 无
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
 
 import akshare as ak
 from common.web_utils import fetch_url
@@ -27,6 +31,22 @@ BOUNDS = (0.1, 1.0)
 
 
 def fetch_ratio():
+    # L1: AKShare（免费权威）
+    try:
+        print("[L1] AKShare futures_zh_daily_sina...")
+        df_al = ak.futures_zh_daily_sina(symbol="AL0")
+        df_cu = ak.futures_zh_daily_sina(symbol="CU0")
+        if df_al is not None and df_cu is not None:
+            p_al = float(df_al.iloc[-1]["close"])
+            p_cu = float(df_cu.iloc[-1]["close"])
+            if p_cu > 0:
+                ratio = round(p_al / p_cu, 4)
+                if BOUNDS[0] <= ratio <= BOUNDS[1]:
+                    print(f"[L1] 成功: AL/CU={ratio}")
+                    return ratio, "akshare", 1.0
+    except Exception as e:
+        print(f"[L1] 失败: {e}")
+
     # L2: 新浪（免费聚合源）
     try:
         print("[L2] 新浪 nf_AL0 & nf_CU0...")
@@ -50,40 +70,33 @@ def fetch_ratio():
     except Exception as e:
         print(f"[L2] 失败: {e}")
 
-    # L1: AKShare
-    try:
-        print("[L1] AKShare futures_zh_daily_sina...")
-        df_al = ak.futures_zh_daily_sina(symbol="AL0")
-        df_cu = ak.futures_zh_daily_sina(symbol="CU0")
-        if df_al is not None and df_cu is not None:
-            p_al = float(df_al.iloc[-1]["close"])
-            p_cu = float(df_cu.iloc[-1]["close"])
-            if p_cu > 0:
-                ratio = round(p_al / p_cu, 4)
-                if BOUNDS[0] <= ratio <= BOUNDS[1]:
-                    print(f"[L1] 成功: AL/CU={ratio}")
-                    return ratio, "akshare", 1.0
-    except Exception as e:
-        print(f"[L1] 失败: {e}")
-
-    # L4回补
-    print("[L4] DB历史回补...")
-    val = get_latest_value(FACTOR_CODE, SYMBOL)
-    if val is not None:
-        print(f"[L4] 兜底: {val}")
-        return val, "db_回补", 0.5
     return None, None, None
 
 
-if __name__ == "__main__":
+def main():
+    ensure_table()
     pub_date, obs_date = get_pit_dates()
     if pub_date is None:
-        print("-- 非交易日"); exit(0)
-    ensure_table()
+        print("-- 非交易日"); return
     print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
+
     value, source, confidence = fetch_ratio()
+
     if value is not None:
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value,
                    source=source, source_confidence=confidence)
+        print(f"[OK] {FACTOR_CODE}={value} 写入成功")
+        return
+
+    # L3: 兜底保障
+    if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                         extra_msg="(铝铜比价)"):
+        pass
     else:
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                   source_confidence=0.0, source="all_sources_failed")
         print(f"[ERR] {FACTOR_CODE} 所有数据源均失败")
+
+
+if __name__ == "__main__":
+    main()

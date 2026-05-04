@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_抓取LME铝库存.py
@@ -6,17 +6,21 @@ AL_抓取LME铝库存.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: [OK]正常
-- 数据源: AKShare macro_euro_lme_stock（欧洲LME库存，含铝分品种）
-- 采集逻辑: 查找列名含'aluminum'/'al'的列，取最新一行数值
-- bounds: [0, 5000000]吨（LME铝库存历史最高约500万吨）
+当前状态: [✅正常]
+- L1: AKShare macro_euro_lme_stock（欧洲LME库存，含铝分品种）
+- L2: 无备选源（LME库存仅此接口）
+- bounds: [0, 5000000]吨
+- 注: L3层已修正为save_l4_fallback（2026-05-05）
 
 订阅优先级: ★★（LME库存为公开数据，AKShare为L2聚合）
 替代付费源: LME官网（免费，需解析）
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
 
 import akshare as ak
 
@@ -59,24 +63,36 @@ def fetch_lme_inventory():
     except Exception as e:
         print(f"[L1] 失败: {e}")
 
-    # L4回补
-    print("[L4] DB历史回补...")
-    val = get_latest_value(FACTOR_CODE, SYMBOL)
-    if val is not None:
-        print(f"[L4] 兜底: {val}")
-        return val, "db_回补", 0.5
+    # L2: 无备选源（LME库存仅此接口）
+    print("[L2] 无备选源（LME库存仅macro_euro_lme_stock）")
+
     return None, None, None
 
 
-if __name__ == "__main__":
+def main():
+    ensure_table()
     pub_date, obs_date = get_pit_dates()
     if pub_date is None:
-        print("-- 非交易日"); exit(0)
-    ensure_table()
+        print("-- 非交易日"); return
     print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
+
     value, source, confidence = fetch_lme_inventory()
+
     if value is not None:
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value,
                    source=source, source_confidence=confidence)
+        print(f"[OK] {FACTOR_CODE}={value} 写入成功")
+        return
+
+    # L3: 兜底保障
+    if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                         extra_msg="(LME铝库存)"):
+        pass
     else:
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                   source_confidence=0.0, source="all_sources_failed")
         print(f"[ERR] {FACTOR_CODE} 所有数据源均失败")
+
+
+if __name__ == "__main__":
+    main()

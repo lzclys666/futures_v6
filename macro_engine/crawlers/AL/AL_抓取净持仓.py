@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_抓取净持仓.py
@@ -6,17 +6,21 @@ AL_抓取净持仓.py
 
 公式: Σ(多头持仓 - 空头持仓)，单位：手
 
-当前状态: [OK]正常
-- 数据源: AKShare get_shfe_rank_table()，L1权威（交易所官网数据）
-- 采集逻辑: 筛选variety=='AL'，取成交量列求和
+当前状态: [✅正常]
+- L1: AKShare get_shfe_rank_table()（交易所官网数据，L1权威）
+- L2: 新浪nf_AL0备用
 - bounds: [-500000, 500000]手
+- 注: obs_date Bug已修复（2026-05-05）
 
 订阅优先级: 无需付费
 替代付费源: 无
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
 
 import akshare as ak
 from common.web_utils import fetch_url
@@ -26,11 +30,11 @@ SYMBOL = "AL"
 BOUNDS = (-500_000, 500_000)
 
 
-def fetch_net_position():
+def fetch_net_position(obs_date):
     # L1: AKShare 交易所排名
     try:
         print("[L1] AKShare get_shfe_rank_table...")
-        df = ak.get_shfe_rank_table(date=obs_date)
+        df = ak.get_shfe_rank_table(date=obs_date.strftime("%Y%m%d"))
         if df is not None and len(df) > 0:
             al_df = df[df["variety"] == "AL"]
             if len(al_df) > 0:
@@ -60,29 +64,39 @@ def fetch_net_position():
             data = html.split('"')[1].split(",")
             if len(data) >= 13:
                 vol = float(data[11]) if data[11] else float(data[4])
-                print(f"[L2] 成功: {vol:.0f} 手")
-                return vol, "sina", 0.9
+                if BOUNDS[0] <= vol <= BOUNDS[1]:
+                    print(f"[L2] 成功: {vol:.0f} 手")
+                    return vol, "sina", 0.9
     except Exception as e:
         print(f"[L2] 失败: {e}")
 
-    # L4回补
-    print("[L4] DB历史回补...")
-    val = get_latest_value(FACTOR_CODE, SYMBOL)
-    if val is not None:
-        print(f"[L4] 兜底: {val}")
-        return val, "db_回补", 0.5
     return None, None, None
 
 
-if __name__ == "__main__":
+def main():
+    ensure_table()
     pub_date, obs_date = get_pit_dates()
     if pub_date is None:
-        print("-- 非交易日"); exit(0)
-    ensure_table()
+        print("-- 非交易日"); return
     print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
-    value, source, confidence = fetch_net_position()
+
+    value, source, confidence = fetch_net_position(obs_date)
+
     if value is not None:
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value,
                    source=source, source_confidence=confidence)
+        print(f"[OK] {FACTOR_CODE}={value} 写入成功")
+        return
+
+    # L3: 兜底保障
+    if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                         extra_msg="(净持仓)"):
+        pass
     else:
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                   source_confidence=0.0, source="all_sources_failed")
         print(f"[ERR] {FACTOR_CODE} 所有数据源均失败")
+
+
+if __name__ == "__main__":
+    main()

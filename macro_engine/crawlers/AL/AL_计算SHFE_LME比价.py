@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_计算SHFE_LME比价.py
@@ -7,17 +7,22 @@ AL_计算SHFE_LME比价.py
 公式: 比价 = SHFE沪铝主力价(元/吨) / (LME铝价(美元/吨) × 美元人民币汇率)
 说明: 跨市套利参考指标，剔除外汇影响后的沪伦铝比值，正常区间0.85~1.15
 
-当前状态: [OK]正常
+当前状态: [✅正常]
 - SHFE铝价: AKShare futures_settle_shfe（每日结算价，L1权威）
 - LME铝价: 数据库已有记录AL_LME_PRICE（铝道网爬虫写入，L2聚合）
-- 汇率: 实时获取新浪USDCNY（L2），避免硬编码
+- 汇率: 实时获取新浪USDCNY（L2）
+- bounds: [0.5, 2.0]
+- 注: L3层已修正为save_l4_fallback（2026-05-05）
 
 订阅优先级: ★★（LME价格来自铝道网免费数据）
 替代付费源: 无需付费
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value, DB_PATH
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates, DB_PATH
 
 import akshare as ak
 from common.web_utils import fetch_url
@@ -82,11 +87,10 @@ def fetch_lme_price_from_db(obs_date):
     return None
 
 
-if __name__ == "__main__":
+def main():
     pub_date, obs_date = get_pit_dates()
     if pub_date is None:
-        print("-- 非交易日")
-        exit(0)
+        print("-- 非交易日"); return
 
     ensure_table()
     print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
@@ -106,17 +110,29 @@ if __name__ == "__main__":
         if 0.5 <= ratio <= 2.0:
             save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, ratio,
                        source="akshare+sina+db", source_confidence=0.85)
-            print(f"[OK] AL_SPD_SHFE_LME={ratio} (SHFE={shfe_price}, LME={lme_price}, FX={fx_rate})")
+            print(f"[OK] {FACTOR_CODE}={ratio} (SHFE={shfe_price}, LME={lme_price}, FX={fx_rate})")
         else:
             print(f"[WARN] 比值{ratio}超出合理范围[0.5,2.0]，跳过写入")
+            # L3: 兜底保障
+            if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                                 extra_msg="(SHFE_LME比价)"):
+                pass
+            else:
+                save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                           source_confidence=0.0, source="all_sources_failed")
     elif not lme_price:
-        # L4回补
-        val = get_latest_value(FACTOR_CODE, SYMBOL)
-        if val is not None:
-            print(f"[L4] LME价格缺失，DB回补: {val}")
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                       source="db_回补", source_confidence=0.5)
+        # L3: 兜底保障
+        print("[L3] LME价格缺失，启用兜底...")
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(SHFE_LME比价)"):
+            pass
         else:
-            print("[WARN] AL_SPD_SHFE_LME 所有数据源均失败")
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                       source_confidence=0.0, source="all_sources_failed")
+            print(f"[ERR] {FACTOR_CODE} 所有数据源均失败")
     else:
         print("[WARN] SHFE或汇率获取失败，跳过")
+
+
+if __name__ == "__main__":
+    main()

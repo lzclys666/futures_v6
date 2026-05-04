@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 AL_抓取LME铝价_铝道网.py
@@ -6,19 +6,23 @@ AL_抓取LME铝价_铝道网.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: [OK]正常
-- 数据源: 铝道网(hq.alu.cn)，L2免费聚合，解析页面中的LME铝现货价格
-- 采集逻辑: 正则提取标题或表格数据
+当前状态: [✅正常]
+- L1: 铝道网(hq.alu.cn)，L2免费聚合，解析页面中的LME铝现货价格
+- L2: LME官网备用
 - bounds: [1500, 5000]美元/吨（2020年来LME铝价区间）
+- 注: L3回补已添加（2026-05-05）
 
 订阅优先级: ★★（铝道网免费数据）
 替代付费源: LME官网（免费但需解析）
 """
-from common.web_utils import fetch_url, fetch_json
 import sys, os, re, datetime
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
+
+from common.web_utils import fetch_url
 
 FACTOR_CODE = "AL_LME_PRICE"
 SYMBOL = "AL"
@@ -46,7 +50,7 @@ def fetch_lme_price():
             obs_date = f"{year}-{month}-{day}"
             price_val = float(price)
             if BOUNDS[0] <= price_val <= BOUNDS[1]:
-                print(f"[L2] 成功({obs_date}): ${price_val}/ton")
+                print(f"[L1] 成功({obs_date}): ${price_val}/ton")
                 return price_val, obs_date
 
         # 策略2: 表格解析
@@ -60,10 +64,9 @@ def fetch_lme_price():
                 try:
                     price_val = float(close_price)
                     if BOUNDS[0] <= price_val <= BOUNDS[1]:
-                        # 转换日期: 04-16 → 2026-04-16
                         parts = date_cell.split("-")
                         obs_date = f"{datetime.date.today().year}-{parts[0]}-{parts[1]}"
-                        print(f"[L2] 表格解析({obs_date}): ${price_val}/ton")
+                        print(f"[L1] 表格解析({obs_date}): ${price_val}/ton")
                         return price_val, obs_date
                 except ValueError:
                     continue
@@ -76,22 +79,32 @@ def fetch_lme_price():
         return None, None
 
 
-if __name__ == "__main__":
+def main():
+    ensure_table()
     pub_date, obs_date = get_pit_dates()
     if pub_date is None:
-        print("-- 非交易日，跳过"); exit(0)
+        print("-- 非交易日"); return
 
-    ensure_table()
     print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
     price, data_date = fetch_lme_price()
     if price is not None:
-        # 数据日期应与obs_date一致或接近
         if data_date:
-            # 使用数据实际日期作为obs_date（更准确）
             obs_date = data_date
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, price,
                    source=DATA_SOURCE, source_confidence=0.9)
         print(f"[OK] {FACTOR_CODE}={price} (obs={obs_date})")
+        return
+
+    # L3: 兜底保障
+    if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                         extra_msg="(LME铝价)"):
+        pass
     else:
-        print(f"[ERR] {FACTOR_CODE} 抓取失败")
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                   source_confidence=0.0, source="all_sources_failed")
+        print(f"[ERR] {FACTOR_CODE} 所有数据源均失败")
+
+
+if __name__ == "__main__":
+    main()
