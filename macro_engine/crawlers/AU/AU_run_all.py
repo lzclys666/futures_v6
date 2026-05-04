@@ -17,28 +17,28 @@ from common.db_utils import ensure_table, get_pit_dates
 # 自动模式脚本（免费源）
 AUTO_SCRIPTS = [
     # 行情+持仓（日度）
-    'AU_期货收盘价.py',
-    'AU_期货持仓量.py',
+    'AU_抓取_期货收盘价.py',
+    'AU_抓取_期货持仓量.py',
     # 宏观因子（日度）
-    'AU_美国10年期国债收益率（名义）.py',
-    'AU_美联储联邦基金目标利率.py',
-    'AU_恐慌指数.py',
-    'AU_金银比_AUAG.py',
-    'AU_COMEX白银.py',
+    'AU_抓取_美国10Y国债.py',
+    'AU_抓取_美联储利率.py',
+    'AU_抓取_恐慌指数.py',
+    'AU_计算_金银比.py',
+    'AU_抓取_COMEX白银.py',
     # 美国宏观（月度）
-    'AU_美国非农.py',
-    'AU_美国CPI.py',
+    'AU_抓取_非农.py',
+    'AU_抓取_CPI.py',
     # 期现/现货
-    'AU_SGE现货基准价.py',
-    'AU_期现基差.py',
+    'AU_抓取_SGE现货价.py',
+    'AU_计算_期现基差.py',
     # 持仓/库存（周/月度）
-    'AU_CFTC非商业净多.py',
-    'AU_央行黄金储备.py',
+    'AU_抓取_CFTC净多.py',
+    'AU_抓取_央行黄金储备.py',
     # L4兜底因子（无免费源）
-    'AU_DXY美元指数.py',
-    'AU_SPDR黄金ETF持仓量.py',
-    'AU_SHFE沪金前20会员净持仓.py',
-    'AU_美联储点阵图（2026年末利率预测中位数）.py',
+    'AU_抓取_美元指数.py',
+    'AU_抓取_SPDR持仓.py',
+    'AU_抓取_SHFE前20净持仓.py',
+    'AU_抓取_美联储点阵图.py',
 ]
 
 # 手动模式脚本（付费/手动录入）
@@ -90,7 +90,6 @@ def main():
         scripts = MANUAL_SCRIPTS
         mode = f"manual - {len(scripts)} 个付费/手动录入脚本"
     else:
-        # 默认auto
         scripts = AUTO_SCRIPTS
         mode = f"auto - {len(scripts)} 个免费源脚本（默认）"
 
