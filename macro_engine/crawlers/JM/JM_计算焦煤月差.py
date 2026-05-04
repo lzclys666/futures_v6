@@ -121,6 +121,11 @@ if __name__ == "__main__":
     
     value, source, confidence = fetch_spread()
     if value is not None:
+        # Bounds 检查: (-100, 100) 元/吨
+        expected_lo, expected_hi = -100.0, 100.0
+        if not (expected_lo <= value <= expected_hi):
+            print(f"[WARN] {FACTOR_CODE}={value} 超出bounds[{expected_lo}, {expected_hi}]，跳过")
+            return
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, 
                   source_confidence=confidence, source=source)
         print(f"[OK] 写入数据: {value}")

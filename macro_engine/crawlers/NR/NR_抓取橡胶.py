@@ -57,7 +57,7 @@ def main():
         print(f"[WARN] {FACTOR_CODE}={raw_value:.1f} out of [{EXPECTED_MIN},{EXPECTED_MAX}]")
         return
 
-    save_to_db(FACTOR_CODE, SYMBOL, pub_date, data_obs_date, raw_value, source_confidence=1.0)
+    save_to_db(FACTOR_CODE, SYMBOL, pub_date, data_obs_date, raw_value, source_confidence=1.0, source="akshare_futures_inventory_em")
     print(f"[OK] {FACTOR_CODE}={raw_value:.1f} obs={data_obs_date}")
 
 if __name__ == "__main__":

@@ -7,8 +7,8 @@ AL_计算铝铜比价.py
 公式: 比价 = AL0收盘价 / CU0收盘价（无量纲）
 
 当前状态: [OK]正常
-- L1: 新浪nf_AL0/nf_CU0实时行情
-- L2: AKShare futures_zh_daily_sina
+- L2: 新浪nf_AL0/nf_CU0实时行情（免费聚合）
+- L1: AKShare futures_zh_daily_sina（免费权威）
 - bounds: [0.1, 1.0]（铝价远低于铜价，正常区间0.2~0.5）
 
 订阅优先级: 无需付费
@@ -27,9 +27,9 @@ BOUNDS = (0.1, 1.0)
 
 
 def fetch_ratio():
-    # L1: 新浪
+    # L2: 新浪（免费聚合源）
     try:
-        print("[L1] 新浪 nf_AL0 & nf_CU0...")
+        print("[L2] 新浪 nf_AL0 & nf_CU0...")
         html, err = fetch_url(
             "http://hq.sinajs.cn/list=nf_AL0,nf_CU0",
             timeout=10
@@ -45,14 +45,14 @@ def fetch_ratio():
             if len(prices) >= 2 and prices[1] > 0:
                 ratio = round(prices[0] / prices[1], 4)
                 if BOUNDS[0] <= ratio <= BOUNDS[1]:
-                    print(f"[L1] 成功: AL/CU={ratio} (AL={prices[0]:.0f}, CU={prices[1]:.0f})")
+                    print(f"[L2] 成功: AL/CU={ratio} (AL={prices[0]:.0f}, CU={prices[1]:.0f})")
                     return ratio, "sina", 0.9
     except Exception as e:
-        print(f"[L1] 失败: {e}")
+        print(f"[L2] 失败: {e}")
 
-    # L2: AKShare
+    # L1: AKShare
     try:
-        print("[L2] AKShare futures_zh_daily_sina...")
+        print("[L1] AKShare futures_zh_daily_sina...")
         df_al = ak.futures_zh_daily_sina(symbol="AL0")
         df_cu = ak.futures_zh_daily_sina(symbol="CU0")
         if df_al is not None and df_cu is not None:
@@ -61,10 +61,10 @@ def fetch_ratio():
             if p_cu > 0:
                 ratio = round(p_al / p_cu, 4)
                 if BOUNDS[0] <= ratio <= BOUNDS[1]:
-                    print(f"[L2] 成功: AL/CU={ratio}")
-                    return ratio, "akshare", 0.9
+                    print(f"[L1] 成功: AL/CU={ratio}")
+                    return ratio, "akshare", 1.0
     except Exception as e:
-        print(f"[L2] 失败: {e}")
+        print(f"[L1] 失败: {e}")
 
     # L4回补
     print("[L4] DB历史回补...")

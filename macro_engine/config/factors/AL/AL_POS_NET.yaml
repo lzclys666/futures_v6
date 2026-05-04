@@ -16,5 +16,5 @@ dependencies:
 description: 上期所前20名会员净持仓（多头-空头），反映主力资金流向
 category: derived
 name: 上期所前20净持仓
-source_confidence: 0.75
+source_confidence: 1.0
 data_source: 上期所官网

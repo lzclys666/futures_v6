@@ -16,7 +16,7 @@ dependencies:
 description: LME铝库存（含注销仓单），反映全球铝显性库存变化
 category: free_data
 name: LME铝库存
-source_confidence: 0.85
+source_confidence: 0.9
 data_source: LME官网
 expected_range:
 - -100000.0

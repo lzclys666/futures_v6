@@ -65,7 +65,7 @@ def main():
             print(f"[L2] DB兜底: {value}")
 
     if value is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=1.0)
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=1.0, source="akshare_futures_main_sina")
         print(f"OK: NR_FUT_OI={value:.0f}")
     else:
         print("FAIL: NR持仓量无数据")

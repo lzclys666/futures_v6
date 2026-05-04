@@ -22,7 +22,7 @@ import akshare as ak
 from datetime import date
 import pandas as pd
 
-FACTOR_CODE = "NR_SPD_CONTRACT"
+FACTOR_CODE = "NR_FUT_CLOSE"
 SYMBOL = "NR"
 EXPECTED_MIN = 10000
 EXPECTED_MAX = 20000
@@ -54,7 +54,7 @@ def main():
         return
 
     pub_date = date.today()
-    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source_confidence=1.0)
+    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source_confidence=1.0, source="akshare_futures_main_sina")
     print("[OK] %s=%.1f obs=%s" % (FACTOR_CODE, raw_value, obs_date))
 
 if __name__ == "__main__":

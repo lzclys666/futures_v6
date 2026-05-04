@@ -17,5 +17,5 @@ dependencies:
 description: 蒙5#折盘面价-焦煤期货价，基差走弱预示下跌
 category: free_data
 name: 焦煤期现基差
-source_confidence: 0.85
+source_confidence: 0.8
 data_source: 汾渭能源

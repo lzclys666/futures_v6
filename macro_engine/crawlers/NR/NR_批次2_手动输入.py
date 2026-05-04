@@ -70,7 +70,7 @@ FACTORS = [
         "hint": "橡胶船运费，波斯湾至中国主港",
     },
     {
-        "code": "NR_DEM_TIRE_EXPO",
+        "code": "NR_DEM_TIRE_EXPORT",
         "name": "轮胎出口量",
         "unit": "万条/月",
         "bounds": (500, 10000),

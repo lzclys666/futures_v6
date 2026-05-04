@@ -87,6 +87,11 @@ if __name__ == "__main__":
     
     value, source, confidence = fetch_basis()
     if value is not None:
+        # Bounds 检查: (-500, 500) 元/吨
+        expected_lo, expected_hi = -500.0, 500.0
+        if not (expected_lo <= value <= expected_hi):
+            print(f"[WARN] {FACTOR_CODE}={value} 超出bounds[{expected_lo}, {expected_hi}]，跳过")
+            return
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=confidence, source=source)
     else:
         print(f"[失败] {FACTOR_CODE} 现货价需付费订阅，接入后自动生效")

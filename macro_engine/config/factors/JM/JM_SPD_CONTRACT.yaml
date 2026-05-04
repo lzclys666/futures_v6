@@ -16,5 +16,5 @@ dependencies:
 description: 焦煤近月-远月价差，反映市场期限结构
 category: free_data
 name: 焦煤月差
-source_confidence: 0.85
-data_source: AKShare
+source_confidence: 0.5
+data_source: AKShare(主), DB回补(备)

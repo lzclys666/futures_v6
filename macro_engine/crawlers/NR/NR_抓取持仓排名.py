@@ -85,7 +85,7 @@ def main():
             print(f"[L3] DB兜底: {value}")
 
     if value is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=1.0)
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=1.0, source="akshare_shfe_rank_table")
         print(f"OK: NR_POS_NET={value:.0f}")
     else:
         print("FAIL: NR持仓排名无数据")

@@ -67,6 +67,10 @@ def main():
         print(f"  单位: {f['unit']}  |  合理范围: {f['bounds']}")
         print(f"  数据源: {f['source']}")
 
+        # obs_date（数据观测日期），默认为今天（pub_date）
+        obs_date_input = input(f"  输入 {f['code']} 的obs_date（留空默认={pub_date}）: ").strip()
+        obs_date = obs_date_input if obs_date_input else pub_date
+
         try:
             val_str = input(f"  输入 {f['code']}（留空跳过）: ").strip()
         except EOFError:
@@ -94,9 +98,9 @@ def main():
                 print("  跳过")
                 continue
 
-        save_to_db(f["code"], SYMBOL, pub_date, pub_date, val,
+        save_to_db(f["code"], SYMBOL, pub_date, obs_date, val,
                    source=f["source"], source_confidence=0.7)
-        print(f"  [OK] {f['code']}={val} {f['unit']}")
+        print(f"  [OK] {f['code']}={val} {f['unit']} obs={obs_date}")
         written += 1
 
     print(f"\n{'=' * 60}")
