@@ -1,21 +1,24 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""批次2_手动输入
-因子: 批次2_手动输入 = BR_COST_BD/BR_COST_ETH/BR_DEM_TIRE_ALLST/BR_DEM_TIRE_SEMI/BR_DEM_AUTO/BR_SUP_RATE/BR_COST_MARGIN（派生）
+"""
+BR_批次2_手动输入.py
+因子: BR_COST_BD/BR_COST_ETH/BR_COST_MARGIN（派生）/BR_DEM_TIRE_ALLST/BR_DEM_TIRE_SEMI/BR_DEM_AUTO/BR_SUP_RATE
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: [WARN]待修复
-- 数据源: 手动录入：SMM(年费)/隆众资讯(年费)/中国汽车工业协会(月度)
-- 采集逻辑: 手动录入（交互模式）或派生计算（auto模式）
-- bounds: 因因子而异
+当前状态: [⚠️待修复]
+- L1: 无免费源（付费因子手动录入）
+- L2: 无备选源
+- L3: save_l4_fallback() 兜底（auto模式派生计算 + L4回补）
 
 订阅优先级: ★★★
 替代付费源: SMM(年费)/隆众资讯(年费)/中国汽车工业协会
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates, get_latest_value
 
 SYMBOL = "BR"
 
@@ -119,6 +122,10 @@ def main():
             save_to_db("BR_COST_MARGIN", SYMBOL, pub_date, obs_date, margin,
                        source="派生计算", source_confidence=0.9)
             print(f"[OK] BR_COST_MARGIN={margin:.0f} 写入成功\n")
+        else:
+            # 派生计算失败时尝试L4回补
+            save_l4_fallback("BR_COST_MARGIN", SYMBOL, pub_date, obs_date,
+                             extra_msg="(BR毛利)")
         print("[AUTO模式] 完成（付费因子需手动录入）")
         return 0
 

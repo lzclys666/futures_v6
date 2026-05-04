@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BR_计算比价.py
@@ -6,18 +6,20 @@ BR_计算比价.py
 
 公式: BR_SPD_RU_BR = BR现货价 / RU现货价
 
-当前状态: [OK]正常
-- 数据源: AKShare futures_spot_price(date, vars_list=['BR', 'RU'])，L1权威
-- 采集逻辑: 取最近交易日BR和RU的spot_price相除
-- obs_date: 数据实际日期
+当前状态: [✅正常]
+- L1: AKShare futures_spot_price(date, vars_list=['BR', 'RU'])，source_confidence=1.0
+- L2: 无备选源（BR/RU现货比价仅有AKShare聚合，无直接免费API）
+- L3: save_l4_fallback() 兜底
 - bounds: [0.5, 1.5]（橡胶比价历史区间）
 
 订阅优先级: 无需付费
 替代付费源: 无
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
 
 import akshare as ak
 import pandas as pd
@@ -54,6 +56,8 @@ def fetch(obs_date):
             return raw_value, actual_date
         except Exception as e:
             print(f"[L1] {date_str}: {e}")
+    # L2: 无备选源
+    print("[L2] 无备选源（BR/RU现货比价仅有AKShare聚合，无直接免费API）")
     return None, None
 
 
@@ -65,24 +69,28 @@ if __name__ == "__main__":
     ensure_table()
     print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
+    raw_value, actual_date = None, None
+
+    # L1
     try:
         raw_value, actual_date = fetch(obs_date)
     except Exception as e:
         print(f"[L1] 失败: {e}")
-        raw_value = None
 
+    # L3
     if raw_value is None:
-        val = get_latest_value(FACTOR_CODE, SYMBOL)
-        if val is not None:
-            print(f"[L4] 兜底: {val}")
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                       source="db_回补", source_confidence=0.5)
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(BR/RU比价)"):
+            pass
         else:
             print(f"[WARN] {FACTOR_CODE} 所有数据源均失败")
         sys.exit(0)
 
     if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
         print(f"[WARN] {FACTOR_CODE}={raw_value} 超出bounds{BOUNDS}，跳过")
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(BR/RU比价)"):
+            pass
         sys.exit(0)
 
     save_to_db(FACTOR_CODE, SYMBOL, pub_date, actual_date, raw_value,

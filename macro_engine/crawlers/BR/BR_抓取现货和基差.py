@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 BR_抓取现货和基差.py
@@ -10,18 +10,20 @@ BR_抓取现货和基差.py
   BR_SPD_BASIS = BR_SPOT_PRICE - BR0结算价
   BR_COST_MARGIN = BR_SPOT_PRICE - BR_COST_BD × 0.82 - 3000
 
-当前状态: [OK]正常
-- 数据源: AKShare futures_spot_price(date, vars_list=['BR']) + futures_main_sina('BR0')，L1权威
-- 采集逻辑: BR取最近5个工作日；基差由现货-期货结算价计算
-- obs_date: 数据实际日期
+当前状态: [✅正常]
+- L1: AKShare futures_spot_price(date, vars_list=['BR']) + futures_main_sina('BR0')
+- L2: 无备选源（现货价/期货结算价仅有AKShare聚合，无直接免费API）
+- L3: save_l4_fallback() 兜底
 - bounds: BR_SPOT_PRICE=[8000,30000], BR_SPD_BASIS=[-2000,5000], BR_COST_MARGIN=[-5000,10000]
 
 订阅优先级: 无需付费
 替代付费源: 无
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates, get_latest_value
 
 import akshare as ak
 import pandas as pd
@@ -57,6 +59,8 @@ def fetch_spot_price(obs_date):
             return raw_value, actual_date
         except Exception as e:
             print(f"[L1] {date_str}: {e}")
+    # L2: 无备选源
+    print("[L2] 无备选源（现货价仅有AKShare聚合，无直接免费API）")
     return None, None
 
 
@@ -68,14 +72,15 @@ def fetch_br0_settlement(obs_date):
         if df is None or df.empty:
             raise ValueError("empty")
         latest = df.sort_values("日期").iloc[-1]
-        # 优先用动态结算价，其次收盘价
         settle = float(latest.get("动态结算价") or latest.get("收盘价") or 0)
         if settle <= 0:
             raise ValueError("结算价<=0")
         return settle
     except Exception as e:
         print(f"[L1] BR0结算价失败: {e}")
-        return None
+    # L2: 无备选源
+    print("[L2] 无备选源（期货结算价仅有AKShare，无备选接口）")
+    return None
 
 
 if __name__ == "__main__":
@@ -89,12 +94,10 @@ if __name__ == "__main__":
     # L1: BR现货价
     ref_price, actual_date = fetch_spot_price(obs_date)
     if ref_price is None:
-        print("[L1] BR现货价失败，尝试L4")
-        val = get_latest_value(FACTOR_CODE_SPOT, SYMBOL)
-        if val is not None:
-            print(f"[L4] 兜底BR_SPOT_PRICE={val}")
-            save_to_db(FACTOR_CODE_SPOT, SYMBOL, pub_date, obs_date, val,
-                       source="db_回补", source_confidence=0.5)
+        # L3: save_l4_fallback
+        if save_l4_fallback(FACTOR_CODE_SPOT, SYMBOL, pub_date, obs_date,
+                             extra_msg="(BR现货价)"):
+            pass
         else:
             print("[WARN] BR_SPOT_PRICE 所有数据源均失败")
         sys.exit(0)
