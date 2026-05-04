@@ -6,7 +6,9 @@ AU_run_all.py - 沪金期货数据采集调度脚本
 调度顺序:
   行情持仓 → 美国宏观 → 期现/现货 → 持仓/库存 → L4兜底
 """
-import subprocess, sys, os, time
+import sys
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+import subprocess, os, time
 from datetime import datetime
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
