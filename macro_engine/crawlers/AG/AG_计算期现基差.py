@@ -6,15 +6,15 @@ AG_计算期现基差.py
 
 公式: AG_SPD_BASIS = 沪银现货价(元/千克) - AG0主力期货结算价(元/千克)
 
-当前状态: [⛔永久跳过]
-- L1: 沪银现货价依赖 AG_抓取现货价.py（该脚本已⛔永久跳过）
-- L1: AG0期货价格可从 AG_抓取期货日行情.py 获取
-- 因现货价无免费数据，期现基差无法计算
-- L2: 无其他免费沪银现货价数据源
-- L3: save_l4_fallback() 也无历史数据
+当前状态: [✅正常]
+- L1: akshare futures_spot_price(date, vars_list=['AG']) 获取沪银现货价
+- L1: akshare futures_main_sina AG0 获取期货价
+- 修复：ak.futures_spot_price API 参数为 vars_list 而非 symbol
+- 修复：今日为节假日时自动回退到前一交易日
+- bounds: 基差[-500, 500]元/kg
 
-订阅优先级: ★★★
-替代付费源: Mysteel年费 | SMM年费 | 隆众资讯年费
+订阅优先级: 无需付费
+替代付费源: 无
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -29,23 +29,32 @@ SYMBOL = "AG"
 
 
 def fetch_spot():
-    """尝试获取沪银现货价"""
-    SYM_ALTERNATIVES = ["沪银", "白银", "AG", "ag", "Silver", "silver"]
+    """尝试获取沪银现货价（自动处理节假日，回退到最近交易日）"""
+    SYM_ALTERNATIVES = ["AG"]  # vars_list 只接受代码如 'AG'
     print("[L1] 尝试AKShare futures_spot_price 获取沪银现货价...")
-    for sym in SYM_ALTERNATIVES:
-        try:
-            import pandas as pd
-            today = pd.Timestamp.now().strftime('%Y-%m-%d')
-            df = ak.futures_spot_price(symbol=sym, date=today)
-            if df is not None and len(df) > 0:
-                row = df.iloc[-1]
-                val = float(row.get('均价', row.iloc[-1]))
-                obs_str = str(row.get('日期', today))[:10]
-                print(f"[L1] futures_spot_price(symbol='{sym}') = {val}")
-                return val, obs_str
-        except Exception as e:
-            print(f"[L1] symbol='{sym}' 失败: {e}")
-        continue
+    
+    # 尝试最近10个自然日（自动跳过节假日/周末）
+    import pandas as pd
+    for days_back in range(10):
+        check_date = pd.Timestamp.now() - pd.Timedelta(days=days_back)
+        date_str = check_date.strftime('%Y%m%d')  # YYYYMMDD 格式
+        date_display = check_date.strftime('%Y-%m-%d')
+        
+        for sym in SYM_ALTERNATIVES:
+            try:
+                df = ak.futures_spot_price(date=date_str, vars_list=[sym])
+                if df is not None and len(df) > 0:
+                    # 找 AG 那一行
+                    ag_row = df[df['symbol'] == 'AG']
+                    if len(ag_row) == 0:
+                        continue
+                    val = float(ag_row.iloc[0]['spot_price'])
+                    obs_str = str(ag_row.iloc[0]['date'])[:10]
+                    print(f"[L1] futures_spot_price(date='{date_str}', vars_list=['{sym}']) = {val}, obs={obs_str}")
+                    return val, obs_str
+            except Exception as e:
+                print(f"[L1] date='{date_str}', vars_list=['{sym}'] 失败: {e}")
+            continue
     return None, None
 
 

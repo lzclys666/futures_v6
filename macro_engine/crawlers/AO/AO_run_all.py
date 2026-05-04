@@ -14,9 +14,9 @@ from common.db_utils import ensure_table, get_pit_dates
 
 # 自动模式脚本（免费源）
 AUTO_SCRIPTS = [
-    'AO_豆一期货收盘价.py',
-    'AO_豆一期货持仓量.py',
-    'AO_大连期货库存.py',
+    'AO_抓取_豆一期货收盘价.py',
+    'AO_抓取_豆一期货持仓量.py',
+    'AO_抓取_大连期货库存.py',
 ]
 
 # 手动模式脚本（付费/手动录入）

@@ -23,6 +23,7 @@ from common.db_utils import ensure_table, get_pit_dates
 
 # === 活跃脚本（免费源）===
 auto_scripts = [
+    ("AL_抓取期货日行情.py", "期货日行情"),
     ("AL_抓取LME铝库存.py", "LME铝库存"),
     ("AL_抓取LME铝价_铝道网.py", "LME铝价"),
     ("AL_抓取净持仓.py", "净持仓"),
