@@ -1,1 +1,97 @@
-﻿#!/usr/bin/env python3# -*- coding: utf-8 -*-"""AU_VIX.py因子: AU_VIX = CBOE VIX恐慌指数公式: 数据采集（无独立计算公式）当前状态: [OK] 正常- 数据源: FRED VIXCLS (fred.stlouisfed.org)，L1权威- 采集逻辑: 直接请求FRED CSV，取最新非空收盘价- obs_date: 数据日期- bounds: [5.0, 80.0]（历史区间）订阅优先级: 无需付费替代付费源: 无"""import sys, os as _ossys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_valuefrom common.web_utils import fetch_urlfrom datetime import datetimeimport functoolsprint_enc = functools.partial(print, flush=True)FACTOR_CODE = "AU_VIX"SYMBOL = "AU"BOUNDS = (5.0, 80.0)def fetch():    """L1: FRED VIXCLS 直接CSV接口"""    print_enc("[L1] FRED VIXCLS...")    url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS"    html, err = fetch_url(url, timeout=15)    if err:        raise ValueError(f"FRED fetch failed: {err}")    lines = html.strip().split("\n")    if len(lines) < 2:        raise ValueError("FRED VIX: empty data")    last_line = lines[-1]    parts = last_line.split(",")    obs_date_str = parts[0]    raw_value = float(parts[1])    obs_date = datetime.strptime(obs_date_str, "%Y-%m-%d").date()    print_enc(f"[L1] VIX={raw_value} obs={obs_date}")    return raw_value, obs_dateif __name__ == "__main__":    pub_date, obs_date = get_pit_dates()    if pub_date is None:        print("-- 非交易日，跳过"); sys.exit(0)    ensure_table()    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")    try:        raw_value, obs_date = fetch()    except Exception as e:        print(f"[L1] 失败: {e}")        val = get_latest_value(FACTOR_CODE, SYMBOL)        if val is not None:            print(f"[L4] 兜底: {val}")            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,                       source="db_回补", source_confidence=0.5)        else:            # Null 占位写入            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,                       source="all_sources_failed", source_confidence=0.0)            print(f"[DB] 因子 {FACTOR_CODE} NULL 占位写入")        sys.exit(0)    if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):        print(f"[WARN] {FACTOR_CODE}={raw_value} 超出bounds{BOUNDS}，跳过")        sys.exit(0)    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value,               source="FRED VIXCLS (CBOE VIX)", source_confidence=1.0)    print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+AU_恐慌指数.py
+因子: AU_VIX = CBOE VIX恐慌指数
+
+公式: 数据采集（无独立计算公式）
+
+当前状态: [✅正常]
+- L1: FRED VIXCLS（CBOE VIX恐慌指数），source_confidence=1.0
+- L2: 无备选源（VIX仅有CBOE官方发布）
+- L3: save_l4_fallback() 兜底
+- bounds: [5.0, 80.0]（历史区间）
+
+订阅优先级: 无需付费
+替代付费源: 无
+"""
+import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
+from common.web_utils import fetch_url
+from datetime import datetime
+
+FACTOR_CODE = "AU_VIX"
+SYMBOL = "AU"
+BOUNDS = (5.0, 80.0)
+
+
+def fetch():
+    """L1: FRED VIXCLS 直接CSV接口"""
+    print("[L1] FRED VIXCLS...")
+    url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=VIXCLS"
+    r_text, err = fetch_url(url, timeout=15)
+    if err:
+        raise ValueError(f"FRED VIXCLS failed: {err}")
+    lines = r_text.strip().split("\n")
+    if len(lines) < 2:
+        raise ValueError("FRED VIX: empty data")
+    last_line = lines[-1]
+    parts = last_line.split(",")
+    obs_date_str = parts[0]
+    raw_value = float(parts[1])
+    obs_date = datetime.strptime(obs_date_str, "%Y-%m-%d").date()
+    print(f"[L1] VIX={raw_value} obs={obs_date}")
+    return raw_value, obs_date
+
+
+def main():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    if pub_date is None:
+        print("-- 非交易日"); return
+    print(f"=== {FACTOR_CODE} === obs={obs_date}")
+
+    raw_value, data_obs_date = None, None
+
+    # L1
+    try:
+        raw_value, data_obs_date = fetch()
+    except Exception as e:
+        print(f"[L1] 失败: {e}")
+
+    # L2: 无备选源（VIX仅有CBOE官方发布）
+    if raw_value is None:
+        print("[L2] 无备选源（VIX仅有CBOE官方发布）")
+
+    # L3
+    if raw_value is None:
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(VIX恐慌指数)"):
+            pass
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                       source="all_sources_failed", source_confidence=0.0)
+            print(f"[ERR] {FACTOR_CODE} 所有数据源均失败")
+        return
+
+    # bounds校验
+    if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+        print(f"[WARN] {FACTOR_CODE}={raw_value} 超出bounds{BOUNDS}，跳过")
+        if save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                             extra_msg="(VIX恐慌指数)"):
+            pass
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                       source="all_sources_failed", source_confidence=0.0)
+        return
+
+    save_to_db(FACTOR_CODE, SYMBOL, pub_date, data_obs_date, raw_value,
+               source="FRED VIXCLS (CBOE VIX)", source_confidence=1.0)
+    print(f"[OK] {FACTOR_CODE}={raw_value} obs={data_obs_date}")
+
+
+if __name__ == "__main__":
+    main()

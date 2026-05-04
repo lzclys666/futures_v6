@@ -6,25 +6,29 @@ AU_SPDR黄金ETF持仓量.py
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: [OK] 正常
-- 数据源: L1a: 我的钢铁网 | L1b: 东方财富API | L1c: 新浪贵金属 | L4: DB回补
-- 采集逻辑: 见脚本内多源漏斗
-- bounds: 因因子而异
+当前状态: [✅正常]
+- L1a: 我的钢铁网 | L1b: 东方财富API | L1c: 新浪贵金属
+- L2: 无备选源（SPDR持仓数据仅通过SPDR官网/第三方发布）
+- L3: save_l4_fallback() 兜底
+- bounds: [500, 2000]吨（SPDR持仓历史区间）
 
 订阅优先级: 无需付费
 替代付费源: 无
 """
 import sys, os, re
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
 from common.web_utils import fetch_url, fetch_json
 
 FACTOR_CODE = "AU_SPD_GLD"
 SYMBOL = "AU"
+BOUNDS = (500, 2000)
 
 
 def fetch_spdr():
-    """尝试从多个源获取SPDR黄金持仓（吨）"""
+    """L1: 多源获取SPDR黄金持仓（吨）"""
 
     # L1a: 我的钢铁网 SPDR黄金持仓
     try:
@@ -35,13 +39,12 @@ def fetch_spdr():
         if err:
             raise Exception(err)
         text = html
-        # Pattern: SPDR Gold Trust持仓量为XXXX.XX吨
         m = re.search(r'SPD[Rr].*?持仓量[为]?(\d+\.?\d*)\s*吨', text)
         if not m:
             m = re.search(r'持仓[为]?(\d+\.?\d{2})\s*吨', text[:3000])
         if m:
             val = float(m.group(1))
-            if 500 <= val <= 2000:
+            if BOUNDS[0] <= val <= BOUNDS[1]:
                 print(f"[L1a] SPDR GLD={val}吨 (Mysteel)")
                 return val, 1.0, "mysteel_spdr_gld"
     except Exception as e:
@@ -58,8 +61,8 @@ def fetch_spdr():
             raise Exception(err)
         for item in data.get('result', {}).get('data', []):
             if 'SPDR' in str(item) or 'GLD' in str(item):
-                hold = item.get('F8') or item.get('hold')  # 持仓量
-                if hold and 500 <= float(hold) <= 2000:
+                hold = item.get('F8') or item.get('hold')
+                if hold and BOUNDS[0] <= float(hold) <= BOUNDS[1]:
                     val = float(hold)
                     print(f"[L1b] SPDR GLD={val}吨 (Eastmoney API)")
                     return val, 1.0, "eastmoney_gold_etf"
@@ -81,7 +84,7 @@ def fetch_spdr():
             for p in parts:
                 try:
                     val = float(p)
-                    if 500 <= val <= 2000:
+                    if BOUNDS[0] <= val <= BOUNDS[1]:
                         print(f"[L1c] SPDR GLD={val} (Sina GLD)")
                         return val, 1.0, "sina_hq_hf_GLD"
                 except (ValueError, IndexError):
@@ -89,32 +92,31 @@ def fetch_spdr():
     except Exception as e:
         print(f"[L1c] {e}")
 
-    # L4: 历史回补
-    latest = get_latest_value(FACTOR_CODE, SYMBOL)
-    if latest is not None:
-        print(f"[L4] SPDR GLD={latest}吨 (L4 fallback from DB)")
-        return latest, 0.5, "L4_historical_fallback"
-    else:
-        print("[WARN] AU_SPD_GLD无任何数据源且DB无历史值，请手动录入")
-        return None, None, None
+    # L2: 无备选源
+    print("[L2] 无备选源（SPDR持仓数据来源有限）")
+    return None, None, None
 
 
 def main():
-    import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--auto', action='store_true')
-    args = parser.parse_args()
-
     ensure_table()
     pub_date, obs_date = get_pit_dates()
+    if pub_date is None:
+        print("-- 非交易日"); return
 
     val, conf, src = fetch_spdr()
-    if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                   source_confidence=conf, source=src)
-        print(f"[OK] {FACTOR_CODE}={val} 写入成功")
-    else:
-        print(f"[WARN] {FACTOR_CODE} 无数据")
+
+    # L3
+    if val is None:
+        if not save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date,
+                                 extra_msg="(SPDR黄金ETF持仓量)"):
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
+                       source="all_sources_failed", source_confidence=0.0)
+            print(f"[ERR] {FACTOR_CODE} 无数据")
+        return
+
+    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+               source_confidence=conf, source=src)
+    print(f"[OK] {FACTOR_CODE}={val} 写入成功")
 
 
 if __name__ == "__main__":
