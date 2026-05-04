@@ -16,6 +16,8 @@ AO_大连期货库存.py
 替代付费源: 无
 """
 import sys, os as _os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
 from common.db_utils import ensure_table, save_to_db, save_l4_fallback, get_pit_dates
 
