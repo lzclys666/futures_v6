@@ -1,44 +1,47 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-沪锡期货持仓量
-因子: 待定义 = 沪锡期货持仓量
-
-公式: 数据采集（无独立计算公式）
-
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+SN_沪锡期货持仓量.py
+因子: SN_FUT_OI = 沪锡期货主力合约持仓量
+当前状态: [✅正常]
 """
+import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
 this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
-from db_utils import save_to_db, get_latest_value
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 import akshare as ak
-from datetime import date
 import pandas as pd
 
 FCODE = "SN_FUT_OI"
 SYM = "SN"
-EMIN = 50000
-EMAX = 500000
+BOUNDS = (10000, 100000)
 
-print("DEBUG: starting SN_FUT_OI")
 
-try:
+def fetch():
     df = ak.futures_main_sina(symbol="SN0")
-    print("DEBUG: got df", df.shape)
+    if df.empty:
+        raise ValueError("no data")
     latest = df.sort_values('日期').iloc[-1]
-    print("DEBUG: latest", dict(latest))
-    oi_val = float(latest.get('持仓量', 0))
-    obs = pd.to_datetime(latest['日期']).date()
-    print("DEBUG: oi_val=%s obs=%s" % (oi_val, obs))
-    save_to_db(FCODE, SYM, date.today(), obs, oi_val, source_confidence=1.0)
-    print("[OK] %s=%s obs=%s" % (FCODE, oi_val, obs))
-except Exception as e:
-    import traceback
-    print("DEBUG: Exception:", type(e).__name__, e)
-    traceback.print_exc()
+    return float(latest['持仓量']), pd.to_datetime(latest['日期']).date()
+
+
+def main():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FCODE} === pub={pub_date} obs={obs_date}")
+    try:
+        raw_value, obs_date = fetch()
+    except Exception as e:
+        print(f"[L1] {FCODE}: {e}")
+        save_l4_fallback(FCODE, SYM, pub_date, obs_date)
+        return
+    if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+        print(f"[WARN] {FCODE}={raw_value} out of {BOUNDS}")
+        return
+    save_to_db(FCODE, SYM, pub_date, obs_date, raw_value, source_confidence=1.0, source='AKShare_Sina_SN0')
+    print(f"[OK] {FCODE}={raw_value} obs={obs_date}")
+
+
+if __name__ == "__main__":
+    main()
