@@ -76,7 +76,7 @@ def fetch_shfe_warrant_ak():
 def fetch_shfe_direct():
     """L2: 直接爬取SHFE官网仓单页面"""
     url = "http://www.shfe.com.cn/data/delay/warehouse_receipt.js"
-    data, err = fetch_json(url, encoding='utf-8', timeout=15)
+    data, err = fetch_json(url, timeout=15)
     if err:
         print(f"[L2] SHFE直爬失败: {err}")
         return None, None
