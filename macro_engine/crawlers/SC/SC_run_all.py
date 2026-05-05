@@ -1,46 +1,78 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+SC_run_all.py - 原油爬虫总控
+"""
 import subprocess, sys, os, time
-from datetime import datetime
+sys.stdout.reconfigure(encoding='utf-8')
+from pathlib import Path
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-os.chdir(SCRIPT_DIR)
+SCRIPT_DIR = Path(__file__).parent
+LOG_DIR = SCRIPT_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
 
-SCRIPTS = ['SC_原油期货收盘价.py', 'SC_原油期货持仓量.py']
+sys.path.insert(0, str(SCRIPT_DIR.parent / 'common'))
+from db_utils import get_pit_dates, ensure_table
+
+SCRIPTS = [
+    'SC_原油期货收盘价.py',
+    'SC_原油期货持仓量.py',
+]
+
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--auto", action="store_true")
+    parser.add_argument("--manual", action="store_true")
+    args = parser.parse_args()
+
+    pub_date, obs_date = get_pit_dates()
+    ensure_table()
+
     sep = "=" * 50
     print(sep)
-    print("SC @ " + datetime.now().isoformat())
+    print(f"SC @ {time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"pub_date={pub_date} obs_date={obs_date}")
     print(sep)
-    t0 = time.time()
-    ok = 0
+
+    ok, fail, skip = 0, 0, 0
     for s in SCRIPTS:
-        path = os.path.join(SCRIPT_DIR, s)
-        if not os.path.exists(path):
-            print("? " + s)
+        path = SCRIPT_DIR / s
+        if not path.exists():
+            print(f"  [跳过] {s} 不存在")
+            skip += 1
             continue
-        print(">> " + s)
+
+        print(f"\n>>> {s}...")
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"
+        cmd = [sys.executable, '-X', 'utf8=1', str(path)]
+        if args.auto:
+            cmd.append("--auto")
+
         try:
-            r = subprocess.run([sys.executable, path, "--auto"], capture_output=True, timeout=30)
-            try:
-                out = r.stdout.decode("utf-8", errors="replace")
-            except (ValueError, IndexError):
-                out = str(r.stdout)
-            for line in out.strip().split("\r\n")[-3:]:
+            r = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                             encoding='utf-8', errors='replace', timeout=60,
+                             cwd=str(SCRIPT_DIR), env=env)
+            out = r.stdout or ""
+            for line in out.strip().split('\n')[-3:]:
                 if line.strip():
-                    try:
-                        print("   " + line[:120])
-                    except (ValueError, IndexError):
-                        pass
+                    print(f"  {line.strip()[:120]}")
             if r.returncode == 0:
                 ok += 1
+            else:
+                fail += 1
         except Exception as e:
-            print("   Exception: " + str(e)[:80])
+            print(f"  [异常] {e}")
+            fail += 1
+        time.sleep(1)
+
     print(sep)
-    elapsed = time.time() - t0
-    print("SC Done " + "%.1fs OK=%d/%d" % (elapsed, ok, len(SCRIPTS)))
+    total = ok + fail + skip
+    print(f"SC Done {ok+fail+skip}/{total}  OK={ok} FAIL={fail} SKIP={skip}")
     print(sep)
+
 
 if __name__ == "__main__":
     main()
