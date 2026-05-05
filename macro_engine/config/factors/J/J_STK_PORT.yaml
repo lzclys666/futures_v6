@@ -1,16 +1,16 @@
-factor_code: J_J_SPT_CCI
+﻿factor_code: J_STK_PORT
 symbol: J
 category: free_data
-name: CCI焦炭价格指数
-description: CCI焦炭价格指数
+name: 港口焦炭库存
+description: 港口焦炭库存
 frequency: daily
-unit: 点
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- price
+- inventory
 - J
 source_confidence: 3
 data_source: AKShare

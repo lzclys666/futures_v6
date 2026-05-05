@@ -1,16 +1,16 @@
-factor_code: J_J_SPD_BASIS
+﻿factor_code: J_STK_COKE_RATE
 symbol: J
 category: derived
-name: 焦炭期现基差
-description: 焦炭期现基差
+name: 焦化企业开工率
+description: 焦化企业开工率
 frequency: daily
-unit: 元/吨
+unit: '%'
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- spread
+- operation
 - J
 source_confidence: 3
 data_source: Calculated

@@ -1,16 +1,16 @@
-factor_code: J_J_SPT_MYSTEEEL
+﻿factor_code: J_STK_MINE
 symbol: J
 category: free_data
-name: 我的钢铁网焦炭现货价格
-description: 我的钢铁网焦炭现货价格
+name: 煤矿焦煤库存
+description: 煤矿焦煤库存
 frequency: daily
-unit: 元/吨
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- price
+- inventory
 - J
 source_confidence: 3
 data_source: AKShare

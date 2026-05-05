@@ -1,8 +1,8 @@
-factor_code: J_J_STK_SEPARATE
+﻿factor_code: J_STK_WARRANT
 symbol: J
 category: free_data
-name: 独立焦企焦炭库存
-description: 独立焦企焦炭库存
+name: 焦炭期货仓单
+description: 焦炭期货仓单
 frequency: daily
 unit: 万吨
 direction: neutral

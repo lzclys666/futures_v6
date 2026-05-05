@@ -1,19 +1,19 @@
-factor_code: J_J_STK_COKE_RATE
+﻿factor_code: J_TOT_DISPATCH
 symbol: J
-category: derived
-name: 焦化企业开工率
-description: 焦化企业开工率
+category: free_data
+name: 焦炭总调出量
+description: 焦炭总调出量
 frequency: daily
-unit: '%'
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- operation
+- supply
 - J
 source_confidence: 3
-data_source: Calculated
+data_source: AKShare
 expected_range:
 - -100000.0
 - 100000.0

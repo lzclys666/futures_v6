@@ -1,16 +1,16 @@
-factor_code: J_J_FOB_EXPORT
+﻿factor_code: J_STK_TRADE
 symbol: J
 category: free_data
-name: 焦炭出口FOB价
-description: 焦炭出口FOB价
+name: 贸易商焦炭库存
+description: 贸易商焦炭库存
 frequency: daily
-unit: 美元/吨
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- price
+- inventory
 - J
 source_confidence: 3
 data_source: AKShare

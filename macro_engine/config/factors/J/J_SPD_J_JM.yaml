@@ -1,19 +1,19 @@
-factor_code: J_J_STK_PORT
+﻿factor_code: J_SPD_J_JM
 symbol: J
-category: free_data
-name: 港口焦炭库存
-description: 港口焦炭库存
+category: derived
+name: 焦炭与焦煤价差
+description: 焦炭与焦煤价差
 frequency: daily
-unit: 万吨
+unit: 元/吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- inventory
+- spread
 - J
 source_confidence: 3
-data_source: AKShare
+data_source: Calculated
 expected_range:
 - -100000.0
 - 100000.0

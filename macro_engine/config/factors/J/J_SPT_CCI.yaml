@@ -1,16 +1,16 @@
-factor_code: J_J_STK_WARRANT
+﻿factor_code: J_SPT_CCI
 symbol: J
 category: free_data
-name: 焦炭期货仓单
-description: 焦炭期货仓单
+name: CCI焦炭价格指数
+description: CCI焦炭价格指数
 frequency: daily
-unit: 万吨
+unit: 点
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- inventory
+- price
 - J
 source_confidence: 3
 data_source: AKShare

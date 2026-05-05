@@ -1,10 +1,10 @@
-factor_code: J_J_STK_MINE
+﻿factor_code: J_STK_STEEL_DAYS
 symbol: J
 category: free_data
-name: 煤矿焦煤库存
-description: 煤矿焦煤库存
+name: 钢厂焦炭可用天数
+description: 钢厂焦炭可用天数
 frequency: daily
-unit: 万吨
+unit: 天
 direction: neutral
 confidence: 3
 source: AKShare

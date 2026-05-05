@@ -1,8 +1,8 @@
-factor_code: J_J_SPD_J_JM
+﻿factor_code: J_SPD_BASIS
 symbol: J
 category: derived
-name: 焦炭与焦煤价差
-description: 焦炭与焦煤价差
+name: 焦炭期现基差
+description: 焦炭期现基差
 frequency: daily
 unit: 元/吨
 direction: neutral

@@ -1,16 +1,16 @@
-factor_code: J_J_PROD_OUTPUT
+﻿factor_code: J_FOB_EXPORT
 symbol: J
 category: free_data
-name: 焦炭产量
-description: 焦炭产量
+name: 焦炭出口FOB价
+description: 焦炭出口FOB价
 frequency: daily
-unit: 万吨
+unit: 美元/吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- supply
+- price
 - J
 source_confidence: 3
 data_source: AKShare

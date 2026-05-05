@@ -1,8 +1,8 @@
-factor_code: J_J_STK_TRADE
+﻿factor_code: J_STK_TOTAL
 symbol: J
 category: free_data
-name: 贸易商焦炭库存
-description: 贸易商焦炭库存
+name: 焦炭社会总库存
+description: 焦炭社会总库存
 frequency: daily
 unit: 万吨
 direction: neutral

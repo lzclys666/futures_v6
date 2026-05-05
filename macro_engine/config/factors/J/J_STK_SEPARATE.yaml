@@ -1,8 +1,8 @@
-factor_code: J_J_TOT_DISPATCH
+﻿factor_code: J_STK_SEPARATE
 symbol: J
 category: free_data
-name: 焦炭总调出量
-description: 焦炭总调出量
+name: 独立焦企焦炭库存
+description: 独立焦企焦炭库存
 frequency: daily
 unit: 万吨
 direction: neutral
@@ -10,7 +10,7 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-- supply
+- inventory
 - J
 source_confidence: 3
 data_source: AKShare
