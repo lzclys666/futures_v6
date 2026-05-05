@@ -19,8 +19,9 @@ M_压榨利润.py
 替代付费源: 我的农产品网（年费）
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, _get_latest_record
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 from common.web_utils import fetch_json
 import akshare as ak
 
@@ -128,17 +129,8 @@ def main():
         return
 
     # L4: DB fallback
-    record = _get_latest_record(FACTOR_CODE, SYMBOL)
-    if record:
-        raw_value, orig_obs_date, orig_source, orig_conf = record
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value,
-                    source_confidence=0.5, source=f"L4回补({orig_source})")
-        print(f"[L4] {FACTOR_CODE}={raw_value} 回补成功")
-        return
-
-    print(f"[L5] {FACTOR_CODE}: 所有数据源失效，写入NULL占位")
-    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
-                source_confidence=0.0, source="L5-NULL占位")
+    save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
+    # L5: 不写NULL占位符（SOP§7）
 
 
 if __name__ == "__main__":
