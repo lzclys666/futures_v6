@@ -21,7 +21,7 @@ if os.name == "nt":
     sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 
 try:
     import akshare as ak
@@ -39,12 +39,8 @@ def main():
     sys.stdout.flush()
 
     if not HAS_AK:
-        v = get_latest_value(FACTOR_CODE, SYMBOL)
-        if v:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, v,
-                       source_confidence=0.5, source="db_history_fallback")
-            sys.stdout.write(f"[L4] {FACTOR_CODE}={v} L4 done\n")
-        return 0
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
+        return
 
     try:
         df = ak.futures_main_sina(symbol="PB0")

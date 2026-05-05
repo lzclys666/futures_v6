@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """PB_run_all.py - 沪铅数据采集（subprocess模式）"""
-import os, sys, subprocess, datetime
+import os, sys, subprocess, datetime, time
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -10,6 +10,9 @@ sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 CURRENT_DIR = Path(__file__).parent
 LOG_DIR = CURRENT_DIR.parent / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
+
+sys.path.insert(0, str(CURRENT_DIR.parent / 'common'))
+from db_utils import get_pit_dates, ensure_table
 
 scripts = [
     "PB_SMM沪铅现货价格.py",
@@ -27,11 +30,14 @@ scripts = [
 ]
 
 def run_all():
+    pub_date, obs_date = get_pit_dates()
+    ensure_table()
     now = datetime.datetime.now()
     log_file = LOG_DIR / f"{now.strftime('%Y-%m-%d')}_PB.log"
 
     print("=" * 50)
     print(f"PB Data Collection @ {now}")
+    print(f"pub_date={pub_date} obs_date={obs_date}")
     print(f"Scripts: {len(scripts)}")
     print("=" * 50)
 
