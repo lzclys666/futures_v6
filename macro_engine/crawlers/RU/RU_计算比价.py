@@ -16,7 +16,7 @@
 """
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 import akshare as ak
 
 SYMBOL = "RU"
@@ -39,10 +39,7 @@ def main():
                 return
     except Exception as e:
         print("[L1] 失败: {}".format(e))
-    v = get_latest_value("RU_SPD_RU_BR", SYMBOL)
-    if v is not None:
-        save_to_db("RU_SPD_RU_BR", SYMBOL, pub_date, obs_date, v, source_confidence=0.5, source="db_回补")
-        print(">>> RU_SPD_RU_BR={} L4回补成功".format(v))
+    save_l4_fallback("RU_SPD_RU_BR", SYMBOL, pub_date, obs_date)
 
 if __name__ == "__main__":
     main()

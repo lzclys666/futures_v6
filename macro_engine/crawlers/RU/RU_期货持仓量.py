@@ -53,15 +53,8 @@ def main():
             save_to_db(fc, SYMBOL, pub_date, obs_date, val, src, conf)
             print(f"[OK] {fc}={val} 写入成功")
     else:
-        print(f"[L4] 回补...")
-        from common.db_utils import get_latest_value
-        v = get_latest_value(FACTOR_CODE, SYMBOL)
-        if v is not None:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, v, source="db_回补", source_confidence=0.5)
-            print(f"[OK] {FACTOR_CODE}={v} L4回补成功")
-        else:
-            # Null 占位写入
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None, source="all_sources_failed", source_confidence=0.0)
+        from common.db_utils import save_l4_fallback
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
             print(f"[DB] 因子 {FACTOR_CODE} NULL 占位写入")
 
 if __name__ == "__main__":
