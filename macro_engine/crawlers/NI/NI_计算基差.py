@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 NI_计算基差.py
@@ -6,24 +6,30 @@ NI_计算基差.py
 
 公式: NI_SPD_BASIS = 沪镍现货价 - 沪镍期货收盘价
 
-当前状态: [SKIP]永久跳过
-- AKShare futures_spot_price(vars_list=['NI']) 只返回到2024-04-30的历史数据，无当前数据
-- 无其他可靠免费源获取沪镍现货价
-- 不写占位符（obs_date=2024-04-30的数据无参考价值）
+当前状态: [⚠️待修复]
+- L1: AKShare futures_spot_price(vars_list=['NI']) — 数据可能滞后
+- L2: 无备源
+- L3: 无备源
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 
+备注: AKShare现货数据可能滞后30天以上，超期自动跳过不写入
 订阅优先级: ★★★
 替代付费源: Mysteel年费 | SMM年费（沪镍现货报价）
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
 this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
-from db_utils import save_to_db, get_latest_value
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 import akshare as ak
-from datetime import date, timedelta
+from datetime import date
 import pandas as pd
 
 FACTOR_CODE = "NI_SPD_BASIS"
 SYMBOL = "NI"
+BOUNDS = (-5000, 5000)
+
 
 def fetch():
     df = ak.futures_spot_price(vars_list=["NI"])
@@ -34,25 +40,31 @@ def fetch():
     obs_date = pd.to_datetime(latest['date']).date()
     return raw_value, obs_date
 
+
 def main():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
+
     try:
         raw_value, obs_date = fetch()
-    except Exception as e:
-        print("[L1 FAIL] %s: %s" % (FACTOR_CODE, e))
-        latest = get_latest_value(FACTOR_CODE, SYMBOL)
-        if latest is not None:
-            print("[L4 Fallback] %s=%.1f (旧数据，不写入)" % (FACTOR_CODE, latest))
+        days_old = (date.today() - obs_date).days
+        if days_old > 30:
+            print(f"[SKIP] {FACTOR_CODE}={raw_value} obs={obs_date} (滞后{days_old}天，无免费源)")
+            save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
             return
-        print("[L4 SKIP] %s: no data" % FACTOR_CODE)
-        return
+        if BOUNDS[0] <= raw_value <= BOUNDS[1]:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value,
+                       source_confidence=1.0, source='akshare_futures_spot_price')
+            print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
+            return
+        else:
+            print(f"[WARN] {FACTOR_CODE}={raw_value} out of {BOUNDS}")
+    except Exception as e:
+        print(f"[L1] {FACTOR_CODE}: {e}")
 
-    days_old = (date.today() - obs_date).days
-    if days_old > 30:
-        print("[SKIP] %s=%.1f obs=%s (滞后%d天，无免费源，不写占位符)" % (FACTOR_CODE, raw_value, obs_date, days_old))
-        return
+    save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
 
-    print("[OK] %s=%.1f obs=%s" % (FACTOR_CODE, raw_value, obs_date))
-    save_to_db(FACTOR_CODE, SYMBOL, date.today(), obs_date, raw_value, source_confidence=1.0)
 
 if __name__ == "__main__":
     main()
