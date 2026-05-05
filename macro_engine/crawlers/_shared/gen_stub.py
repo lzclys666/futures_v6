@@ -305,8 +305,8 @@ def gen_stub_script(symbol: str, code: str, name: str, layer: str, reason: str) 
         '',
         '# 尝试导入通用模块',
         'try:',
-        "    sys.path.insert(0, str(Path(__file__).parent.parent / 'common'))",
-        '    from io_win import fix_encoding',
+        "    sys.path.insert(0, str(Path(__file__).parent.parent)),"
+        '    from common.io_win import fix_encoding',
         '    fix_encoding()',
         'except ImportError:',
         '    pass',
