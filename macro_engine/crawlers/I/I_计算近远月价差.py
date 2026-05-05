@@ -22,6 +22,12 @@ BOUNDS = (-100, 200)
 
 def get_last_trading_day():
     today = date.today()
+    if today.weekday() == 0:
+        return today - timedelta(days=3)
+    elif today.weekday() == 6:
+        return today - timedelta(days=2)
+    elif today.weekday() == 5:
+        return today - timedelta(days=1)
     for days_back in range(7):
         d = today - timedelta(days=days_back)
         if d.weekday() < 5:
@@ -53,7 +59,7 @@ def main():
         print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
     except Exception as e:
         print(f"[L1 FAIL] {FACTOR_CODE}: {e}")
-        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date)
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
 
 if __name__ == "__main__":
     main()

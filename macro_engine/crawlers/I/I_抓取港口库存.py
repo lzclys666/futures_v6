@@ -41,7 +41,7 @@ def main():
         print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
     except Exception as e:
         print(f"[L1 FAIL] {FACTOR_CODE}: {e}")
-        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date)
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
 
 if __name__ == "__main__":
     main()
