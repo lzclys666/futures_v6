@@ -16,7 +16,7 @@
 """
 import sys, os, re
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common.db_utils import ensure_table, save_to_db, get_latest_value
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 
 SYMBOL = "NR"
 
@@ -130,13 +130,7 @@ def main():
                        source_confidence=1.0, source="新浪财经fx_susdcny")
             print(f"[OK] NR_CST_USDCNY={fx} 免费获取成功\n")
         else:
-            val = get_latest_value("NR_CST_USDCNY", SYMBOL)
-            if val:
-                save_to_db("NR_CST_USDCNY", SYMBOL, pub_date, obs_date, val,
-                           source_confidence=0.5, source="db_回补")
-                print(f"[OK] NR_CST_USDCNY={val} L4回补成功\n")
-            else:
-                print(" NR_CST_USDCNY 无数据（需手动录入）\n")
+            save_l4_fallback("NR_CST_USDCNY", SYMBOL, pub_date, obs_date)
         print("[AUTO] 完成（付费因子需手动录入）")
         return 0
 

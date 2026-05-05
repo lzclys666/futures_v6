@@ -1,31 +1,29 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-抓取持仓排名
-因子: NR_POS_NET = 抓取持仓排名
+NR_抓取持仓排名.py
+因子: NR_POS_NET = 20号胶期货净持仓(前5)
 
-公式: 数据采集（无独立计算公式）
+公式: NR_POS_NET = 前5多头持仓 - 前5空头持仓（手）
 
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+当前状态: [✅正常]
+- L1: AKShare get_shfe_rank_table — 上期所持仓排名
+- L2: 回退最近5个交易日
+- L3: 无备源
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
-
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 import akshare as ak
 import pandas as pd
-from datetime import timedelta
+from datetime import timedelta, date
 
 FACTOR_CODE = "NR_POS_NET"
 SYMBOL = "NR"
-MIN_VALUE = -50000
-MAX_VALUE = 100000
+BOUNDS = (-50000, 100000)
 
 
 def fetch_net(date_str):
@@ -44,52 +42,35 @@ def fetch_net(date_str):
 
 
 def main():
-    pub_date, obs_date = get_pit_dates(freq="日频")
-    if obs_date is None:
-        from datetime import date
-        obs_date = date.today()
-        for d in range(1, 10):
-            check = obs_date - timedelta(days=d)
-            if check.weekday() < 5:
-                obs_date = check
-                break
-        pub_date = obs_date
-
     ensure_table()
-    print(f"=== NR持仓排名 === obs={obs_date}")
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
     value = None
     obs_str = obs_date.strftime('%Y%m%d')
 
     # L1: 当前日期
     net = fetch_net(obs_str)
-    if net is not None and MIN_VALUE <= net <= MAX_VALUE:
+    if net is not None and BOUNDS[0] <= net <= BOUNDS[1]:
         value = float(net)
         print(f"[L1] NR净多头={net:.0f}手")
 
-    # L2: 回退
+    # L2: 回退最近5个交易日
     if value is None:
         for delta in range(1, 5):
             prev = (obs_date - timedelta(days=delta)).strftime('%Y%m%d')
             net = fetch_net(prev)
-            if net is not None and MIN_VALUE <= net <= MAX_VALUE:
+            if net is not None and BOUNDS[0] <= net <= BOUNDS[1]:
                 value = float(net)
-                print(f"[L1] NR净多头={net:.0f}手 (日期={prev})")
+                print(f"[L2] NR净多头={net:.0f}手 (日期={prev})")
                 break
 
-    # L3: DB兜底
-    if value is None:
-        val = get_latest_value(FACTOR_CODE, SYMBOL)
-        if val is not None:
-            value = val
-            print(f"[L3] DB兜底: {value}")
-
     if value is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=1.0, source="akshare_shfe_rank_table")
-        print(f"OK: NR_POS_NET={value:.0f}")
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value,
+                   source_confidence=1.0, source='akshare_shfe_rank_table')
+        print(f"[OK] {FACTOR_CODE}={value:.0f} obs={obs_date}")
     else:
-        print("FAIL: NR持仓排名无数据")
-        exit(1)
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
 
 
 if __name__ == "__main__":

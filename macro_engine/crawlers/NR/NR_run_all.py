@@ -1,62 +1,93 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""NR_run_all.py"""
-import os, sys, subprocess, time
-sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-sys.stderr.reconfigure(encoding='utf-8', errors='replace')
-from datetime import datetime
+"""
+NR_run_all.py - 20号胶爬虫总控
+"""
+import subprocess, sys, os, time
+sys.stdout.reconfigure(encoding='utf-8')
+from pathlib import Path
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-os.chdir(SCRIPT_DIR)
+SCRIPT_DIR = Path(__file__).parent
+LOG_DIR = SCRIPT_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+sys.path.insert(0, str(SCRIPT_DIR.parent / 'common'))
+from db_utils import get_pit_dates, ensure_table
 
 SCRIPTS = [
-    "NR_抓取橡胶.py",  # NR_INV_TOTAL
-    "NR_抓取BDI.py",  # NR_FREIGHT_BDI
-    "NR_抓取仓单.py",  # NR_STK_WARRANT
-    "NR_抓取持仓排名.py",  # NR_POS_NET
-    "NR_抓取期货持仓.py",  # NR_FUT_OI
-    "NR_计算RU-NR价差.py",  # NR_SPD_RU_NR
-    "NR_天然橡胶期货收盘价.py",  # NR_FUT_CLOSE
-    "NR_橡胶持仓量.py",  # NR_POS_OPEN_INT
-    "NR_橡胶合约间价差.py",  # NR_SPD_CONTRACT
-    "NR_抓取现货和基差.py",  # NR_SPD_BASIS
-    "NR_批次2_手动输入.py",  # batch2
+    "NR_天然橡胶期货收盘价.py",
+    "NR_橡胶持仓量.py",
+    "NR_抓取橡胶.py",
+    "NR_抓取BDI.py",
+    "NR_抓取仓单.py",
+    "NR_抓取持仓排名.py",
+    "NR_抓取期货持仓.py",
+    "NR_计算RU-NR价差.py",
+    "NR_橡胶合约间价差.py",
+    "NR_抓取现货和基差.py",
+    "NR_批次2_手动输入.py",
 ]
 
-def run_script(name):
-    path = os.path.join(SCRIPT_DIR, name)
-    if not os.path.exists(path):
-        print("[WARN] {} not found".format(name)); return None
-    print(">> Running {}...".format(name))
-    try:
-        env = os.environ.copy()
-        env["PYTHONIOENCODING"] = "utf-8"
-        r = subprocess.run([sys.executable, path, "--auto"],
-            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=60, env=env)
-        out = (r.stdout or "").strip()
-        if out:
-            for line in out.splitlines()[-4:]: print("    {}".format(line))
-        if r.returncode == 0:
-            print("[OK] {} complete".format(name)); return True
-        else:
-            print("[WARN] {} error code:{}".format(name, r.returncode)); return False
-    except Exception as e:
-        print("[FAIL] {} exception: {}".format(name, e)); return False
 
 def main():
-    print("=" * 50)
-    print("NR Data Collection @ {}".format(datetime.now()))
-    print("Scripts to run: {}".format(len(SCRIPTS)))
-    print("=" * 50)
-    t0 = time.time(); ok, fail = 0, 0
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--auto", action="store_true")
+    parser.add_argument("--manual", action="store_true")
+    args = parser.parse_args()
+
+    pub_date, obs_date = get_pit_dates()
+    ensure_table()
+
+    sep = "=" * 50
+    print(sep)
+    print(f"NR @ {time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"pub_date={pub_date} obs_date={obs_date}")
+    print(sep)
+
+    ok, fail, skip = 0, 0, 0
     for s in SCRIPTS:
-        r = run_script(s)
-        if r: ok += 1
-        else: fail += 1
-        time.sleep(0.5)
-    print("=" * 50)
-    print("NR Data Collection Done  {:.1f}s  Success:{}/{}".format(time.time()-t0, ok, ok+fail))
-    print("=" * 50)
+        path = SCRIPT_DIR / s
+        if not path.exists():
+            print(f"  [跳过] {s} 不存在")
+            skip += 1
+            continue
+
+        print(f"\n>>> {s}...")
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"
+        cmd = [sys.executable, '-X', 'utf8=1', str(path)]
+        if args.auto:
+            cmd.append("--auto")
+
+        try:
+            r = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                             encoding='utf-8', errors='replace', timeout=120,
+                             cwd=str(SCRIPT_DIR), env=env)
+            out = r.stdout or ""
+            for line in out.strip().split('\n')[-3:]:
+                if line.strip():
+                    print(f"  {line.strip()[:120]}")
+            if r.returncode == 0:
+                ok += 1
+            else:
+                fail += 1
+        except Exception as e:
+            print(f"  [异常] {e}")
+            fail += 1
+        time.sleep(1)
+
+    print(sep)
+    total = ok + fail + skip
+    print(f"NR Done {ok+fail+skip}/{total}  OK={ok} FAIL={fail} SKIP={skip}")
+    print(sep)
+
+    import datetime
+    log_file = LOG_DIR / f"{datetime.date.today()}.log"
+    with open(log_file, 'a', encoding='utf-8') as f:
+        f.write(f"NR @ {datetime.datetime.now()} | pub={pub_date} obs={obs_date}\n")
+        f.write(f"  OK={ok} FAIL={fail} SKIP={skip}\n")
+
 
 if __name__ == "__main__":
     main()
