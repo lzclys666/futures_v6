@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 棕榈油期货收盘价
@@ -20,8 +20,8 @@ if os.name == "nt":
     sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 
 try:
     import akshare as ak
@@ -39,11 +39,7 @@ def main():
     sys.stdout.flush()
 
     if not HAS_AK:
-        v = get_latest_value(FACTOR_CODE, SYMBOL)
-        if v:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, v,
-                       source_confidence=0.5, source="db_history_fallback")
-            sys.stdout.write(f"[L4] {FACTOR_CODE}={v} L4 done\n")
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
         return 0
 
     try:
@@ -58,15 +54,8 @@ def main():
         return 0
     except Exception as e:
         sys.stderr.write(f"[L1] AKShare Y0 failed: {e}\n")
-        v = get_latest_value(FACTOR_CODE, SYMBOL)
-        if v:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, v,
-                       source_confidence=0.5, source="db_history_fallback")
-            sys.stdout.write(f"[L4] {FACTOR_CODE}={v} L4 done\n")
-            return 0
-        else:
-            sys.stdout.write("[WARN] All sources failed\n")
-            return 0
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
+        return 0
 
 if __name__ == "__main__":
     sys.exit(main())

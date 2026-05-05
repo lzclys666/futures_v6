@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 豆油与棕榈油价差
@@ -18,9 +18,11 @@ import sys
 import datetime
 from pathlib import Path
 
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, str(Path(__file__).parent.parent / 'common'))
+
 # 尝试导入通用模块
 try:
-    sys.path.insert(0, str(Path(__file__).parent.parent / 'common'))
     from io_win import fix_encoding
     fix_encoding()
 except ImportError:
