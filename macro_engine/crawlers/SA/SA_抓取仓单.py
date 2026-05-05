@@ -16,7 +16,7 @@
 """
 import sys, os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback, get_latest_value
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback, save_l4_fallback
 import akshare as ak
 
 FACTOR_CODE = "sa_warrant_daily"
