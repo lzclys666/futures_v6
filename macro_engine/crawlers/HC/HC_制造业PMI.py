@@ -50,7 +50,7 @@ _FACTOR_REASON = "国家统计局接口待验证"
 
 
 def run(auto=False):
-    obs_date, pub_date = get_pit_dates()
+    pub_date, obs_date = get_pit_dates()
     print(f"[跳过] {_FACTOR_CODE} = None (obs={obs_date})")
     print(f"      原因: {_FACTOR_REASON}")
 

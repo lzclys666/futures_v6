@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 HC_我的钢铁网热卷现货价格
-因子: HC_SPT_MYSTEEEL = Mysteel热卷现货价格
+因子: HC_SPT_MYSTEL = Mysteel热卷现货价格
 
 公式: 数据采集（无独立计算公式）
 
@@ -44,13 +44,13 @@ except ImportError:
 
 # 因子参数
 _FACTOR_SYMBOL = "HC"
-_FACTOR_CODE = "HC_SPT_MYSTEEEL"
+_FACTOR_CODE = "HC_SPT_MYSTEL"
 _FACTOR_NAME = "Mysteel热卷现货价格"
 _FACTOR_REASON = "Mysteel需付费订阅"
 
 
 def run(auto=False):
-    obs_date, pub_date = get_pit_dates()
+    pub_date, obs_date = get_pit_dates()
     print(f"[跳过] {_FACTOR_CODE} = None (obs={obs_date})")
     print(f"      原因: {_FACTOR_REASON}")
 
