@@ -6,8 +6,13 @@ J_焦炭期货仓单.py
 
 公式: J_STK_WARRANT = 仓单数量（手）
 
-当前状态: [✅正常]
-- 数据源: AKShare futures_warehouse_receipt_dce(date, symbol='焦炭')
+当前状态: [⚠️待修复]
+- L1: AKShare futures_warehouse_receipt_dce(date, symbol='焦炭') — 7天回溯
+- L2: 无备源（DCE仓单仅AKShare提供）
+- L3: 无付费源备选
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
+- 已知问题: DCE API返回非zip数据，7天回溯可能全部失败
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')

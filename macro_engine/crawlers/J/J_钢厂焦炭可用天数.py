@@ -7,8 +7,11 @@ J_钢厂焦炭可用天数.py
 公式: J_STK_STEEL_DAYS = 钢厂焦炭库存可用天数
 
 当前状态: [⛔永久跳过]
-- 无免费数据源（付费订阅: Mysteel）
-- 不写占位符
+- L1: 无免费数据源
+- L2: 无备源
+- L3: 付费订阅: Mysteel（年费）
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')

@@ -7,8 +7,11 @@ J_我的钢铁网焦炭现货价格.py
 公式: J_SPT_MYSTEL = 焦炭现货价（元/吨）
 
 当前状态: [✅正常]
-- L1: Mysteel公共API
-- L2: AKShare futures_spot_price(date, vars_list=['J'])
+- L1: Mysteel公共API — index.mysteel.com
+- L2: AKShare futures_spot_price(date, vars_list=['J']) — AKShare现货价
+- L3: 无付费源备选
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')

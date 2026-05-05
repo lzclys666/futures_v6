@@ -7,7 +7,11 @@ J_焦炭期货收盘价.py
 公式: J_FUT_CLOSE = 收盘价（元/吨）
 
 当前状态: [✅正常]
-- 数据源: AKShare futures_main_sina("J0")
+- L1: AKShare futures_main_sina("J0") — 主力合约收盘价
+- L2: 无备源（期货收盘价仅新浪提供）
+- L3: 无付费源备选
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')

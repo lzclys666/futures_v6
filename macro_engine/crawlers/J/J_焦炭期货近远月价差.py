@@ -7,8 +7,11 @@ J_焦炭期货近远月价差.py
 公式: J_SPD_NEAR_FAR = J0收盘价 - J1收盘价（元/吨）
 
 当前状态: [⚠️待修复]
-- J1（焦炭次月合约）在新浪无数据，futures_main_sina("J1")返回空
-- 当前用L4回补
+- L1: AKShare futures_main_sina("J0") - futures_main_sina("J1") — 失败（J1新浪无数据）
+- L2: 无备源（近远月价差需J0+J1，J1仅新浪提供）
+- L3: 无付费源备选
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 - 解决方案：等AKShare支持J1或改用其他数据源
 """
 import sys, os

@@ -7,7 +7,11 @@ J_焦炭与焦煤价差.py
 公式: J_SPD_J_JM = 焦炭现货价 / 焦煤现货价
 
 当前状态: [✅正常]
-- 数据源: AKShare futures_spot_price(date, vars_list=['J','JM'])
+- L1: AKShare futures_spot_price(date, vars_list=['J','JM']) — J和JM现货价
+- L2: 无备源（焦炭/焦煤现货价仅AKShare提供）
+- L3: 无付费源备选
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')

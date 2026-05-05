@@ -7,8 +7,11 @@ J_CCI焦炭价格指数.py
 公式: J_SPT_CCI = CCI指数（元/吨）
 
 当前状态: [⚠️待修复]
-- CCI指数需汾渭付费账号，当前用JM现货替代
-- L2: AKShare futures_spot_price(date, vars_list=['JM'])
+- L1: CCI指数需汾渭付费账号（无免费源）
+- L2: AKShare futures_spot_price(date, vars_list=['JM']) — JM现货替代
+- L3: 无付费源备选
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')

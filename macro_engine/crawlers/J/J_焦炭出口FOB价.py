@@ -7,8 +7,11 @@ J_焦炭出口FOB价.py
 公式: J_FOB_EXPORT = 焦炭出口FOB价（美元/吨）
 
 当前状态: [⛔永久跳过]
-- 无免费数据源（付费订阅: 隆众/普氏）
-- 不写占位符
+- L1: 无免费数据源
+- L2: 无备源
+- L3: 付费订阅: 隆众/普氏（年费）
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')
