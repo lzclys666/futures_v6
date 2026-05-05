@@ -1,61 +1,119 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-I_run_all.py - 铁矿石日度数据采集总调度
-批次1: 免费数据源 (AKShare) - 5个因子
-批次2: 付费/无免费数据源 - 11个因子 (手动输入)
-注意: DCE铁矿石持仓排名接口不稳定，I_POS_NET暂归批次2
-"""
-import subprocess
-import sys
-import os
+"""I_run_all.py - 铁矿石数据采集（subprocess模式）"""
+import os, sys, subprocess, datetime, argparse
+from pathlib import Path
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
-# 批次1: 免费数据源
-BATCH1 = [
-    ("I_抓取港口库存.py",    "I_STK_PORT"),
-    ("I_计算基差.py",        "I_SPD_BASIS"),
-    ("I_抓取期货持仓量.py",   "I_FUT_OI"),
-    ("I_抓取期货收盘价.py",   "I_FUT_MAIN"),
-    ("I_计算近远月价差.py",   "I_SPD_CONTRACT"),
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from common.db_utils import get_pit_dates, ensure_table
+
+CURRENT_DIR = Path(__file__).parent
+LOG_DIR = CURRENT_DIR.parent / 'logs'
+LOG_DIR.mkdir(exist_ok=True)
+
+auto_scripts = [
+    "I_抓取期货收盘价.py",
+    "I_抓取港口库存.py",
+    "I_抓取期货持仓量.py",
+    "I_计算基差.py",
+    "I_计算近远月价差.py",
 ]
 
-# 批次2: 付费/无免费数据源
-BATCH2 = [
-    ("I_批次2_手动输入.py",   "BATCH2"),
+manual_scripts = [
+    "I_批次2_手动输入.py",
 ]
 
-ALL = BATCH1 + BATCH2
+all_scripts = auto_scripts + manual_scripts
 
-def run_script(name, factor_hint=""):
-    script_path = os.path.join(SCRIPT_DIR, name)
-    print(f"\n{'='*60}")
-    print(f">>> {name} {f'(target: {factor_hint})' if factor_hint else ''}")
-    result = subprocess.run(
-        [sys.executable, script_path, "--auto"],
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-    )
-    return result.returncode == 0
+def run_all(scripts):
+    now = datetime.datetime.now()
+    pub_date, obs_date = get_pit_dates()
+    ensure_table()
+    log_file = LOG_DIR / f"{now.strftime('%Y-%m-%d')}_I.log"
 
-def main():
-    print("铁矿石数据采集开始")
-    print(f"当前工作目录: {os.getcwd()}")
-    print(f"脚本目录: {SCRIPT_DIR}")
+    print("=" * 50)
+    print(f"I Data Collection @ {now}")
+    print(f"PIT: pub={pub_date} obs={obs_date}")
+    print(f"Scripts: {len(scripts)}")
+    print("=" * 50)
 
-    results = []
-    for name, hint in ALL:
-        ok = run_script(name, hint)
-        results.append((name, ok))
+    success_count = 0
+    failures = []
 
-    print(f"\n{'='*60}")
-    print("铁矿石采集结果汇总:")
-    success = sum(1 for _, ok in results if ok)
-    total = len(results)
-    for name, ok in results:
-        status = "OK" if ok else "FAIL"
-        print(f"  [{status}] {name}")
-    print(f"批次1: {sum(1 for n,_ in BATCH1)}/{len(BATCH1)}")
-    print(f"批次2: {sum(1 for n,_ in BATCH2)}/{len(BATCH2)}")
+    with open(log_file, "a", encoding="utf-8") as log:
+        log.write(f"\n{'='*50}\nI Start @ {now}\n{'='*50}\n")
+
+        for script in scripts:
+            script_path = CURRENT_DIR / script
+            if not script_path.exists():
+                msg = f"[SKIP] {script} not found"
+                print(msg); log.write(f"{msg}\n")
+                failures.append((script, "not found"))
+                continue
+
+            print(f">> {script}...")
+            log.write(f"\n--- {script} @ {datetime.datetime.now()} ---\n")
+
+            env = os.environ.copy()
+            env["PYTHONIOENCODING"] = "utf-8"
+
+            try:
+                result = subprocess.run(
+                    [sys.executable, "-X", "utf8=1", str(script_path), "--auto"],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    encoding='utf-8',
+                    errors='replace',
+                    timeout=120,
+                    cwd=str(CURRENT_DIR),
+                    env=env
+                )
+
+                log.write(result.stdout if result.stdout else "")
+                if result.stderr:
+                    log.write(f"[stderr] {result.stderr}\n")
+
+                if result.returncode == 0:
+                    success_count += 1
+                    print(f"    [OK] {script} done")
+                else:
+                    print(f"    [WARN] {script} exit:{result.returncode}")
+                    failures.append((script, f"exit {result.returncode}"))
+
+            except subprocess.TimeoutExpired:
+                msg = f"{script} TIMEOUT"
+                print(f"    [WARN] {msg}")
+                failures.append((script, "timeout"))
+            except Exception as e:
+                msg = f"{script} exception: {e}"
+                print(f"    [ERR] {msg}")
+                failures.append((script, str(e)))
+
+        duration = (datetime.datetime.now() - now).total_seconds()
+        print(f"\n{'='*50}")
+        print(f"I Done  {duration:.1f}s  {success_count}/{len(scripts)}")
+        if failures:
+            for n, r in failures:
+                print(f"  - {n}: {r}")
+        else:
+            print("[OK] All done")
+        print(f"{'='*50}")
+        log.write(f"\n[Done] {success_count}/{len(scripts)}\n")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--auto', action='store_true', help='只跑免费源脚本')
+    parser.add_argument('--manual', action='store_true', help='只跑付费源/兜底脚本')
+    args = parser.parse_args()
+
+    if args.manual:
+        scripts = manual_scripts
+    elif args.auto:
+        scripts = auto_scripts
+    else:
+        scripts = all_scripts
+
+    run_all(scripts)

@@ -1,61 +1,47 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-抓取港口库存
-因子: I_STK_PORT = 抓取港口库存
+I_抓取港口库存.py
+因子: I_STK_PORT = 铁矿石港口库存
 
-公式: 数据采集（无独立计算公式）
+公式: I_STK_PORT = 港口库存（万吨）
 
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+当前状态: [✅正常]
+- 数据源: AKShare futures_inventory_em(symbol='铁矿石')
 """
 import sys, os
-this_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
-from db_utils import save_to_db, get_latest_value
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 import akshare as ak
-from datetime import date
+import pandas as pd
 
-FACTOR_CODE = "I_STK_PORT"
 SYMBOL = "I"
-EXPECTED_MIN = 0
-EXPECTED_MAX = 6000  # 万吨
+FACTOR_CODE = "I_STK_PORT"
+BOUNDS = (5000, 20000)
 
 def fetch():
-    df = ak.futures_inventory_em(symbol="\u94c1\u77ff\u77f3")
-    df['\u65e5\u671f'] = df['\u65e5\u671f'].apply(
-        lambda x: pd.to_datetime(str(x)).date() if pd.notna(x) else None
-    )
-    latest = df.sort_values('\u65e5\u671f').iloc[-1]
-    raw_value = float(latest['\u5e93\u5b58'])  # 单位: 万吨
-    obs_date = latest['\u65e5\u671f']
+    df = ak.futures_inventory_em(symbol="铁矿石")
+    df['日期'] = pd.to_datetime(df['日期']).dt.date
+    latest = df.sort_values('日期').iloc[-1]
+    raw_value = float(latest['库存'])
+    obs_date = latest['日期']
     return raw_value, obs_date
 
 def main():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+
     try:
         raw_value, obs_date = fetch()
-    except Exception as e:
-        print("[L1 FAIL] %s: %s" % (FACTOR_CODE, e))
-        latest = get_latest_value(FACTOR_CODE, SYMBOL)
-        if latest is not None:
-            print("[L4 Fallback] %s=%.2f" % (FACTOR_CODE, latest))
+        if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={raw_value} out of {BOUNDS}")
             return
-        print("[L4 SKIP] %s: no data" % FACTOR_CODE)
-        return
-
-    if not (EXPECTED_MIN <= raw_value <= EXPECTED_MAX):
-        print("[WARN] %s=%.1f out of [%d,%d]" % (FACTOR_CODE, raw_value, EXPECTED_MIN, EXPECTED_MAX))
-        return
-
-    pub_date = date.today()
-    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source_confidence=1.0)
-    print("[OK] %s=%.1f obs=%s" % (FACTOR_CODE, raw_value, obs_date))
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source='AKShare', source_confidence=1.0)
+        print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
+    except Exception as e:
+        print(f"[L1 FAIL] {FACTOR_CODE}: {e}")
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date)
 
 if __name__ == "__main__":
-    import pandas as pd
     main()
