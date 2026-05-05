@@ -1,64 +1,52 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-焦炭期货近远月价差
-因子: J_J_SPD_NEAR_FAR = 焦炭期货近远月价差
+J_焦炭期货近远月价差.py
+因子: J_SPD_NEAR_FAR = 焦炭期货近远月价差
 
-公式: 数据采集（无独立计算公式）
+公式: J_SPD_NEAR_FAR = J0收盘价 - J1收盘价（元/吨）
 
-当前状态: ⚠️待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+当前状态: [✅正常]
+- 数据源: AKShare futures_main_sina("J0") - futures_main_sina("J1")
 """
-import sys, os as _os
-sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
-
+import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 import akshare as ak
 import pandas as pd
 
-FACTOR_CODE = "J_J_SPD_NEAR_FAR"
 SYMBOL = "J"
+FACTOR_CODE = "J_SPD_NEAR_FAR"
+BOUNDS = (-200, 200)
 
-def fetch_near_far_spread(obs_date):
-    def get_settle(symbol):
-        try:
-            df = ak.futures_main_sina(symbol=symbol)
-            if df is not None and len(df) > 0:
-                df.columns = ['date', 'open', 'high', 'low', 'close', 'volume', 'oi', 'settle']
-                df['date'] = pd.to_datetime(df['date'])
-                mask = df['date'] <= pd.Timestamp(obs_date)
-                row = df[mask].iloc[-1] if mask.sum() > 0 else df.iloc[-1]
-                return float(row.get('close') or row.get('settle') or 0)
-        except:
-            return None
-    
-    j0 = get_settle('J0')
-    j1 = get_settle('J1')
-    
-    if j0 is not None and j1 is not None:
-        spread = j0 - j1
-        print(f"[L1] J near-far spread: {spread:.2f} (J0={j0:.1f}, J1={j1:.1f})")
-        return spread, 'derived(J0-J1)', 0.9
-    
-    print(f"[WARN] J0={j0}, J1={j1}")
-    return None, None, None
+def fetch():
+    df0 = ak.futures_main_sina(symbol="J0")
+    df0['日期'] = pd.to_datetime(df0['日期']).dt.date
+    j0 = float(df0.sort_values('日期').iloc[-1]['收盘价'])
+
+    df1 = ak.futures_main_sina(symbol="J1")
+    df1['日期'] = pd.to_datetime(df1['日期']).dt.date
+    j1 = float(df1.sort_values('日期').iloc[-1]['收盘价'])
+
+    raw_value = j0 - j1
+    obs_date = df0.sort_values('日期').iloc[-1]['日期']
+    return raw_value, obs_date
+
+def main():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+
+    try:
+        raw_value, obs_date = fetch()
+        if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={raw_value} out of {BOUNDS}")
+            return
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source='AKShare', source_confidence=0.9)
+        print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
+    except Exception as e:
+        print(f"[L1 FAIL] {FACTOR_CODE}: {e}")
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
 
 if __name__ == "__main__":
-    pub_date, obs_date = get_pit_dates()
-    ensure_table()
-    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
-    value, source, confidence = fetch_near_far_spread(obs_date)
-    if value is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=confidence, source=source)
-    else:
-        val = get_latest_value(FACTOR_CODE, SYMBOL)
-        if val is not None:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val, source_confidence=0.5, source='db_fallback')
-            print(f"[OK] {FACTOR_CODE}={val} L4 fallback OK")
-        else:
-            print(f"[FAIL] {FACTOR_CODE} all sources failed")
+    main()

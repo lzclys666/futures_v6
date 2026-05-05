@@ -1,63 +1,57 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-CCI焦炭价格指数
-因子: J_J_SPT_CCI = CCI焦炭价格指数
+J_CCI焦炭价格指数.py
+因子: J_SPT_CCI = CCI焦炭价格指数
 
-公式: 数据采集（无独立计算公式）
+公式: J_SPT_CCI = CCI指数（元/吨）
 
-当前状态: ⚠️待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+当前状态: [⚠️待修复]
+- CCI指数需汾渭付费账号，当前用JM现货替代
+- L2: AKShare futures_spot_price(date, vars_list=['JM'])
 """
-import sys, os as _os
-sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
-
+import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 import akshare as ak
-import pandas as pd
 from datetime import timedelta
 
-FACTOR_CODE = "J_J_SPT_CCI"
 SYMBOL = "J"
+FACTOR_CODE = "J_SPT_CCI"
+BOUNDS = (500, 5000)
 
-def fetch_jm_spot(obs_date):
+def fetch():
+    pub_date, obs_date = get_pit_dates()
     for delta in range(8):
-        check = obs_date - timedelta(days=delta)
-        if check.weekday() >= 5:
+        d = obs_date - timedelta(days=delta)
+        if d.weekday() >= 5:
             continue
-        date_str = check.strftime('%Y%m%d')
         try:
-            df = ak.futures_spot_price(date=date_str, vars_list=['JM'])
-            if df is None or df.empty:
-                continue
-            row = df.iloc[-1]
-            spot = float(row.get("near_contract_price") or row.get("spot_price") or 0)
-            if spot > 0:
-                print(f"[L2] JM spot({date_str}): {spot} (as CCI alternative)")
-                return spot, check
-        except Exception as e:
-            print(f"[L2] JM spot({date_str}): {e}")
-    return None, None
+            df = ak.futures_spot_price(date=d.strftime('%Y%m%d'), vars_list=['JM'])
+            if df is not None and not df.empty:
+                row = df.iloc[-1]
+                spot = float(row.get("near_contract_price") or row.get("spot_price") or 0)
+                if spot > 0:
+                    return spot, d
+        except:
+            continue
+    raise ValueError("CCI指数JM现货替代获取失败")
+
+def main():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+
+    try:
+        raw_value, obs_date = fetch()
+        if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={raw_value} out of {BOUNDS}")
+            return
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source='AKShare_JM替代', source_confidence=0.8)
+        print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
+    except Exception as e:
+        print(f"[L2 FAIL] {FACTOR_CODE}: {e}")
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
 
 if __name__ == "__main__":
-    pub_date, obs_date = get_pit_dates()
-    ensure_table()
-    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
-    print("[NOTE] CCI coking coal price needs Fenwei paid account, using JM spot as alternative")
-    
-    value, actual_date = fetch_jm_spot(obs_date)
-    if value is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, actual_date, value, source_confidence=0.8, source='akshare_futures_spot_price_JM(alternative_CCI)')
-        print(f"[OK] {FACTOR_CODE}={value:.2f} written")
-    else:
-        val = get_latest_value(FACTOR_CODE, SYMBOL)
-        if val is not None:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val, source_confidence=0.5, source='db_fallback')
-            print(f"[OK] {FACTOR_CODE}={val} L4 fallback OK")
-        else:
-            print(f"[SKIP] {FACTOR_CODE} no data")
+    main()

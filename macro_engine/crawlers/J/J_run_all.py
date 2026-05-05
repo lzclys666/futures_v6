@@ -1,119 +1,131 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-J（焦炭）爬虫总控脚本
-基于AKShare的真实数据采集版本
+J_run_all.py
+品种: J（焦炭）爬虫总控脚本
+调度: 11个因子脚本（8个活跃 + 3个付费因子跳过）
 """
 import os
 import sys
 import datetime
 import subprocess
+import argparse
 from pathlib import Path
+
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, str(Path(__file__).parent.parent / 'common'))
+from db_utils import get_pit_dates, ensure_table
 
 CURRENT_DIR = Path(__file__).parent
 LOG_DIR = CURRENT_DIR.parent / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
-scripts = [
+SCRIPTS = [
+    "J_我的钢铁网焦炭现货价格.py",
     "J_焦炭期货收盘价.py",
     "J_焦炭期货仓单.py",
     "J_焦炭期货净持仓.py",
     "J_焦炭期现基差.py",
     "J_焦炭期货近远月价差.py",
     "J_焦炭与焦煤价差.py",
-    "J_我的钢铁网焦炭现货价格.py",
     "J_CCI焦炭价格指数.py",
+    "J_钢厂焦炭可用天数.py",
+    "J_焦化企业开工率.py",
+    "J_焦炭出口FOB价.py",
 ]
 
-def run_all():
-    _sym = "J"
-    _name = "焦炭"
+SYMBOL = "J"
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--auto', action='store_true')
+    parser.add_argument('--manual', action='store_true')
+    args = parser.parse_args()
+
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
     now = datetime.datetime.now()
-    log_file = LOG_DIR / (now.strftime('%Y-%m-%d') + '_' + _sym + '.log')
+    log_file = LOG_DIR / (now.strftime('%Y-%m-%d') + '_' + SYMBOL + '.log')
 
     print("=" * 50)
-    print('[REAL] J (焦炭) AKShare数据采集版')
-    print("待执行脚本数: " + str(len(scripts)))
+    print(f"{SYMBOL} Data Collection @ {now}")
+    print(f"PIT: pub={pub_date} obs={obs_date}")
+    print(f"Scripts: {len(SCRIPTS)}")
     print("=" * 50)
 
     success_count = 0
     failures = []
 
     with open(log_file, "a", encoding="utf-8") as log:
-        sep50 = '=' * 50
-        log_write = sep50 + '\n' + _sym + ' start @ ' + str(now) + '\n' + sep50 + '\n'
-        log.write(log_write)
+        log.write(f"\n{'='*50}\n{SYMBOL} start @ {now}\nPIT: pub={pub_date} obs={obs_date}\n{'='*50}\n")
 
-        for script in scripts:
+        for script in SCRIPTS:
             script_path = CURRENT_DIR / script
             if not script_path.exists():
-                msg = '[SKIP] script not found: ' + script
-                print("[WARN] " + msg)
+                msg = f'[SKIP] not found: {script}'
+                print(f"[WARN] {msg}")
                 log.write(msg + '\n')
                 failures.append((script, 'file_not_found'))
                 continue
 
-            print(">>> " + script + "...")
-            log.write('--- ' + script + ' @ ' + str(datetime.datetime.now()) + ' ---\n')
+            print(f">> {script}...")
+            log.write(f'--- {script} @ {datetime.datetime.now()} ---\n')
 
-            cmd = [sys.executable, str(script_path), "--auto"]
+            cmd = [sys.executable, '-X', 'utf8=1', str(script_path)]
+            if args.auto:
+                cmd.append('--auto')
 
             try:
                 env = os.environ.copy()
-                env["PYTHONIOENCODING"] = "utf-8"
-                env["PYTHONUTF8"] = "1"
+                env['PYTHONIOENCODING'] = 'utf-8'
+                env['PYTHONUTF8'] = '1'
 
                 result = subprocess.run(
                     cmd,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
-                    encoding="utf-8",
-                    errors="replace",
+                    encoding='utf-8',
+                    errors='replace',
                     timeout=120,
                     cwd=str(CURRENT_DIR),
                     env=env,
                 )
 
-                log.write(result.stdout if result.stdout else "")
+                if result.stdout:
+                    log.write(result.stdout)
                 if result.stderr:
-                    log.write('[stderr] ' + result.stderr + '\n')
+                    log.write(f'[stderr] {result.stderr}\n')
 
                 if result.returncode == 0:
                     success_count += 1
-                    print("[OK] " + script)
+                    print(f"    [OK] {script} done")
                 else:
-                    print("[WARN] " + script + " err=" + str(result.returncode))
-                    failures.append((script, 'err=' + str(result.returncode)))
+                    print(f"    [WARN] {script} exit:{result.returncode}")
+                    failures.append((script, f'exit:{result.returncode}'))
 
             except subprocess.TimeoutExpired:
-                msg = script + ' timeout'
-                print("[WARN] " + msg)
+                print(f"    [WARN] {script} timeout")
                 failures.append((script, 'timeout'))
-
+                log.write(f'[TIMEOUT] {script}\n')
             except Exception as e:
-                msg = script + ' exception: ' + str(e)
-                print("[WARN] " + msg)
+                print(f"    [WARN] {script} exception: {e}")
                 failures.append((script, str(e)))
+                log.write(f'[EXCEPTION] {script}: {e}\n')
 
-        end_time = datetime.datetime.now()
-        duration = (end_time - now).total_seconds()
+            import time
+            time.sleep(1)
 
-        sep = '=' * 50
-        summary = "\n" + sep + "\n"
-        summary += _sym + " done @ " + str(end_time) + "\n"
-        summary += "duration: " + str(round(duration, 1)) + "s\n"
-        summary += "success: " + str(success_count) + "/" + str(len(scripts)) + "\n"
+        duration = (datetime.datetime.now() - now).total_seconds()
+        summary = f"\n{'='*50}\n{SYMBOL} Done  {round(duration,1)}s  {success_count}/{len(SCRIPTS)}\n"
         if failures:
-            summary += "failed " + str(len(failures)) + "\n"
             for n, r in failures:
-                summary += "  - " + n + ": " + r + "\n"
+                summary += f"  - {n}: {r}\n"
         else:
-            summary += 'all ok\n'
-        summary += sep + "\n"
+            summary += "[OK] All done\n"
+        summary += f"{'='*50}\n"
 
         log.write(summary)
         print(summary)
 
-
 if __name__ == "__main__":
-    run_all()
+    main()
