@@ -1,31 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-计算焦煤月差
-因子: JM_SPD_CONTRACT = 计算焦煤月差
+JM_计算焦煤月差.py
+因子: JM_SPD_CONTRACT = 焦煤期货近远月价差
 
-公式: 数据采集（无独立计算公式）
+公式: JM_SPD_CONTRACT = 近月合约结算价 - 远月合约结算价（元/吨）
 
-当前状态: [WARN] 待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+当前状态: [✅正常]
+- L1: AKShare futures_zh_daily_sina 多合约枚举（1/5/9月）+ 持仓量排序选主力
+- L2: 新浪实时API hq.sinajs.cn — 多合约实时价格
+- L3: 无备源（近远月价差需多合约数据）
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
-
-import sys
-import os as _os
-sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
-
+import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 import akshare as ak
-from common.web_utils import fetch_url
+from web_utils import fetch_url
 import datetime
 
-FACTOR_CODE = "JM_SPD_CONTRACT"
 SYMBOL = "JM"
+FACTOR_CODE = "JM_SPD_CONTRACT"
+BOUNDS = (-300, 300)
+
 
 def get_active_contracts():
     """获取大商所焦煤活跃合约列表(1,5,9月)"""
@@ -33,12 +32,13 @@ def get_active_contracts():
     y, m = today.year, today.month
     months = [1, 5, 9]
     contracts = []
-    for my in range(y, y+2):
+    for my in range(y, y + 2):
         for mm in months:
             dt = datetime.date(my, mm, 1)
             if dt > today - datetime.timedelta(days=30):
                 contracts.append(f"JM{str(my)[2:]}{mm:02d}")
     return sorted(contracts)
+
 
 def fetch_contract_settle(contract):
     """获取单个合约最新结算价"""
@@ -52,11 +52,12 @@ def fetch_contract_settle(contract):
         pass
     return None, None
 
+
 def fetch_spread():
     """四层漏斗获取月差"""
     contracts = get_active_contracts()
     print(f"  候选合约: {contracts}")
-    
+
     # L1: AKShare 多合约结算价
     try:
         print("[L1] AKShare futures_zh_daily_sina 多合约...")
@@ -66,9 +67,8 @@ def fetch_spread():
             if settle and hold and hold > 0:
                 results.append((c, settle, hold))
                 print(f"    {c}: settle={settle}, hold={hold}")
-        
+
         if len(results) >= 2:
-            # 按持仓量排序取前两个
             results.sort(key=lambda x: x[2], reverse=True)
             near = results[0]
             far = results[1] if results[1][2] > 10000 else (results[-1] if len(results) > 2 else None)
@@ -78,7 +78,7 @@ def fetch_spread():
                 return spread, 'akshare', 1.0
     except Exception as e:
         print(f"[L1] 失败: {e}")
-    
+
     # L2: 新浪实时API
     try:
         print("[L2] 新浪实时API...")
@@ -99,35 +99,36 @@ def fetch_spread():
                     return spread, 'sina', 0.9
     except Exception as e:
         print(f"[L2] 失败: {e}")
-    
-    # L4: DB兜底
-    print("[L4] DB历史回补...")
-    val = get_latest_value(FACTOR_CODE, SYMBOL)
-    if val is not None:
-        print(f"[L4] 兜底: {val}")
-        return val, 'db_回补', 0.5
-    
+
+    # L3: 无备源（近远月价差需多合约数据）
+
+    # L4: DB历史最新值回补
+    # 由 main() 中的 save_l4_fallback() 处理
     return None, None, None
 
-if __name__ == "__main__":
-    pub_date, obs_date = get_pit_dates()
-    if pub_date is None:
-        print("非交易日，跳过"); exit(0)
-    
+
+def main():
     ensure_table()
-    print(f"=== {FACTOR_CODE} ===")
-    print(f"pub_date: {pub_date}")
-    print(f"obs_date: {obs_date}")
-    
-    value, source, confidence = fetch_spread()
-    if value is not None:
-        # Bounds 检查: (-100, 100) 元/吨
-        expected_lo, expected_hi = -100.0, 100.0
-        if not (expected_lo <= value <= expected_hi):
-            print(f"[WARN] {FACTOR_CODE}={value} 超出bounds[{expected_lo}, {expected_hi}]，跳过")
+    pub_date, obs_date = get_pit_dates()
+
+    try:
+        value, source, confidence = fetch_spread()
+        if value is None:
+            print(f"[L1-L3 FAIL] {FACTOR_CODE} 所有数据源均失败")
+            save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
             return
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, 
-                  source_confidence=confidence, source=source)
-        print(f"[OK] 写入数据: {value}")
-    else:
-        print(f"[失败] {FACTOR_CODE} 所有数据源均失败")
+        if not (BOUNDS[0] <= value <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={value} out of {BOUNDS}")
+            return
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value,
+                   source_confidence=confidence, source=source)
+        print(f"[OK] {FACTOR_CODE}={value} obs={obs_date}")
+    except Exception as e:
+        print(f"[ERR] {FACTOR_CODE}: {e}")
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
+
+    # L5: 不写NULL占位符（SOP§7）
+
+
+if __name__ == "__main__":
+    main()

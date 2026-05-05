@@ -1,71 +1,39 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-蒙煤山西煤价差
+JM_蒙煤山西煤价差.py
 因子: JM_SPD_MG_SX = 蒙煤山西煤价差
 
-公式: 数据采集（无独立计算公式）
+公式: JM_SPD_MG_SX = 蒙煤价格 - 山西煤价格（元/吨）
 
-当前状态: [WARN] 待修复
-- 补充 L1-L3 框架代码
-- 尝试过的数据源及结果：需补充
-
-订阅优先级: [付费-汾渭能源]
-替代付费源: 汾渭能源(年费)
+当前状态: [⛔永久跳过]
+- L1: 无免费数据源（蒙煤/山西煤价格需行业调研）
+- L2: 无备源
+- L3: 付费订阅: 汾渭能源（年费）
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
-import sys, os as _os
-sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 
-FACTOR_CODE = "JM_SPD_MG_SX"
 SYMBOL = "JM"
-# 付费来源: 汾渭能源(年费)
+FACTOR_CODE = "JM_SPD_MG_SX"
 
-def fetch_value():
-    """四层漏斗获取蒙煤山西煤价差"""
-    # L1: 免费权威源
-    try:
-        print("[L1] 尝试免费权威源...")
-        # 暂无可靠免费数据源
-    except Exception as e:
-        print(f"[L1] 失败: {e}")
-    
-    # L2: 免费聚合源
-    try:
-        print("[L2] 尝试免费聚合源...")
-        # 暂无可用免费聚合数据
-    except Exception as e:
-        print(f"[L2] 失败: {e}")
-    
-    # L3: 付费源（需订阅）
-    try:
-        print("[L3] 付费源（需订阅）...")
-        print("[L3] 汾渭能源 - 年费订阅，数据需人工订阅获取")
-    except Exception as e:
-        print(f"[L3] 失败: {e}")
-    
-    # L4: DB兜底
-    print("[L4] DB历史回补...")
-    val = get_latest_value(FACTOR_CODE, SYMBOL)
-    if val is not None:
-        return val, 'db_回补', 0.5
-    
-    if '--manual' in sys.argv:
-        try:
-            v = float(input("请输入蒙煤山西煤价差(元/吨): "))
-            return v, '手动输入', 0.6
-        except (ValueError, EOFError):
-            pass
-    return None, None, None
+
+def main():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+
+    # L1-L3: 无免费数据源（蒙煤/山西煤价格需行业调研，汾渭年费）
+    print(f"[跳过] {FACTOR_CODE} 无免费数据源（付费订阅:汾渭能源）")
+
+    # L4: DB历史最新值回补
+    save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
+
+    # L5: 不写NULL占位符（SOP§7）
+
 
 if __name__ == "__main__":
-    pub_date, obs_date = get_pit_dates()
-    if pub_date is None:
-        print("非交易日，跳过"); exit(0)
-    ensure_table()
-    print(f"=== {FACTOR_CODE} ===")
-    value, source, confidence = fetch_value()
-    if value is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=confidence, source=source)
-    else:
-        print(f"[跳过] {FACTOR_CODE} 需付费数据")
+    main()

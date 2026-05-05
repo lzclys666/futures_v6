@@ -3,13 +3,20 @@
 """
 JM_run_all.py - 焦煤爬虫总控
 自动脚本走 --auto，手动兜底脚本走 --manual
+
+调度分类:
+- daily_free: 每日自动采集（免费数据源）
+- monthly: 月度自动采集（免费数据源）
+- manual_scripts: 手动兜底（付费数据源，--manual模式才运行）
 """
 import subprocess, sys, os, datetime
 
-# Windows UTF-8
-sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+sys.stdout.reconfigure(encoding='utf-8')
+sys.stderr.reconfigure(encoding='utf-8')
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent / 'common'))
+from db_utils import get_pit_dates, ensure_table
 
 CURRENT_DIR = Path(__file__).parent
 LOG_DIR = CURRENT_DIR / "logs"
@@ -46,17 +53,20 @@ manual_scripts = [
     "JM_蒙煤山西煤价差.py",            # JM_SPD_MG_SX - 汾渭(年费)
 ]
 
+
 def run_scripts(scripts, mode="auto"):
     success, fail, skip = 0, 0, 0
     for script in scripts:
         script_path = CURRENT_DIR / script
         if not script_path.exists():
-            print(f"  [跳过] {script} 不存在"); skip += 1; continue
+            print(f"  [跳过] {script} 不存在")
+            skip += 1
+            continue
 
         print(f"\n>>> {script}... ({mode})")
         env = os.environ.copy()
         env["PYTHONIOENCODING"] = "utf-8"
-        args = [sys.executable, str(script_path)]
+        args = [sys.executable, '-X', 'utf8=1', str(script_path)]
         if mode == "auto":
             args.append("--auto")
         elif mode == "manual":
@@ -84,36 +94,50 @@ def run_scripts(scripts, mode="auto"):
         except Exception as e:
             fail += 1
             print(f"  [异常] {e}")
+        import time
+        time.sleep(1)
     return success, fail, skip
 
+
 def run_all(mode="auto"):
+    pub_date, obs_date = get_pit_dates()
+    ensure_table()
+
     now = datetime.datetime.now()
     log_file = LOG_DIR / f"{now.strftime('%Y-%m-%d')}.log"
 
     print("=" * 60)
     print(f"JM 数据采集 @ {now}")
+    print(f"pub_date={pub_date} obs_date={obs_date}")
     print(f"自动化: {len(auto_scripts)}, 手动兜底: {len(manual_scripts)}")
+    print(f"模式: {mode}")
     print("=" * 60)
 
     auto_ok, auto_fail, auto_skip = run_scripts(auto_scripts, mode=mode)
 
+    # auto模式不运行manual脚本（它们会检测--auto后立即退出，但仍浪费资源）
     if mode == "manual":
         man_ok, man_fail, man_skip = run_scripts(manual_scripts, mode="manual")
     else:
-        man_ok, man_fail, man_skip = run_scripts(manual_scripts, mode="auto")
+        print(f"\n[AUTO模式] 跳过 {len(manual_scripts)} 个手动兜底脚本（付费数据源）")
+        man_ok, man_fail, man_skip = 0, 0, len(manual_scripts)
 
     total_ok = auto_ok + man_ok
     total_fail = auto_fail + man_fail
     total_skip = auto_skip + man_skip
 
     with open(log_file, "a", encoding="utf-8") as log:
-        log.write(f"\n{'='*60}\nJM采集 @ {now} | 自动={auto_ok}/{len(auto_scripts)} 手动={man_ok}/{len(manual_scripts)}\n{'='*60}\n")
+        log.write(f"\n{'='*60}\n")
+        log.write(f"JM采集 @ {now} | pub={pub_date} obs={obs_date} | mode={mode}\n")
+        log.write(f"自动={auto_ok}/{len(auto_scripts)} 手动={man_ok}/{len(manual_scripts)}\n")
+        log.write(f"{'='*60}\n")
 
     print(f"\n{'='*60}")
-    print(f"结果: 成功={total_ok} 失败={total_fail} 跳过={total_skip}")
-    print(f"  自动化: {auto_ok}/{len(auto_scripts)}")
-    print(f"  手动兜底: {man_ok}/{len(manual_scripts)} (DB回补)")
+    print(f"JM Done  {now.strftime('%H:%M:%S')}  {total_ok+total_fail+total_skip}/{len(auto_scripts)+len(manual_scripts)}")
+    print(f"  自动: {auto_ok}/{len(auto_scripts)}")
+    print(f"  手动: {man_ok}/{len(manual_scripts)} (DB回补)")
     print(f"{'='*60}")
+
 
 if __name__ == "__main__":
     mode = "auto"

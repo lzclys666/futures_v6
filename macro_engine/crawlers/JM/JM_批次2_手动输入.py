@@ -1,23 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-批次2_手动输入
-因子: 待定义 = 批次2_手动输入
+JM_批次2_手动输入.py
+因子: 批次2/3/4 付费因子手动录入
 
-公式: 数据采集（无独立计算公式）
+公式: 无（手动输入模式）
 
-当前状态: [WARN] 待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
+当前状态: [⛔永久跳过]
+- L1: 无免费数据源（批次2/3/4均为付费因子）
+- L2: 无备源
+- L3: 付费订阅: Mysteel/汾渭/普氏（年费）
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 
-订阅优先级: [付费]
-替代付费源: 具体平台名称
+数据说明:
+- auto模式: 打印跳过信息并退出
+- manual模式: 交互式手动输入（需人工从付费终端获取数据）
 """
 import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common.db_utils import ensure_table, save_to_db
-from datetime import date
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
+from db_utils import save_to_db, ensure_table, get_pit_dates
 
 SYMBOL = "JM"
 
@@ -44,20 +47,23 @@ FACTORS = [
 
 def main():
     ensure_table()
+    pub_date, obs_date = get_pit_dates()
+
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--auto", action="store_true")
     args = parser.parse_args()
-    today = date.today()
-    pub_date = today.isoformat()
+
     print("=" * 60)
     print(f"  JM批次2/3/4 - 付费因子录入  @ {pub_date}")
     print("=" * 60)
+
     if args.auto:
         print("[AUTO模式] JM批次2/3/4为付费因子或永久跳过，无免费采集路径")
         print("[AUTO模式] JM_SPD_BASIS已标记永久跳过（无可靠免费源）")
         print("[AUTO模式] 完成")
         return 0
+
     written = 0
     for f in FACTORS:
         print(f"\n--- {f['code']} ({f['name']}) [批次{f['batch']}] ---")
@@ -90,6 +96,7 @@ def main():
                    source_confidence=0.8, source=f["source"])
         print(f"  [OK] {f['code']}={val} {f['unit']} 写入成功")
         written += 1
+
     print(f"\n{'=' * 60}")
     print(f"完成，共写入 {written} 个因子")
     print(f"{'=' * 60}")
