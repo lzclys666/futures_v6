@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 批次2_手动输入
@@ -17,7 +17,7 @@
 
 import sys, os as _os
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 
 FACTOR_CODE_BATCH2 = [
     ("RB_SUPPLY_STEEL_OUTPUT", "钢厂螺纹钢产量(万吨)", "db_回补"),
@@ -31,16 +31,10 @@ def manual_input_factors():
     is_auto = "--auto" in sys.argv
     
     if is_auto:
-        print("[自动模式] 批次2因子无免费数据源，尝试DB回补...")
-        results = []
+        print("[自动模式] 批次2因子无免费数据源，DB回补...")
         for factor, name, src in FACTOR_CODE_BATCH2:
-            val = get_latest_value(factor, "RB")
-            if val is not None:
-                print(f"  [DB回补] {factor}: {val}")
-                results.append((factor, val, src, 0.5))
-            else:
-                print(f"  [跳过] {factor} 无历史数据")
-        return results
+            save_l4_fallback(factor, "RB", pub_date, obs_date)
+        return []
     else:
         print("\n" + "=" * 50)
         print("手动输入模式 - RB批次2因子")

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 计算期现基差
@@ -17,7 +17,7 @@
 
 import sys, os as _os
 sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 
 import akshare as ak
 
@@ -70,10 +70,7 @@ def fetch_basis():
     
     # L4: DB回补
     print("[L4] DB历史基差回补...")
-    val = get_latest_value(FACTOR_CODE, SYMBOL)
-    if val is not None:
-        print(f"[L4] 兜底: {val}")
-        return val, 'db_回补', 0.5
+    # L4: DB回补 (moved to main)
     return None, None, None
 
 if __name__ == "__main__":
