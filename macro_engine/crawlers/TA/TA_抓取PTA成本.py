@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 TA_抓取PTA成本.py
@@ -10,7 +10,8 @@ TA_抓取PTA成本.py
 当前状态: [WARN]️ 永久跳过 -- 无PX免费源，不写占位符
 """
 import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, get_pit_dates
 
 SYMBOL = "TA"

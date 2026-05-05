@@ -15,8 +15,9 @@
 替代付费源: 具体平台名称
 """
 import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 import akshare as ak
 import pandas as pd
 from datetime import timedelta
@@ -82,13 +83,7 @@ def main():
         print(f"OK {FACTOR_CODE}={warrant:.0f}")
         return 0
     else:
-        v = get_latest_value(FACTOR_CODE, SYMBOL)
-        if v is not None:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, v,
-                       source_confidence=0.5, source="db_回补")
-            print(f"OK {FACTOR_CODE}={v:.0f} L4")
-        else:
-            print("[WARN] 仓单全失败，跳过")
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
         return 0
 
 

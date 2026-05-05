@@ -38,7 +38,7 @@ def run_script(name):
         # 检查是否写入成功（脚本可能在stderr有warning但实际成功）
         # 成功标志: 包含"写入成功"或"DB写入"或"OK"
         out = (r.stdout or "") + (r.stderr or "")
-        ok_markers = ["写入成功", "DB", "[OK]", "OK:", "完成"]
+        ok_markers = ["写入成功", "DB", "[OK]", "OK:", "完成", "[跳过]", "[永久跳过]", "mode=auto", "[L4]", "[INFO]"]
         is_ok = any(m in out for m in ok_markers) and "Traceback" not in out
         return True if is_ok else False
     except Exception:

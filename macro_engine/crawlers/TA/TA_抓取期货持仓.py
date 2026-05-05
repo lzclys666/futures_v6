@@ -15,7 +15,8 @@
 替代付费源: 具体平台名称
 """
 import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates
 
 import akshare as ak
@@ -61,12 +62,7 @@ def main():
 
     # L2: 兜底历史值
     if value is None:
-        from common.db_utils import get_latest_value
-        val = get_latest_value(FACTOR_CODE, SYMBOL)
-        if val is not None:
-            value = val
-            source_conf = 0.5
-            print(f"[L4] DB兜底: {value}")
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
 
     if value is not None and MIN_VALUE <= value <= MAX_VALUE:
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, value, source_confidence=source_conf)

@@ -15,8 +15,9 @@
 替代付费源: 具体平台名称
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 import akshare as ak
 
 FACTOR_CODE = "TA_STK_SOCIAL"
@@ -45,12 +46,7 @@ def main():
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val, source_confidence=1.0, source="akshare_futures_inventory_em")
         print(f"[OK] {FACTOR_CODE}={val} 写入成功")
     else:
-        v = get_latest_value(FACTOR_CODE, SYMBOL)
-        if v is not None:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, v, source_confidence=0.5, source="db_回补")
-            print(f"[OK] {FACTOR_CODE}={v} L4回补成功")
-        else:
-            print(f"[WARN]️  {FACTOR_CODE} 无数据源")
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
 
 if __name__ == "__main__":
     main()

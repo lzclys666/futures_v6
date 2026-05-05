@@ -15,8 +15,9 @@
 替代付费源: 具体平台名称
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 import akshare as ak
 
 SYMBOL = "TA"
@@ -46,11 +47,7 @@ def main():
         print(f"[OK] TA_STK_SOCIAL={val} 写入成功")
     else:
         # TA_STK_WARRANT 不在此脚本处理（由TA_抓取郑商所仓单.py负责）
-        for fc in ["TA_STK_SOCIAL"]:
-            v = get_latest_value(fc, SYMBOL)
-            if v is not None:
-                save_to_db(fc, SYMBOL, pub_date, obs_date, v, source_confidence=0.5, source="db_回补")
-                print(f"[OK] {fc}={v} L4回补成功")
+        save_l4_fallback("TA_STK_SOCIAL", SYMBOL, pub_date, obs_date)
 
 if __name__ == "__main__":
     main()

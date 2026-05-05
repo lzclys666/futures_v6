@@ -15,9 +15,10 @@
 替代付费源: 具体平台名称
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.web_utils import fetch_url, fetch_json
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 import pandas as pd
 from datetime import datetime
 
@@ -141,12 +142,7 @@ def main():
 
     # L4: 历史回补（BRENT无免费可靠源，依赖L4维持连续性）
     if not result:
-        v = get_latest_value(FACTOR_CODE, SYMBOL)
-        if v and MIN_VALUE <= v <= MAX_VALUE:
-            print(f"[L4] 历史回补: ${v:.2f}")
-            result = (v, 0.5, "db_history_fallback")
-        else:
-            print("[L4] 无可用历史值，跳过")
+        save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
 
     if result:
         val, conf, src = result

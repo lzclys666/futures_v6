@@ -15,7 +15,8 @@
 替代付费源: 具体平台名称
 """
 import sys, os
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, get_pit_dates
 
 FACTOR_CODE = "TA_SUP_OP_RATE"

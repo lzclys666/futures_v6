@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 TA_抓取汇率.py
@@ -14,7 +14,10 @@ TA_抓取汇率.py
 订阅优先级: [付费]（付费源才需要标注）
 替代付费源: 具体平台名称
 """
-from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value
+import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
+from common.db_utils import ensure_table, save_to_db, get_pit_dates, save_l4_fallback
 from common.web_utils import fetch_url
 
 
@@ -50,12 +53,7 @@ def main():
         print(f">>> TA_CST_USDCNY={rate} 写入成功")
     else:
         print("  [L1/L2] 无免费汇率数据")
-        val = get_latest_value("TA_CST_USDCNY", "TA")
-        if val is not None:
-            save_to_db("TA_CST_USDCNY", "TA", pub_date, obs_date, val, source_confidence=0.5, source="db_回补")
-            print(f">>> TA_CST_USDCNY={val} L4回补成功")
-        else:
-            print("FAIL: USDCNY无数据")
+        save_l4_fallback("TA_CST_USDCNY", "TA", pub_date, obs_date)
 
 if __name__ == "__main__":
     main()
