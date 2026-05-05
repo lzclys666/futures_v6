@@ -15,6 +15,7 @@ SCRIPTS = [
     "TA_抓取期货持仓.py",
     "TA_抓取汇率.py",
     "TA_抓取BRENT价格.py",
+    "TA_PTA成交量.py",
     "TA_抓取PX价格.py",
     "TA_抓取PTA成本.py",
     "TA_抓取聚酯开工率.py",

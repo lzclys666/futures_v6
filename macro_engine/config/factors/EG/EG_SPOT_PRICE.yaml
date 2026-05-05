@@ -1,0 +1,8 @@
+factor_code: EG_SPOT_PRICE
+name: "EG乙二醇现货价格"
+category: free_data
+description: "乙二醇现货价格（华东出罐价），反映现货市场供需。"
+data_source: AKShare futures_spot_price_daily(vars_list=['EG'])['spot_price']
+source_confidence: 1.0
+expected_range: [3000.0, 10000.0]
+notes: "L1: AKShare futures_spot_price_daily | L4: DB历史回补"

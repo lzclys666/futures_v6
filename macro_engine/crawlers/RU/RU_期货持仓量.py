@@ -55,7 +55,7 @@ def main():
     else:
         from common.db_utils import save_l4_fallback
         save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date)
-            print(f"[DB] 因子 {FACTOR_CODE} NULL 占位写入")
+        print(f"[DB] 因子 {FACTOR_CODE} NULL 占位写入")
 
 if __name__ == "__main__":
     fix_encoding()

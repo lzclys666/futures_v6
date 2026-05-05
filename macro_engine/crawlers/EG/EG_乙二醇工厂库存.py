@@ -19,7 +19,7 @@ import akshare as ak
 
 FACTOR_CODE = "EG_STK_WARRANT"
 SYMBOL = "EG"
-BOUNDS = (10000, 500000)
+BOUNDS = (3000, 500000)
 
 def run():
     ensure_table()

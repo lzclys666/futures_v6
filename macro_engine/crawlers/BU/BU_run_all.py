@@ -4,8 +4,8 @@
 BU（沥青）爬虫总控脚本
 
 调度顺序:
-  活跃脚本: 收盘价 → 净持仓 → 基差 → 现货价 → 布伦特价差 → 汇率 → 库存
-  stub脚本: 仓单 → 开工率 → 高速公路 → 消费者信心
+  活跃脚本: 收盘价 → 净持仓 → 仓单 → 持仓量 → 成交量 → 基差 → 现货价 → 布伦特价差 → 汇率 → 库存
+  stub脚本: 开工率 → 高速公路 → 消费者信心
 """
 import subprocess, sys, os, time, datetime
 from pathlib import Path
@@ -24,6 +24,9 @@ from common.db_utils import ensure_table, get_pit_dates
 AUTO_SCRIPTS = [
     "BU_抓取_沥青期货收盘价.py",
     "BU_抓取_沥青期货净持仓.py",
+    "BU_抓取_沥青期货仓单.py",
+    "BU_抓取_期货持仓量.py",
+    "BU_抓取_期货成交量.py",
     "BU_计算_沥青期现基差.py",
     "BU_抓取_华东沥青市场价格.py",
     "BU_计算_沥青与布伦特原油比价.py",
@@ -33,7 +36,6 @@ AUTO_SCRIPTS = [
 
 # stub脚本（无免费源，仅L4回补）
 STUB_SCRIPTS = [
-    "BU_抓取_沥青期货仓单.py",
     "BU_抓取_炼厂沥青开工率.py",
     "BU_抓取_全国高速公路整车流量.py",
     "BU_抓取_消费者信心指数.py",

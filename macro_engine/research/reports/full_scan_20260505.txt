@@ -1,0 +1,423 @@
+============================================================
+FULL SCRIPT SCAN - ALL SYMBOLS
+============================================================
+Symbols found: 35
+List: ['AG', 'AL', 'AO', 'AU', 'BR', 'BU', 'CU', 'CU_NI', 'EC', 'EG', 'FU', 'HC', 'I', 'J', 'JM', 'LC', 'LH', 'M', 'NI', 'NR', 'P', 'PB', 'PP', 'RB', 'RU', 'SA', 'SC', 'SN', 'TA', 'Y', 'ZN', 'ZN_PB_SN', 'common', 'logs', 'tools']
+
+[L0] requests.get / import requests
+  Total .py files: 383
+  requests.get/post: 0 hits
+  import requests:   1 hits
+    web_utils.py -> D:\futures_v6\macro_engine\crawlers\common\web_utils.py
+
+[L1] Syntax & Import by Symbol
+  [AG] 16 scripts - FAIL
+    SYNTAX_ERR: AG_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取CFTC白银持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取COMEX白银库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取COMEX黄金库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取CPI.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取SHFE白银仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取TIPS.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取期货日行情.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取汇率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取现货价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取白银ETF持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取美元指数.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_抓取黄金白银比.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_计算期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AG_计算沪银COMEX比价.py: UNKNOWN_SYNTAX_ERR
+  [AL] 12 scripts - FAIL
+    SYNTAX_ERR: AL_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_批次2_手动输入.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_抓取LME铝价_铝道网.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_抓取LME铝库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_抓取上期所沪铝仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_抓取净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_抓取期货日行情.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_计算SHFE_LME比价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_计算持仓集中度.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_计算期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_计算近远月价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AL_计算铝铜比价.py: UNKNOWN_SYNTAX_ERR
+  [AO] 13 scripts - FAIL
+    SYNTAX_ERR: AO_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_抓取上期所仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_抓取前20净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_抓取期货持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_抓取期货日行情.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_抓取氧化铝主力价格.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_抓取氧化铝进口量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_抓取沪铝期货价格.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_抓取铝土矿CIF价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_抓取铝土矿进口量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_计算期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_计算电解铝行业利润.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AO_计算跨品种价差.py: UNKNOWN_SYNTAX_ERR
+  [AU] 18 scripts - FAIL
+    SYNTAX_ERR: AU_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_CFTC净多.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_COMEX白银.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_CPI.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_SGE现货价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_SHFE前20净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_SPDR持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_央行黄金储备.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_恐慌指数.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_美元指数.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_美国10Y国债.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_美联储利率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_美联储点阵图.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_抓取_非农.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_计算_期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: AU_计算_金银比.py: UNKNOWN_SYNTAX_ERR
+  [BR] 9 scripts - FAIL
+    SYNTAX_ERR: BR_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BR_抓取_批次2手动因子.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BR_抓取_批次2手动输入.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BR_抓取仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BR_抓取库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BR_抓取期货持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BR_抓取汽车销量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BR_抓取现货和基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BR_计算比价.py: UNKNOWN_SYNTAX_ERR
+  [BU] 15 scripts - FAIL
+    SYNTAX_ERR: BU_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_全国高速公路整车流量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_华东沥青市场价格.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_期货成交量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_沥青期货仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_沥青期货净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_沥青期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_沥青社会库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_消费者信心指数.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_炼厂沥青开工率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_抓取_美元兑人民币汇率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_补采_OHLCV.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_计算_沥青与布伦特原油比价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: BU_计算_沥青期现基差.py: UNKNOWN_SYNTAX_ERR
+  [CU] 10 scripts - FAIL
+    SYNTAX_ERR: CU_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: CU_批次2_手动输入.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: CU_抓取LME库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: CU_抓取SHFE仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: CU_抓取库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: CU_抓取持仓排名.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: CU_抓取期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: CU_沪铜期货库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: CU_计算基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: CU_计算近远月价差.py: UNKNOWN_SYNTAX_ERR
+  [CU_NI] 1 scripts - FAIL
+    SYNTAX_ERR: CU_NI_LME升贴水.py: UNKNOWN_SYNTAX_ERR
+  [EC] 3 scripts - FAIL
+    SYNTAX_ERR: EC_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EC_欧线期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EC_欧线期货收盘价.py: UNKNOWN_SYNTAX_ERR
+  [EG] 18 scripts - FAIL
+    SYNTAX_ERR: EG_create_ohlcv.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇工厂库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇期货净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇期货开盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇期货成交量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇期货最低价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇期货最高价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇期货结算价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇现货价格.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_乙二醇装置开工率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_华东乙二醇港口库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_煤制乙二醇开工率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_石脑油裂解价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: EG_聚酯企业乙二醇库存.py: UNKNOWN_SYNTAX_ERR
+  [FU] 7 scripts - FAIL
+    SYNTAX_ERR: FU_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: FU_WTI收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: FU_抓取仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: FU_抓取期货持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: FU_抓取现货和基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: FU_新加坡库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: FU_高低硫价差.py: UNKNOWN_SYNTAX_ERR
+  [HC] 14 scripts - FAIL
+    SYNTAX_ERR: HC_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_制造业PMI.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_我的钢铁网热卷现货价格.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_汽车产量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_热卷-螺纹钢跨品种价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_热卷仓单库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_热卷期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_热卷期货净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_热卷期货合约间价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_热卷期货近远月价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_热卷社会库存总量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_热轧卷板期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_热轧卷板期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: HC_钢厂热卷库存周度.py: UNKNOWN_SYNTAX_ERR
+  [I] 7 scripts - FAIL
+    SYNTAX_ERR: I_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: I_批次2_手动输入.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: I_抓取期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: I_抓取期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: I_抓取港口库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: I_计算基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: I_计算近远月价差.py: UNKNOWN_SYNTAX_ERR
+  [J] 12 scripts - FAIL
+    SYNTAX_ERR: J_CCI焦炭价格指数.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_我的钢铁网焦炭现货价格.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_焦化企业开工率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_焦炭与焦煤价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_焦炭出口FOB价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_焦炭期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_焦炭期货仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_焦炭期货净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_焦炭期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_焦炭期货近远月价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: J_钢厂焦炭可用天数.py: UNKNOWN_SYNTAX_ERR
+  [JM] 21 scripts - FAIL
+    SYNTAX_ERR: JM_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_三大口岸库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_批次2_手动输入.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_抓取期货日行情.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_抓取焦煤期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_抓取焦煤进口量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_澳煤进口盈亏.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_焦企产能利用率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_焦化利润.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_焦化厂炼焦煤库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_甘其毛都口岸库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_甘其毛都通关车数.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_矿山开工率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_精煤产量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_蒙煤口岸成本.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_蒙煤山西煤价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_计算焦煤动力煤比价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_计算焦煤月差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_计算焦煤期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_钢厂炼焦煤库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: JM_铁水产量.py: UNKNOWN_SYNTAX_ERR
+  [LC] 3 scripts - FAIL
+    SYNTAX_ERR: LC_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: LC_碳酸锂期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: LC_碳酸锂期货收盘价.py: UNKNOWN_SYNTAX_ERR
+  [LH] 3 scripts - FAIL
+    SYNTAX_ERR: LH_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: LH_生猪期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: LH_生猪期货收盘价.py: UNKNOWN_SYNTAX_ERR
+  [M] 11 scripts - FAIL
+    SYNTAX_ERR: M_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: M_压榨利润.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: M_大豆到港量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: M_抓取仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: M_抓取库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: M_抓取期货持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: M_抓取现货和基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: M_油厂库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: M_油厂开机率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: M_计算比价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: M_计算近远月价差.py: UNKNOWN_SYNTAX_ERR
+  [NI] 7 scripts - FAIL
+    SYNTAX_ERR: NI_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NI_抓取SHFE仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NI_抓取期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NI_抓取期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NI_沪镍期货库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NI_浙镍期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NI_计算基差.py: UNKNOWN_SYNTAX_ERR
+  [NR] 13 scripts - FAIL
+    SYNTAX_ERR: NR_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_回填历史数据.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_天然橡胶期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_批次2_手动输入.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_抓取BDI.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_抓取仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_抓取持仓排名.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_抓取期货持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_抓取橡胶.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_抓取现货和基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_橡胶合约间价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_橡胶持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: NR_计算RU-NR价差.py: UNKNOWN_SYNTAX_ERR
+  [P] 8 scripts - FAIL
+    SYNTAX_ERR: P_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: P_原油参考.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: P_批次2_月报爬虫.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: P_抓取期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: P_抓取期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: P_棕榈油期货库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: P_计算基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: P_计算近远月价差.py: UNKNOWN_SYNTAX_ERR
+  [PB] 13 scripts - FAIL
+    SYNTAX_ERR: PB_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_SMM沪铅现货价格.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_原生铅与再生铅价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_沪铅期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_沪铅期货净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_沪铅期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_沪铅期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_沪铅期货近远月价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_美元兑人民币汇率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_铅TC加工费.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_铅酸电池用铅占比.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_铅锭仓单库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PB_铅锭社会库存.py: UNKNOWN_SYNTAX_ERR
+  [PP] 12 scripts - FAIL
+    SYNTAX_ERR: PP_CFR中国丙烯到岸价格.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_拉丝-共聚价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_线型低密度聚乙烯-聚丙烯价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_聚丙烯仓单库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_聚丙烯期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_聚丙烯期货净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_聚丙烯期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_聚丙烯期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_聚丙烯港口库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_聚丙烯袋装比例.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: PP_聚丙烯装置开工率.py: UNKNOWN_SYNTAX_ERR
+  [RB] 9 scripts - FAIL
+    SYNTAX_ERR: RB_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RB_批次2_手动输入.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RB_抓取上期所螺纹钢仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RB_抓取净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RB_抓取螺纹钢库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RB_计算持仓集中度.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RB_计算期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RB_计算螺纹钢热卷比价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RB_计算近远月价差.py: UNKNOWN_SYNTAX_ERR
+  [RU] 7 scripts - FAIL
+    SYNTAX_ERR: RU_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RU_抓取仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RU_抓取库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RU_抓取期货持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RU_抓取现货和基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RU_期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: RU_计算比价.py: UNKNOWN_SYNTAX_ERR
+    IMPORT_ERR: RU_期货持仓量.py: IndentationError
+  [SA] 12 scripts - FAIL
+    SYNTAX_ERR: SA_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_抓取产量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_抓取仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_抓取厂家库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_抓取持仓排名.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_抓取期货日行情.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_抓取次月合约价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_抓取现货价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_抓取纯碱库存_em.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_抓取行业开工率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_抓取近月合约价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SA_计算SA_FG比价.py: UNKNOWN_SYNTAX_ERR
+  [SC] 3 scripts - FAIL
+    SYNTAX_ERR: SC_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SC_原油期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SC_原油期货收盘价.py: UNKNOWN_SYNTAX_ERR
+  [SN] 4 scripts - FAIL
+    SYNTAX_ERR: SN_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SN_沪锡期货库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SN_沪锡期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: SN_沪锡期货收盘价.py: UNKNOWN_SYNTAX_ERR
+  [TA] 13 scripts - FAIL
+    SYNTAX_ERR: TA_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_批次2_手动输入.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_抓取BRENT价格.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_抓取PTA库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_抓取PTA开工率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_抓取PTA成本.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_抓取PX价格.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_抓取期货持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_抓取汇率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_抓取社会库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_抓取聚酯开工率.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_抓取郑商所仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: TA_计算基差.py: UNKNOWN_SYNTAX_ERR
+  [Y] 11 scripts - FAIL
+    SYNTAX_ERR: Y_CBOT大豆期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: Y_CBOT豆油期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: Y_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: Y_棕榈油期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: Y_棕榈油期货收盘价.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: Y_豆油与棕榈油价差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: Y_豆油商业库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: Y_豆油期现基差.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: Y_豆油期货仓单.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: Y_豆油期货净持仓.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: Y_进口大豆CNF价.py: UNKNOWN_SYNTAX_ERR
+  [ZN] 4 scripts - FAIL
+    SYNTAX_ERR: ZN_run_all.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: ZN_沪锌期货库存.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: ZN_沪锌期货持仓量.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: ZN_沪锌期货收盘价.py: UNKNOWN_SYNTAX_ERR
+  [ZN_PB_SN] 1 scripts - FAIL
+    SYNTAX_ERR: fetch_lme_zn_pb_sn.py: UNKNOWN_SYNTAX_ERR
+  [common] 6 scripts - FAIL
+    SYNTAX_ERR: check_au_data.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: check_health.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: db_utils.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: io_win.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: market_data.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: web_utils.py: UNKNOWN_SYNTAX_ERR
+  [tools] 12 scripts - FAIL
+    SYNTAX_ERR: check_db.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: check_factors.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: verify_db.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: _check_factors.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: _check_factors2.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: _check_ni.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: _check_ni2.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: _check_obs.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: _check_p.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: _check_today.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: _db_schema.py: UNKNOWN_SYNTAX_ERR
+    SYNTAX_ERR: _scan_issues.py: UNKNOWN_SYNTAX_ERR
+    IMPORT_ERR: check_db.py: No module named 'config'
+    IMPORT_ERR: check_factors.py: No module named 'config'
+    IMPORT_ERR: verify_db.py: No module named 'config'
+    IMPORT_ERR: _check_factors.py: OperationalError
+    IMPORT_ERR: _check_today.py: OperationalError
+
+[L3] Effective Factors (30d) per Symbol
+  RU      20 [OK]
+  M       19 [OK]
+  NR      17 [OK]
+  SA      16 [OK]
+  AU      16 [OK]
+  RB      14 [OK]
+  AO      14 [OK]
+  AG      14 [OK]
+  BR      13 [OK]
+  CU      12 [OK]
+  NI      11 [OK]
+  EG      10 [OK]
+  BU      10 [OK]
+  AL      10 [OK]
+  TA       9 [FAIL]
+  ZN       8 [FAIL]
+  JM       8 [FAIL]
+  FU       8 [FAIL]
+  I        6 [FAIL]
+  J        5 [FAIL]
+  P        4 [FAIL]
+  Y        3 [FAIL]
+  SN       3 [FAIL]
+  HC       3 [FAIL]
+  SC       2 [FAIL]
+  PP       2 [FAIL]
+  PB       2 [FAIL]
+  LH       2 [FAIL]
+  LC       2 [FAIL]
+  EC       2 [FAIL]
+
+============================================================
+OVERALL SUMMARY
+============================================================
+  Total symbol dirs:        35
+  Total scripts scanned:    328
+  requests.get/post hits:   0 [PASS]
+  import requests hits:     1 [FAIL]
+  Total syntax errors:     328 [FAIL]
+  Total import errors:      6 [WARN]

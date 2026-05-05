@@ -6,7 +6,7 @@ from datetime import datetime
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(SCRIPT_DIR)
 
-SCRIPTS = ['ZN_沪锌期货收盘价.py', 'ZN_沪锌期货持仓量.py', "ZN_沪锌期货库存.py"]
+SCRIPTS = ['ZN_沪锌期货收盘价.py', 'ZN_沪锌期货持仓量.py', 'ZN_沪锌期货库存.py', 'ZN_沪锌期货成交量.py', 'ZN_LME锌3月.py']
 
 def main():
     sep = "=" * 50

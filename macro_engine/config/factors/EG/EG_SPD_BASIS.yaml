@@ -1,8 +1,8 @@
-﻿factor_code: EG_SPD_BASIS
+factor_code: EG_SPD_BASIS
 symbol: EG
-category: derived
+category: free_data
 name: 乙二醇期现基差
-description: 乙二醇期现基差
+description: 乙二醇期现基差（现货价-期货主力价）
 frequency: daily
 unit: 元/吨
 direction: neutral
@@ -12,9 +12,8 @@ calculation: null
 tags:
 - spread
 - EG
-source_confidence: 3
-data_source: Calculated
+source_confidence: 1.0
+data_source: AKShare futures_spot_price_daily(vars_list=['EG'])
 expected_range:
-- -100000.0
-- 100000.0
-
+- -2000.0
+- 2000.0

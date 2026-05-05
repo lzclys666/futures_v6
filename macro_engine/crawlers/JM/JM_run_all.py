@@ -28,6 +28,8 @@ daily_free = [
     "JM_计算焦煤月差.py",            # JM_SPD_CONTRACT
     "JM_计算焦煤期现基差.py",         # JM_SPD_BASIS(现货价付费，当前L4兜底)
     "JM_计算焦煤动力煤比价.py",       # JM_SPD_ZC
+    "JM_焦煤期货成交量.py",          # JM_VOLUME
+    "JM_焦煤日波幅.py",              # JM_HIGH_LOW
 ]
 
 monthly = [

@@ -1,0 +1,8 @@
+factor_code: EG_FUT_SETTLE
+name: "EG乙二醇期货结算价"
+category: free_data
+description: "DCE乙二醇期货主力合约日结算价。"
+data_source: AKShare futures_main_sina(symbol="EG0")['动态结算价']
+source_confidence: 1.0
+expected_range: [3000.0, 8000.0]
+notes: "L1: AKShare EG0主力合约 | L4: DB历史回补"

@@ -2,41 +2,61 @@
 EG Factor Collection Health Check
 =======================================================
 
-[OHLCV] NO eg_futures_ohlcv table found!
-  Tables with 'eg': []
+[OHLCV] eg_futures_ohlcv: columns=['pub_date', 'obs_date', 'contract', 'trade_date', 'open', 'high', 'low', 'close', 'volume', 'hold', 'settle']
+  last=2026-04-30, rows=3688
 
 [FACTOR] EG All Factor Types
-  Total factor types: 3
+  Total factor types: 10
     EG_FUT_CLOSE                             | last=2026-04-30 | cnt=9
     EG_FUT_OI                                | last=2026-04-30 | cnt=8
-    EG_STK_WARRANT                           | last=2026-04-30 | cnt=7
+    EG_STK_WARRANT                           | last=2026-04-30 | cnt=8
+    EG_FUT_HIGH                              | last=2026-04-30 | cnt=1
+    EG_FUT_LOW                               | last=2026-04-30 | cnt=1
+    EG_FUT_OPEN                              | last=2026-04-30 | cnt=1
+    EG_FUT_SETTLE                            | last=2026-04-30 | cnt=1
+    EG_FUT_VOL                               | last=2026-04-30 | cnt=1
+    EG_SPD_BASIS                             | last=2026-04-30 | cnt=1
+    EG_SPOT_PRICE                            | last=2026-04-30 | cnt=1
 
-  EG effective factors (30d): 3 [FAIL] (need >=10 for P1)
-  EG total records: 24
+  EG effective factors (30d): 10 [PASS] (need >=10 for P1)
+  EG total records: 32
   EG PIT violations: 0 [PASS]
 
 [FACTOR-OBS] EG Factor obs counts (IC threshold=30)
   EG_FUT_CLOSE                             | cnt=    9 | range=2026-04-18~2026-04-30 | BELOW
   EG_FUT_OI                                | cnt=    8 | range=2026-04-22~2026-04-30 | BELOW
-  EG_STK_WARRANT                           | cnt=    7 | range=2026-04-22~2026-04-30 | BELOW
+  EG_STK_WARRANT                           | cnt=    8 | range=2026-04-22~2026-04-30 | BELOW
+  EG_FUT_HIGH                              | cnt=    1 | range=2026-04-30~2026-04-30 | BELOW
+  EG_FUT_LOW                               | cnt=    1 | range=2026-04-30~2026-04-30 | BELOW
+  EG_FUT_OPEN                              | cnt=    1 | range=2026-04-30~2026-04-30 | BELOW
+  EG_FUT_SETTLE                            | cnt=    1 | range=2026-04-30~2026-04-30 | BELOW
+  EG_FUT_VOL                               | cnt=    1 | range=2026-04-30~2026-04-30 | BELOW
+  EG_SPD_BASIS                             | cnt=    1 | range=2026-04-30~2026-04-30 | BELOW
+  EG_SPOT_PRICE                            | cnt=    1 | range=2026-04-30~2026-04-30 | BELOW
 
 [L0] requests.get / import requests
   requests.get: 0 [PASS]
   import requests: 0 [PASS]
 
 [L1] EG Syntax & Import
-  EG scripts found: 11
+  EG scripts found: 18
   Syntax errors: 0 [PASS]
   Import errors: 0 [PASS]
 
 [L4] EG_run_all.py
   EXISTS: YES
-  Sub-factors: 10
+  Sub-factors: 16
     - EG_乙二醇工厂库存.py
     - EG_乙二醇期现基差.py
     - EG_乙二醇期货净持仓.py
     - EG_乙二醇期货持仓量.py
     - EG_乙二醇期货收盘价.py
+    - EG_乙二醇期货开盘价.py
+    - EG_乙二醇期货最高价.py
+    - EG_乙二醇期货最低价.py
+    - EG_乙二醇期货结算价.py
+    - EG_乙二醇期货成交量.py
+    - EG_乙二醇现货价格.py
     - EG_乙二醇装置开工率.py
     - EG_华东乙二醇港口库存.py
     - EG_煤制乙二醇开工率.py
@@ -52,9 +72,9 @@ EG Factor Collection Health Check
 SUMMARY - EG
 =======================================================
   P1 threshold: effective_factors >= 10
-  EG effective factors (30d): 3  [FAIL]
+  EG effective factors (30d): 10  [PASS]
   EG PIT violations:          0  [PASS]
-  EG OHLCV last:              None, rows=0
+  EG OHLCV last:              2026-04-30, rows=3688
   ic_heatmap symbols:         18/20  [BLOCK]
   EG in ic_heatmap:           0 combinations
   L0 requests.get:            0  [PASS]

@@ -1,0 +1,8 @@
+factor_code: EG_FUT_VOL
+name: "EG乙二醇期货成交量"
+category: free_data
+description: "DCE乙二醇期货主力合约日成交量（手），反映市场活跃度。"
+data_source: AKShare futures_main_sina(symbol="EG0")['成交量']
+source_confidence: 1.0
+expected_range: [10000.0, 5000000.0]
+notes: "L1: AKShare EG0主力合约 | L4: DB历史回补"
