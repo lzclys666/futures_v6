@@ -1,0 +1,103 @@
+=======================================================
+AU Factor Collection Health Check
+=======================================================
+
+[OHLCV] au_futures_ohlcv: columns=['pub_date', 'obs_date', 'contract', 'trade_date', 'open', 'high', 'low', 'close', 'volume', 'hold', 'settle']
+  last=2026-04-30, rows=2024
+
+[FACTOR] AU All Factor Types
+  Total factor types: 19
+    AU_FUT_CLOSE                             | last=2026-04-30 | cnt=1720
+    AU_FUT_OI                                | last=2026-04-30 | cnt=1716
+    AU_SPOT_SGE                              | last=2026-04-28 | cnt=823
+    AU_US_10Y_YIELD                          | last=2026-05-01 | cnt=12
+    AU_CFTC_NC                               | last=2026-04-28 | cnt=8
+    AU_SPD_BASIS                             | last=2026-04-30 | cnt=8
+    AU_FED_DOT                               | last=2026-05-01 | cnt=7
+    AU_GOLD_RESERVE_CB                       | last=2026-03-01 | cnt=7
+    AU_SPD_GLD                               | last=2026-05-01 | cnt=7
+    AU_DXY                                   | last=2026-05-05 | cnt=6
+    AU_SHFE_OI_RANK                          | last=2026-05-01 | cnt=6
+    AU_FED_RATE                              | last=2025-07-31 | cnt=5
+    AU_SPD_AUAG                              | last=2026-04-28 | cnt=5
+    AU_US_NFP                                | last=2025-08-01 | cnt=5
+    AU_VIX                                   | last=2026-05-01 | cnt=5
+    AU_COMEX_AU                              | last=2026-05-01 | cnt=4
+    AU_US_CPI                                | last=2026-04-10 | cnt=3
+    AU_US_CPI_YOY                            | last=2026-04-10 | cnt=3
+    AU_COMEX_AG                              | last=2026-05-05 | cnt=2
+
+  AU effective factors (30d): 16 [PASS] (need >=10 for P0)
+  AU total records: 4352
+  AU PIT violations: 2 [CHECK]
+    AU_DXY | obs=2026-05-05 pub=2026-05-05 val=118.7294
+    AU_COMEX_AG | obs=2026-05-05 pub=2026-05-05 val=None
+
+[FACTOR-OBS] AU Factor obs counts (IC threshold=30)
+  AU_FUT_CLOSE                             | cnt= 1720 | range=2023-01-03~2026-04-30 | OK
+  AU_FUT_OI                                | cnt= 1716 | range=2023-01-03~2026-04-30 | OK
+  AU_SPOT_SGE                              | cnt=  823 | range=2023-01-02~2026-04-28 | OK
+  AU_US_10Y_YIELD                          | cnt=   12 | range=2026-04-17~2026-05-01 | BELOW
+  AU_CFTC_NC                               | cnt=    8 | range=2026-04-14~2026-04-28 | BELOW
+  AU_SPD_BASIS                             | cnt=    8 | range=2026-04-17~2026-04-30 | BELOW
+  AU_FED_DOT                               | cnt=    7 | range=2026-03-19~2026-05-01 | BELOW
+  AU_GOLD_RESERVE_CB                       | cnt=    7 | range=2026-03-01~2026-03-01 | BELOW
+  AU_SPD_GLD                               | cnt=    7 | range=2026-04-17~2026-05-01 | BELOW
+  AU_DXY                                   | cnt=    6 | range=2026-04-17~2026-05-05 | BELOW
+  AU_SHFE_OI_RANK                          | cnt=    6 | range=2026-04-17~2026-05-01 | BELOW
+  AU_FED_RATE                              | cnt=    5 | range=2025-07-31~2025-07-31 | BELOW
+  AU_SPD_AUAG                              | cnt=    5 | range=2026-04-15~2026-04-28 | BELOW
+  AU_US_NFP                                | cnt=    5 | range=2025-08-01~2025-08-01 | BELOW
+  AU_VIX                                   | cnt=    5 | range=2026-04-16~2026-05-01 | BELOW
+  AU_COMEX_AU                              | cnt=    4 | range=2026-04-17~2026-05-01 | BELOW
+  AU_US_CPI                                | cnt=    3 | range=2026-04-10~2026-04-10 | BELOW
+  AU_US_CPI_YOY                            | cnt=    3 | range=2026-04-10~2026-04-10 | BELOW
+  AU_COMEX_AG                              | cnt=    2 | range=2026-04-30~2026-05-05 | BELOW
+
+[L0] requests.get / import requests
+  requests.get: 0 [PASS]
+  import requests: 0 [PASS]
+
+[L1] AU Syntax & Import
+  AU scripts found: 18
+  Syntax errors: 0 [PASS]
+  Import errors: 0 [PASS]
+
+[L4] AU_run_all.py
+  EXISTS: YES
+  Sub-factors: 17
+    - AU_抓取_期货收盘价.py
+    - AU_抓取_期货持仓量.py
+    - AU_抓取_美国10Y国债.py
+    - AU_抓取_美联储利率.py
+    - AU_抓取_恐慌指数.py
+    - AU_计算_金银比.py
+    - AU_抓取_COMEX白银.py
+    - AU_抓取_非农.py
+    - AU_抓取_CPI.py
+    - AU_抓取_SGE现货价.py
+    - AU_计算_期现基差.py
+    - AU_抓取_CFTC净多.py
+    - AU_抓取_央行黄金储备.py
+    - AU_抓取_美元指数.py
+    - AU_抓取_SPDR持仓.py
+    - AU_抓取_SHFE前20净持仓.py
+    - AU_抓取_美联储点阵图.py
+
+[L5.0] ic_heatmap Coverage
+  ic_heatmap symbols: 18/20 [BLOCK]
+  Detail: [('AG', 3), ('AO', 9), ('AU', 9), ('CU', 12), ('EC', 6), ('I', 6), ('JM', 23), ('LC', 6), ('LH', 6), ('NI', 29), ('NR', 21), ('P', 6), ('RB', 23), ('RU', 32), ('SC', 6), ('SN', 9), ('TA', 9), ('ZN', 29)]
+  AU in ic_heatmap: 9 factor combinations
+
+=======================================================
+SUMMARY - AU
+=======================================================
+  P0 threshold: effective_factors >= 10
+  AU effective factors (30d): 16  [PASS]
+  AU PIT violations:          2  [CHECK]
+  AU OHLCV last:              2026-04-30, rows=2024
+  ic_heatmap symbols:         18/20  [BLOCK]
+  AU in ic_heatmap:           9 combinations
+  L0 requests.get:            0  [PASS]
+  L1 syntax:                  0
+  L1 import:                  0

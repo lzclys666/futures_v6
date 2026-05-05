@@ -1,81 +1,42 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-乙二醇期货净持仓
-因子: 待定义 = 乙二醇期货净持仓
+EG_抓取_期货净持仓.py
+因子: EG_POS_NET = 乙二醇期货净持仓
 
-公式: 数据采集（无独立计算公式）
+公式: 多头持仓 - 空头持仓（DCE前20名）
 
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
+当前状态: [⚠️待修复]
+- DCE持仓排名接口需验证
+- 备选: AKShare futures_dce_position_rank
 
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+订阅优先级: 无（免费源需验证）
 """
-import sys
-import datetime
-from pathlib import Path
+import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
-# 尝试导入通用模块
-try:
-    sys.path.insert(0, str(Path(__file__).parent.parent / 'common'))
-    from io_win import fix_encoding
-    fix_encoding()
-except ImportError:
-    pass
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
+from db_utils import ensure_table, get_pit_dates, save_l4_fallback
+import akshare as ak
 
-try:
-    from common.db_utils import save_to_db, get_pit_dates
-except ImportError:
-    def save_to_db(*a, **kw): pass
-    def get_pit_dates():
-        today = datetime.date.today()
-        dow = today.weekday()
-        if dow == 0:
-            obs = today - datetime.timedelta(days=3)
-        elif dow >= 5:
-            obs = today - datetime.timedelta(days=dow - 4)
-        else:
-            obs = today
-        return obs, today
+FACTOR_CODE = "EG_POS_NET"
+SYMBOL = "EG"
 
-# 因子参数（在函数外捕获值）
-_FACTOR_SYMBOL = "EG"
-_FACTOR_CODE = "EG_POS_NET"
-_FACTOR_NAME = "大商所前20净持仓"
-_FACTOR_FC = "EG_EG_POS_NET"
-_FACTOR_REASON = "DCE接口待验证"
+def run():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
-
-def run(auto=False):
-    obs_date, pub_date = get_pit_dates()
-    print("[跳过] " + _FACTOR_FC + " = None (obs=" + str(obs_date) + ")")
-    print("      原因: " + _FACTOR_REASON)
-
-    if not auto:
-        print('\n提示: 使用 --auto 参数可跳过此确认')
-
-    # 写入 L4 stub 记录，value = None
+    # L1: DCE持仓排名
     try:
-        save_to_db(
-            symbol=_FACTOR_SYMBOL,
-            factor_code=_FACTOR_FC,
-            obs_date=obs_date,
-            pub_date=pub_date,
-            raw_value=None,
-            source="占位(付费订阅待配)",
-            source_confidence=0.5,
-            notes="[STUB] " + _FACTOR_REASON,
-        )
-        print("[OK] 已写入 stub 记录 (source_confidence=0.5)")
+        print("[L1] AKShare futures_dce_position_rank()...")
+        # DCE接口需验证，暂不实现
+        raise NotImplementedError("DCE接口待验证")
     except Exception as e:
-        print("[WARN] DB写入失败: " + str(e))
+        print(f"[L1 FAIL] {e}")
 
-    return 0
-
+    # L4
+    save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date, extra_msg="乙二醇净持仓")
 
 if __name__ == "__main__":
-    auto = "--auto" in sys.argv
-    sys.exit(run(auto=auto))
+    run()

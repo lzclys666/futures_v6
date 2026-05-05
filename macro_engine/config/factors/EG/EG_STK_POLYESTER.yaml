@@ -1,4 +1,4 @@
-factor_code: EG_EG_STK_POLYESTER
+﻿factor_code: EG_STK_POLYESTER
 symbol: EG
 category: free_data
 name: 聚酯企业乙二醇库存
@@ -17,3 +17,4 @@ data_source: AKShare
 expected_range:
 - -100000.0
 - 100000.0
+

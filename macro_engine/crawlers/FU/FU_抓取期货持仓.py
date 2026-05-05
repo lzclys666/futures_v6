@@ -17,6 +17,8 @@ FU_抓取期货持仓.py
 替代付费源: 无
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, _get_latest_record
 import akshare as ak
@@ -27,6 +29,7 @@ from datetime import datetime, timedelta
 
 FACTOR_CODE = "FU_NET_POSITION"
 SYMBOL = "FU"
+BOUNDS = (-200000, 200000)  # 净持仓 -20万~20万手
 
 
 def fetch_shfe_rank_ak():
@@ -96,16 +99,22 @@ def main():
     # L1
     val, source = fetch_shfe_rank_ak()
     if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                    source_confidence=1.0, source=f"L1-AKShare-SHFE:{source}")
-        return
+        if not (BOUNDS[0] <= val <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                        source_confidence=1.0, source=f"L1-AKShare-SHFE:{source}")
+            return
 
     # L2
     val, source = fetch_shfe_rank_direct()
     if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                    source_confidence=0.9, source=f"L2-SHFE官网:{source}")
-        return
+        if not (BOUNDS[0] <= val <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                        source_confidence=0.9, source=f"L2-SHFE官网:{source}")
+            return
 
     # L4: DB fallback
     record = _get_latest_record(FACTOR_CODE, SYMBOL)

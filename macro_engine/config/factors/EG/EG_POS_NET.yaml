@@ -1,4 +1,4 @@
-factor_code: EG_EG_POS_NET
+﻿factor_code: EG_POS_NET
 symbol: EG
 category: free_data
 name: 乙二醇期货净持仓
@@ -17,3 +17,4 @@ data_source: AKShare
 expected_range:
 - -100000.0
 - 100000.0
+

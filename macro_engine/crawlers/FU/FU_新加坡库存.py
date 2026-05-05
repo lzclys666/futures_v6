@@ -17,6 +17,8 @@ FU_新加坡库存.py
 替代付费源: 隆众资讯（年费）
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, _get_latest_record
 from common.web_utils import fetch_url, fetch_json
@@ -25,6 +27,7 @@ from datetime import datetime
 
 FACTOR_CODE = "FU_SG_INVENTORY"
 SYMBOL = "FU"
+BOUNDS = (500000, 8000000)  # 新加坡燃料油库存 50万-800万立方米
 
 
 def fetch_sg_inventory_mpa():
@@ -87,16 +90,22 @@ def main():
     # L1
     val, source = fetch_sg_inventory_mpa()
     if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                    source_confidence=1.0, source=f"L1-MPA新加坡:{source}")
-        return
+        if not (BOUNDS[0] <= val <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                        source_confidence=1.0, source=f"L1-MPA新加坡:{source}")
+            return
 
     # L2
     val, source = fetch_sg_inventory_eia()
     if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                    source_confidence=0.9, source=f"L2-EIA:{source}")
-        return
+        if not (BOUNDS[0] <= val <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                        source_confidence=0.9, source=f"L2-EIA:{source}")
+            return
 
     # L4: DB fallback
     record = _get_latest_record(FACTOR_CODE, SYMBOL)

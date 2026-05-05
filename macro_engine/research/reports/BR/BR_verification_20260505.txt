@@ -1,0 +1,80 @@
+=======================================================
+BR Factor Collection Health Check
+=======================================================
+
+[OHLCV] NO br_futures_ohlcv table found!
+  Tables with 'br': []
+
+[FACTOR] BR All Factor Types
+  Total factor types: 13
+    BR_COST_MARGIN                           | last=2026-05-02 | cnt=14
+    BR_INV_TOTAL                             | last=2026-05-01 | cnt=12
+    BR_POS_NET                               | last=2026-05-01 | cnt=12
+    BR_SPD_RU_BR                             | last=2026-05-01 | cnt=12
+    BR_STK_WARRANT                           | last=2026-05-01 | cnt=12
+    BR_SPD_BASIS                             | last=2026-04-30 | cnt=10
+    BR_SPOT_PRICE                            | last=2026-04-30 | cnt=10
+    BR_DEM_TIRE_ALLSTEEL                     | last=2026-05-01 | cnt=5
+    BR_DEM_TIRE_SEMI                         | last=2026-05-01 | cnt=5
+    BR_SUP_RATE                              | last=2026-05-01 | cnt=5
+    BR_DEM_AUTO                              | last=2026-05-01 | cnt=4
+    BR_COST_BD                               | last=2026-04-17 | cnt=3
+    BR_COST_ETH                              | last=2026-04-16 | cnt=1
+
+  BR effective factors (30d): 13 [PASS] (need >=10 for P1)
+  BR total records: 105
+  BR PIT violations: 0 [PASS]
+
+[FACTOR-OBS] BR Factor obs counts (IC threshold=30)
+  BR_COST_MARGIN                           | cnt=   14 | range=2026-04-17~2026-05-02 | BELOW
+  BR_INV_TOTAL                             | cnt=   12 | range=2026-04-14~2026-05-01 | BELOW
+  BR_POS_NET                               | cnt=   12 | range=2026-04-15~2026-05-01 | BELOW
+  BR_SPD_RU_BR                             | cnt=   12 | range=2026-04-15~2026-05-01 | BELOW
+  BR_STK_WARRANT                           | cnt=   12 | range=2026-04-15~2026-05-01 | BELOW
+  BR_SPD_BASIS                             | cnt=   10 | range=2026-04-17~2026-04-30 | BELOW
+  BR_SPOT_PRICE                            | cnt=   10 | range=2026-04-17~2026-04-30 | BELOW
+  BR_DEM_TIRE_ALLSTEEL                     | cnt=    5 | range=2026-04-15~2026-05-01 | BELOW
+  BR_DEM_TIRE_SEMI                         | cnt=    5 | range=2026-04-15~2026-05-01 | BELOW
+  BR_SUP_RATE                              | cnt=    5 | range=2026-04-16~2026-05-01 | BELOW
+  BR_DEM_AUTO                              | cnt=    4 | range=2026-03-31~2026-05-01 | BELOW
+  BR_COST_BD                               | cnt=    3 | range=2026-04-15~2026-04-17 | BELOW
+  BR_COST_ETH                              | cnt=    1 | range=2026-04-16~2026-04-16 | BELOW
+
+[L0] requests.get / import requests
+  requests.get: 0 [PASS]
+  import requests: 0 [PASS]
+
+[L1] BR Syntax & Import
+  BR scripts found: 9
+  Syntax errors: 0 [PASS]
+  Import errors: 0 [PASS]
+
+[L4] BR_run_all.py
+  EXISTS: YES
+  Sub-factors: 8
+    - BR_抓取现货和基差.py
+    - BR_抓取期货持仓.py
+    - BR_抓取库存.py
+    - BR_抓取仓单.py
+    - BR_计算比价.py
+    - BR_抓取汽车销量.py
+    - BR_抓取_批次2手动因子.py
+    - BR_抓取_批次2手动输入.py
+
+[L5.0] ic_heatmap Coverage
+  ic_heatmap symbols: 18/20 [BLOCK]
+  Detail: [('AG', 3), ('AO', 9), ('AU', 9), ('CU', 12), ('EC', 6), ('I', 6), ('JM', 23), ('LC', 6), ('LH', 6), ('NI', 29), ('NR', 21), ('P', 6), ('RB', 23), ('RU', 32), ('SC', 6), ('SN', 9), ('TA', 9), ('ZN', 29)]
+  BR in ic_heatmap: 0 factor combinations
+
+=======================================================
+SUMMARY - BR
+=======================================================
+  P1 threshold: effective_factors >= 10
+  BR effective factors (30d): 13  [PASS]
+  BR PIT violations:          0  [PASS]
+  BR OHLCV last:              None, rows=0
+  ic_heatmap symbols:         18/20  [BLOCK]
+  BR in ic_heatmap:           0 combinations
+  L0 requests.get:            0  [PASS]
+  L1 syntax:                  0
+  L1 import:                  0

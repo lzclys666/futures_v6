@@ -1,58 +1,55 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-抓取期货持仓量
-因子: CU_FUT_OI = 抓取期货持仓量
+CU_抓取_期货持仓量.py
+因子: CU_FUT_OI = 沪铜期货持仓量
 
-公式: 数据采集（无独立计算公式）
+公式: 数据采集（主力合约持仓量）
 
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+当前状态: [✅正常]
+- L1: AKShare futures_main_sina(symbol='cu0') 持仓量列
+- L4: db_utils save_l4_fallback
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
-from db_utils import save_to_db, get_latest_value
+from db_utils import save_to_db, get_pit_dates, ensure_table, save_l4_fallback
 import akshare as ak
-from datetime import date
+import pandas as pd
 
 FACTOR_CODE = "CU_FUT_OI"
 SYMBOL = "CU"
-EXPECTED_MIN = 50000
-EXPECTED_MAX = 500000
+BOUNDS = (50000, 500000)
 
-def fetch():
-    df = ak.futures_main_sina(symbol="cu0")
-    df['日期'] = pd.to_datetime(df['日期']).dt.date
-    latest = df.sort_values('日期').iloc[-1]
-    raw_value = float(latest['持仓量'])
-    obs_date = latest['日期']
-    return raw_value, obs_date
+def run():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
-def main():
+    # L1
     try:
-        raw_value, obs_date = fetch()
-    except Exception as e:
-        print(f"[L1 FAIL] {FACTOR_CODE}: {e}")
-        latest = get_latest_value(FACTOR_CODE, SYMBOL)
-        if latest is not None:
-            print(f"[L4 Fallback] {FACTOR_CODE}={latest}")
+        print("[L1] AKShare futures_main_sina(symbol='cu0')...")
+        df = ak.futures_main_sina(symbol="cu0")
+        if df is None or df.empty:
+            raise ValueError("Empty DataFrame")
+        df['日期'] = pd.to_datetime(df['日期']).dt.date
+        latest = df.sort_values('日期').iloc[-1]
+        raw_value = float(latest['持仓量'])
+        obs = latest['日期']
+
+        if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={raw_value} out of {BOUNDS}")
             return
-        print(f"[L4 SKIP] {FACTOR_CODE}: no data")
-        return
 
-    if not (EXPECTED_MIN <= raw_value <= EXPECTED_MAX):
-        print(f"[WARN] {FACTOR_CODE}={raw_value} out of [{EXPECTED_MIN},{EXPECTED_MAX}]")
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs, raw_value, source_confidence=1.0)
+        print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs}")
         return
+    except Exception as e:
+        print(f"[L1 FAIL] {e}")
 
-    pub_date = date.today()
-    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source_confidence=1.0)
-    print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
+    # L4
+    save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date, extra_msg="沪铜持仓量")
 
 if __name__ == "__main__":
-    import pandas as pd
-    main()
+    run()

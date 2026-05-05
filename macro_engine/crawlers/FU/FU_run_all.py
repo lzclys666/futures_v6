@@ -3,8 +3,11 @@
 """
 FU_run_all.py
 """
-import os, sys, subprocess, time
+import os, sys, subprocess, time, argparse
 from datetime import datetime
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'common'))
+from db_utils import ensure_table, get_pit_dates
 
 # Windows UTF-8 编码修复
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -68,4 +71,9 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--auto', action='store_true', help='自动模式')
+    parser.add_argument('--manual', action='store_true', help='手动模式')
+    args = parser.parse_args()
+    ensure_table()
     main()

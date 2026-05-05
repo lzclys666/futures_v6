@@ -1,17 +1,21 @@
 # -*- coding: utf-8 -*-
 """
 CU_run_all.py - 沪铜日度数据采集总调度
-批次1: 免费数据源 (AKShare) - 7个因子
-批次2: 付费/无免费数据源 - 14个因子 (手动输入)
 """
-import subprocess
-import sys
-import os
+import subprocess, sys, os, time, argparse
+from datetime import datetime
+
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'common'))
+from db_utils import ensure_table, get_pit_dates
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+LOG_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), 'logs')
+os.makedirs(LOG_DIR, exist_ok=True)
 
-# 批次1: 免费数据源
-BATCH1 = [
+SCRIPTS = [
     ("CU_抓取库存.py",       "CU_INV_SHFE"),
     ("CU_抓取SHFE仓单.py",    "CU_WRT_SHFE"),
     ("CU_计算基差.py",        "CU_SPD_BASIS"),
@@ -19,45 +23,72 @@ BATCH1 = [
     ("CU_抓取持仓排名.py",     "CU_POS_NET"),
     ("CU_抓取LME库存.py",     "CU_INV_LME"),
     ("CU_计算近远月价差.py",   "CU_SPD_CONTRACT"),
-    ("../CU_NI/CU_NI_LME升贴水.py", "CU_LME_SPREAD/CU_LME_SPREAD_DIFF/CU_LME_SPREAD_EVENT"),
-]
-
-# 批次2: 付费/无免费数据源
-BATCH2 = [
     ("CU_批次2_手动输入.py",   "BATCH2"),
 ]
 
-ALL = BATCH1 + BATCH2
-
-def run_script(name, factor_hint=""):
-    script_path = os.path.join(SCRIPT_DIR, name)
-    print(f"\n{'='*60}")
-    print(f">>> {name} {f'(target: {factor_hint})' if factor_hint else ''}")
-    result = subprocess.run(
-        [sys.executable, script_path, "--auto"],
-        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-    )
-    return result.returncode == 0
-
 def main():
-    print("CU沪铜数据采集开始")
-    print(f"当前工作目录: {os.getcwd()}")
-    print(f"脚本目录: {SCRIPT_DIR}")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--auto', action='store_true')
+    parser.add_argument('--manual', action='store_true')
+    args = parser.parse_args()
 
-    results = []
-    for name, hint in ALL:
-        ok = run_script(name, hint)
-        results.append((name, ok))
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    if pub_date is None:
+        print("[ERR] 非交易日，跳过")
+        return
 
-    print(f"\n{'='*60}")
-    print("CU采集结果汇总:")
-    success = sum(1 for _, ok in results if ok)
-    total = len(results)
-    for name, ok in results:
-        status = "OK" if ok else "FAIL"
-        print(f"  [{status}] {name}")
-    print(f"批次1: {sum(1 for n,_ in BATCH1 if any(n in r[0] for r in results[:len(BATCH1)]))}/{len(BATCH1)}")
-    print(f"批次2: {sum(1 for n,_ in BATCH2 if any(n in r[0] for r in results[len(BATCH1):]))}/{len(BATCH2)}")
+    mode = 'auto' if args.auto else ('manual' if args.manual else 'auto')
+    print("=" * 60)
+    print(f"CU沪铜数据采集 @ {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"日期: pub={pub_date} obs={obs_date} mode={mode}")
+    print("=" * 60)
+
+    log_file = os.path.join(LOG_DIR, f"{datetime.now().strftime('%Y-%m-%d')}_CU.log")
+    ok_count, fail_count = 0, 0
+
+    with open(log_file, "a", encoding="utf-8") as log:
+        log.write(f"\n{'='*60}\nCU Start @ {datetime.now()}\n{'='*60}\n")
+        for script, hint in SCRIPTS:
+            script_path = os.path.join(SCRIPT_DIR, script)
+            if not os.path.exists(script_path):
+                print(f"[SKIP] {script} not found")
+                fail_count += 1
+                continue
+            print(f">>> {script}...")
+            env = os.environ.copy()
+            env["PYTHONIOENCODING"] = "utf-8"
+            try:
+                r = subprocess.run(
+                    [sys.executable, "-X", "utf8=1", script_path, f"--{mode}"],
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                    encoding='utf-8', errors='replace',
+                    timeout=120, cwd=SCRIPT_DIR, env=env
+                )
+                out = (r.stdout or "").strip()
+                if out:
+                    for line in out.splitlines()[-4:]:
+                        print(f"    {line}")
+                    log.write(f"\n--- {script} ---\n{out}\n")
+                if r.stderr:
+                    log.write(f"[stderr] {r.stderr}\n")
+                if r.returncode == 0:
+                    ok_count += 1
+                    print(f"[OK] {script} done")
+                else:
+                    fail_count += 1
+                    print(f"[WARN] {script} exit:{r.returncode}")
+            except subprocess.TimeoutExpired:
+                fail_count += 1
+                print(f"[WARN] {script} TIMEOUT")
+            except Exception as e:
+                fail_count += 1
+                print(f"[ERR] {script} exception: {e}")
+            time.sleep(1)
+
+    print("=" * 60)
+    print(f"CU完成: {ok_count}/{ok_count + fail_count} 成功, 耗时见log")
+    print("=" * 60)
 
 if __name__ == "__main__":
     main()

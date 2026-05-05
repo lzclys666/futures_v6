@@ -17,6 +17,8 @@ FU_抓取现货和基差.py
 替代付费源: 隆众资讯（舟山燃料油保税价，年费）
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, _get_latest_record
 from common.web_utils import fetch_json
@@ -25,6 +27,7 @@ import pandas as pd
 
 FACTOR_CODE = "FU_BASIS"
 SYMBOL = "FU"
+BOUNDS = (-500, 500)  # 期现基差 -500~500元/吨
 
 
 def fetch_basis_from_em():
@@ -111,9 +114,12 @@ def main():
     # L1: 直接基差
     val, source = fetch_basis_from_em()
     if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                    source_confidence=1.0, source=f"L1-东方财富基差:{source}")
-        return
+        if not (BOUNDS[0] <= val <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                        source_confidence=1.0, source=f"L1-东方财富基差:{source}")
+            return
 
     # L2: 分别获取现货+期货计算基差
     spot, spot_date = fetch_fu_spot_em()
@@ -122,9 +128,12 @@ def main():
         if fut is not None:
             basis = fut - spot
             print(f"[L2] 计算基差: {fut} - {spot} = {basis}")
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, basis,
-                        source_confidence=0.9, source=f"L2-计算(期-现):{spot_date}")
-            return
+            if not (BOUNDS[0] <= basis <= BOUNDS[1]):
+                print(f"[WARN] {FACTOR_CODE}={basis} out of {BOUNDS}")
+            else:
+                save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, basis,
+                            source_confidence=0.9, source=f"L2-计算(期-现):{spot_date}")
+                return
         else:
             save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, spot,
                         source_confidence=0.8, source=f"L2-东方财富现货:{spot_date}")

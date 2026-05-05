@@ -1,58 +1,55 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-抓取LME库存
-因子: CU_INV_LME = 抓取LME库存
+CU_抓取_LME库存.py
+因子: CU_INV_LME = LME铜库存
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+当前状态: [✅正常]
+- L1: AKShare macro_euro_lme_stock() 铜-库存列
+- L4: db_utils save_l4_fallback
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
-from db_utils import save_to_db, get_latest_value
+from db_utils import save_to_db, get_pit_dates, ensure_table, save_l4_fallback
 import akshare as ak
-from datetime import date
+import pandas as pd
 
 FACTOR_CODE = "CU_INV_LME"
 SYMBOL = "CU"
-EXPECTED_MIN = 100000
-EXPECTED_MAX = 800000
+BOUNDS = (100000, 800000)
 
-def fetch():
-    df = ak.macro_euro_lme_stock()
-    df['日期'] = pd.to_datetime(df['日期']).dt.date
-    latest = df.sort_values('日期').iloc[-1]
-    raw_value = float(latest['铜-库存'])
-    obs_date = latest['日期']
-    return raw_value, obs_date
+def run():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
-def main():
+    # L1
     try:
-        raw_value, obs_date = fetch()
-    except Exception as e:
-        print(f"[L1 FAIL] {FACTOR_CODE}: {e}")
-        latest = get_latest_value(FACTOR_CODE, SYMBOL)
-        if latest is not None:
-            print(f"[L4 Fallback] {FACTOR_CODE}={latest}")
+        print("[L1] AKShare macro_euro_lme_stock()...")
+        df = ak.macro_euro_lme_stock()
+        if df is None or df.empty:
+            raise ValueError("Empty DataFrame")
+        df['日期'] = pd.to_datetime(df['日期']).dt.date
+        latest = df.sort_values('日期').iloc[-1]
+        raw_value = float(latest['铜-库存'])
+        obs = latest['日期']
+
+        if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={raw_value} out of {BOUNDS}")
             return
-        print(f"[L4 SKIP] {FACTOR_CODE}: no data")
-        return
 
-    if not (EXPECTED_MIN <= raw_value <= EXPECTED_MAX):
-        print(f"[WARN] {FACTOR_CODE}={raw_value} out of [{EXPECTED_MIN},{EXPECTED_MAX}]")
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs, raw_value, source_confidence=1.0)
+        print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs}")
         return
+    except Exception as e:
+        print(f"[L1 FAIL] {e}")
 
-    pub_date = date.today()
-    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source_confidence=1.0)
-    print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
+    # L4
+    save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date, extra_msg="LME铜库存")
 
 if __name__ == "__main__":
-    import pandas as pd
-    main()
+    run()

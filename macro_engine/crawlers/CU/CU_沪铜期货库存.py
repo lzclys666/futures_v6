@@ -1,113 +1,70 @@
-﻿#!/usr/bin/env python3
-
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 """
-
-沪铜期货库存
-
-因子: 待定义 = 沪铜期货库存
-
-
+CU_抓取_沪铜DCE库存.py
+因子: CU_DCE_INV = 沪铜DCE库存
 
 公式: 数据采集（无独立计算公式）
 
-
-
-当前状态: [WARN]待修复
-
-- 脚本已有数据获取逻辑，Header待完善
-
-- 尝试过的数据源及结果：需补充
-
-- 解决方案：需补充
-
-
-
-订阅优先级: ★★（付费源才需要标注）
-
-替代付费源: 具体平台名称
-
+当前状态: [⚠️待修复]
+- L1: AKShare futures_inventory_em(symbol='cu') 返回空或报错，需验证参数
+- 备选: futures_inventory_em(symbol='铜') 可能返回DCE+SHFE混合数据
+- L4: db_utils save_l4_fallback
 """
+import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 
-import sys
-import os
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
-
-import datetime
-from db_utils import save_to_db, get_latest_value
-
+from db_utils import save_to_db, get_pit_dates, ensure_table, save_l4_fallback
 import akshare as ak
-
 import pandas as pd
 
+FACTOR_CODE = "CU_DCE_INV"
+SYMBOL = "CU"
+BOUNDS = (50000, 500000)
 
+def run():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
-FCODE = "CU_DCE_INV"
-
-SYM = "CU"
-
-EMIN = 50000
-
-EMAX = 500000
-
-
-
-def fetch():
-
-    # futures_inventory_em DCE库存
-
-    df = ak.futures_inventory_em(symbol='cu')
-
-    if df.empty:
-
-        raise ValueError("CU DCE inv no data")
-
-    latest = df.sort_values(df.columns[0]).iloc[-1]
-
-    raw_value = float(latest.iloc[1])
-
-    obs_date = pd.to_datetime(latest.iloc[0]).date()
-
-    return raw_value, obs_date
-
-
-
-def main():
-
+    # L1
     try:
-
-        raw_value, obs_date = fetch()
-
+        print("[L1] AKShare futures_inventory_em(symbol='cu')...")
+        df = ak.futures_inventory_em(symbol='cu')
+        if df is None or df.empty:
+            raise ValueError("Empty DataFrame")
+        df['日期'] = pd.to_datetime(df['日期']).dt.date
+        latest = df.sort_values('日期').iloc[-1]
+        raw_value = float(latest['库存'])
+        obs = latest['日期']
+        if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={raw_value} out of {BOUNDS}")
+            return
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs, raw_value, source_confidence=1.0)
+        print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs}")
+        return
     except Exception as e:
+        print(f"[L1 FAIL] {e}")
 
-        print("[L1] " + FCODE + ": " + str(e))
-
-        latest = get_latest_value(FCODE, SYM)
-
-        if latest is not None:
-
-            print("[L4] " + FCODE + "=" + str(latest))
-
-        else:
-
-            print("[SKIP] " + FCODE)
-
+    # L2
+    try:
+        print("[L2] AKShare futures_inventory_em(symbol='铜')...")
+        df = ak.futures_inventory_em(symbol='铜')
+        if df is None or df.empty:
+            raise ValueError("Empty DataFrame")
+        df['日期'] = pd.to_datetime(df['日期']).dt.date
+        latest = df.sort_values('日期').iloc[-1]
+        raw_value = float(latest['库存'])
+        obs = latest['日期']
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs, raw_value, source_confidence=0.9)
+        print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs} (L2)")
         return
+    except Exception as e:
+        print(f"[L2 FAIL] {e}")
 
-    if not (EMIN <= raw_value <= EMAX):
-
-        print("[WARN] " + FCODE + "=" + str(raw_value) + " [" + str(EMIN) + "," + str(EMAX) + "]")
-
-        return
-
-    save_to_db(FCODE, SYM, datetime.date.today(), obs_date, raw_value, source_confidence=0.9)
-
-    print("[OK] " + FCODE + "=" + str(raw_value) + " obs=" + str(obs_date))
-
-
+    # L4
+    save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date, extra_msg="沪铜DCE库存")
 
 if __name__ == "__main__":
-
-    main()
-
+    run()

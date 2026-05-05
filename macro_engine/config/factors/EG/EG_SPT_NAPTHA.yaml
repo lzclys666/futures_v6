@@ -1,19 +1,20 @@
-factor_code: EG_EG_STK_PORT
+﻿factor_code: EG_SPT_NAPTHA
 symbol: EG
 category: free_data
-name: 华东乙二醇港口库存
-description: 华东乙二醇港口库存
+name: 石脑油裂解价差
+description: 石脑油裂解价差
 frequency: daily
-unit: 万吨
+unit: 美元/吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- inventory
+- cost
 - EG
 source_confidence: 3
 data_source: AKShare
 expected_range:
 - -100000.0
 - 100000.0
+

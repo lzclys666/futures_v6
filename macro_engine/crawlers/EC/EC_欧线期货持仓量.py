@@ -1,55 +1,55 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-欧线期货持仓量
-因子: 待定义 = 欧线期货持仓量
+EC_抓取_期货持仓量.py
+因子: EC_FUT_OI = 集运指数期货持仓量
 
-公式: 数据采集（无独立计算公式）
+公式: 数据采集（主力合约持仓量）
 
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+当前状态: [✅正常]
+- L1: AKShare futures_main_sina(symbol='EC0') 持仓量列
+- L4: db_utils save_l4_fallback
 """
-sys.path.insert(0, 'd:/futures_v6/macro_engine/crawlers/common')
-from db_utils import save_to_db, get_latest_value
+import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
+from db_utils import save_to_db, get_pit_dates, ensure_table, save_l4_fallback
 import akshare as ak
 import pandas as pd
+import datetime
 
-FCODE = "EC_FUT_OI"
-SYM = "EC"
-EMIN = 1000
-EMAX = 100000
+FACTOR_CODE = "EC_FUT_OI"
+SYMBOL = "EC"
+BOUNDS = (1000, 100000)
 
-def fetch():
-    df = ak.futures_main_sina(symbol="EC0")
-    if df.empty:
-        raise ValueError("EC0 no data")
-    # 列: [0]=日期, [1]=开盘, [2]=高, [3]=低, [4]=收盘, [5]=成交量, [6]=持仓, [7]=结算
-    latest = df.iloc[-1]
-    obs_date = pd.to_datetime(latest.iloc[0]).date()
-    raw_value = float(latest.iloc[6])  # 持仓量
-    return raw_value, obs_date
+def run():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
-def main():
+    # L1
     try:
-        raw_value, obs_date = fetch()
+        print("[L1] AKShare futures_main_sina(symbol='EC0')...")
+        df = ak.futures_main_sina(symbol="EC0")
+        if df is None or df.empty:
+            raise ValueError("Empty DataFrame")
+        latest = df.iloc[-1]
+        obs = pd.to_datetime(latest.iloc[0]).date()
+        raw_value = float(latest.iloc[6])  # 持仓量
+
+        if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={raw_value} out of {BOUNDS}")
+            return
+
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs, raw_value, source_confidence=1.0)
+        print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs}")
+        return
     except Exception as e:
-        print("[L1] " + FCODE + ": " + str(e))
-        latest = get_latest_value(FCODE, SYM)
-        if latest is not None:
-            print("[L4] " + FCODE + "=" + str(latest))
-        else:
-            print("[SKIP] " + FCODE)
-        return
-    if not (EMIN <= raw_value <= EMAX):
-        print("[WARN] " + FCODE + "=" + str(raw_value) + " [" + str(EMIN) + "," + str(EMAX) + "]")
-        return
-    save_to_db(FCODE, SYM, datetime.date.today(), obs_date, raw_value, source_confidence=1.0)
-    print("[OK] " + FCODE + "=" + str(raw_value) + " obs=" + str(obs_date))
+        print(f"[L1 FAIL] {e}")
+
+    # L4
+    save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date, extra_msg="集运指数持仓量")
 
 if __name__ == "__main__":
-    main()
+    run()

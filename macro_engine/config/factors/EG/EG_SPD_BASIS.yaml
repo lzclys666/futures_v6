@@ -1,4 +1,4 @@
-factor_code: EG_EG_SPD_BASIS
+﻿factor_code: EG_SPD_BASIS
 symbol: EG
 category: derived
 name: 乙二醇期现基差
@@ -17,3 +17,4 @@ data_source: Calculated
 expected_range:
 - -100000.0
 - 100000.0
+

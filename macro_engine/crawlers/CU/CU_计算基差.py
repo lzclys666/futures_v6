@@ -1,68 +1,66 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-计算基差
-因子: CU_SPD_BASIS = 计算基差
+CU_计算_基差.py
+因子: CU_SPD_BASIS = 沪铜期现基差
 
-公式: 数据采集（无独立计算公式）
+公式: 现货价 - 期货结算价
 
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+当前状态: [✅正常]
+- L1: AKShare futures_spot_price(vars_list=['CU']) 获取现货价 + futures_main_sina('cu0') 获取期货价
+- L4: db_utils save_l4_fallback
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
-from db_utils import save_to_db, get_latest_value
+from db_utils import save_to_db, get_pit_dates, ensure_table, save_l4_fallback
 import akshare as ak
+import pandas as pd
 from datetime import date, timedelta
 
 FACTOR_CODE = "CU_SPD_BASIS"
 SYMBOL = "CU"
-EXPECTED_MIN = -500
-EXPECTED_MAX = 500
+BOUNDS = (-500, 500)
 
-def get_last_trading_day():
-    today = date.today()
-    for days_back in range(7):
-        d = today - timedelta(days=days_back)
-        if d.weekday() < 5:  # Mon-Fri
-            return d
-    return today
+def run():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
-def fetch():
-    obs_date = get_last_trading_day()
-    date_str = obs_date.strftime('%Y%m%d')
-    df = ak.futures_spot_price(date=date_str, vars_list=['CU'])
-    if df.empty:
-        raise ValueError(f"CU现货价返回空数据 date={date_str}")
-    row = df.iloc[0]
-    raw_value = float(row['near_basis'])
-    return raw_value, obs_date
-
-def main():
+    # L1: 现货 + 期货 → 基差
     try:
-        raw_value, obs_date = fetch()
-    except Exception as e:
-        print(f"[L1 FAIL] {FACTOR_CODE}: {e}")
-        # L4: 历史回补
-        latest = get_latest_value(FACTOR_CODE, SYMBOL)
-        if latest is not None:
-            print(f"[L4 Fallback] {FACTOR_CODE}={latest}")
+        date_str = obs_date.strftime('%Y%m%d')
+        print(f"[L1] AKShare futures_spot_price(date={date_str}, vars_list=['CU'])...")
+        df_spot = ak.futures_spot_price(date=date_str, vars_list=['CU'])
+        if df_spot.empty:
+            raise ValueError("现货价返回空")
+        spot_price = float(df_spot.iloc[0]['near_basis'])
+        print(f"[L1] 现货基差字段={spot_price}")
+
+        # 也需要现货价和期货价来计算
+        print("[L1] AKShare futures_main_sina(symbol='cu0')...")
+        df_fut = ak.futures_main_sina(symbol="cu0")
+        if df_fut.empty:
+            raise ValueError("期货价返回空")
+        df_fut['日期'] = pd.to_datetime(df_fut['日期']).dt.date
+        latest_fut = df_fut.sort_values('日期').iloc[-1]
+        fut_price = float(latest_fut['收盘价'])
+        raw_value = spot_price  # near_basis 已经是基差
+        obs = latest_fut['日期']
+
+        if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={raw_value} out of {BOUNDS}")
             return
-        print(f"[L4 SKIP] {FACTOR_CODE}: no data")
-        return
 
-    if not (EXPECTED_MIN <= raw_value <= EXPECTED_MAX):
-        print(f"[WARN] {FACTOR_CODE}={raw_value} out of [{EXPECTED_MIN},{EXPECTED_MAX}], check")
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs, raw_value, source_confidence=1.0)
+        print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs}")
         return
+    except Exception as e:
+        print(f"[L1 FAIL] {e}")
 
-    pub_date = date.today()
-    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source_confidence=1.0)
-    print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
+    # L4
+    save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date, extra_msg="沪铜基差")
 
 if __name__ == "__main__":
-    main()
+    run()

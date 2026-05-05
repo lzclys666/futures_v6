@@ -17,6 +17,8 @@ FU_高低硫价差.py
 替代付费源: 隆众资讯（年费）、SMM（年费）
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, _get_latest_record
 from common.web_utils import fetch_json, fetch_url
@@ -25,6 +27,7 @@ from datetime import datetime
 
 FACTOR_CODE = "FU_HS_LS_SPREAD"
 SYMBOL = "FU"
+BOUNDS = (-50, 300)  # 高硫-低硫价差 -50~300美元/吨
 
 
 def fetch_hs_ls_spread_eastmoney():
@@ -114,16 +117,22 @@ def main():
     # L1
     val, source = fetch_hs_ls_spread_eastmoney()
     if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                    source_confidence=1.0, source=f"L1-东方财富:{source}")
-        return
+        if not (BOUNDS[0] <= val <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                        source_confidence=1.0, source=f"L1-东方财富:{source}")
+            return
 
     # L3
     val, source = fetch_hs_ls_spread_platts()
     if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                    source_confidence=0.8, source=f"L3-Platts:{source}")
-        return
+        if not (BOUNDS[0] <= val <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                        source_confidence=0.9, source=f"L3-Platts:{source}")
+            return
 
     # L4: DB fallback
     record = _get_latest_record(FACTOR_CODE, SYMBOL)

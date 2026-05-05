@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """EG_run_all.py - 乙二醇数据采集（subprocess模式）"""
-import os, sys, subprocess, datetime
+import os, sys, subprocess, datetime, argparse
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+
+sys.path.insert(0, str(Path(__file__).parent.parent / 'common'))
+from db_utils import ensure_table, get_pit_dates
 
 CURRENT_DIR = Path(__file__).parent
 LOG_DIR = CURRENT_DIR.parent / 'logs'
@@ -25,11 +28,24 @@ scripts = [
 ]
 
 def run_all():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--auto', action='store_true')
+    parser.add_argument('--manual', action='store_true')
+    args = parser.parse_args()
+
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    if pub_date is None:
+        print("[ERR] 非交易日，跳过")
+        return
+
+    mode = 'auto' if args.auto else ('manual' if args.manual else 'auto')
     now = datetime.datetime.now()
     log_file = LOG_DIR / f"{now.strftime('%Y-%m-%d')}_EG.log"
 
     print("=" * 50)
     print(f"EG Data Collection @ {now}")
+    print(f"pub={pub_date} obs={obs_date} mode={mode}")
     print(f"Scripts: {len(scripts)}")
     print("=" * 50)
 
@@ -55,7 +71,7 @@ def run_all():
 
             try:
                 result = subprocess.run(
-                    [sys.executable, "-X", "utf8=1", str(script_path), "--auto"],
+                    [sys.executable, "-X", "utf8=1", str(script_path), f"--{mode}"],
                     stdout=subprocess.PIPE,
                     stderr=subprocess.PIPE,
                     encoding='utf-8',

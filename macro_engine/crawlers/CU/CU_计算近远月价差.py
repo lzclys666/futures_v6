@@ -1,69 +1,55 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-计算近远月价差
-因子: CU_SPD_CONTRACT = 计算近远月价差
+CU_计算_近远月价差.py
+因子: CU_SPD_CONTRACT = 沪铜近远月价差
 
-公式: 数据采集（无独立计算公式）
+公式: 近月合约价 - 主力合约价
 
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+当前状态: [✅正常]
+- L1: AKShare futures_spot_price(vars_list=['CU']) 获取 near_contract_price - dominant_contract_price
+- L4: db_utils save_l4_fallback
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
-from db_utils import save_to_db, get_latest_value
+from db_utils import save_to_db, get_pit_dates, ensure_table, save_l4_fallback
 import akshare as ak
-from datetime import date, timedelta
 
 FACTOR_CODE = "CU_SPD_CONTRACT"
 SYMBOL = "CU"
-EXPECTED_MIN = -300
-EXPECTED_MAX = 300
+BOUNDS = (-300, 300)
 
-def get_last_trading_day():
-    today = date.today()
-    for days_back in range(7):
-        d = today - timedelta(days=days_back)
-        if d.weekday() < 5:
-            return d
-    return today
+def run():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FACTOR_CODE} === pub={pub_date} obs={obs_date}")
 
-def fetch():
-    obs_date = get_last_trading_day()
-    date_str = obs_date.strftime('%Y%m%d')
-    df = ak.futures_spot_price(date=date_str, vars_list=['CU'])
-    if df.empty:
-        raise ValueError(f"CU现货价返回空 date={date_str}")
-    row = df.iloc[0]
-    near_price = float(row['near_contract_price'])
-    dom_price = float(row['dominant_contract_price'])
-    raw_value = near_price - dom_price
-    return raw_value, obs_date
-
-def main():
+    # L1
     try:
-        raw_value, obs_date = fetch()
-    except Exception as e:
-        print(f"[L1 FAIL] {FACTOR_CODE}: {e}")
-        latest = get_latest_value(FACTOR_CODE, SYMBOL)
-        if latest is not None:
-            print(f"[L4 Fallback] {FACTOR_CODE}={latest}")
+        date_str = obs_date.strftime('%Y%m%d')
+        print(f"[L1] AKShare futures_spot_price(date={date_str}, vars_list=['CU'])...")
+        df = ak.futures_spot_price(date=date_str, vars_list=['CU'])
+        if df.empty:
+            raise ValueError("返回空")
+        row = df.iloc[0]
+        near_price = float(row['near_contract_price'])
+        dom_price = float(row['dominant_contract_price'])
+        raw_value = near_price - dom_price
+
+        if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={raw_value} out of {BOUNDS}")
             return
-        print(f"[L4 SKIP] {FACTOR_CODE}: no data")
-        return
 
-    if not (EXPECTED_MIN <= raw_value <= EXPECTED_MAX):
-        print(f"[WARN] {FACTOR_CODE}={raw_value} out of [{EXPECTED_MIN},{EXPECTED_MAX}]")
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source_confidence=1.0)
+        print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
         return
+    except Exception as e:
+        print(f"[L1 FAIL] {e}")
 
-    pub_date = date.today()
-    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value, source_confidence=1.0)
-    print(f"[OK] {FACTOR_CODE}={raw_value} obs={obs_date}")
+    # L4
+    save_l4_fallback(FACTOR_CODE, SYMBOL, pub_date, obs_date, extra_msg="沪铜近远月价差")
 
 if __name__ == "__main__":
-    main()
+    run()

@@ -17,6 +17,8 @@ FU_WTI收盘价.py
 替代付费源: 无
 """
 import sys, os
+sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..'))
 from common.db_utils import ensure_table, save_to_db, get_pit_dates, get_latest_value, _get_latest_record
 import akshare as ak
@@ -25,6 +27,7 @@ import pandas as pd
 
 FACTOR_CODE = "FU_WTI_PRICE"
 SYMBOL = "FU"
+BOUNDS = (30, 200)  # WTI原油 30-200美元/桶
 
 
 def fetch_wti_eastmoney():
@@ -98,23 +101,32 @@ def main():
     # L1
     val, source = fetch_wti_eastmoney()
     if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                    source_confidence=1.0, source=f"L1-AKShare-东方财富:{source}")
-        return
+        if not (BOUNDS[0] <= val <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                        source_confidence=1.0, source=f"L1-AKShare-东方财富:{source}")
+            return
 
     # L2
     val, source = fetch_wti_jin10()
     if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                    source_confidence=0.9, source=f"L2-金十数据:{source}")
-        return
+        if not (BOUNDS[0] <= val <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                        source_confidence=0.9, source=f"L2-金十数据:{source}")
+            return
 
     # L3
     val, source = fetch_wti_eia()
     if val is not None:
-        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                    source_confidence=0.9, source=f"L3-EIA:{source}")
-        return
+        if not (BOUNDS[0] <= val <= BOUNDS[1]):
+            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
+        else:
+            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                        source_confidence=0.9, source=f"L3-EIA:{source}")
+            return
 
     # L4: DB fallback
     record = _get_latest_record(FACTOR_CODE, SYMBOL)
