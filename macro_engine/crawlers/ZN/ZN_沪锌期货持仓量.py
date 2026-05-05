@@ -1,53 +1,47 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-沪锌期货持仓量
-因子: 待定义 = 沪锌期货持仓量
-
-公式: 数据采集（无独立计算公式）
-
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
-
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+ZN_沪锌期货持仓量.py
+因子: ZN_FUT_OI = 沪锌期货主力合约持仓量
+当前状态: [✅正常]
 """
+import sys, os
+sys.stdout.reconfigure(encoding='utf-8')
 this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
-from db_utils import save_to_db, get_latest_value
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 import akshare as ak
-from datetime import date
 import pandas as pd
 
 FCODE = "ZN_FUT_OI"
 SYM = "ZN"
-EMIN = 50000
-EMAX = 400000
+BOUNDS = (50000, 400000)
+
 
 def fetch():
     df = ak.futures_main_sina(symbol="ZN0")
     if df.empty:
         raise ValueError("no data")
     latest = df.sort_values('日期').iloc[-1]
-    oi_val = float(latest.get('持仓量', 0))
-    obs = pd.to_datetime(latest['日期']).date()
-    return oi_val, obs
+    return float(latest['持仓量']), pd.to_datetime(latest['日期']).date()
+
 
 def main():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f"=== {FCODE} === pub={pub_date} obs={obs_date}")
     try:
         raw_value, obs_date = fetch()
     except Exception as e:
-        print("[L1] " + FCODE + ": " + str(e))
-        latest = get_latest_value(FCODE, SYM)
-        if latest is not None:
-            print("[L4] " + FCODE + "=" + str(latest))
-        else:
-            print("[SKIP] " + FCODE)
+        print(f"[L1] {FCODE}: {e}")
+        save_l4_fallback(FCODE, SYM, pub_date, obs_date)
         return
-    if not (EMIN <= raw_value <= EMAX):
-        print("[WARN] " + FCODE + "=" + str(raw_value) + " [" + str(EMIN) + "," + str(EMAX) + "]")
+    if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+        print(f"[WARN] {FCODE}={raw_value} out of {BOUNDS}")
         return
-    save_to_db(FCODE, SYM, date.today(), obs_date, raw_value, source_confidence=1.0)
-    print("[OK] " + FCODE + "=" + str(raw_value) + " obs=" + str(obs_date))
+    save_to_db(FCODE, SYM, pub_date, obs_date, raw_value, source_confidence=1.0, source='AKShare_Sina_ZN0')
+    print(f"[OK] {FCODE}={raw_value} obs={obs_date}")
+
+
+if __name__ == "__main__":
+    main()
