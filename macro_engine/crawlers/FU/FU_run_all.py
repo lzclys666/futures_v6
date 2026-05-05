@@ -6,7 +6,7 @@ FU_run_all.py
 import os, sys, subprocess, time, argparse
 from datetime import datetime
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'common'))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'common'))
 from db_utils import ensure_table, get_pit_dates
 
 # Windows UTF-8 编码修复

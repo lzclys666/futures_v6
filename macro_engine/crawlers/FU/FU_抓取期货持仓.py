@@ -125,9 +125,7 @@ def main():
         print(f"[L4] {FACTOR_CODE}={raw_value} 回补成功")
         return
 
-    print(f"[L5] {FACTOR_CODE}: 所有数据源失效，写入NULL占位")
-    save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, None,
-                source_confidence=0.0, source="L5-NULL占位")
+    print(f"[L5] {FACTOR_CODE}: 所有数据源失效，不写占位符")
 
 
 if __name__ == "__main__":

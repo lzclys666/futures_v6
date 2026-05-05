@@ -191,7 +191,7 @@ def _get_latest_record(factor_code, symbol, before_date=None):
             cursor.execute("""
                 SELECT raw_value, obs_date, source, source_confidence
                 FROM pit_factor_observations
-                WHERE factor_code=? AND symbol=?
+                WHERE factor_code=? AND symbol=? AND raw_value IS NOT NULL
                 ORDER BY obs_date DESC LIMIT 1
             """, (factor_code, symbol))
         row = cursor.fetchone()
