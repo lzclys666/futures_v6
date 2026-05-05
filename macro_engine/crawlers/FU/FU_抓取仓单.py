@@ -93,6 +93,7 @@ def fetch_shfe_direct():
     except Exception as e:
         print(f"[L2] SHFE解析失败: {e}")
     return None, None
+    return None, None
 
 
 def main():
