@@ -1,73 +1,89 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-P_run_all.py - 棕榈油日度数据采集总调度
-批次1: 免费数据源 (AKShare DCE/INE) - 5个因子
-批次2: MPOB月报PDF解析/进口量海关总署 (付费/需解析)
+P_run_all.py - 棕榈油爬虫总控
 """
 import subprocess, sys, os, time
-from datetime import datetime
+sys.stdout.reconfigure(encoding='utf-8')
+from pathlib import Path
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-os.chdir(SCRIPT_DIR)
+SCRIPT_DIR = Path(__file__).parent
+LOG_DIR = SCRIPT_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+sys.path.insert(0, str(SCRIPT_DIR.parent / 'common'))
+from db_utils import get_pit_dates, ensure_table
 
 SCRIPTS = [
-    "P_抓取期货收盘价.py",     # P_FUT_CLOSE
-    "P_抓取期货持仓量.py",     # P_FUT_OI
-    "P_原油参考.py",          # P_OIL_REF
-    "P_计算基差.py",          # P_SPD_BASIS (可能滞后)
-    "P_计算近远月价差.py",    # P_SPD_CONTRACT (可能滞后)
-    # P_批次2_手动输入.py,  # 批次2付费因子
+    "P_抓取期货收盘价.py",
+    "P_抓取期货持仓量.py",
+    "P_棕榈油期货库存.py",
+    "P_原油参考.py",
+    "P_计算基差.py",
+    "P_计算近远月价差.py",
+    "P_批次2_月报爬虫.py",
 ]
 
-BATCH2 = [
-    # "P_批次2_手动输入.py",
-]
-
-def run_script(name):
-    path = os.path.join(SCRIPT_DIR, name)
-    if not os.path.exists(path):
-        print("? %s does not exist" % name)
-        return False
-    print(">> %s" % name)
-    try:
-        r = subprocess.run(
-            [sys.executable, path, "--auto"],
-            capture_output=True, timeout=30
-        )
-        try:
-            out = r.stdout.decode('utf-8', errors='replace')
-        except (ValueError, IndexError):
-            out = str(r.stdout)
-        for line in out.strip().split('\r\n')[-3:]:
-            if line.strip():
-                try:
-                    print("   %s" % line[:120])
-                except (ValueError, IndexError):
-                    pass
-        return r.returncode == 0
-    except subprocess.TimeoutExpired:
-        print("   TIMEOUT")
-        return False
-    except Exception as e:
-        print("   Exception: %s" % str(e)[:80])
-        return False
 
 def main():
-    print("=" * 50)
-    print("P(棕榈油) @ %s" % datetime.now())
-    print("=" * 50)
-    t0 = time.time()
-    ok, fail = 0, 0
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--auto", action="store_true")
+    parser.add_argument("--manual", action="store_true")
+    args = parser.parse_args()
+
+    pub_date, obs_date = get_pit_dates()
+    ensure_table()
+
+    sep = "=" * 50
+    print(sep)
+    print(f"P @ {time.strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"pub_date={pub_date} obs_date={obs_date}")
+    print(sep)
+
+    ok, fail, skip = 0, 0, 0
     for s in SCRIPTS:
-        if run_script(s):
-            ok += 1
-        else:
+        path = SCRIPT_DIR / s
+        if not path.exists():
+            print(f"  [跳过] {s} 不存在")
+            skip += 1
+            continue
+
+        print(f"\n>>> {s}...")
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"
+        cmd = [sys.executable, '-X', 'utf8=1', str(path)]
+        if args.auto:
+            cmd.append("--auto")
+
+        try:
+            r = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                             encoding='utf-8', errors='replace', timeout=120,
+                             cwd=str(SCRIPT_DIR), env=env)
+            out = r.stdout or ""
+            for line in out.strip().split('\n')[-3:]:
+                if line.strip():
+                    print(f"  {line.strip()[:120]}")
+            if r.returncode == 0:
+                ok += 1
+            else:
+                fail += 1
+        except Exception as e:
+            print(f"  [异常] {e}")
             fail += 1
-        time.sleep(0.5)
-    print("=" * 50)
-    print("P Done  %.1fs  OK=%d FAIL=%d" % (time.time()-t0, ok, fail))
-    print("=" * 50)
+        time.sleep(1)
+
+    print(sep)
+    total = ok + fail + skip
+    print(f"P Done {ok+fail+skip}/{total}  OK={ok} FAIL={fail} SKIP={skip}")
+    print(sep)
+
+    import datetime
+    log_file = LOG_DIR / f"{datetime.date.today()}.log"
+    with open(log_file, 'a', encoding='utf-8') as f:
+        f.write(f"P @ {datetime.datetime.now()} | pub={pub_date} obs={obs_date}\n")
+        f.write(f"  OK={ok} FAIL={fail} SKIP={skip}\n")
+
 
 if __name__ == "__main__":
     main()

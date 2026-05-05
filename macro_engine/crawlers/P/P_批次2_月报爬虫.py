@@ -18,7 +18,7 @@ import sys, os, re
 this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
 from common.web_utils import fetch_url, fetch_json
-from db_utils import save_to_db, get_latest_value
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 from datetime import date
 
 FACTOR_MAP = {
@@ -116,26 +116,23 @@ def save_factor(fc, val, obs):
     print('[OK] ' + fc + '=%.0f obs=%s' % (val, obs))
 
 def main():
+    ensure_table()
+    pub_date, obs_date = get_pit_dates()
+    print(f'=== P批次2 === pub={pub_date} obs={obs_date}')
+
     try:
         data, obs_date = fetch_mpob()
     except Exception as e:
         print('[L1 FAIL] P_batch2: ' + str(e)[:80])
-        # L4 fallback for each factor
         for fc in FACTOR_MAP:
-            latest = get_latest_value(fc, 'P')
-            if latest is not None:
-                print('[L4] ' + fc + '=%.0f (fallback)' % latest)
+            save_l4_fallback(fc, 'P', pub_date, obs_date)
         return
 
     for fc, key in FACTOR_MAP.items():
         if key in data:
             save_factor(fc, data[key], obs_date)
         else:
-            latest = get_latest_value(fc, 'P')
-            if latest is not None:
-                print('[L4] ' + fc + '=%.0f (fallback)' % latest)
-            else:
-                print('[SKIP] ' + fc + ' no data')
+            save_l4_fallback(fc, 'P', pub_date, obs_date)
 
 if __name__ == '__main__':
     main()
