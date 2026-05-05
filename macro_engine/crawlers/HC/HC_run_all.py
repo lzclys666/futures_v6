@@ -1,38 +1,49 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """HC_run_all.py - 热轧卷板数据采集（subprocess模式）"""
-import os, sys, subprocess, datetime
+import os, sys, subprocess, datetime, argparse
 from pathlib import Path
 
 sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from common.db_utils import get_pit_dates, ensure_table
+
 CURRENT_DIR = Path(__file__).parent
 LOG_DIR = CURRENT_DIR.parent / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
-scripts = [
-    "HC_制造业PMI.py",
-    "HC_我的钢铁网热卷现货价格.py",
-    "HC_汽车产量.py",
-    "HC_热卷-螺纹钢跨品种价差.py",
-    "HC_热卷仓单库存.py",
-    "HC_热卷期现基差.py",
-    "HC_热卷期货净持仓.py",
-    "HC_热卷期货合约间价差.py",
-    "HC_热卷期货近远月价差.py",
-    "HC_热卷社会库存总量.py",
-    "HC_热轧卷板期货持仓量.py",
+auto_scripts = [
     "HC_热轧卷板期货收盘价.py",
-    "HC_钢厂热卷库存周度.py",
+    "HC_热轧卷板期货持仓量.py",
 ]
 
-def run_all():
+manual_scripts = [
+    "HC_热卷期现基差.py",
+    "HC_热卷期货净持仓.py",
+    "HC_热卷仓单库存.py",
+    "HC_热卷社会库存总量.py",
+    "HC_热卷期货近远月价差.py",
+    "HC_热卷期货合约间价差.py",
+    "HC_热卷-螺纹钢跨品种价差.py",
+    "HC_我的钢铁网热卷现货价格.py",
+    "HC_钢厂热卷库存周度.py",
+    "HC_汽车产量.py",
+    "HC_制造业PMI.py",
+]
+
+all_scripts = auto_scripts + manual_scripts
+
+def run_all(scripts):
     now = datetime.datetime.now()
+    pub_date, obs_date = get_pit_dates()
+    ensure_table()
     log_file = LOG_DIR / f"{now.strftime('%Y-%m-%d')}_HC.log"
 
     print("=" * 50)
     print(f"HC Data Collection @ {now}")
+    print(f"PIT: pub={pub_date} obs={obs_date}")
     print(f"Scripts: {len(scripts)}")
     print("=" * 50)
 
@@ -50,7 +61,7 @@ def run_all():
                 failures.append((script, "not found"))
                 continue
 
-            print(f">>> {script}...")
+            print(f">> {script}...")
             log.write(f"\n--- {script} @ {datetime.datetime.now()} ---\n")
 
             env = os.environ.copy()
@@ -74,18 +85,18 @@ def run_all():
 
                 if result.returncode == 0:
                     success_count += 1
-                    print(f"[OK] {script} done")
+                    print(f"    [OK] {script} done")
                 else:
-                    print(f"[WARN] {script} exit:{result.returncode}")
+                    print(f"    [WARN] {script} exit:{result.returncode}")
                     failures.append((script, f"exit {result.returncode}"))
 
             except subprocess.TimeoutExpired:
                 msg = f"{script} TIMEOUT"
-                print(f"[WARN] {msg}")
+                print(f"    [WARN] {msg}")
                 failures.append((script, "timeout"))
             except Exception as e:
                 msg = f"{script} exception: {e}"
-                print(f"[ERR] {msg}")
+                print(f"    [ERR] {msg}")
                 failures.append((script, str(e)))
 
         duration = (datetime.datetime.now() - now).total_seconds()
@@ -100,4 +111,16 @@ def run_all():
         log.write(f"\n[Done] {success_count}/{len(scripts)}\n")
 
 if __name__ == "__main__":
-    run_all()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--auto', action='store_true', help='只跑免费源脚本')
+    parser.add_argument('--manual', action='store_true', help='只跑付费源/兜底脚本')
+    args = parser.parse_args()
+
+    if args.manual:
+        scripts = manual_scripts
+    elif args.auto:
+        scripts = auto_scripts
+    else:
+        scripts = all_scripts
+
+    run_all(scripts)

@@ -1,18 +1,17 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-热卷社会库存总量
-因子: 待定义 = 热卷社会库存总量
+HC_热卷社会库存总量
+因子: HC_STK_SOCIAL = 热卷社会库存总量
 
 公式: 数据采集（无独立计算公式）
 
-当前状态: [WARN]待修复
-- 脚本已有数据获取逻辑，Header待完善
-- 尝试过的数据源及结果：需补充
-- 解决方案：需补充
+当前状态: [永久跳过]
+- 需Mysteel付费数据
+- 不写占位符（SOP §7）
 
-订阅优先级: ★★（付费源才需要标注）
-替代付费源: 具体平台名称
+订阅优先级: 无
+替代付费源: 无
 """
 import sys
 import datetime
@@ -26,10 +25,12 @@ try:
 except ImportError:
     pass
 
+sys.stdout.reconfigure(encoding='utf-8')
+sys.stderr.reconfigure(encoding='utf-8')
+
 try:
-    from common.db_utils import save_to_db, get_pit_dates
+    from common.db_utils import get_pit_dates
 except ImportError:
-    def save_to_db(*a, **kw): pass
     def get_pit_dates():
         today = datetime.date.today()
         dow = today.weekday()
@@ -39,39 +40,22 @@ except ImportError:
             obs = today - datetime.timedelta(days=dow - 4)
         else:
             obs = today
-        return obs, today
+        return today, obs
 
-# 因子参数（在函数外捕获值）
+# 因子参数
 _FACTOR_SYMBOL = "HC"
 _FACTOR_CODE = "HC_STK_SOCIAL"
-_FACTOR_NAME = "热卷社会库存"
-_FACTOR_FC = "HC_HC_STK_SOCIAL"
-_FACTOR_REASON = "Mysteel付费"
+_FACTOR_NAME = "热卷社会库存总量"
+_FACTOR_REASON = "需Mysteel付费数据"
 
 
 def run(auto=False):
     obs_date, pub_date = get_pit_dates()
-    print("[跳过] " + _FACTOR_FC + " = None (obs=" + str(obs_date) + ")")
-    print("      原因: " + _FACTOR_REASON)
+    print(f"[跳过] {_FACTOR_CODE} = None (obs={obs_date})")
+    print(f"      原因: {_FACTOR_REASON}")
 
     if not auto:
         print('\n提示: 使用 --auto 参数可跳过此确认')
-
-    # 写入 L4 stub 记录，value = None
-    try:
-        save_to_db(
-            symbol=_FACTOR_SYMBOL,
-            factor_code=_FACTOR_FC,
-            obs_date=obs_date,
-            pub_date=pub_date,
-            raw_value=None,
-            source="占位(付费订阅待配)",
-            source_confidence=0.5,
-            notes="[STUB] " + _FACTOR_REASON,
-        )
-        print("[OK] 已写入 stub 记录 (source_confidence=0.5)")
-    except Exception as e:
-        print("[WARN] DB写入失败: " + str(e))
 
     return 0
 

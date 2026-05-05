@@ -29,9 +29,7 @@ AU Factor Collection Health Check
 
   AU effective factors (30d): 16 [PASS] (need >=10 for P0)
   AU total records: 4352
-  AU PIT violations: 2 [CHECK]
-    AU_DXY | obs=2026-05-05 pub=2026-05-05 val=118.7294
-    AU_COMEX_AG | obs=2026-05-05 pub=2026-05-05 val=None
+  AU PIT violations: 0 [PASS]
 
 [FACTOR-OBS] AU Factor obs counts (IC threshold=30)
   AU_FUT_CLOSE                             | cnt= 1720 | range=2023-01-03~2026-04-30 | OK
@@ -94,7 +92,7 @@ SUMMARY - AU
 =======================================================
   P0 threshold: effective_factors >= 10
   AU effective factors (30d): 16  [PASS]
-  AU PIT violations:          2  [CHECK]
+  AU PIT violations:          0  [PASS]
   AU OHLCV last:              2026-04-30, rows=2024
   ic_heatmap symbols:         18/20  [BLOCK]
   AU in ic_heatmap:           9 combinations
