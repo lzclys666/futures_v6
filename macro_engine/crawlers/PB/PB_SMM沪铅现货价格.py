@@ -15,7 +15,7 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
 from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 
-FCODE = "PB_PB_SPT_SMM"
+FCODE = "PB_SPT_SMM"
 SYM = "PB"
 
 

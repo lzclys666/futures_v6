@@ -1,16 +1,16 @@
-factor_code: PB_PB_FX_USDCNY
+factor_code: PB_STK_WARRANT
 symbol: PB
 category: free_data
-name: 美元兑人民币汇率
-description: 美元兑人民币汇率
+name: 铅锭仓单库存
+description: 铅锭仓单库存
 frequency: daily
-unit: null
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- fx
+- inventory
 - PB
 source_confidence: 3
 data_source: AKShare

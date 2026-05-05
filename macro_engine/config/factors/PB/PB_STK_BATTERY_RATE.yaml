@@ -1,16 +1,16 @@
-factor_code: PB_PB_MACRO_TC
+factor_code: PB_STK_BATTERY_RATE
 symbol: PB
 category: free_data
-name: 铅TC加工费
-description: 铅TC加工费
+name: 铅酸电池用铅占比
+description: 铅酸电池用铅占比
 frequency: daily
-unit: 元/金属吨
+unit: '%'
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- cost
+- inventory
 - PB
 source_confidence: 3
 data_source: AKShare

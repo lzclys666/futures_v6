@@ -1,16 +1,16 @@
-factor_code: PB_PB_STK_SOCIAL
+factor_code: PB_FX_USDCNY
 symbol: PB
 category: free_data
-name: 铅锭社会库存
-description: 铅锭社会库存
+name: 美元兑人民币汇率
+description: 美元兑人民币汇率
 frequency: daily
-unit: 万吨
+unit: null
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- inventory
+- fx
 - PB
 source_confidence: 3
 data_source: AKShare

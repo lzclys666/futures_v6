@@ -1,16 +1,16 @@
-factor_code: PB_PB_SPT_SMM
+factor_code: PB_STK_FUTURES
 symbol: PB
 category: free_data
-name: SMM沪铅现货价格
-description: SMM沪铅现货价格
+name: 沪铅期货库存
+description: 沪铅期货库存
 frequency: daily
-unit: 元/吨
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- price
+- inventory
 - PB
 source_confidence: 3
 data_source: AKShare

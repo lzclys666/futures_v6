@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 PB_沪铅期现基差.py
-因子: PB_PB_SPD_BASIS = 沪铅期现基差（元/吨）
+因子: PB_SPD_BASIS = 沪铅期现基差（元/吨）
 当前状态: [⛔永久跳过]
 - 原因: SHFE铅现货数据待验证，无可靠免费源
 - 不写占位符，不做L4回补
@@ -13,7 +13,7 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
 from db_utils import ensure_table, get_pit_dates
 
-FCODE = "PB_PB_SPD_BASIS"
+FCODE = "PB_SPD_BASIS"
 SYM = "PB"
 
 

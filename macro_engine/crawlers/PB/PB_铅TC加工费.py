@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 PB_铅TC加工费.py
-因子: PB_PB_MACRO_TC = 铅矿加工费（美元/吨）
+因子: PB_MACRO_TC = 铅矿加工费（美元/吨）
 当前状态: [⛔永久跳过]
 - 原因: 付费订阅（SMM），无免费数据源
 - 不写占位符，不做L4回补
@@ -13,7 +13,7 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
 from db_utils import ensure_table, get_pit_dates
 
-FCODE = "PB_PB_MACRO_TC"
+FCODE = "PB_MACRO_TC"
 SYM = "PB"
 
 

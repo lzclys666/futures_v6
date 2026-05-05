@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 PB_沪铅期货近远月价差.py
-因子: PB_PB_SPD_NEAR_FAR = 沪铅近远月价差（元/吨）
+因子: PB_SPD_NEAR_FAR = 沪铅近远月价差（元/吨）
 当前状态: [⛔永久跳过]
 - 原因: SHFE近远月合约价差接口待验证
 - 不写占位符，不做L4回补
@@ -13,7 +13,7 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
 from db_utils import ensure_table, get_pit_dates
 
-FCODE = "PB_PB_SPD_NEAR_FAR"
+FCODE = "PB_SPD_NEAR_FAR"
 SYM = "PB"
 
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 PB_铅锭仓单库存.py
-因子: PB_PB_STK_WARRANT = 上期所沪铅仓单（吨）
+因子: PB_STK_WARRANT = 上期所沪铅仓单（吨）
 当前状态: [⛔永久跳过]
 - 原因: SHFE仓单接口待验证
 - 不写占位符，不做L4回补
@@ -13,7 +13,7 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
 from db_utils import ensure_table, get_pit_dates
 
-FCODE = "PB_PB_STK_WARRANT"
+FCODE = "PB_STK_WARRANT"
 SYM = "PB"
 
 

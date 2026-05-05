@@ -1,10 +1,10 @@
-factor_code: PB_PB_STK_BATTERY_RATE
+factor_code: PB_STK_INVENTORY
 symbol: PB
 category: free_data
-name: 铅酸电池用铅占比
-description: 铅酸电池用铅占比
+name: 铅锭社会库存
+description: 铅锭社会库存
 frequency: daily
-unit: '%'
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare

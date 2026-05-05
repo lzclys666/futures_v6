@@ -1,8 +1,8 @@
-factor_code: PB_PB_SPD_BASIS
+factor_code: PB_SPD_NEAR_FAR
 symbol: PB
 category: derived
-name: 沪铅期现基差
-description: 沪铅期现基差
+name: 沪铅期货近远月价差
+description: 沪铅期货近远月价差
 frequency: daily
 unit: 元/吨
 direction: neutral

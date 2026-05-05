@@ -1,8 +1,8 @@
-factor_code: PB_PB_STK_FUTURES
+factor_code: PB_STK_SOCIAL
 symbol: PB
 category: free_data
-name: 沪铅期货库存
-description: 沪铅期货库存
+name: 铅锭社会库存
+description: 铅锭社会库存
 frequency: daily
 unit: 万吨
 direction: neutral

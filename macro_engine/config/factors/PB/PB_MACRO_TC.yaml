@@ -1,16 +1,16 @@
-factor_code: PB_PB_POS_NET
+factor_code: PB_MACRO_TC
 symbol: PB
 category: free_data
-name: 沪铅期货净持仓
-description: 沪铅期货净持仓
+name: 铅TC加工费
+description: 铅TC加工费
 frequency: daily
-unit: 手
+unit: 元/金属吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- position
+- cost
 - PB
 source_confidence: 3
 data_source: AKShare

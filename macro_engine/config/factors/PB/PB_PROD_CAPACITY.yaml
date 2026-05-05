@@ -1,16 +1,16 @@
-factor_code: PB_PB_SPD_PRI_VIRGIN
+factor_code: PB_PROD_CAPACITY
 symbol: PB
 category: derived
-name: 原生铅与再生铅价差
-description: 原生铅与再生铅价差
+name: 原生铅产能利用率
+description: 原生铅产能利用率
 frequency: daily
-unit: 元/吨
+unit: '%'
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- spread
+- operation
 - PB
 source_confidence: 3
 data_source: Calculated

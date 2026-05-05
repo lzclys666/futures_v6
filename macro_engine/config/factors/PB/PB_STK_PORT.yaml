@@ -1,8 +1,8 @@
-factor_code: PB_PB_PROD_OUTPUT
+factor_code: PB_STK_PORT
 symbol: PB
 category: free_data
-name: 铅锭产量
-description: 铅锭产量
+name: 铅锭港口库存
+description: 铅锭港口库存
 frequency: daily
 unit: 万吨
 direction: neutral
@@ -10,7 +10,7 @@ confidence: 3
 source: AKShare
 calculation: null
 tags:
-- supply
+- inventory
 - PB
 source_confidence: 3
 data_source: AKShare
