@@ -1,8 +1,8 @@
-factor_code: Y_Y_INV_LAND
+factor_code: Y_STK_WARRANT
 symbol: Y
 category: free_data
-name: 进口大豆港口库存
-description: 进口大豆港口库存
+name: 豆油期货仓单
+description: 豆油期货仓单
 frequency: daily
 unit: 万吨
 direction: neutral

@@ -1,19 +1,19 @@
-factor_code: Y_Y_SPD_PALM_OIL
+factor_code: Y_STK_COMMERCIAL
 symbol: Y
-category: derived
-name: 豆油与棕榈油价差
-description: 豆油与棕榈油价差
+category: free_data
+name: 豆油商业库存
+description: 豆油商业库存
 frequency: daily
-unit: 元/吨
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- spread
+- inventory
 - Y
 source_confidence: 3
-data_source: Calculated
+data_source: AKShare
 expected_range:
 - -100000.0
 - 100000.0

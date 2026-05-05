@@ -1,16 +1,16 @@
-factor_code: Y_Y_FUT_CBOT_SOY
+factor_code: Y_COST_CNF
 symbol: Y
 category: free_data
-name: CBOT大豆期货收盘价
-description: CBOT大豆期货收盘价
+name: 进口大豆CNF价
+description: 进口大豆CNF价
 frequency: daily
-unit: 美分/蒲式耳
+unit: 美元/吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- price
+- cost
 - Y
 source_confidence: 3
 data_source: AKShare

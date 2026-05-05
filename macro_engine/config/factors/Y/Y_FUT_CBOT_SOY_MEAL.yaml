@@ -1,16 +1,16 @@
-factor_code: Y_Y_INV_MALAYS
+factor_code: Y_FUT_CBOT_SOY_MEAL
 symbol: Y
 category: free_data
-name: 马来西亚棕榈油库存
-description: 马来西亚棕榈油库存
+name: CBOT豆粕主力合约
+description: CBOT豆粕主力合约
 frequency: daily
-unit: 万吨
+unit: 美元/短吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- inventory
+- price
 - Y
 source_confidence: 3
 data_source: AKShare

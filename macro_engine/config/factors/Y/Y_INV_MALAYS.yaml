@@ -1,16 +1,16 @@
-factor_code: Y_Y_POS_NET
+factor_code: Y_INV_MALAYS
 symbol: Y
 category: free_data
-name: 豆油期货净持仓
-description: 豆油期货净持仓
+name: 马来西亚棕榈油库存
+description: 马来西亚棕榈油库存
 frequency: daily
-unit: 手
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- position
+- inventory
 - Y
 source_confidence: 3
 data_source: AKShare
