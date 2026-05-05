@@ -1,15 +1,18 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-SN_娌敗鏈熻揣搴撳瓨.py
-鍥犲瓙: SN_DCE_INV = 娌敗鏈熻揣搴撳瓨
-褰撳墠鐘舵€? [鉁呮甯竇
+SN_沪锡期货库存.py
+因子: SN_DCE_INV = 沪锡期货库存
+当前状态: [✅正常]
+- L1: AKShare futures_inventory_em(symbol='sn')
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')
 this_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(this_dir, '..'))
-from common.db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
+sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 import akshare as ak
 import pandas as pd
 

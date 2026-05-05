@@ -1,14 +1,20 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-SN_娌敗鏈熻揣鎸佷粨閲?py
-鍥犲瓙: SN_FUT_OI = 娌敗鏈熻揣涓诲姏鍚堢害鎸佷粨閲?褰撳墠鐘舵€? [鉁呮甯竇
+SN_沪锡期货持仓量.py
+因子: SN_FUT_OI = 沪锡期货主力合约持仓量
+公式: SN_FUT_OI = SN0主力合约日持仓量（手）
+
+当前状态: [✅正常]
+- L1: AKShare futures_main_sina(symbol="SN0")
+- L4: save_l4_fallback() DB历史最新值回补
+- L5: 不写NULL占位符
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')
 this_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(this_dir, '..'))
-from common.db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
+sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
 import akshare as ak
 import pandas as pd
 
@@ -21,8 +27,8 @@ def fetch():
     df = ak.futures_main_sina(symbol="SN0")
     if df.empty:
         raise ValueError("no data")
-    latest = df.sort_values('鏃ユ湡').iloc[-1]
-    return float(latest['鎸佷粨閲?]), pd.to_datetime(latest['鏃ユ湡']).date()
+    latest = df.sort_values('日期').iloc[-1]
+    return float(latest['持仓量']), pd.to_datetime(latest['日期']).date()
 
 
 def main():
