@@ -1,8 +1,8 @@
-factor_code: PP_PP_STK_POLYMER
+factor_code: PP_STK_WARRANT
 symbol: PP
 category: free_data
-name: 高分子库存
-description: 高分子库存
+name: 聚丙烯仓单库存
+description: 聚丙烯仓单库存
 frequency: daily
 unit: 万吨
 direction: neutral

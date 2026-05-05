@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 PP_聚丙烯袋装比例.py
-因子: PP_PP_STK_BAG_RATE = 聚丙烯袋装比例（%）
+因子: PP_STK_BAG_RATE = 聚丙烯袋装比例（%）
 当前状态: [⛔永久跳过]
 - 原因: 付费订阅(隆众资讯)，无免费数据源
 - 不写占位符，不做L4回补
@@ -13,7 +13,7 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
 from db_utils import ensure_table, get_pit_dates
 
-FCODE = "PP_PP_STK_BAG_RATE"
+FCODE = "PP_STK_BAG_RATE"
 SYM = "PP"
 
 

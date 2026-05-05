@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 PP_CFR中国丙烯到岸价格.py
-因子: PP_PP_SPT_CFR_CHINA = 丙烯CFR中国价格（美元/吨）
+因子: PP_SPT_CFR_CHINA = 丙烯CFR中国价格（美元/吨）
 当前状态: [⛔永久跳过]
 - 原因: 付费订阅(隆众资讯)，无免费数据源
 - 不写占位符，不做L4回补
@@ -13,7 +13,7 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
 from db_utils import ensure_table, get_pit_dates
 
-FCODE = "PP_PP_SPT_CFR_CHINA"
+FCODE = "PP_SPT_CFR_CHINA"
 SYM = "PP"
 
 

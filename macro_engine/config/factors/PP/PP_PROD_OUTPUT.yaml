@@ -1,0 +1,19 @@
+factor_code: PP_PROD_OUTPUT
+symbol: PP
+category: free_data
+name: 聚丙烯产量
+description: 聚丙烯产量
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- supply
+- PP
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

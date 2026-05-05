@@ -1,19 +1,19 @@
-factor_code: PP_PP_SPD_LAM_Copoly
+factor_code: PP_POS_NET
 symbol: PP
-category: derived
-name: 拉丝-共聚价差
-description: 拉丝-共聚价差
+category: free_data
+name: 聚丙烯期货净持仓
+description: 聚丙烯期货净持仓
 frequency: daily
-unit: 元/吨
+unit: 手
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- spread
+- position
 - PP
 source_confidence: 3
-data_source: Calculated
+data_source: AKShare
 expected_range:
 - -100000.0
 - 100000.0

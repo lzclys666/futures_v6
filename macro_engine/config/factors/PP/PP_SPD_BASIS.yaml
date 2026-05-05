@@ -1,19 +1,19 @@
-factor_code: PP_PP_POS_NET
+factor_code: PP_SPD_BASIS
 symbol: PP
-category: free_data
-name: 聚丙烯期货净持仓
-description: 聚丙烯期货净持仓
+category: derived
+name: 聚丙烯期现基差
+description: 聚丙烯期现基差
 frequency: daily
-unit: 手
+unit: 元/吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- position
+- spread
 - PP
 source_confidence: 3
-data_source: AKShare
+data_source: Calculated
 expected_range:
 - -100000.0
 - 100000.0

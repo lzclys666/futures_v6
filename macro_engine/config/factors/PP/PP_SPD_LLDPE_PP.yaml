@@ -1,8 +1,8 @@
-factor_code: PP_PP_SPD_BASIS
+factor_code: PP_SPD_LLDPE_PP
 symbol: PP
 category: derived
-name: 聚丙烯期现基差
-description: 聚丙烯期现基差
+name: 线型低密度聚乙烯-聚丙烯价差
+description: 线型低密度聚乙烯-聚丙烯价差
 frequency: daily
 unit: 元/吨
 direction: neutral

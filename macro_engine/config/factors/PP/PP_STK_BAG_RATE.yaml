@@ -1,8 +1,8 @@
-factor_code: PP_PP_STK_PLANT_RATE
+factor_code: PP_STK_BAG_RATE
 symbol: PP
 category: derived
-name: 聚丙烯装置开工率
-description: 聚丙烯装置开工率
+name: 聚丙烯袋装比例
+description: 聚丙烯袋装比例
 frequency: daily
 unit: '%'
 direction: neutral

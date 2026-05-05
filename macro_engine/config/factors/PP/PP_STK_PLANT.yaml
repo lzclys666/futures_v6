@@ -1,19 +1,19 @@
-factor_code: PP_PP_STK_BAG_RATE
+factor_code: PP_STK_PLANT
 symbol: PP
-category: derived
-name: 聚丙烯袋装比例
-description: 聚丙烯袋装比例
+category: free_data
+name: 聚丙烯石化库存
+description: 聚丙烯石化库存
 frequency: daily
-unit: '%'
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- operation
+- inventory
 - PP
 source_confidence: 3
-data_source: Calculated
+data_source: AKShare
 expected_range:
 - -100000.0
 - 100000.0

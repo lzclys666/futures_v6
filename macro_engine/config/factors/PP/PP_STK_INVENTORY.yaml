@@ -1,8 +1,8 @@
-factor_code: PP_PP_STK_PLANT
+factor_code: PP_STK_INVENTORY
 symbol: PP
 category: free_data
-name: 聚丙烯石化库存
-description: 聚丙烯石化库存
+name: 聚丙烯社会库存
+description: 聚丙烯社会库存
 frequency: daily
 unit: 万吨
 direction: neutral

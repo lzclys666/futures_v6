@@ -1,19 +1,19 @@
-factor_code: PP_PP_STK_WARRANT
+factor_code: PP_SPD_LAM_Copoly
 symbol: PP
-category: free_data
-name: 聚丙烯仓单库存
-description: 聚丙烯仓单库存
+category: derived
+name: 拉丝-共聚价差
+description: 拉丝-共聚价差
 frequency: daily
-unit: 万吨
+unit: 元/吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- inventory
+- spread
 - PP
 source_confidence: 3
-data_source: AKShare
+data_source: Calculated
 expected_range:
 - -100000.0
 - 100000.0

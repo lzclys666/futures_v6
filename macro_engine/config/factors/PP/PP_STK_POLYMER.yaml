@@ -1,16 +1,16 @@
-factor_code: PP_PP_SPT_CFR_CHINA
+factor_code: PP_STK_POLYMER
 symbol: PP
 category: free_data
-name: CFR中国丙烯到岸价格
-description: CFR中国丙烯到岸价格
+name: 高分子库存
+description: 高分子库存
 frequency: daily
-unit: 美元/吨
+unit: 万吨
 direction: neutral
 confidence: 3
 source: AKShare
 calculation: null
 tags:
-- price
+- inventory
 - PP
 source_confidence: 3
 data_source: AKShare

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 PP_聚丙烯期现基差.py
-因子: PP_PP_SPD_BASIS = 聚丙烯期现基差（元/吨）
+因子: PP_SPD_BASIS = 聚丙烯期现基差（元/吨）
 当前状态: [⛔永久跳过]
 - 原因: SHFE现货数据待验证，无可靠免费源
 - 不写占位符，不做L4回补
@@ -13,7 +13,7 @@ this_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
 from db_utils import ensure_table, get_pit_dates
 
-FCODE = "PP_PP_SPD_BASIS"
+FCODE = "PP_SPD_BASIS"
 SYM = "PP"
 
 
