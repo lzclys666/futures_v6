@@ -1,0 +1,10 @@
+factor_code: HC_INV_EM
+name: 热卷库存变化
+category: free_data
+description: 热卷库存日变化量（东方财富）
+data_source: AKShare futures_inventory_em
+source_confidence: 0.9
+expected_range:
+- -50000.0
+- 50000.0
+notes: 库存增减量（吨），来源东方财富

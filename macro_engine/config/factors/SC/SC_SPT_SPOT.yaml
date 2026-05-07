@@ -1,0 +1,19 @@
+factor_code: SC_SPT_SPOT
+symbol: SC
+category: free_data
+name: 原油现货价
+description: 原油现货价
+frequency: daily
+unit: 元/桶
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- spot
+- SC
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- 200.0
+- 1000.0

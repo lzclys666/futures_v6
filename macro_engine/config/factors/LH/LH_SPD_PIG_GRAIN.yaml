@@ -1,0 +1,19 @@
+factor_code: LH_SPD_PIG_GRAIN
+symbol: LH
+category: derived
+name: 猪粮比
+description: 猪粮比价
+frequency: daily
+unit: 倍
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: pig_price / corn_price
+tags:
+- spread
+- LH
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- 3.0
+- 15.0

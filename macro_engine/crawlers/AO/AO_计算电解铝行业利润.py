@@ -7,7 +7,8 @@ AO_计算电解铝行业利润.py
 公式: 利润 = 沪铝期货价格 × 汇率 - 电解铝完全成本
 
 当前状态: [⚠️待修复]
-- L1: AKShare futures_main_sina(symbol="AL") 获取沪铝价格，乘以汇率减去成本
+- L1: AKShare futures_zh_daily_sina(symbol="AL0") 获取沪铝价格，乘以汇率减去成本
+- 修复记录: 2026-05-05 futures_main_sina返回ValueError, 改用futures_zh_daily_sina
 - 电解铝完全成本按行业平均约16000元/吨（含氧化铝、阳极、电费等）
 - 汇率来源: AKShare 或固定值 7.25
 - bounds: [-5000, 10000]元/吨
@@ -36,9 +37,9 @@ AL_FULL_COST = 16000.0
 
 def fetch():
     # L1: AKShare 获取沪铝价格
-    print("[L1] AKShare futures_main_sina AL...")
+    print("[L1] AKShare futures_zh_daily_sina AL0...")
     try:
-        df = ak.futures_main_sina(symbol="AL")
+        df = ak.futures_zh_daily_sina(symbol="AL0")
         if df is not None and len(df) > 0:
             al_price = float(df.iloc[-1]["close"])
             # 简化计算：沪铝价格直接以人民币计价，无需汇率转换

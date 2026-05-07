@@ -3,12 +3,13 @@ from config.paths import MACRO_ENGINE
 import csv
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from vnpy_ctastrategy import CtaTemplate
 from vnpy.trader.constant import Direction, Offset, Status
 from vnpy.trader.object import BarData, TickData
 from vnpy.trader.utility import BarGenerator, ArrayManager
+from services.signal_bridge import EVENT_MACRO_SIGNAL
 
 
 # 品种配置映射表
@@ -56,7 +57,7 @@ class MacroDemoStrategy(CtaTemplate):
     fast_window = 10
     slow_window = 20
     use_macro = True
-    csv_path_str = "str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv"
+    csv_path_str = str(MACRO_ENGINE / "output" / "{symbol}_macro_daily_{date}.csv")
     
     # 风控开关
     enable_stop_loss = True      # 固定止损开关
@@ -98,6 +99,11 @@ class MacroDemoStrategy(CtaTemplate):
         self.lowest_price = 0.0     # 持仓期间最低价（用于移动止损）
 
         self._csv_missing_warned = False
+        self._position_synced = False  # CTP持仓同步标志
+
+        # SignalBridge 事件驱动信号缓存
+        self._latest_signals: dict = {}       # {symbol: event_data_dict}
+        self._signal_last_update: dict = {}   # {symbol: datetime}
 
     def extract_symbol(self, vt_symbol: str) -> str:
         """从vt_symbol提取品种代码"""
@@ -142,6 +148,175 @@ class MacroDemoStrategy(CtaTemplate):
         # 初始化时加载一次（实盘模式用当前日期）
         self.load_macro_signal()
 
+    def on_start(self):
+        """策略启动 - 同步CTP持仓状态 + 注册SignalBridge事件"""
+        self.write_log_safe("[START] 策略启动")
+        self.sync_position_from_ctp()
+
+        # 注册 SignalBridge 宏观信号事件
+        try:
+            if self.cta_engine is not None and hasattr(self.cta_engine, 'event_engine'):
+                self.cta_engine.event_engine.register(
+                    EVENT_MACRO_SIGNAL, self.on_signal_update
+                )
+                self.write_log_safe(f"[START] 已注册 SignalBridge 事件: {EVENT_MACRO_SIGNAL}")
+            else:
+                self.write_log_safe("[START] cta_engine 或 event_engine 不可用，跳过事件注册")
+        except Exception as e:
+            self.write_log_safe(f"[WARNING] SignalBridge 事件注册失败: {e}")
+
+    def sync_position_from_ctp(self):
+        """
+        从CTP查询当前持仓并同步self.pos。
+        
+        策略重启后self.pos重置为0，但CTP账户可能有未平仓合约。
+        此方法在on_start()中调用，从MainEngine的持仓缓存中查询实际持仓。
+        
+        多个查询路径（优先级从高到低）：
+        1. vnpy_bridge.positions（FastAPI桥接器缓存）
+        2. main_engine.positions（VNpy主引擎缓存）
+        """
+        try:
+            if self.cta_engine is None:
+                self.write_log_safe("[SYNC] 测试模式，跳过持仓同步")
+                self._position_synced = True
+                return
+
+            # --- 路径1: vnpy_bridge ---
+            bridge = getattr(self.cta_engine, 'vnpy_bridge', None)
+            if bridge is None:
+                # 尝试通过main_engine获取
+                main_engine = getattr(self.cta_engine, 'main_engine', None)
+                if main_engine:
+                    bridge = getattr(main_engine, 'vnpy_bridge', None)
+
+            if bridge and hasattr(bridge, 'positions'):
+                positions = bridge.positions
+                long_vol = 0
+                short_vol = 0
+                avg_price = 0.0
+                prices = []
+                for key, pos in positions.items():
+                    # 精确匹配或品种前缀匹配（兼容主力连续 vs 具体合约）
+                    if key == self.vt_symbol or key.startswith(self.symbol):
+                        if str(getattr(pos, 'direction', '')) == 'Direction.LONG':
+                            long_vol += pos.volume
+                            if pos.price > 0:
+                                prices.append((pos.volume, pos.price))
+                        elif str(getattr(pos, 'direction', '')) == 'Direction.SHORT':
+                            short_vol += pos.volume
+                            if pos.price > 0:
+                                prices.append((pos.volume, pos.price))
+
+                net_pos = long_vol - short_vol
+                if net_pos != 0:
+                    self.pos = net_pos
+                    # 用成交量加权均价作为开仓价
+                    if prices:
+                        total_vol = sum(v for v, _ in prices)
+                        if total_vol > 0:
+                            self.entry_price = sum(v * p for v, p in prices) / total_vol
+                    self.write_log_safe(f"[SYNC] 恢复持仓: pos={self.pos}, entry_price={self.entry_price:.2f}")
+                else:
+                    self.write_log_safe("[SYNC] CTP无持仓，pos=0")
+                self._position_synced = True
+                return
+
+            # --- 路径2: main_engine.positions ---
+            main_engine = getattr(self.cta_engine, 'main_engine', None)
+            if main_engine and hasattr(main_engine, 'positions'):
+                positions = main_engine.positions
+                long_vol = 0
+                short_vol = 0
+                avg_price = 0.0
+                prices = []
+                for key, pos in positions.items():
+                    if key == self.vt_symbol or key.startswith(self.symbol):
+                        if str(getattr(pos, 'direction', '')) == 'Direction.LONG':
+                            long_vol += pos.volume
+                            if pos.price > 0:
+                                prices.append((pos.volume, pos.price))
+                        elif str(getattr(pos, 'direction', '')) == 'Direction.SHORT':
+                            short_vol += pos.volume
+                            if pos.price > 0:
+                                prices.append((pos.volume, pos.price))
+
+                net_pos = long_vol - short_vol
+                if net_pos != 0:
+                    self.pos = net_pos
+                    if prices:
+                        total_vol = sum(v for v, _ in prices)
+                        if total_vol > 0:
+                            self.entry_price = sum(v * p for v, p in prices) / total_vol
+                    self.write_log_safe(f"[SYNC] 恢复持仓: pos={self.pos}, entry_price={self.entry_price:.2f}")
+                else:
+                    self.write_log_safe("[SYNC] CTP无持仓，pos=0")
+                self._position_synced = True
+                return
+
+            self.write_log_safe("[WARNING] 无法访问持仓数据源，跳过同步")
+            self._position_synced = True  # 不阻止启动
+
+        except Exception as e:
+            self.write_log_safe(f"[ERROR] 持仓同步失败: {e}，使用默认pos=0")
+            self._position_synced = True  # 不阻止启动
+
+    def on_signal_update(self, event):
+        """处理 SignalBridge 推送的宏观信号事件"""
+        try:
+            data = event.data
+            symbol = data.get("symbol", "")
+            direction = data.get("direction", "NEUTRAL")
+            score = data.get("score", 0.0)
+
+            self._latest_signals[symbol] = data
+            self._signal_last_update[symbol] = datetime.now()
+
+            print(f"[SignalBridge] 收到信号更新: {symbol} -> {direction}")
+            self.write_log_safe(
+                f"[SignalBridge] 事件信号: {symbol} -> {direction}, score={score:.4f}"
+            )
+        except Exception as e:
+            self.write_log_safe(f"[ERROR] on_signal_update 处理异常: {e}")
+
+    def _try_apply_event_signal(self) -> bool:
+        """
+        尝试使用事件驱动的信号数据。
+
+        返回 True 表示已成功应用事件信号（跳过 CSV）。
+        返回 False 表示事件信号不可用或已过期，需 fallback 到 CSV。
+
+        有效性规则：
+        - _latest_signals 中有当前品种数据
+        - 最后更新时间在 30 分钟以内
+        """
+        data = self._latest_signals.get(self.symbol)
+        if data is None:
+            return False
+
+        last_update = self._signal_last_update.get(self.symbol)
+        if last_update is None:
+            return False
+
+        # 30 分钟超时检查
+        elapsed = (datetime.now() - last_update).total_seconds()
+        if elapsed > 1800:  # 30 * 60 秒
+            return False
+
+        # 应用事件信号
+        new_dir = data.get("direction", "NEUTRAL")
+        new_score = data.get("score", 0.0)
+        if new_dir != self.macro_direction:
+            self.macro_direction = new_dir
+            self.macro_score = new_score
+            self.write_log_safe(
+                f"[MACRO-Event] {self.symbol} direction updated: {self.macro_direction}, "
+                f"score: {self.macro_score:.2f}"
+            )
+        else:
+            self.macro_score = new_score
+        return True
+
     def on_timer(self):
         self.load_macro_signal()
 
@@ -161,11 +336,34 @@ class MacroDemoStrategy(CtaTemplate):
         csv_path = os.path.normpath(csv_path_str)
         
         if not os.path.exists(csv_path):
-            # 只在实盘模式下记录警告，回测模式下不记录（因为每天都在变）
-            if bar_datetime is None and not self._csv_missing_warned:
-                self.write_log_safe(f"[WARNING] CSV file not found: {csv_path}")
-                self._csv_missing_warned = True
-            return
+            # Fallback: 往前找最近交易日的 CSV（最多 5 天）
+            fallback_date = None
+            if bar_datetime is not None:
+                base_dt = bar_datetime
+            else:
+                base_dt = datetime.now()
+
+            for i in range(1, 6):
+                prev_date = base_dt - timedelta(days=i)
+                # 跳过周末
+                if prev_date.weekday() >= 5:
+                    continue
+                prev_date_str = prev_date.strftime("%Y%m%d")
+                prev_csv = self.csv_path_str.format(symbol=self.symbol, date=prev_date_str)
+                prev_csv = os.path.normpath(prev_csv)
+                if os.path.exists(prev_csv):
+                    csv_path = prev_csv
+                    fallback_date = prev_date_str
+                    break
+
+            if fallback_date is None:
+                if bar_datetime is None and not self._csv_missing_warned:
+                    self.write_log_safe(f"[WARNING] CSV file not found for today or recent trading days: {self.symbol}")
+                    self._csv_missing_warned = True
+                return
+            else:
+                if bar_datetime is None:
+                    self.write_log_safe(f"[INFO] Using fallback CSV from {fallback_date} for {self.symbol}")
 
         try:
             with open(csv_path, 'r', encoding='utf-8-sig') as f:
@@ -198,8 +396,10 @@ class MacroDemoStrategy(CtaTemplate):
         self.bg.update_bar(bar)
 
     def on_1min_bar(self, bar: BarData):
-        # 回测时传入bar时间，实盘时传入None
-        self.load_macro_signal(bar.datetime)
+        # 优先使用事件驱动信号，fallback 到 CSV
+        if not self._try_apply_event_signal():
+            # 回测时传入bar时间，实盘时传入None
+            self.load_macro_signal(bar.datetime)
 
         self.am.update_bar(bar)
         if not self.am.inited:

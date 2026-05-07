@@ -4,7 +4,7 @@
  * @date 2026-04-20
  */
 
-import type { RiskRuleStatus } from './risk'
+import type { RiskRuleStatus, RiskSeverity } from './risk'
 
 // ---------- 信号方向 ----------
 // LONG: compositeScore > 0.15, NEUTRAL: -0.15 ≤ compositeScore ≤ 0.15, SHORT: compositeScore < -0.15
@@ -28,6 +28,20 @@ export interface FactorDetail {
   contribution: number
   /** 因子 IC 值（API 实际字段名：factorIc，非 null） */
   factorIc?: number
+
+  // ---------- 风险状态字段（R1~R12） ----------
+  r1_single_position?: RiskSeverity
+  r2_continuous_profit?: RiskSeverity
+  r3_price_limit?: RiskSeverity
+  r4_total_position?: RiskSeverity
+  r5_stop_loss?: RiskSeverity
+  r6_max_drawdown?: RiskSeverity
+  r7_trading_frequency?: RiskSeverity
+  r8_trading_hours?: RiskSeverity
+  r9_frozen_capital?: RiskSeverity
+  r10_circuit_breaker?: RiskSeverity
+  r11_disposition_effect?: RiskSeverity
+  r12_cancel_limit?: RiskSeverity
 }
 
 // ---------- 单品种信号 ----------
@@ -152,6 +166,10 @@ export interface PortfolioData {
   totalEquity: number
   /** 可用资金 */
   availableCash: number
+  /** 可用资金（新字段名） */
+  availableFunds?: number
+  /** 冻结保证金 */
+  usedMargin?: number
   /** 持仓列表 */
   positions: PositionItem[]
   /** 总持仓比例 % */
@@ -178,7 +196,7 @@ export interface RiskLevelItem {
 export interface RiskStatusData {
   date: string
   overallStatus: 'PASS' | 'WARN' | 'BLOCK'
-  rules: RiskRule[]
+  rules: RiskRuleStatus[]
   triggeredCount: number
   circuitBreaker: boolean
   updatedAt: string

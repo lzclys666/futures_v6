@@ -1,108 +1,93 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""PB_run_all.py - 沪铅数据采集（subprocess模式）"""
-import os, sys, subprocess, datetime, time
+"""
+PB_run_all.py - 铅爬虫总控
+"""
+import subprocess, sys, os, time
+sys.stdout.reconfigure(encoding='utf-8')
 from pathlib import Path
 
-sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-sys.stderr.reconfigure(encoding='utf-8', errors='replace')
-
-CURRENT_DIR = Path(__file__).parent
-LOG_DIR = CURRENT_DIR.parent / 'logs'
+SCRIPT_DIR = Path(__file__).parent
+LOG_DIR = SCRIPT_DIR / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 
-sys.path.insert(0, str(CURRENT_DIR.parent / 'common'))
+sys.path.insert(0, str(SCRIPT_DIR.parent / 'common'))
 from db_utils import get_pit_dates, ensure_table
 
-scripts = [
-    "PB_SMM沪铅现货价格.py",
-    "PB_原生铅与再生铅价差.py",
-    "PB_沪铅期现基差.py",
-    "PB_沪铅期货净持仓.py",
-    "PB_沪铅期货持仓量.py",
-    "PB_沪铅期货收盘价.py",
-    "PB_沪铅期货近远月价差.py",
-    "PB_美元兑人民币汇率.py",
-    "PB_铅TC加工费.py",
-    "PB_铅酸电池用铅占比.py",
-    "PB_铅锭仓单库存.py",
-    "PB_铅锭社会库存.py",
+SCRIPTS = [
+    'PB_沪铅期货收盘价.py',
+    'PB_沪铅期货持仓量.py',
+    'PB_沪铅现货价.py',
+    'PB_SMM沪铅现货价格.py',
+    'PB_沪铅期现基差.py',
+    'PB_沪铅期货近远月价差.py',
+    'PB_沪铅期货净持仓.py',
+    'PB_铅锭仓单库存.py',
+    'PB_期货交易所铅库存.py',
+    'PB_铅锭社会库存.py',
+    'PB_铅酸电池用铅占比.py',
+    'PB_美元兑人民币汇率.py',
+    'PB_原生铅产能利用率.py',
+    'PB_铅TC加工费.py',
+    'PB_原生铅与再生铅价差.py',
+    'PB_铅锭社会库存_东方.py',
+    'PB_铅锭产量.py',
 ]
 
-def run_all():
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--auto", action="store_true")
+    parser.add_argument("--manual", action="store_true")
+    args = parser.parse_args()
+
     pub_date, obs_date = get_pit_dates()
     ensure_table()
-    now = datetime.datetime.now()
-    log_file = LOG_DIR / f"{now.strftime('%Y-%m-%d')}_PB.log"
 
-    print("=" * 50)
-    print(f"PB Data Collection @ {now}")
+    sep = "=" * 50
+    print(sep)
+    print(f"PB @ {time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"pub_date={pub_date} obs_date={obs_date}")
-    print(f"Scripts: {len(scripts)}")
-    print("=" * 50)
+    print(sep)
 
-    success_count = 0
-    failures = []
+    ok, fail, skip = 0, 0, 0
+    for s in SCRIPTS:
+        path = SCRIPT_DIR / s
+        if not path.exists():
+            print(f"  [跳过] {s} 不存在")
+            skip += 1
+            continue
 
-    with open(log_file, "a", encoding="utf-8") as log:
-        log.write(f"\n{'='*50}\nPB Start @ {now}\n{'='*50}\n")
+        print(f"\n>>> {s}...")
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"
+        cmd = [sys.executable, '-X', 'utf8=1', str(path)]
+        if args.auto:
+            cmd.append("--auto")
 
-        for script in scripts:
-            script_path = CURRENT_DIR / script
-            if not script_path.exists():
-                msg = f"[SKIP] {script} not found"
-                print(msg); log.write(f"{msg}\n")
-                failures.append((script, "not found"))
-                continue
+        try:
+            r = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                             encoding='utf-8', errors='replace', timeout=60,
+                             cwd=str(SCRIPT_DIR), env=env)
+            out = r.stdout or ""
+            for line in out.strip().split('\n')[-3:]:
+                if line.strip():
+                    print(f"  {line.strip()[:120]}")
+            if r.returncode == 0:
+                ok += 1
+            else:
+                fail += 1
+        except Exception as e:
+            print(f"  [异常] {e}")
+            fail += 1
+        time.sleep(1)
 
-            print(f">>> {script}...")
-            log.write(f"\n--- {script} @ {datetime.datetime.now()} ---\n")
+    print(sep)
+    total = ok + fail + skip
+    print(f"PB Done {ok+fail+skip}/{total}  OK={ok} FAIL={fail} SKIP={skip}")
+    print(sep)
 
-            env = os.environ.copy()
-            env["PYTHONIOENCODING"] = "utf-8"
-
-            try:
-                result = subprocess.run(
-                    [sys.executable, "-X", "utf8=1", str(script_path), "--auto"],
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    encoding='utf-8',
-                    errors='replace',
-                    timeout=120,
-                    cwd=str(CURRENT_DIR),
-                    env=env
-                )
-
-                log.write(result.stdout if result.stdout else "")
-                if result.stderr:
-                    log.write(f"[stderr] {result.stderr}\n")
-
-                if result.returncode == 0:
-                    success_count += 1
-                    print(f"[OK] {script} done")
-                else:
-                    print(f"[WARN] {script} exit:{result.returncode}")
-                    failures.append((script, f"exit {result.returncode}"))
-
-            except subprocess.TimeoutExpired:
-                msg = f"{script} TIMEOUT"
-                print(f"[WARN] {msg}")
-                failures.append((script, "timeout"))
-            except Exception as e:
-                msg = f"{script} exception: {e}"
-                print(f"[ERR] {msg}")
-                failures.append((script, str(e)))
-
-        duration = (datetime.datetime.now() - now).total_seconds()
-        print(f"\n{'='*50}")
-        print(f"PB Done  {duration:.1f}s  {success_count}/{len(scripts)}")
-        if failures:
-            for n, r in failures:
-                print(f"  - {n}: {r}")
-        else:
-            print("[OK] All done")
-        print(f"{'='*50}")
-        log.write(f"\n[Done] {success_count}/{len(scripts)}\n")
 
 if __name__ == "__main__":
-    run_all()
+    main()

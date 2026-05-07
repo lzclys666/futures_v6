@@ -30,11 +30,12 @@
 
 ## 爬虫脚本
 
-总计：7 个脚本（working 3 / simple 1 / stub 3）
+总计：8 个脚本（working 4 / stub 3 / run_all 1）
 
 - `NI_抓取SHFE仓单.py` ✅
 - `NI_抓取期货持仓量.py` ✅
 - `NI_抓取期货收盘价.py` ✅
+- `NI_抓取持仓排名.py` ✅  *(新增, 2026-05-07)*
 - `NI_run_all.py` 🔧
 - `NI_沪镍期货库存.py` ⏸️（stub）
 - `NI_浙镍期货持仓量.py` ⏸️（stub）

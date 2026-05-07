@@ -49,9 +49,9 @@ def fetch_spot():
 
 def fetch_future():
     """获取AO期货价格"""
-    print("[L1] AKShare futures_main_sina AO 获取期货价...")
+    print("[L1] AKShare futures_zh_daily_sina AO0 获取期货价...")
     try:
-        df = ak.futures_main_sina(symbol="AO")
+        df = ak.futures_zh_daily_sina(symbol="AO0")
         if df is not None and len(df) > 0:
             val = float(df.iloc[-1]["close"])
             print(f"[L1] AO期货={val} 元/吨")

@@ -1,0 +1,20 @@
+﻿factor_code: AO_IMP_ALUMINA
+symbol: AO
+category: free_data
+name: 氧化铝进口量
+description: 中国氧化铝进口量（万吨/月）
+frequency: monthly
+unit: 万吨/月
+direction: neutral
+confidence: 3
+source: null
+calculation: null
+tags:
+- import
+- AO
+source_confidence: 0.0
+data_source: null
+expected_range:
+- 0.0
+- 200.0
+skip_reason: "AKShare macro_china_imports 接口不支持'氧化铝'商品查询，海关数据无免费API"

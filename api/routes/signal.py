@@ -52,10 +52,10 @@ def get_signal_bridge():
                 vnpy_bridge = None
             
             if vnpy_bridge and hasattr(vnpy_bridge, 'event_engine'):
-                _signal_bridge = SignalBridge(vnpy_bridge.event_engine, str(OUTPUT))
+                _signal_bridge = SignalBridge(csv_dir=str(OUTPUT), event_engine=vnpy_bridge.event_engine)
             else:
                 # 无 event_engine 时使用 None（仅文件轮询）
-                _signal_bridge = SignalBridge(None, str(OUTPUT))
+                _signal_bridge = SignalBridge(csv_dir=str(OUTPUT))
         except Exception as e:
             logging.getLogger("signal_api").warning(f"SignalBridge init failed: {e}")
     return _signal_bridge

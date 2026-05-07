@@ -12,17 +12,21 @@ LOG_DIR = CURRENT_DIR.parent / 'logs'
 LOG_DIR.mkdir(exist_ok=True)
 
 scripts = [
+    "PP_聚丙烯期货收盘价.py",
+    "PP_聚丙烯期货持仓量.py",
+    "PP_聚丙烯期货净持仓.py",
+    "PP_聚丙烯期现基差.py",
+    "PP_聚丙烯仓单库存.py",
+    "PP_聚丙烯港口库存.py",
+    "PP_聚丙烯社会库存.py",
+    "PP_聚丙烯石化库存.py",
+    "PP_聚丙烯装置开工率.py",
+    "PP_聚丙烯袋装比例.py",
+    "PP_高分子库存.py",
+    "PP_聚丙烯产量.py",
     "PP_CFR中国丙烯到岸价格.py",
     "PP_拉丝-共聚价差.py",
     "PP_线型低密度聚乙烯-聚丙烯价差.py",
-    "PP_聚丙烯仓单库存.py",
-    "PP_聚丙烯期现基差.py",
-    "PP_聚丙烯期货净持仓.py",
-    "PP_聚丙烯期货持仓量.py",
-    "PP_聚丙烯期货收盘价.py",
-    "PP_聚丙烯港口库存.py",
-    "PP_聚丙烯袋装比例.py",
-    "PP_聚丙烯装置开工率.py",
 ]
 
 def run_all():

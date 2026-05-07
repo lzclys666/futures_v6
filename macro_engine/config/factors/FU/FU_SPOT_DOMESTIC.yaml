@@ -1,0 +1,19 @@
+factor_code: FU_SPOT_DOMESTIC
+symbol: FU
+category: free_data
+name: 燃料油国内现货价
+description: 国内燃料油现货价格
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: Ship&Bunker + Sina
+calculation: null
+tags:
+- spot
+- FU
+source_confidence: 3
+data_source: Ship&Bunker + Sina
+expected_range:
+- 2000.0
+- 8000.0

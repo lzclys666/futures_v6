@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "updated_at": "2026-05-07T11:58:25.331617",
+  "profile": "moderate",
+  "counters": {
+    "R7_consecutive_losses": 0,
+    "R7_consecutive_wins": 0
+  },
+  "timers": {
+    "R10_last_trigger_score": null
+  },
+  "flags": {
+    "R7_is_paused": false
+  }
+}

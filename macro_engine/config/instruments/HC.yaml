@@ -20,3 +20,9 @@ factors:
 - code: HC_INV_SOCIAL
   enabled: true
   weight_override: 0.12
+- code: HC_POS_CONC
+  enabled: true
+  weight_override: 0.10
+- code: HC_INV_EM
+  enabled: true
+  weight_override: 0.10

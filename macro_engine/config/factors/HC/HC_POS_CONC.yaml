@@ -1,0 +1,10 @@
+factor_code: HC_POS_CONC
+name: 热卷持仓集中度
+category: free_data
+description: 热卷前20持仓集中度差（多头CR10 - 空头CR10）
+data_source: AKShare get_shfe_rank_table
+source_confidence: 1.0
+expected_range:
+- -30.0
+- 30.0
+notes: 上期所持仓排名计算，正值=多头集中

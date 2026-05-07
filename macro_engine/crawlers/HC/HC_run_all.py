@@ -17,6 +17,8 @@ LOG_DIR.mkdir(exist_ok=True)
 auto_scripts = [
     "HC_热轧卷板期货收盘价.py",
     "HC_热轧卷板期货持仓量.py",
+    "HC_热卷持仓集中度.py",
+    "HC_热卷库存变化.py",
 ]
 
 manual_scripts = [

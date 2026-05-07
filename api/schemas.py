@@ -22,6 +22,20 @@ class FactorDetail(BaseModel):
     contribution: float = Field(..., alias="contribution")
     factor_ic: Optional[float] = Field(None, alias="factorIc")
 
+    # 12 条风控规则状态（PASS/WARN/BLOCK）
+    r1_single_position: Optional[str] = Field(None, alias="r1SinglePosition")
+    r2_continuous_profit: Optional[str] = Field(None, alias="r2ContinuousProfit")
+    r3_price_limit: Optional[str] = Field(None, alias="r3PriceLimit")
+    r4_total_position: Optional[str] = Field(None, alias="r4TotalPosition")
+    r5_stop_loss: Optional[str] = Field(None, alias="r5StopLoss")
+    r6_max_drawdown: Optional[str] = Field(None, alias="r6MaxDrawdown")
+    r7_trading_frequency: Optional[str] = Field(None, alias="r7TradingFrequency")
+    r8_trading_hours: Optional[str] = Field(None, alias="r8TradingHours")
+    r9_frozen_capital: Optional[str] = Field(None, alias="r9FrozenCapital")
+    r10_circuit_breaker: Optional[str] = Field(None, alias="r10CircuitBreaker")
+    r11_disposition_effect: Optional[str] = Field(None, alias="r11DispositionEffect")
+    r12_cancel_limit: Optional[str] = Field(None, alias="r12CancelLimit")
+
 
 class MacroSignal(BaseModel):
     """单品种宏观信号（字段契约 V1.0：对齐 API 实际响应）"""

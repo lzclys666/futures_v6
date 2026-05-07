@@ -29,8 +29,8 @@ print('[TEST] Getting CtaEngine...')
 cta_engine = main_engine.get_engine('CtaStrategy')
 print('[TEST] CtaEngine type:', type(cta_engine).__name__)
 
-print('[TEST] Loading strategies from macro_engine/strategies...')
-strategy_dir = project_dir / 'macro_engine' / 'strategies'
+print('[TEST] Loading strategies from strategies/...')
+strategy_dir = project_dir / 'strategies'
 cta_engine.load_strategy_class_from_folder(strategy_dir, module_name='macro_engine.strategies')
 
 class_names = cta_engine.get_all_strategy_class_names()

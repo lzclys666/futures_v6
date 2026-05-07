@@ -33,39 +33,39 @@ def fetch_net_position(obs_date):
     # L1: AKShare 交易所排名
     try:
         print("[L1] AKShare get_shfe_rank_table...")
-        df = ak.get_shfe_rank_table(date=obs_date.strftime("%Y%m%d"))
-        if df is not None and len(df) > 0:
-            ao_df = df[df["variety"] == "AO"]
-            if len(ao_df) > 0:
-                cols = ao_df.columns.tolist()
-                # 找多头和空头持仓列
-                long_col = None
-                short_col = None
+        import pandas as pd
+        # 尝试obs_date，如果非交易日则回退
+        for offset in range(0, 7):
+            try_date = obs_date - __import__("datetime").timedelta(days=offset)
+            result = ak.get_shfe_rank_table(date=try_date.strftime("%Y%m%d"))
+            frames = []
+            if isinstance(result, dict):
+                for contract, df in result.items():
+                    if isinstance(df, pd.DataFrame) and "variety" in df.columns:
+                        ao_df = df[df["variety"] == "AO"]
+                        if len(ao_df) > 0:
+                            frames.append(ao_df)
+            elif isinstance(result, pd.DataFrame) and "variety" in result.columns:
+                ao_df = result[result["variety"] == "AO"]
+                if len(ao_df) > 0:
+                    frames.append(ao_df)
+
+            if frames:
+                combined = pd.concat(frames, ignore_index=True)
+                cols = combined.columns.tolist()
+                long_col = short_col = None
                 for c in cols:
                     cl = str(c).lower()
-                    if "long" in cl or "买" in cl or "多" in cl:
+                    if ("long" in cl or "买" in cl or "多" in cl) and "chg" not in cl:
                         long_col = c
-                    elif "short" in cl or "卖" in cl or "空" in cl:
+                    elif ("short" in cl or "卖" in cl or "空" in cl) and "chg" not in cl:
                         short_col = c
                 if long_col and short_col:
-                    long_oi = float(ao_df[long_col].sum())
-                    short_oi = float(ao_df[short_col].sum())
-                    net = long_oi - short_oi
+                    ao_long = float(combined[long_col].sum())
+                    ao_short = float(combined[short_col].sum())
+                    net = ao_long - ao_short
                     if BOUNDS[0] <= net <= BOUNDS[1]:
-                        print(f"[L1] 成功: 净持仓={net:.0f} 手 (多={long_oi:.0f}, 空={short_oi:.0f})")
-                        return net, "akshare", 1.0
-                # 如果没有找到多空列，尝试用成交量列
-                vol_col = None
-                for c in cols:
-                    if "volume" in str(c).lower() or "成交量" in str(c):
-                        vol_col = c
-                        break
-                if vol_col is None and len(cols) > 3:
-                    vol_col = cols[3]
-                if vol_col:
-                    net = float(ao_df[vol_col].sum())
-                    if BOUNDS[0] <= net <= BOUNDS[1]:
-                        print(f"[L1] 成功: {net:.0f} 手")
+                        print(f"[L1] 成功: 净持仓={net:.0f} 手 (多={ao_long:.0f}, 空={ao_short:.0f}, date={try_date})")
                         return net, "akshare", 1.0
     except Exception as e:
         print(f"[L1] 失败: {e}")

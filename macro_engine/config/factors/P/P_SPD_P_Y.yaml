@@ -1,0 +1,10 @@
+factor_code: P_SPD_P_Y
+name: 棕榈豆油价差
+category: derived
+description: 棕榈油/豆油期货主力价差（元/吨）
+data_source: AKShare futures_main_sina
+source_confidence: 1.0
+expected_range:
+- -3000.0
+- 3000.0
+notes: P0收盘价-Y0收盘价

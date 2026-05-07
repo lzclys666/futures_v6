@@ -1,65 +1,95 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-HC_热卷期货净持仓
-因子: HC_POS_NET = 热卷期货净持仓
+HC_热卷期货净持仓.py
+因子: HC_POS_NET = 上期所热卷前20净持仓（手）
 
-公式: 数据采集（无独立计算公式）
+公式: sum(long_open_interest across all HC contracts top 20) - sum(short_open_interest across all HC contracts top 20)
 
-当前状态: [永久跳过]
-- SHFE/DCE接口不支持HC持仓排名
-- 不写占位符（SOP §7）
+当前状态: ✅正常
+- L1: AKShare get_shfe_rank_table(date="YYYYMMDD") — SHFE持仓排名前20
+- L4: save_l4_fallback() DB历史最新值回补
 
-订阅优先级: 无
-替代付费源: 无
+已验证: get_shfe_rank_table(date="20260430") 返回 hc2505/hc2506/hc2507 等多个合约
+净持仓 = -70492手（long=3546102, short=3616594）
 """
-import sys
-import datetime
-from pathlib import Path
-
-# 尝试导入通用模块
-try:
-    sys.path.insert(0, str(Path(__file__).parent.parent / 'common'))
-    from io_win import fix_encoding
-    fix_encoding()
-except ImportError:
-    pass
-
+import sys, os
 sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
+this_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(this_dir, '..', 'common'))
+from db_utils import save_to_db, ensure_table, get_pit_dates, save_l4_fallback
+import akshare as ak
+import pandas as pd
+from datetime import datetime, timedelta
 
-try:
-    from common.db_utils import get_pit_dates
-except ImportError:
-    def get_pit_dates():
-        today = datetime.date.today()
-        dow = today.weekday()
-        if dow == 0:
-            obs = today - datetime.timedelta(days=3)
-        elif dow >= 5:
-            obs = today - datetime.timedelta(days=dow - 4)
-        else:
-            obs = today
-        return today, obs
-
-# 因子参数
-_FACTOR_SYMBOL = "HC"
-_FACTOR_CODE = "HC_POS_NET"
-_FACTOR_NAME = "热卷期货净持仓"
-_FACTOR_REASON = "SHFE/DCE接口不支持HC持仓排名"
+FCODE = "HC_POS_NET"
+SYM = "HC"
+BOUNDS = (-500000, 500000)  # 净持仓合理范围（手）
 
 
-def run(auto=False):
+def fetch(obs_date):
+    """获取热卷前20净持仓，自动回退最多30个自然日找最近交易日"""
+    for backoff in range(30):
+        try_date = obs_date - timedelta(days=backoff)
+        date_str = try_date.strftime('%Y%m%d')
+        try:
+            result = ak.get_shfe_rank_table(date=date_str)
+        except Exception as e:
+            print(f"  [backoff {backoff}] get_shfe_rank_table({date_str}): {e}")
+            continue
+
+        if not (isinstance(result, dict) and result):
+            print(f"  [backoff {backoff}] {date_str}: empty result")
+            continue
+
+        hc_keys = [k for k in result if k.startswith('hc')]
+        if not hc_keys:
+            print(f"  [backoff {backoff}] {date_str}: no HC keys in result")
+            continue
+
+        total_long = 0.0
+        total_short = 0.0
+        for k in hc_keys:
+            df = result[k]
+            if not isinstance(df, pd.DataFrame):
+                print(f"  [backoff {backoff}] {date_str}/{k}: expected DataFrame, got {type(df).__name__}")
+                continue
+            if 'long_open_interest' not in df.columns or 'short_open_interest' not in df.columns:
+                print(f"  [backoff {backoff}] {date_str}/{k}: missing OI columns, got {df.columns.tolist()}")
+                continue
+            long_sum = df['long_open_interest'].sum()
+            short_sum = df['short_open_interest'].sum()
+            total_long += long_sum
+            total_short += short_sum
+
+        net = total_long - total_short
+        print(f"  [backoff {backoff}] {date_str}: long={total_long}, short={total_short}, net={net}")
+        return float(net), try_date
+
+    raise ValueError("get_shfe_rank_table failed after 30 backoff attempts — no HC data on any recent trading day")
+
+
+def main():
+    ensure_table()
     pub_date, obs_date = get_pit_dates()
-    print(f"[跳过] {_FACTOR_CODE} = None (obs={obs_date})")
-    print(f"      原因: {_FACTOR_REASON}")
+    print(f"=== {FCODE} === pub={pub_date} obs={obs_date}")
 
-    if not auto:
-        print('\n提示: 使用 --auto 参数可跳过此确认')
+    # L1: SHFE rank table
+    try:
+        raw_value, actual_obs = fetch(obs_date)
+    except Exception as e:
+        print(f"[L1 FAIL] {FCODE}: {e}")
+        save_l4_fallback(FCODE, SYM, pub_date, obs_date)
+        return
 
-    return 0
+    if not (BOUNDS[0] <= raw_value <= BOUNDS[1]):
+        print(f"[WARN] {FCODE}={raw_value:.0f} out of {BOUNDS}, fall back to L4")
+        save_l4_fallback(FCODE, SYM, pub_date, obs_date)
+        return
+
+    save_to_db(FCODE, SYM, pub_date, actual_obs, raw_value, source_confidence=1.0, source='AKShare_SHFE_rank')
+    print(f"[OK] {FCODE}={raw_value:.0f} obs={actual_obs}")
 
 
 if __name__ == "__main__":
-    auto = "--auto" in sys.argv
-    sys.exit(run(auto=auto))
+    main()

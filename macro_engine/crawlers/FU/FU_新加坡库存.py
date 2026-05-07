@@ -80,32 +80,42 @@ def fetch_sg_inventory_eia():
     return None, None
 
 
+def fetch_sg_inventory_eia():
+    """L1: EIA新加坡燃料油库存"""
+    url = ("https://api.eia.gov/v2/petroleum/pri/snf/data/"
+           "?api_key=DEMO_KEY&frequency=weekly&data[0]=value"
+           "&facets[process][]=KSTK&sort[0][column]=period"
+           "&sort[0][direction]=desc&length=2")
+    data, err = fetch_json(url, timeout=15)
+    if err:
+        print(f"[L1] EIA失败: {err}")
+        return None, None
+    try:
+        rows = data.get("response", {}).get("data", [])
+        if rows:
+            val = float(rows[0]["value"])
+            date_str = rows[0]["period"][:10]
+            print(f"[L1] EIA新加坡库存: {date_str} -> {val}")
+            return val, date_str
+    except Exception as e:
+        print(f"[L1] EIA解析失败: {e}")
+    return None, None
+
+
 def main():
     ensure_table()
     pub_date, obs_date = get_pit_dates()
     print(f"(auto) === {FACTOR_CODE} === obs={obs_date}")
 
-    val, source = None, None
-
-    # L1
-    val, source = fetch_sg_inventory_mpa()
-    if val is not None:
-        if not (BOUNDS[0] <= val <= BOUNDS[1]):
-            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
-        else:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                        source_confidence=1.0, source=f"L1-MPA新加坡:{source}")
-            return
-
-    # L2
+    # L1: MPA官网已404，直接用EIA
     val, source = fetch_sg_inventory_eia()
     if val is not None:
         if not (BOUNDS[0] <= val <= BOUNDS[1]):
             print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
-        else:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                        source_confidence=0.9, source=f"L2-EIA:{source}")
-            return
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
+                    source_confidence=0.9, source=f"L1-EIA:{source}")
+        print(f"[OK] {FACTOR_CODE}={val}")
+        return
 
     # L4: DB fallback
     record = _get_latest_record(FACTOR_CODE, SYMBOL)
@@ -113,10 +123,10 @@ def main():
         raw_value, orig_obs_date, orig_source, orig_conf = record
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value,
                     source_confidence=0.5, source=f"L4回补({orig_source})")
-        print(f"[L4] {FACTOR_CODE}={raw_value} 回补成功")
+        print(f"[L4] {FACTOR_CODE}={raw_value} 回补成功 (obs={orig_obs_date})")
         return
 
-    print(f"[L5] {FACTOR_CODE}: 所有数据源失效，不写占位符")
+    print(f"[L5] {FACTOR_CODE}: 无历史数据可回补")
 
 
 if __name__ == "__main__":

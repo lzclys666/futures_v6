@@ -11,7 +11,7 @@ LOG_DIR.mkdir(exist_ok=True)
 sys.path.insert(0, str(SCRIPT_DIR.parent / 'common'))
 from db_utils import get_pit_dates, ensure_table
 
-SCRIPTS = ['SN_沪锡期货收盘价.py', 'SN_沪锡期货持仓量.py', 'SN_沪锡期货库存.py']
+SCRIPTS = ['SN_沪锡期货收盘价.py', 'SN_沪锡期货持仓量.py', 'SN_沪锡期货库存.py', 'SN_沪锡期货仓单.py', 'SN_沪锡期货净持仓.py', 'SN_沪锡期现基差.py']
 
 
 def main():

@@ -46,8 +46,8 @@ const CircuitBreakerPanel: React.FC = () => {
   const [notes, setNotes] = useState('')
   const [reason, setReason] = useState('')
   const [countdown, setCountdown] = useState<number | null>(null)
-  const pollingRef = useRef<NodeJS.Timeout | null>(null)
-  const countdownRef = useRef<NodeJS.Timeout | null>(null)
+  const pollingRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const countdownRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const totalConfirmSeconds = 30 * 60 // 30分钟确认窗口
 
   // 加载状态

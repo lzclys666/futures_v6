@@ -6,7 +6,7 @@ Risk Engine Core - 风控引擎核心
 
 三层防御架构：
 - Layer 1: 市场系统性风险防御（R10, R5, R6, R8, R3）
-- Layer 2: 账户级风险防御（R2, R7, R11）
+- Layer 2: 账户级风险防御（R2, R7, R11, R12）
 - Layer 3: 交易执行风险防御（R1, R4, R9）
 """
 
@@ -17,7 +17,12 @@ from enum import Enum
 from typing import Dict, List, Optional, Any
 import numpy as np
 import yaml
+import json
+import time as time_mod
+import logging
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 # =============================================================================
@@ -292,14 +297,14 @@ class R8_TradingTimeRule(RiskRule):
     R8: 交易时间检查
     非交易时段禁止下单
     集合竞价期间禁止开仓
+    支持按品种匹配不同夜盘交易时段
     """
     
-    # 交易时段配置（简化版，仅商品期货）
-    TRADING_SESSIONS = [
+    # 日盘交易时段（所有品种统一）
+    DAY_SESSIONS = [
         (time(9, 0), time(10, 15)),   # 上午第一节
         (time(10, 30), time(11, 30)), # 上午第二节
         (time(13, 30), time(15, 0)),  # 下午
-        (time(21, 0), time(23, 0)),   # 夜盘（部分品种）
     ]
     
     # 集合竞价时段
@@ -311,10 +316,66 @@ class R8_TradingTimeRule(RiskRule):
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
         self.enable_night_session = config.get('enable_night_session', True)
-        
+        # 从 risk_rules.yaml 加载夜盘交易时段（支持按品种细分）
+        night_sessions = config.get('night_sessions', [])
+        if not night_sessions:
+            night_sessions = self._load_night_sessions_from_yaml()
+        self.night_sessions = self._build_night_sessions(night_sessions)
+    
+    @staticmethod
+    def _load_night_sessions_from_yaml() -> List[Dict[str, Any]]:
+        """从 config/risk_rules.yaml 加载夜盘交易时段"""
+        try:
+            config_path = Path(__file__).parent.parent.parent / "config" / "risk_rules.yaml"
+            with open(config_path, encoding="utf-8") as f:
+                cfg = yaml.safe_load(f)
+            return cfg.get('trading_sessions', {}).get('night', [])
+        except Exception:
+            return []
+    
+    @staticmethod
+    def _parse_time(time_str: str) -> time:
+        """解析 HH:MM 格式时间字符串"""
+        parts = str(time_str).split(':')
+        return time(int(parts[0]), int(parts[1]))
+    
+    def _build_night_sessions(self, raw_sessions: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """构建夜盘交易时段列表"""
+        result = []
+        for s in raw_sessions:
+            start = self._parse_time(s['start'])
+            end = self._parse_time(s['end'])
+            symbols = s.get('symbols', [])
+            result.append({
+                'start': start,
+                'end': end,
+                'symbols': [sym.upper() for sym in symbols] if symbols else [],
+            })
+        return result
+    
+    def _in_night_session(self, current_time: time, symbol: str) -> bool:
+        """检查当前时间是否在指定品种的夜盘交易时段内"""
+        base_symbol = ''.join(c for c in symbol if c.isalpha()).upper()
+        for session in self.night_sessions:
+            start = session['start']
+            end = session['end']
+            session_symbols = session['symbols']
+            # 有 symbols 字段：仅适用于指定品种；无 symbols：适用于所有品种
+            if session_symbols and base_symbol not in session_symbols:
+                continue
+            # 处理跨午夜（如 21:00-02:30）
+            if end <= start:
+                if current_time >= start or current_time <= end:
+                    return True
+            else:
+                if start <= current_time <= end:
+                    return True
+        return False
+    
     def check(self, order: OrderRequest, context: RiskContext) -> RiskResult:
         now = datetime.now()
         current_time = now.time()
+        symbol = order.symbol
         
         # 检查是否在集合竞价时段
         for start, end in self.AUCTION_SESSIONS:
@@ -326,34 +387,37 @@ class R8_TradingTimeRule(RiskRule):
                         current_time=current_time.strftime('%H:%M:%S')
                     )
                 else:
-                    # 平仓允许
                     return self._create_result(
                         RiskAction.PASS,
                         f"集合竞价期间允许平仓",
                         current_time=current_time.strftime('%H:%M:%S')
                     )
         
-        # 检查是否在交易时段
-        in_trading_hours = False
-        for start, end in self.TRADING_SESSIONS:
+        # 检查日盘时段（所有品种统一）
+        for start, end in self.DAY_SESSIONS:
             if start <= current_time <= end:
-                in_trading_hours = True
-                break
+                return self._create_result(
+                    RiskAction.PASS,
+                    f"日盘交易时段：{current_time.strftime('%H:%M')}",
+                    current_time=current_time.strftime('%H:%M:%S')
+                )
         
-        if not in_trading_hours:
-            return self._create_result(
-                RiskAction.BLOCK,
-                f"非交易时段：{current_time.strftime('%H:%M')}",
-                current_time=current_time.strftime('%H:%M:%S')
-            )
+        # 检查夜盘时段（按品种匹配）
+        if self.enable_night_session and self.night_sessions:
+            if self._in_night_session(current_time, symbol):
+                return self._create_result(
+                    RiskAction.PASS,
+                    f"夜盘交易时段：{current_time.strftime('%H:%M')}，品种{symbol}",
+                    current_time=current_time.strftime('%H:%M:%S'),
+                    symbol=symbol
+                )
         
-        # 检查节假日（简化版，实际需要配置文件）
-        # TODO: 加载交易所休市安排
-        
+        # 不在任何交易时段
         return self._create_result(
-            RiskAction.PASS,
-            f"交易时段：{current_time.strftime('%H:%M')}",
-            current_time=current_time.strftime('%H:%M:%S')
+            RiskAction.BLOCK,
+            f"非交易时段：{current_time.strftime('%H:%M')}，品种{symbol}",
+            current_time=current_time.strftime('%H:%M:%S'),
+            symbol=symbol
         )
 
 
@@ -900,6 +964,60 @@ class R9_CapitalAdequacyRule(RiskRule):
         )
 
 
+class R12_CancelLimitRule(RiskRule):
+    """
+    R12: 撤单次数限制
+    60分钟内撤单次数 >= 阈值（默认10）→ BLOCK
+    预警线：达到阈值 80% → WARN
+    支持 simulate（实时检查）和 precheck（下单前预检）两种模式
+    """
+    
+    def __init__(self, config: Dict[str, Any]):
+        super().__init__(config)
+        self.max_cancel = config.get('max_cancel', 10)  # 60分钟内撤单上限
+        self.window_minutes = config.get('window_minutes', 60)  # 检查窗口（分钟）
+        
+    def check(self, order: OrderRequest, context: RiskContext) -> RiskResult:
+        symbol = order.symbol
+        
+        # 从 context 获取撤单次数（由上层通过 market_data 注入）
+        # 键名约定：cancel_count_60m 或 {symbol}_cancel_count_60m
+        cancel_count = context.market_data.get(
+            f'{symbol}_cancel_count_60m',
+            context.market_data.get('cancel_count_60m', 0)
+        )
+        
+        if cancel_count >= self.max_cancel:
+            return self._create_result(
+                RiskAction.BLOCK,
+                f"撤单次数超限：{symbol} 60分钟内撤单{cancel_count}次 >= 阈值{self.max_cancel}次",
+                symbol=symbol,
+                cancel_count=cancel_count,
+                threshold=self.max_cancel,
+                window_minutes=self.window_minutes
+            )
+        
+        # 预警线：达到阈值的 80%
+        warn_threshold = int(self.max_cancel * 0.8)
+        if cancel_count >= warn_threshold:
+            return self._create_result(
+                RiskAction.WARN,
+                f"撤单次数预警：{symbol} 60分钟内撤单{cancel_count}次，接近阈值{self.max_cancel}次",
+                symbol=symbol,
+                cancel_count=cancel_count,
+                threshold=self.max_cancel,
+                warn_threshold=warn_threshold
+            )
+        
+        return self._create_result(
+            RiskAction.PASS,
+            f"撤单次数正常：{symbol} 60分钟内撤单{cancel_count}次 < 阈值{self.max_cancel}次",
+            symbol=symbol,
+            cancel_count=cancel_count,
+            threshold=self.max_cancel
+        )
+
+
 # ==================== Risk Engine ====================
 
 class RiskEngine:
@@ -919,16 +1037,18 @@ class RiskEngine:
         'R2',   # 单日最大亏损
         'R7',   # 连续亏损次数限制
         'R11',  # 处置效应监控
+        'R12',  # 撤单次数限制
         'R1',   # 单品种持仓限制
         'R4',   # 总保证金占用上限
     ]
     
-    def __init__(self, profile: str = 'moderate'):
+    def __init__(self, profile: str = 'moderate', state_path: str = "config/risk_state.json"):
         """
         初始化风控引擎
         
         Args:
             profile: 风险画像 - conservative/moderate/aggressive
+            state_path: 风控状态持久化文件路径
         """
         self.profile = profile
         self.config = self._load_config(profile)
@@ -936,6 +1056,12 @@ class RiskEngine:
         self.rule_instances = {r.rule_id: r for r in self.rules}
         # 加载统一 YAML 规则定义（Layer + Severity 映射）
         self._rules = self._load_risk_rules()
+        # 状态持久化
+        self._state_path = state_path
+        self._last_save_time: float = 0.0
+        self._save_interval: float = 5.0  # 最小保存间隔（秒）
+        # 自动加载历史状态
+        self.load_state(state_path)
 
     def _load_risk_rules(self) -> List[Dict[str, Any]]:
         """从 risk/rules/risk_rules.yaml 加载规则定义"""
@@ -983,6 +1109,7 @@ class RiskEngine:
             'R2': {'enabled': True, 'limit': 0.025, 'absolute_min': 5000},
             'R7': {'enabled': True, 'base': 5},
             'R11': {'enabled': True, 'drawdown_threshold': 0.50},
+            'R12': {'enabled': True, 'max_cancel': 10, 'window_minutes': 60},
         }
         
         # 根据画像调整
@@ -1028,6 +1155,7 @@ class RiskEngine:
             'R1': R1_PositionLimitRule,
             'R4': R4_TotalMarginRule,
             'R9': R9_CapitalAdequacyRule,
+            'R12': R12_CancelLimitRule,
         }
         
         rules = []
@@ -1067,6 +1195,9 @@ class RiskEngine:
                 # 记录警告，继续检查
                 context.add_warning(result)
         
+        # 每轮风控检查后自动保存状态（频率受限）
+        self._auto_save_state()
+        
         return results
     
     def can_trade(self, order: OrderRequest, context: Optional[RiskContext] = None) -> bool:
@@ -1078,6 +1209,126 @@ class RiskEngine:
         """
         results = self.check_order(order, context)
         return all(r.action != RiskAction.BLOCK for r in results)
+    
+    # ==================== 状态持久化 ====================
+    
+    def save_state(self, path: Optional[str] = None) -> bool:
+        """
+        将风控状态序列化到 JSON 文件。
+        
+        Args:
+            path: 保存路径，默认使用 self._state_path
+            
+        Returns:
+            bool: 是否保存成功
+        """
+        path = path or self._state_path
+        now = time_mod.time()
+        
+        # 频率限制：至少 5 秒间隔
+        if now - self._last_save_time < self._save_interval:
+            return True
+        
+        try:
+            # 收集各规则状态
+            counters = {}
+            timers = {}
+            flags = {}
+            
+            # R7: 连续亏损状态
+            r7 = self.rule_instances.get('R7')
+            if r7 and isinstance(r7, R7_ConsecutiveLossRule):
+                counters['R7_consecutive_losses'] = r7.consecutive_losses
+                counters['R7_consecutive_wins'] = r7.consecutive_wins
+                flags['R7_is_paused'] = r7.is_paused
+            
+            # R10: 宏观熔断状态
+            r10 = self.rule_instances.get('R10')
+            if r10 and isinstance(r10, R10_MacroFuseRule):
+                timers['R10_last_trigger_score'] = r10.last_trigger_score
+            
+            # R12: 撤单计数（从外部注入，这里保存快照）
+            # cancel_count / cancel_timestamps 由上层管理，此处记录版本信息
+            
+            state = {
+                "version": 1,
+                "updated_at": datetime.now().isoformat(),
+                "profile": self.profile,
+                "counters": counters,
+                "timers": timers,
+                "flags": flags,
+            }
+            
+            # 写入文件（原子写：先写临时文件再重命名）
+            save_path = Path(path)
+            save_path.parent.mkdir(parents=True, exist_ok=True)
+            tmp_path = save_path.with_suffix('.tmp')
+            with open(tmp_path, 'w', encoding='utf-8') as f:
+                json.dump(state, f, indent=2, ensure_ascii=False)
+            tmp_path.replace(save_path)
+            
+            self._last_save_time = now
+            return True
+            
+        except Exception as e:
+            logger.warning("风控状态保存失败: %s", e, exc_info=True)
+            return False
+    
+    def load_state(self, path: Optional[str] = None) -> bool:
+        """
+        从 JSON 文件恢复风控状态。
+        
+        Args:
+            path: 加载路径，默认使用 self._state_path
+            
+        Returns:
+            bool: 是否加载成功
+        """
+        path = path or self._state_path
+        state_file = Path(path)
+        
+        if not state_file.exists():
+            return False
+        
+        try:
+            with open(state_file, 'r', encoding='utf-8') as f:
+                state = json.load(f)
+            
+            version = state.get('version', 0)
+            if version != 1:
+                logger.warning("风控状态文件版本不匹配: %s (期望 1)", version)
+                return False
+            
+            counters = state.get('counters', {})
+            timers = state.get('timers', {})
+            flags = state.get('flags', {})
+            
+            # 恢复 R7 状态
+            r7 = self.rule_instances.get('R7')
+            if r7 and isinstance(r7, R7_ConsecutiveLossRule):
+                r7.consecutive_losses = counters.get('R7_consecutive_losses', 0)
+                r7.consecutive_wins = counters.get('R7_consecutive_wins', 0)
+                r7.is_paused = flags.get('R7_is_paused', False)
+            
+            # 恢复 R10 状态
+            r10 = self.rule_instances.get('R10')
+            if r10 and isinstance(r10, R10_MacroFuseRule):
+                r10.last_trigger_score = timers.get('R10_last_trigger_score', None)
+            
+            updated_at = state.get('updated_at', '未知')
+            logger.info("风控状态已恢复 (更新时间: %s)", updated_at)
+            return True
+            
+        except Exception as e:
+            logger.warning("风控状态加载失败: %s", e, exc_info=True)
+            return False
+    
+    def _auto_save_state(self) -> None:
+        """自动保存状态（频率受限，失败不阻断）"""
+        try:
+            self.save_state()
+        except Exception as e:
+            logger.debug("自动保存状态异常: %s", e)
 
 
 # ==================== 测试 ====================

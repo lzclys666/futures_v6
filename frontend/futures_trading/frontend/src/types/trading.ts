@@ -47,6 +47,8 @@ export interface OrderResponse {
   createdAt: string
   updatedAt: string
   message?: string
+  /** 是否成功（可选，兼容旧数据） */
+  success?: boolean
 }
 
 /** 撤单响应 */

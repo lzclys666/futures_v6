@@ -1,0 +1,19 @@
+factor_code: FU_WARRANT
+symbol: FU
+category: free_data
+name: 燃料油仓单
+description: 上期所燃料油期货仓单
+frequency: daily
+unit: 吨
+direction: negative
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- warrant
+- FU
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- 0.0
+- 500000.0

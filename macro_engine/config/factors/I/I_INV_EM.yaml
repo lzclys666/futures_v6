@@ -1,0 +1,10 @@
+factor_code: I_INV_EM
+name: 铁矿石库存变化
+category: free_data
+description: 铁矿石港口库存日变化量（东方财富）
+data_source: AKShare futures_inventory_em
+source_confidence: 0.9
+expected_range:
+- -5000.0
+- 5000.0
+notes: 库存增减量（万吨），来源东方财富

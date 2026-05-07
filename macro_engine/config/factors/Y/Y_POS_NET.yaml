@@ -17,3 +17,4 @@ data_source: AKShare
 expected_range:
 - -100000.0
 - 100000.0
+skip_reason: DCE净持仓因内网无法部署浏览器环境而暂不获取（2026-05-06 PM决定）

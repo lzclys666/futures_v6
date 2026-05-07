@@ -51,6 +51,11 @@ def save_to_db(factor_code, symbol, pub_date, obs_date, raw_value, source_confid
     source: 数据来源描述（如 'akshare' '海关总署' 'Mysteel(年费)'）
     返回: True 写入成功, False 跳过写入（已有更高置信度记录）
     """
+    # PIT 合规全局检查：obs_date 必须早于 pub_date
+    if str(obs_date) == str(pub_date):
+        print(f"[PIT] 拒绝写入: {factor_code} obs_date=pub_date={obs_date} (PIT违规)")
+        return False
+
     # 豁免逻辑：source_confidence=0.0 时跳过置信度保护，直接写入
     if source_confidence == 0.0:
         print(f"[豁免] source_confidence=0.0，跳过置信度保护，直接写入")
@@ -218,9 +223,23 @@ def save_l4_fallback(factor_code, symbol, pub_date, today_obs_date,
     if orig_obs_date == today_obs_date:
         # 今日已有数据，无需回补
         return False
+    # PIT 合规：obs_date 必须早于 pub_date
+    if str(orig_obs_date) == str(pub_date):
+        print(f"[L4] {factor_code} 拒绝写入: obs_date=pub_date={orig_obs_date} (PIT违规)")
+        return False
+    # 不嵌套L4前缀：如果原始source已经是L4回补，提取最内层
+    import re
+    clean_source = orig_source
+    while clean_source and "L4回补(" in clean_source and clean_source.rstrip().endswith(")"):
+        match = re.search(r'L4回补\((.+)\)\s*$', clean_source)
+        if match:
+            clean_source = match.group(1)
+        else:
+            break
+    new_source = f"L4回补:{clean_source}"
     save_to_db(factor_code, symbol, str(pub_date), orig_obs_date,
                 raw_value, source_confidence=0.5,
-                source=f"L4回补({orig_source})")
+                source=new_source)
     print(f"[L4] {factor_code}={raw_value} obs={orig_obs_date} (原始数据){extra_msg}")
     return True
 
@@ -251,8 +270,9 @@ def get_pit_dates(freq="日频"):
     today = datetime.date.today()
     dow = today.weekday()
 
+    # PIT 合规: obs_date 必须 < pub_date（观测日期早于发布日期）
     # 周六(5)回退到周五，周日(6)/周一(0)回退到上周五
-    # 周一=0: 上周五 obs_date（因为周五夜盘后到周一开盘之间无新数据）
+    # 周二~周五: obs_date = yesterday（今日采集的是昨日数据）
     if dow == 6:
         obs_date = today - datetime.timedelta(days=2)   # 周日→周五
     elif dow == 5:
@@ -260,7 +280,7 @@ def get_pit_dates(freq="日频"):
     elif dow == 0:
         obs_date = today - datetime.timedelta(days=3)   # 周一→上周五
     else:
-        obs_date = today
+        obs_date = today - datetime.timedelta(days=1)   # 工作日→昨日
 
     pub_date = today
     return pub_date, obs_date

@@ -33,10 +33,23 @@ print("  CSV 行数: {}".format(len(ratio_df)))
 
 # 3. 写入 pit_factor_observations
 print("=== 2. 写入 pit_factor_observations ===")
+
+# 获取交易日历（用于计算 pub_date = 下一个交易日）
+trading_days = pd.read_sql(
+    "SELECT DISTINCT obs_date FROM pit_factor_observations WHERE factor_code='CU_FUT_CLOSE' ORDER BY obs_date",
+    conn
+)['obs_date'].tolist()
+
 obs_rows = []
 for _, row in ratio_df.iterrows():
     obs_date_str = row['date'].strftime('%Y-%m-%d')
-    pub_date_str = obs_date_str  # ratio 当日收盘后即计算，pub_date=obs_date
+    # PIT 合规：pub_date = 下一个交易日（数据当日收盘后计算，次日可用）
+    try:
+        idx = trading_days.index(obs_date_str)
+        pub_date_str = trading_days[idx + 1] if idx + 1 < len(trading_days) else obs_date_str
+    except ValueError:
+        from datetime import timedelta
+        pub_date_str = (row['date'] + timedelta(days=1)).strftime('%Y-%m-%d')
     obs_rows.append((
         'CU_AL_ratio',
         'CU',                 # symbol: 第一个品种

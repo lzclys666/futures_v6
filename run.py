@@ -9,6 +9,7 @@ import os
 import json
 import shutil
 import sqlite3
+import argparse
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, Any, List
@@ -283,119 +284,257 @@ class AuditService:
             conn.execute("DELETE FROM event_queue WHERE created_at < ?", (event_cut,))
             conn.execute("VACUUM")
 
-# ==================== 主引擎初始化 ====================
-event_engine = EventEngine()
-main_engine = MainEngine(event_engine)
+# ==================== 命令行参数解析 ====================
+def parse_args():
+    parser = argparse.ArgumentParser(description="Futures V6 Trading System")
+    parser.add_argument("--api-only", action="store_true",
+                        help="仅启动 API 服务（无 CTP，纯数据/信号服务）")
+    parser.add_argument("--headless", action="store_true",
+                        help="无头模式（策略 + CTP，无 API）")
+    parser.add_argument("--symbol", type=str, default=None,
+                        help="指定交易品种（默认全部）")
+    parser.add_argument("--no-macro", action="store_true",
+                        help="不加载宏观信号")
+    return parser.parse_args()
 
-# 数据适配器链
-data_chain = DataAdapterChain(event_engine, main_engine)
-print(f"数据适配器链已初始化，当前数据源：{data_chain.get_current_source()}")
 
-# 审计服务
-audit_svc = AuditService(event_engine)
-main_engine.audit_service = audit_svc
-print("审计服务已启动并挂载到主引擎")
+def init_engine(args):
+    """初始化交易引擎（CTP + 策略 + 数据链路）
 
-# VNpyBridge（FastAPI 桥接器）
-from services.vnpy_bridge import VNpyBridge
-vnpy_bridge = VNpyBridge()
-main_engine.vnpy_bridge = vnpy_bridge
-print("VNpyBridge 已初始化")
+    提取自 main() 默认模式的初始化代码，供默认模式和 --headless 共用。
+    """
+    global event_engine, main_engine, data_chain, audit_svc, vnpy_bridge, signal_bridge
 
-# SignalBridge（宏观信号事件桥接器）
-from services.signal_bridge import SignalBridge
-signal_bridge = SignalBridge(event_engine, csv_dir=os.path.join(project_dir, "macro_engine", "output"))
-signal_bridge.start()
-main_engine.signal_bridge = signal_bridge
-print("SignalBridge 已启动")
+    # ==================== 主引擎初始化 ====================
+    event_engine = EventEngine()
+    main_engine = MainEngine(event_engine)
 
-# 添加网关和应用
-main_engine.add_gateway(CtpGateway)
+    # 数据适配器链
+    data_chain = DataAdapterChain(event_engine, main_engine)
+    print(f"数据适配器链已初始化，当前数据源：{data_chain.get_current_source()}")
 
-# ==================== CTP SimNow 连接配置化 ====================
-# 账号配置（可写入 .env 或 config 文件，这里硬编码方便调试）
-# 注意: CtpGateway 期望中文 key: 用户名/密码/经纪商代码/交易服务器/行情服务器/产品名称/授权码
-CTP_USER_ID     = os.environ.get("VNPY_CTP_USER_ID", "PLEASE_SET_ENV")
-CTP_PASSWORD    = os.environ.get("VNPY_CTP_PASSWORD", "PLEASE_SET_ENV")
-CTP_BROKER_ID   = os.environ.get("VNPY_CTP_BROKER_ID", "9999")
-CTP_TD_SERVER   = os.environ.get("VNPY_CTP_TD_SERVER", "182.254.243.31:30001")   # 交易服务器
-CTP_MD_SERVER   = os.environ.get("VNPY_CTP_MD_SERVER", "182.254.243.31:30011")   # 行情服务器
-CTP_APP_ID      = os.environ.get("VNPY_CTP_APP_ID", "simnow_client_test")        # 产品名称
-CTP_AUTH_CODE   = os.environ.get("VNPY_CTP_AUTH_CODE", "0000000000000000")        # 授权编码
+    # 审计服务
+    audit_svc = AuditService(event_engine)
+    main_engine.audit_service = audit_svc
+    print("审计服务已启动并挂载到主引擎")
 
-try:
-    gw = main_engine.get_gateway("CTP")
-    gw.connect({
-        "用户名": CTP_USER_ID,
-        "密码": CTP_PASSWORD,
-        "经纪商代码": CTP_BROKER_ID,
-        "交易服务器": CTP_TD_SERVER,
-        "行情服务器": CTP_MD_SERVER,
-        "产品名称": CTP_APP_ID,
-        "授权编码": CTP_AUTH_CODE,
-        "环境": "仿真",
-    })
-    print(f"[CTP] SimNow 连接: user={CTP_USER_ID}, broker={CTP_BROKER_ID}, "
-          f"td={CTP_TD_SERVER}, md={CTP_MD_SERVER}")
-except Exception as e:
-    print(f"[CTP] 连接失败: {e}")
+    # VNpyBridge（FastAPI 桥接器）
+    from services.vnpy_bridge import VNpyBridge, set_vnpy_bridge as _set_bridge
+    vnpy_bridge = VNpyBridge()
+    main_engine.vnpy_bridge = vnpy_bridge
+    _set_bridge(vnpy_bridge)
+    print("VNpyBridge 已初始化")
 
-main_engine.add_app(CtaStrategyApp)
-# main_engine.add_app(WebTraderApp)  # P0-fix: 未安装，已注释
-main_engine.add_app(DataManagerApp)
-main_engine.add_app(CtaBacktesterApp)
-main_engine.add_app(MacroRiskApp)
-print("[App] MacroRiskApp 已加载")
+    # SignalBridge（宏观信号事件桥接器）
+    from services.signal_bridge import SignalBridge
+    signal_bridge = SignalBridge(csv_dir=os.path.join(project_dir, "macro_engine", "output"), event_engine=event_engine)
+    signal_bridge.start()
+    main_engine.signal_bridge = signal_bridge
+    print("SignalBridge 已启动")
 
-main_engine.init_engines()
+    # 添加网关和应用
+    main_engine.add_gateway(CtpGateway)
 
-# ==================== 自动加载策略 ====================
-try:
-    cta_engine = main_engine.get_engine("CtaStrategy")
-    if cta_engine:
+    # ==================== CTP 连接配置（config/ctp.json + 环境变量 fallback） ====================
+    ctp_config = {}
+    ctp_config_path = os.path.join(project_dir, "config", "ctp.json")
+    if os.path.exists(ctp_config_path):
+        with open(ctp_config_path, "r", encoding="utf-8") as f:
+            ctp_config = json.load(f)
+        print(f"[CTP] 已加载配置: {ctp_config_path}")
+    else:
+        print(f"[CTP] 配置文件不存在，使用环境变量: {ctp_config_path}")
+
+    def _ctp_val(key, env_key, default):
+        """config/ctp.json 优先，环境变量其次，默认值兜底"""
+        val = ctp_config.get(key, "")
+        if val and not val.startswith("$"):
+            return val
+        return os.environ.get(env_key, default)
+
+    CTP_USER_ID     = _ctp_val("user_id",    "VNPY_CTP_USER_ID",    "PLEASE_SET_ENV")
+    CTP_PASSWORD    = _ctp_val("password",   "VNPY_CTP_PASSWORD",   "PLEASE_SET_ENV")
+    CTP_BROKER_ID   = _ctp_val("broker_id",  "VNPY_CTP_BROKER_ID",  "9999")
+    CTP_TD_SERVER   = _ctp_val("td_server",  "VNPY_CTP_TD_SERVER",  "182.254.243.31:30001")
+    CTP_MD_SERVER   = _ctp_val("md_server",  "VNPY_CTP_MD_SERVER",  "182.254.243.31:30011")
+    CTP_APP_ID      = _ctp_val("app_id",     "VNPY_CTP_APP_ID",     "simnow_client_test")
+    CTP_AUTH_CODE    = _ctp_val("auth_code",  "VNPY_CTP_AUTH_CODE",  "0000000000000000")
+
+    try:
+        gw = main_engine.get_gateway("CTP")
+        gw.connect({
+            "用户名": CTP_USER_ID,
+            "密码": CTP_PASSWORD,
+            "经纪商代码": CTP_BROKER_ID,
+            "交易服务器": CTP_TD_SERVER,
+            "行情服务器": CTP_MD_SERVER,
+            "产品名称": CTP_APP_ID,
+            "授权编码": CTP_AUTH_CODE,
+            "环境": "仿真",
+        })
+        print(f"[CTP] SimNow 连接: user={CTP_USER_ID}, broker={CTP_BROKER_ID}, "
+              f"td={CTP_TD_SERVER}, md={CTP_MD_SERVER}")
+    except Exception as e:
+        print(f"[CTP] 连接失败: {e}")
+
+    main_engine.add_app(CtaStrategyApp)
+    main_engine.add_app(DataManagerApp)
+    main_engine.add_app(CtaBacktesterApp)
+    main_engine.add_app(MacroRiskApp)
+    print("[App] MacroRiskApp 已加载")
+
+    main_engine.init_engines()
+
+    # ==================== 自动加载策略（StrategyRegistry） ====================
+    try:
+        from core.strategy_registry import init_registry
         strategy_dir = Path(project_dir) / "strategies"
-        if strategy_dir.exists():
-            cta_engine.load_strategy_class_from_folder(strategy_dir, module_name="macro_engine.strategies")
+        bindings_path = Path(project_dir) / "config" / "strategy_bindings.yaml"
+        registry = init_registry(
+            strategy_dir=strategy_dir,
+            bindings_path=bindings_path,
+            project_dir=Path(project_dir),
+        )
+        cta_engine = main_engine.get_engine("CtaStrategy")
+        if cta_engine:
+            # 通过注册中心加载策略类
+            for class_name, info in registry.get_all_strategies().items():
+                try:
+                    cta_engine.add_strategy_class(info.cls)
+                except Exception:
+                    pass
             class_names = cta_engine.get_all_strategy_class_names()
             print(f"[策略] 已加载 {len(class_names)} 个策略类: {class_names}")
+            # 校验绑定
+            binding_errors = registry.validate_bindings()
+            for err in binding_errors:
+                print(f"[策略] WARNING: {err}")
+            enabled = registry.get_enabled_bindings()
+            print(f"[策略] 品种绑定: {len(enabled)} 个启用 / {len(registry.get_bindings())} 个总计")
         else:
-            print(f"[策略] 策略目录不存在: {strategy_dir}")
-    else:
-        print("[策略] CtaEngine 未找到，跳过策略加载")
-except Exception as e:
-    print(f"[策略] 自动加载策略失败: {e}")
+            print("[策略] CtaEngine 未找到，跳过策略加载")
+    except Exception as e:
+        print(f"[策略] 自动加载策略失败: {e}")
 
-# ==================== 启动前注册桥接器到 API ====================
-try:
-    import api.macro_api_server as api_server
-    api_server.set_vnpy_bridge(vnpy_bridge)
-    print("VNpyBridge 已注册到 FastAPI")
-except Exception as e:
-    print(f"VNpyBridge 注册到 FastAPI 失败: {e}")
-
-# ==================== 启动模式判断 ====================
-# 强制无头模式：服务器无图形界面
-headless = True
-print("[模式] 无头模式启动（不加载GUI）")
-
-# ==================== 启动 GUI ====================
-if __name__ == "__main__" and not headless:
-    print("=" * 50)
-    print(f"VNPY 配置目录: {get_folder_path('.vntrader')}")
-    print("=" * 50)
-
-    from vnpy.trader.ui import create_qapp, MainWindow
-    qapp = create_qapp()
-    main_window = MainWindow(main_engine, event_engine)
-    main_window.show()
-    qapp.exec()
-else:
-    print("[模式] 引擎已启动，无头模式运行中...")
-    import time
+    # ==================== 启动前注册桥接器到 API ====================
     try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        print("[退出] 收到中断信号，正在关闭...")
-        main_engine.close()
-        event_engine.stop()
+        import api.macro_api_server as api_server
+        api_server.set_vnpy_bridge(vnpy_bridge)
+        print("VNpyBridge 已注册到 FastAPI")
+    except Exception as e:
+        print(f"VNpyBridge 注册到 FastAPI 失败: {e}")
+
+    # ==================== 对账快照启动恢复 ====================
+    try:
+        from services.reconciliation_engine import get_reconciliation_engine
+        recon = get_reconciliation_engine()
+        mode = recon.check_recovery_mode()
+        if mode == "RECOVERY_NEEDED":
+            print("[对账] 检测到重启恢复模式，从最近快照恢复持仓...")
+            from datetime import date
+            yesterday = (date.today()).isoformat()
+            recovered = recon.recover_positions_from_snapshot(yesterday, bridge=vnpy_bridge)
+            print(f"[对账] 已从快照恢复 {recovered} 条持仓")
+        else:
+            print("[对账] 快照状态正常，无需恢复")
+    except Exception as e:
+        print(f"[对账] 启动恢复检查失败（不影响交易）: {e}")
+
+    return main_engine
+
+
+def main():
+    args = parse_args()
+
+    # 模式互斥检查
+    modes = sum([args.api_only, args.headless])
+    if modes > 1:
+        print("ERROR: --api-only 和 --headless 不能同时使用")
+        sys.exit(1)
+
+    if args.api_only:
+        # === API-only 模式：仅启动 FastAPI 服务（无 CTP） ===
+        print("[INFO] API-only 模式 — 仅启动 FastAPI 服务（无 CTP）")
+        try:
+            import uvicorn
+        except ImportError:
+            print("[ERROR] uvicorn 未安装，请执行: pip install uvicorn")
+            sys.exit(1)
+        from api.macro_api_server import app
+        # API-only 模式：对账引擎已由 FastAPI startup 事件初始化，此处仅记录恢复状态
+        try:
+            from services.reconciliation_engine import get_reconciliation_engine
+            recon = get_reconciliation_engine()
+            mode = recon.check_recovery_mode()
+            if mode == "RECOVERY_NEEDED":
+                print("[对账] API模式: 检测到重启恢复需求，详见日志")
+            else:
+                print("[对账] API模式: 快照状态正常")
+        except Exception as e:
+            print(f"[对账] API模式恢复检查失败: {e}")
+        uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
+
+    elif args.headless:
+        # === Headless 模式：引擎 + CTP，无 API ===
+        print("[INFO] Headless 模式 — 策略 + CTP，无 API")
+        engine = init_engine(args)
+        print("[INFO] Headless 模式运行中，按 Ctrl+C 退出")
+        import time
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            print("[退出] 收到中断信号，正在关闭...")
+            try:
+                from services.reconciliation_engine import get_reconciliation_engine
+                recon = get_reconciliation_engine()
+                cnt = recon.trigger_daily_snapshots(
+                    bridge=engine.vnpy_bridge if hasattr(engine, 'vnpy_bridge') else None,
+                    snapshot_type="EOD")
+                print(f"[对账] 日终快照已写入 {cnt} 条")
+            except Exception as e:
+                print(f"[对账] 日终快照失败: {e}")
+            engine.close()
+            event_engine.stop()
+
+    else:
+        # === 默认模式：引擎 + CTP + GUI/无头循环 ===
+        engine = init_engine(args)
+
+        # 强制无头模式：服务器无图形界面
+        headless = True
+        print("[模式] 无头模式启动（不加载GUI）")
+
+        if __name__ == "__main__" and not headless:
+            print("=" * 50)
+            print(f"VNPY 配置目录: {get_folder_path('.vntrader')}")
+            print("=" * 50)
+
+            from vnpy.trader.ui import create_qapp, MainWindow
+            qapp = create_qapp()
+            main_window = MainWindow(engine, event_engine)
+            main_window.show()
+            qapp.exec()
+        else:
+            print("[模式] 引擎已启动，无头模式运行中...")
+            import time
+            try:
+                while True:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                print("[退出] 收到中断信号，正在关闭...")
+                try:
+                    from services.reconciliation_engine import get_reconciliation_engine
+                    recon = get_reconciliation_engine()
+                    cnt = recon.trigger_daily_snapshots(
+                        bridge=engine.vnpy_bridge if hasattr(engine, 'vnpy_bridge') else None,
+                        snapshot_type="EOD")
+                    print(f"[对账] 日终快照已写入 {cnt} 条")
+                except Exception as e:
+                    print(f"[对账] 日终快照失败: {e}")
+                engine.close()
+                event_engine.stop()
+
+
+if __name__ == "__main__":
+    main()

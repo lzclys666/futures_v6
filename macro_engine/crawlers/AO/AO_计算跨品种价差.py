@@ -7,8 +7,9 @@ AO_计算跨品种价差.py
 公式: 价差 = 沪铝主力价格 - 氧化铝主力价格
 
 当前状态: [✅正常]
-- L1: AKShare futures_main_sina（免费权威）
+- L1: AKShare futures_zh_daily_sina（免费权威）
 - L2: 新浪 nf_AL0/nf_AO0 实时行情（免费聚合）
+- 修复记录: 2026-05-05 futures_main_sina返回ValueError, 改用futures_zh_daily_sina
 - bounds: [5000, 25000]元/吨（铝价远高于氧化铝价）
 - 注: 价差=AL价格-AO价格
 
@@ -32,9 +33,9 @@ BOUNDS = (5_000, 25_000)
 def fetch_spread():
     # L1: AKShare（免费权威）
     try:
-        print("[L1] AKShare futures_main_sina AL & AO...")
-        df_al = ak.futures_main_sina(symbol="AL")
-        df_ao = ak.futures_main_sina(symbol="AO")
+        print("[L1] AKShare futures_zh_daily_sina AL0 & AO0...")
+        df_al = ak.futures_zh_daily_sina(symbol="AL0")
+        df_ao = ak.futures_zh_daily_sina(symbol="AO0")
         if df_al is not None and df_ao is not None:
             p_al = float(df_al.iloc[-1]["close"])
             p_ao = float(df_ao.iloc[-1]["close"])

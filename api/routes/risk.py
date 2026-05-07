@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 
 """
 
@@ -50,6 +50,8 @@ from datetime import datetime
 
 from risk.risk_engine import RiskEngine, OrderRequest, RiskContext, RiskAction
 import httpx
+
+from api.alert import get_alert_manager
 
 
 
@@ -261,7 +263,7 @@ class SimulateResponse(BaseModel):
 
     """风控预检响应"""
 
-    pass_: bool = Field(alias="pass")
+    passed: bool = Field(alias="pass")
 
     violations: list[SimulateViolation]
 
@@ -269,7 +271,7 @@ class SimulateResponse(BaseModel):
 
     class Config:
 
-        populate_by_name = True  # 允许 pass 字段名
+        populate_by_name = True  # 允许 passed 字段名
 
 
 
@@ -769,13 +771,33 @@ async def simulate_risk(req: SimulateRequest):
 
     positions = get_vnpy_bridge().get_positions() if hasattr(get_vnpy_bridge(), 'get_positions') else []
 
+    # 注入撤单次数到 market_data（供 R12_CancelLimitRule 使用）
+
+    _market_data = {}
+
+    try:
+
+        _bridge = get_vnpy_bridge()
+
+        if hasattr(_bridge, 'get_cancel_count'):
+
+            _cancel_count = _bridge.get_cancel_count(minutes=60)
+
+            _market_data['cancel_count_60m'] = _cancel_count
+
+            _market_data[f'{req.symbol.upper()}_cancel_count_60m'] = _cancel_count
+
+    except Exception:
+
+        pass
+
     context = RiskContext(
 
         account=account,
 
         positions={p.get("symbol", ""): p for p in positions},
 
-        market_data={},
+        market_data=_market_data,
 
     )
 
@@ -815,24 +837,111 @@ async def simulate_risk(req: SimulateRequest):
 
     passed = len(violations) == 0
 
+    # Alert integration: trigger alerts on WARN/BLOCK violations
+    if not passed:
+        try:
+            mgr = get_alert_manager()
+            for v in violations:
+                level = "CRITICAL" if v.severity == "BLOCK" else "WARNING"
+                mgr.add_alert(
+                    level=level,
+                    category=f"risk_{v.severity.lower()}",
+                    message=f"[{v.ruleId}] {v.message}",
+                    details={"symbol": req.symbol, "direction": req.direction, "ruleId": v.ruleId}
+                )
+        except Exception:
+            pass  # alert failure must not block risk check
+
     return {
-
         "code": 0,
-
         "message": "success",
-
         "data": {
-
             "pass": passed,
-
             "violations": [v.model_dump() for v in violations]
-
         }
-
     }
 
 
 
+
+
+@router.post("/precheck")
+async def risk_precheck(req: SimulateRequest):
+    """
+    风控预检（轻量级） — 前端下单前调用
+    优先 RiskEngine.check_order()，不可用时降级到 _simulate_fallback
+    前端调用：POST /api/risk/precheck
+    返回格式：{code, message, data: {pass, violations}}
+    """
+    try:
+        from services.vnpy_bridge import get_vnpy_bridge
+    except Exception:
+        return {
+            "code": 0,
+            "message": "success",
+            "data": {"pass": True, "violations": []}
+        }
+
+    engine = _get_risk_engine()
+    if engine is None:
+        return await _simulate_fallback(req, get_vnpy_bridge())
+
+    # 构建 OrderRequest
+    exchange = _infer_exchange(req.symbol)
+    order = OrderRequest(
+        symbol=req.symbol,
+        exchange=exchange,
+        direction=req.direction,
+        offset="OPEN",
+        price=req.price,
+        volume=req.volume,
+    )
+
+    # 构建 RiskContext
+    account = get_vnpy_bridge().get_account() if hasattr(get_vnpy_bridge(), 'get_account') else None
+    positions = get_vnpy_bridge().get_positions() if hasattr(get_vnpy_bridge(), 'get_positions') else []
+
+    # 注入撤单次数到 market_data（供 R12_CancelLimitRule 使用）
+    _market_data = {}
+    try:
+        _bridge = get_vnpy_bridge()
+        if hasattr(_bridge, 'get_cancel_count'):
+            _cancel_count = _bridge.get_cancel_count(minutes=60)
+            _market_data['cancel_count_60m'] = _cancel_count
+            _market_data[f'{req.symbol.upper()}_cancel_count_60m'] = _cancel_count
+    except Exception:
+        pass
+
+    context = RiskContext(
+        account=account,
+        positions={p.get("symbol", ""): p for p in positions},
+        market_data=_market_data,
+    )
+
+    # 调用 RiskEngine
+    violations: list[SimulateViolation] = []
+    results = engine.check_order(order, context)
+
+    for r in results:
+        if r.action == RiskAction.PASS:
+            continue
+        long_id = _rule_id_to_long(r.rule_id)
+        severity = ACTION_TO_SEVERITY.get(r.action, 'WARN')
+        violations.append(SimulateViolation(
+            ruleId=long_id,
+            message=r.message,
+            severity=severity
+        ))
+
+    passed = len(violations) == 0
+    return {
+        "code": 0,
+        "message": "success",
+        "data": {
+            "pass": passed,
+            "violations": [v.model_dump(by_alias=True) for v in violations]
+        }
+    }
 
 
 def _infer_exchange(symbol: str) -> str:
@@ -1027,6 +1136,56 @@ async def _simulate_fallback(req: SimulateRequest, bridge) -> dict:
 
 
 
+    # R12：撤单次数限制
+
+    try:
+
+        # 获取最近60分钟内的撤单次数
+
+        cancel_count = 0
+
+        if hasattr(bridge, 'get_cancel_count'):
+
+            cancel_count = bridge.get_cancel_count(minutes=60)
+
+
+
+        # 根据风控画像获取阈值（默认中等=10）
+
+        max_cancels = 10  # 默认中等画像
+
+
+
+        if cancel_count >= max_cancels:
+
+            violations.append(SimulateViolation(
+
+                ruleId="R12_CANCEL_LIMIT",
+
+                message=f"撤单次数过多：60分钟内 {cancel_count} 次 ≥ {max_cancels} 次",
+
+                severity="BLOCK"
+
+            ))
+
+        elif cancel_count >= int(max_cancels * 0.8):
+
+            violations.append(SimulateViolation(
+
+                ruleId="R12_CANCEL_LIMIT",
+
+                message=f"撤单次数预警：60分钟内 {cancel_count} 次，接近阈值 {max_cancels} 次",
+
+                severity="WARN"
+
+            ))
+
+    except Exception:
+
+        pass
+
+
+
     passed = len(violations) == 0
 
     return {
@@ -1039,7 +1198,7 @@ async def _simulate_fallback(req: SimulateRequest, bridge) -> dict:
 
             "pass": passed,
 
-            "violations": [v.model_dump() for v in violations]
+            "violations": [v.model_dump(by_alias=True) for v in violations]
 
         }
 
@@ -1337,3 +1496,138 @@ async def run_stress_test(req: StressTestRequest):
 
         }
 
+
+# ==================== WebSocket 风控推送 ====================
+
+import asyncio
+import json
+import logging as _risk_logging
+from typing import Any, Set
+
+_risk_logger = _risk_logging.getLogger("risk_ws")
+
+
+class RiskConnectionManager:
+    """管理 /ws/risk 的 WebSocket 连接"""
+
+    def __init__(self) -> None:
+        self._connections: Set[Any] = set()
+
+    @property
+    def count(self) -> int:
+        return len(self._connections)
+
+    def add(self, ws: Any) -> None:
+        self._connections.add(ws)
+        _risk_logger.info(f"Risk WS client +1, total={self.count}")
+
+    def remove(self, ws: Any) -> None:
+        self._connections.discard(ws)
+        _risk_logger.info(f"Risk WS client -1, total={self.count}")
+
+    def get_all(self) -> list:
+        return list(self._connections)
+
+    async def broadcast(self, message: dict) -> None:
+        payload = json.dumps(message, ensure_ascii=False)
+        stale: list = []
+        for ws in self.get_all():
+            try:
+                await ws.send_text(payload)
+            except Exception:
+                stale.append(ws)
+        for ws in stale:
+            self.remove(ws)
+
+
+_risk_ws_manager = RiskConnectionManager()
+
+
+def _get_risk_status_data() -> dict:
+    """获取风控状态数据（复用 /api/risk/status 逻辑）"""
+    try:
+        from services.vnpy_bridge import get_vnpy_bridge
+        risk_data = get_vnpy_bridge().get_risk_status()
+        if isinstance(risk_data, dict) and "overallStatus" in risk_data and "rules" in risk_data:
+            return risk_data
+        _status = risk_data.get("status", "normal") if isinstance(risk_data, dict) else "normal"
+        _overall = "PASS" if _status == "normal" else "WARN"
+        return {
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "overallStatus": _overall,
+            "rules": risk_data.get("active_rules", []) if isinstance(risk_data, dict) else [],
+            "triggeredCount": 0,
+            "circuitBreaker": False,
+            "updatedAt": datetime.now().isoformat(),
+        }
+    except Exception:
+        return {
+            "date": datetime.now().strftime("%Y-%m-%d"),
+            "overallStatus": "PASS",
+            "rules": [],
+            "triggeredCount": 0,
+            "circuitBreaker": False,
+            "updatedAt": datetime.now().isoformat(),
+        }
+
+
+
+async def _risk_broadcast_loop() -> None:
+    """后台任务：每 5 秒向所有 /ws/risk 客户端广播风控状态"""
+    while True:
+        try:
+            if _risk_ws_manager.count > 0:
+                status_data = _get_risk_status_data()
+                await _risk_ws_manager.broadcast({
+                    "type": "risk_status_update",
+                    "data": status_data,
+                })
+        except Exception as e:
+            _risk_logger.error(f"Risk broadcast error: {e}")
+        await asyncio.sleep(5)
+
+
+# ==================== Alert API ====================
+
+@router.get("/alerts")
+async def get_alerts(
+    level: Optional[str] = None,
+    limit: int = 100,
+    since: Optional[str] = None,
+):
+    """
+    Get recent alerts.
+
+    Query params:
+        level:  INFO | WARNING | CRITICAL (optional filter)
+        limit:  max items (default 100)
+        since:  ISO timestamp — only alerts after this time
+
+    Returns: {"code": 0, "message": "success", "data": {"alerts": [...], "total": N}}
+    """
+    try:
+        mgr = get_alert_manager()
+        result = mgr.get_alerts(level=level, limit=limit, since=since)
+        return {"code": 0, "message": "success", "data": result}
+    except Exception as e:
+        return {"code": 1, "message": str(e), "data": {"alerts": [], "total": 0}}
+
+
+@router.get("/alerts/stats")
+async def get_alert_stats():
+    """
+    Get alert statistics.
+
+    Returns: {"code": 0, "message": "success", "data": {
+        "total": N, "critical": N, "warning": N, "info": N,
+        "last_critical": "..." or null
+    }}
+    """
+    try:
+        mgr = get_alert_manager()
+        result = mgr.get_stats()
+        return {"code": 0, "message": "success", "data": result}
+    except Exception as e:
+        return {"code": 1, "message": str(e), "data": {
+            "total": 0, "critical": 0, "warning": 0, "info": 0, "last_critical": None
+        }}

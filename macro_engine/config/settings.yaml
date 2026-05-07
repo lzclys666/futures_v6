@@ -1,46 +1,38 @@
-# config/settings.yaml
 database:
   type: sqlite
-  path: ../pit_data.db   # 假设 settings.yaml 位于 config/ 下
-
+  path: ../pit_data.db
 redis:
   host: localhost
   port: 6379
   db: 0
-  password: "PLEASE_SET_ENV"
+  password: PLEASE_SET_ENV
   cache_ttl: 86400
-
 data_sources:
-  - name: akshare
-    priority: 1
-    confidence: 0.9
-  - name: tushare
-    priority: 2
-    confidence: 0.8
-    token: "${TUSHARE_TOKEN}"
-
+- name: akshare
+  priority: 1
+  confidence: 0.9
+- name: tushare
+  priority: 2
+  confidence: 0.8
+  token: ${TUSHARE_TOKEN}
 veighna:
   ctp:
-    broker_id: "${VNPY_CTP_BROKER_ID}"
-    user_id: "${VNPY_CTP_USER_ID}"
-    password: "${VNPY_CTP_PASSWORD}"
-    front_addr: "${VNPY_CTP_MD_SERVER}"
-
+    broker_id: ${VNPY_CTP_BROKER_ID}
+    user_id: ${VNPY_CTP_USER_ID}
+    password: ${VNPY_CTP_PASSWORD}
+    front_addr: ${VNPY_CTP_MD_SERVER}
 scoring:
   norm_window: 756
   ic_window: 60
   score_change_daily_max: 15
   max_weight_single_factor: 0.25
-  weight_change_daily_max: 0.10
+  weight_change_daily_max: 0.1
   shrink_lambda_default: 0.5
   direction_cooling_days: 3
   direction_confirm_days: 2
-  sentiment_weight_default: 0.10
+  sentiment_weight_default: 0.1
   sentiment_weight_event: 0.25
-  # 信号阈值：|z_score| >= 此值才下单，降低无效切换
-  # W4 组合回测中发现日均换手率 47%，设此阈值过滤低置信信号
   signal_zscore_threshold: 0.5
-
 risk:
   meltdown:
     yellow:
@@ -51,16 +43,34 @@ risk:
       liquidity_drop: 0.5
     red:
       volatility_percentile: 0.95
-
 symbols:
-  - RU
-  - AU
-  - BR
-  - NR
-  - TA
-  - AG
-  - CU
-  - SA
-  - RB  # 螺纹钢（2026-04-30 补加）
-  - NI  # 镍（2026-04-30 补加）
-  - ZN  # 锌（2026-04-30 补加）
+- RU
+- AU
+- BR
+- NR
+- TA
+- AG
+- CU
+- SA
+- RB
+- NI
+- ZN
+- AL
+- AO
+- BU
+- EC
+- EG
+- HC
+- I
+- J
+- JM
+- LC
+- LH
+- M
+- P
+- PB
+- PP
+- SC
+- SN
+- Y
+- FU

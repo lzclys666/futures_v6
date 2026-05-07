@@ -193,7 +193,7 @@ def main():
         "fast_window": args.fast,
         "slow_window": args.slow,
         "use_macro": not args.no_macro,
-        "csv_path_str": "str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv",
+        "csv_path_str": str(MACRO_ENGINE / "output" / "{symbol}_macro_daily_{date}.csv"),
     }
 
     try:

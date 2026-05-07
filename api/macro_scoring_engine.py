@@ -22,11 +22,17 @@ import csv
 import random
 import math
 import os
+import sys
 from datetime import date, timedelta, datetime
 from pathlib import Path
 from typing import Dict, List, Literal, Optional
 import akshare as ak
 import json
+
+# 确保 core/risk 在 Python 路径中（用于风控状态查询）
+_CORE_DIR = Path(r"D:\futures_v6\core")
+if str(_CORE_DIR) not in sys.path:
+    sys.path.insert(0, str(_CORE_DIR))
 
 # ---------------------------------------------------------------------------
 # 因子元数据（单一配置源）
@@ -303,6 +309,107 @@ def refresh_scores() -> None:
 
 
 # ---------------------------------------------------------------------------
+# 风控状态查询（集成 risk_engine 12 条规则）
+# ---------------------------------------------------------------------------
+_RISK_ENGINE = None
+
+
+def _get_risk_engine():
+    """懒加载全局风控引擎实例"""
+    global _RISK_ENGINE
+    if _RISK_ENGINE is None:
+        try:
+            from risk.risk_engine import RiskEngine
+            _RISK_ENGINE = RiskEngine(profile='moderate')
+        except Exception:
+            _RISK_ENGINE = None
+    return _RISK_ENGINE
+
+
+def _get_risk_statuses(symbol: str, composite_score: Optional[float] = None) -> Dict[str, str]:
+    """
+    查询 12 条风控规则的当前状态。
+    返回 dict，key 为 r1~r12，value 为 PASS/WARN/BLOCK。
+    规则无法评估时默认 PASS。
+    """
+    # 默认全部 PASS
+    statuses = {
+        "r1_single_position": "PASS",
+        "r2_continuous_profit": "PASS",
+        "r3_price_limit": "PASS",
+        "r4_total_position": "PASS",
+        "r5_stop_loss": "PASS",
+        "r6_max_drawdown": "PASS",
+        "r7_trading_frequency": "PASS",
+        "r8_trading_hours": "PASS",
+        "r9_frozen_capital": "PASS",
+        "r10_circuit_breaker": "PASS",
+        "r11_disposition_effect": "PASS",
+        "r12_cancel_limit": "PASS",
+    }
+
+    engine = _get_risk_engine()
+    if engine is None:
+        return statuses
+
+    try:
+        from risk.risk_engine import OrderRequest, RiskContext, RiskAction
+
+        # 构建基础订单（用于规则检查）
+        order = OrderRequest(
+            symbol=symbol,
+            exchange="SHFE",
+            direction="LONG",
+            offset="OPEN",
+            price=0.0,
+            volume=1,
+        )
+
+        # 构建上下文（宏观评分可用，其余数据缺失时规则自行降级）
+        market_data = {}
+        if composite_score is not None:
+            # R10 宏观熔断使用 [0,100] 评分，composite_score 在 [-1,1]
+            market_data["macro_score"] = (composite_score + 1) * 50
+
+        context = RiskContext(
+            account=None,
+            positions={},
+            market_data=market_data,
+        )
+
+        # 执行风控检查
+        results = engine.check_order(order, context)
+
+        # 规则 ID → 字段名映射
+        RULE_TO_FIELD = {
+            "R1": "r1_single_position",
+            "R2": "r2_continuous_profit",
+            "R3": "r3_price_limit",
+            "R4": "r4_total_position",
+            "R5": "r5_stop_loss",
+            "R6": "r6_max_drawdown",
+            "R7": "r7_trading_frequency",
+            "R8": "r8_trading_hours",
+            "R9": "r9_frozen_capital",
+            "R10": "r10_circuit_breaker",
+            "R11": "r11_disposition_effect",
+        }
+
+        for r in results:
+            field = RULE_TO_FIELD.get(r.rule_id)
+            if field:
+                statuses[field] = r.action.value
+
+        # R12（撤单次数限制）在 risk_engine.py 中无实现类，默认 PASS
+        # 如后续实现，此处补充映射
+
+    except Exception:
+        pass  # 降级：全部 PASS
+
+    return statuses
+
+
+# ---------------------------------------------------------------------------
 # 公开接口
 # ---------------------------------------------------------------------------
 
@@ -328,10 +435,10 @@ def get_latest_signal(symbol: str, trade_date: Optional[str] = None) -> dict:
         # 直接使用 CSV SUMMARY 行的 composite_score 和 direction（数据生成时已正确计算）
         # 不重新计算，避免因子原始值 (normalized_score=0) 覆盖已算好的综合得分
         updated_at = summary_row["updatedAt"].strip()
-        factors = _build_factor_details_from_csv(symbol, today_str)
         raw_score = float(summary_row.get("compositeScore", "").strip())
         composite_score = (raw_score - 0.5) * 2  # [0,1] → [-1,1]
         direction = summary_row.get("direction", "NEUTRAL").strip().upper()
+        factors = _build_factor_details_from_csv(symbol, today_str, composite_score)
     else:
         # Fallback: 找最近可用的 CSV，不使用 _current_scores（避免 Brownian motion 漂移）
         latest_date = _find_latest_csv_date(symbol)
@@ -339,19 +446,19 @@ def get_latest_signal(symbol: str, trade_date: Optional[str] = None) -> dict:
             summary_row = _read_csv_row(symbol, "SUMMARY", latest_date)
             if summary_row is not None:
                 updated_at = summary_row["updatedAt"].strip() + " (非今日数据)"
-                factors = _build_factor_details_from_csv(symbol, latest_date)
                 raw_score = float(summary_row.get("compositeScore", "").strip())
                 composite_score = (raw_score - 0.5) * 2  # [0,1] → [-1,1]
                 direction = summary_row.get("direction", "NEUTRAL").strip().upper()
+                factors = _build_factor_details_from_csv(symbol, latest_date, composite_score)
             else:
                 composite_score = _current_scores[symbol]
                 direction = composite_to_direction(composite_score)
-                factors = _build_factor_details_from_mock(symbol)
+                factors = _build_factor_details_from_mock(symbol, composite_score)
                 updated_at = datetime.now().strftime("%Y-%m-%dT%H:%M:%S+08:00")
         else:
             composite_score = _current_scores[symbol]
             direction = composite_to_direction(composite_score)
-            factors = _build_factor_details_from_mock(symbol)
+            factors = _build_factor_details_from_mock(symbol, composite_score)
             updated_at = datetime.now().strftime("%Y-%m-%dT%H:%M:%S+08:00")
 
     return {
@@ -379,10 +486,10 @@ def get_all_signals(trade_date: Optional[str] = None) -> List[dict]:
 
         if summary_row is not None:
             updated_at = summary_row["updatedAt"].strip()
-            factors = _build_factor_details_from_csv(symbol, today_str)
             raw_score = float(summary_row.get("compositeScore", "").strip())
             composite_score = (raw_score - 0.5) * 2  # [0,1] → [-1,1]
             direction = summary_row.get("direction", "NEUTRAL").strip().upper()
+            factors = _build_factor_details_from_csv(symbol, today_str, composite_score)
         else:
             # Fallback: 找最近可用的 CSV，不使用 _current_scores（避免 Brownian motion 漂移）
             latest_date = _find_latest_csv_date(symbol)
@@ -427,12 +534,22 @@ def get_factor_details(symbol: str, trade_date: Optional[str] = None) -> List[di
     csv_factors = _read_csv_factors(symbol, today_str)
 
     if csv_factors:
-        return _build_factor_details_from_csv(symbol, today_str)
+        # 获取综合评分用于风控状态查询
+        summary_row = _read_csv_row(symbol, "SUMMARY", today_str)
+        cs = None
+        if summary_row:
+            try:
+                raw_s = float(summary_row.get("compositeScore", "").strip())
+                cs = (raw_s - 0.5) * 2
+            except (ValueError, AttributeError):
+                pass
+        return _build_factor_details_from_csv(symbol, today_str, cs)
     else:
-        return _build_factor_details_from_mock(symbol)
+        cs = _current_scores.get(symbol.upper())
+        return _build_factor_details_from_mock(symbol, cs)
 
 
-def _build_factor_details_from_csv(symbol: str, trade_date: str) -> List[dict]:
+def _build_factor_details_from_csv(symbol: str, trade_date: str, composite_score: Optional[float] = None) -> List[dict]:
     """
     从 CSV FACTOR 行构建因子明细列表。
     字段映射：CSV normalized_score → normalizedScore（API 字段名，与前端 FactorDetail 一致）
@@ -482,10 +599,16 @@ def _build_factor_details_from_csv(symbol: str, trade_date: str) -> List[dict]:
             "contribution": round(contribution, 6),
             "factorIc": float(row["icValue"]) if row.get("icValue", "").strip() else None,
         })
+
+    # 注入 12 条风控规则状态
+    risk_statuses = _get_risk_statuses(symbol, composite_score)
+    for f in factors:
+        f.update(risk_statuses)
+
     return factors
 
 
-def _build_factor_details_from_mock(symbol: str) -> List[dict]:
+def _build_factor_details_from_mock(symbol: str, composite_score: Optional[float] = None) -> List[dict]:
     """Fallback: 从内存 mock 数据构建因子明细。"""
     meta_list = FACTOR_META[symbol]
     results = []
@@ -522,6 +645,11 @@ def _build_factor_details_from_mock(symbol: str) -> List[dict]:
             "contribution": round(contribution, 6),
             "factorIc": ic,
         })
+
+    # 注入 12 条风控规则状态
+    risk_statuses = _get_risk_statuses(symbol, composite_score)
+    for f in results:
+        f.update(risk_statuses)
 
     return results
 

@@ -202,5 +202,2086 @@
       "weight": 0.08,
       "proxy": "usdcny_proxy"
     }
+  ],
+  "RB": [
+    {
+      "factor_code": "RB_FUT_CLOSE",
+      "factor_name": "RB_FUT_CLOSE",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "RB_FUT_CLOSE"
+    },
+    {
+      "factor_code": "RB_INV_SHFE",
+      "factor_name": "上期所沪螺纹钢仓单",
+      "direction": "negative",
+      "weight": 0.0172,
+      "proxy": "RB_INV_SHFE"
+    },
+    {
+      "factor_code": "RB_INV_STEEL",
+      "factor_name": "RB_INV_STEEL",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "RB_INV_STEEL"
+    },
+    {
+      "factor_code": "RB_POS_CHANGE",
+      "factor_name": "RB_POS_CHANGE",
+      "direction": "positive",
+      "weight": 0.057,
+      "proxy": "RB_POS_CHANGE"
+    },
+    {
+      "factor_code": "RB_POS_CONCENTRATION",
+      "factor_name": "持仓集中度",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "RB_POS_CONCENTRATION"
+    },
+    {
+      "factor_code": "RB_POS_NET",
+      "factor_name": "上期所前20净持仓",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "RB_POS_NET"
+    },
+    {
+      "factor_code": "RB_POS_OI",
+      "factor_name": "RB_POS_OI",
+      "direction": "positive",
+      "weight": 0.3083,
+      "proxy": "RB_POS_OI"
+    },
+    {
+      "factor_code": "RB_SPD_01",
+      "factor_name": "RB_SPD_01",
+      "direction": "positive",
+      "weight": 0.1511,
+      "proxy": "RB_SPD_01"
+    },
+    {
+      "factor_code": "RB_SPD_03",
+      "factor_name": "RB_SPD_03",
+      "direction": "positive",
+      "weight": 0.2383,
+      "proxy": "RB_SPD_03"
+    },
+    {
+      "factor_code": "RB_SPD_05",
+      "factor_name": "RB_SPD_05",
+      "direction": "positive",
+      "weight": 0.1073,
+      "proxy": "RB_SPD_05"
+    },
+    {
+      "factor_code": "RB_SPD_BASIS",
+      "factor_name": "沪螺纹钢期现基差",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "RB_SPD_BASIS"
+    },
+    {
+      "factor_code": "RB_SPD_CONTRACT",
+      "factor_name": "沪螺纹钢近远月价差",
+      "direction": "negative",
+      "weight": 0.0172,
+      "proxy": "RB_SPD_CONTRACT"
+    },
+    {
+      "factor_code": "RB_SPD_RB_HC",
+      "factor_name": "RB_SPD_RB_HC",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "RB_SPD_RB_HC"
+    }
+  ],
+  "NI": [
+    {
+      "factor_code": "NI_DCE_INV",
+      "factor_name": "NI_DCE_INV",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "NI_DCE_INV"
+    },
+    {
+      "factor_code": "NI_FUT_CLOSE",
+      "factor_name": "NI_FUT_CLOSE",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "NI_FUT_CLOSE"
+    },
+    {
+      "factor_code": "NI_FUT_OI",
+      "factor_name": "NI_FUT_OI",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "NI_FUT_OI"
+    },
+    {
+      "factor_code": "NI_LME_SPREAD",
+      "factor_name": "NI_LME_SPREAD",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "NI_LME_SPREAD"
+    },
+    {
+      "factor_code": "NI_LME_SPREAD_DIFF",
+      "factor_name": "NI_LME_SPREAD_DIFF",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "NI_LME_SPREAD_DIFF"
+    },
+    {
+      "factor_code": "NI_LME_SPREAD_EVENT",
+      "factor_name": "NI_LME_SPREAD_EVENT",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "NI_LME_SPREAD_EVENT"
+    },
+    {
+      "factor_code": "NI_POS_CHANGE",
+      "factor_name": "NI_POS_CHANGE",
+      "direction": "positive",
+      "weight": 0.0499,
+      "proxy": "NI_POS_CHANGE"
+    },
+    {
+      "factor_code": "NI_POS_OI",
+      "factor_name": "NI_POS_OI",
+      "direction": "positive",
+      "weight": 0.3653,
+      "proxy": "NI_POS_OI"
+    },
+    {
+      "factor_code": "NI_SPD_01",
+      "factor_name": "NI_SPD_01",
+      "direction": "positive",
+      "weight": 0.1787,
+      "proxy": "NI_SPD_01"
+    },
+    {
+      "factor_code": "NI_SPD_03",
+      "factor_name": "NI_SPD_03",
+      "direction": "positive",
+      "weight": 0.1723,
+      "proxy": "NI_SPD_03"
+    },
+    {
+      "factor_code": "NI_SPD_05",
+      "factor_name": "NI_SPD_05",
+      "direction": "positive",
+      "weight": 0.0959,
+      "proxy": "NI_SPD_05"
+    },
+    {
+      "factor_code": "NI_SPD_BASIS",
+      "factor_name": "NI_SPD_BASIS",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "NI_SPD_BASIS"
+    },
+    {
+      "factor_code": "NI_WRT_SHFE",
+      "factor_name": "NI_WRT_SHFE",
+      "direction": "positive",
+      "weight": 0.0172,
+      "proxy": "NI_WRT_SHFE"
+    }
+  ],
+  "ZN": [
+    {
+      "factor_code": "ZN_DCE_INV",
+      "factor_name": "ZN_DCE_INV",
+      "direction": "positive",
+      "weight": 0.0181,
+      "proxy": "ZN_DCE_INV"
+    },
+    {
+      "factor_code": "ZN_FUT_CLOSE",
+      "factor_name": "ZN_FUT_CLOSE",
+      "direction": "positive",
+      "weight": 0.0181,
+      "proxy": "ZN_FUT_CLOSE"
+    },
+    {
+      "factor_code": "ZN_FUT_OI",
+      "factor_name": "ZN_FUT_OI",
+      "direction": "positive",
+      "weight": 0.0181,
+      "proxy": "ZN_FUT_OI"
+    },
+    {
+      "factor_code": "ZN_LME_3M",
+      "factor_name": "ZN_LME_3M",
+      "direction": "positive",
+      "weight": 0.0181,
+      "proxy": "ZN_LME_3M"
+    },
+    {
+      "factor_code": "ZN_POS_CHANGE",
+      "factor_name": "ZN_POS_CHANGE",
+      "direction": "positive",
+      "weight": 0.2976,
+      "proxy": "ZN_POS_CHANGE"
+    },
+    {
+      "factor_code": "ZN_POS_OI",
+      "factor_name": "ZN_POS_OI",
+      "direction": "positive",
+      "weight": 0.2716,
+      "proxy": "ZN_POS_OI"
+    },
+    {
+      "factor_code": "ZN_SPD_01",
+      "factor_name": "ZN_SPD_01",
+      "direction": "positive",
+      "weight": 0.0181,
+      "proxy": "ZN_SPD_01"
+    },
+    {
+      "factor_code": "ZN_SPD_03",
+      "factor_name": "ZN_SPD_03",
+      "direction": "positive",
+      "weight": 0.0597,
+      "proxy": "ZN_SPD_03"
+    },
+    {
+      "factor_code": "ZN_SPD_05",
+      "factor_name": "ZN_SPD_05",
+      "direction": "positive",
+      "weight": 0.2625,
+      "proxy": "ZN_SPD_05"
+    },
+    {
+      "factor_code": "ZN_VOLUME",
+      "factor_name": "ZN_VOLUME",
+      "direction": "positive",
+      "weight": 0.0181,
+      "proxy": "ZN_VOLUME"
+    }
+  ],
+  "BR": [
+    {
+      "factor_code": "BR_COST_MARGIN",
+      "factor_name": "BR行业毛利",
+      "direction": "positive",
+      "weight": 0.0909,
+      "proxy": "BR_COST_MARGIN"
+    },
+    {
+      "factor_code": "BR_DEM_AUTO",
+      "factor_name": "汽车月度销量",
+      "direction": "positive",
+      "weight": 0.0909,
+      "proxy": "BR_DEM_AUTO"
+    },
+    {
+      "factor_code": "BR_DEM_TIRE_ALLSTEEL",
+      "factor_name": "全钢胎开工率",
+      "direction": "positive",
+      "weight": 0.0909,
+      "proxy": "BR_DEM_TIRE_ALLSTEEL"
+    },
+    {
+      "factor_code": "BR_DEM_TIRE_SEMI",
+      "factor_name": "半钢胎开工率",
+      "direction": "positive",
+      "weight": 0.0909,
+      "proxy": "BR_DEM_TIRE_SEMI"
+    },
+    {
+      "factor_code": "BR_INV_TOTAL",
+      "factor_name": "BR全国总库存",
+      "direction": "negative",
+      "weight": 0.0909,
+      "proxy": "BR_INV_TOTAL"
+    },
+    {
+      "factor_code": "BR_POS_NET",
+      "factor_name": "BR前20净持仓",
+      "direction": "positive",
+      "weight": 0.0909,
+      "proxy": "BR_POS_NET"
+    },
+    {
+      "factor_code": "BR_SPD_BASIS",
+      "factor_name": "BR期现基差",
+      "direction": "positive",
+      "weight": 0.0909,
+      "proxy": "BR_SPD_BASIS"
+    },
+    {
+      "factor_code": "BR_SPD_RU_BR",
+      "factor_name": "BR/RU比价",
+      "direction": "positive",
+      "weight": 0.0909,
+      "proxy": "BR_SPD_RU_BR"
+    },
+    {
+      "factor_code": "BR_SPOT_PRICE",
+      "factor_name": "BR_SPOT_PRICE",
+      "direction": "positive",
+      "weight": 0.0909,
+      "proxy": "BR_SPOT_PRICE"
+    },
+    {
+      "factor_code": "BR_STK_WARRANT",
+      "factor_name": "上期所BR仓单",
+      "direction": "negative",
+      "weight": 0.0909,
+      "proxy": "BR_STK_WARRANT"
+    },
+    {
+      "factor_code": "BR_SUP_RATE",
+      "factor_name": "BR行业开工率",
+      "direction": "negative",
+      "weight": 0.0909,
+      "proxy": "BR_SUP_RATE"
+    }
+  ],
+  "NR": [
+    {
+      "factor_code": "NR_FREIGHT_BDI",
+      "factor_name": "NR_FREIGHT_BDI",
+      "direction": "positive",
+      "weight": 0.142,
+      "proxy": "NR_FREIGHT_BDI"
+    },
+    {
+      "factor_code": "NR_FUT_CLOSE",
+      "factor_name": "NR_FUT_CLOSE",
+      "direction": "positive",
+      "weight": 0.1677,
+      "proxy": "NR_FUT_CLOSE"
+    },
+    {
+      "factor_code": "NR_FUT_OI",
+      "factor_name": "NR_FUT_OI",
+      "direction": "positive",
+      "weight": 0.1816,
+      "proxy": "NR_FUT_OI"
+    },
+    {
+      "factor_code": "NR_INV_TOTAL",
+      "factor_name": "NR_INV_TOTAL",
+      "direction": "positive",
+      "weight": 0.0196,
+      "proxy": "NR_INV_TOTAL"
+    },
+    {
+      "factor_code": "NR_POS_OPEN_INT",
+      "factor_name": "NR期货持仓量",
+      "direction": "positive",
+      "weight": 0.1816,
+      "proxy": "NR_POS_OPEN_INT"
+    },
+    {
+      "factor_code": "NR_SPD_CONTRACT",
+      "factor_name": "NR_SPD_CONTRACT",
+      "direction": "positive",
+      "weight": 0.1677,
+      "proxy": "NR_SPD_CONTRACT"
+    },
+    {
+      "factor_code": "NR_SPD_RU_NR",
+      "factor_name": "RU-NR深浅色价差",
+      "direction": "positive",
+      "weight": 0.1397,
+      "proxy": "NR_SPD_RU_NR"
+    }
+  ],
+  "SA": [
+    {
+      "factor_code": "sa_futures_daily_hold",
+      "factor_name": "SA期货持仓量",
+      "direction": "positive",
+      "weight": 0.0714,
+      "proxy": "sa_futures_daily_hold"
+    },
+    {
+      "factor_code": "sa_futures_near_price",
+      "factor_name": "SA近月期货价",
+      "direction": "positive",
+      "weight": 0.0714,
+      "proxy": "sa_futures_near_price"
+    },
+    {
+      "factor_code": "sa_futures_sub_daily_close",
+      "factor_name": "SA期货次主力收盘价",
+      "direction": "positive",
+      "weight": 0.0714,
+      "proxy": "sa_futures_sub_daily_close"
+    },
+    {
+      "factor_code": "sa_inventory_w",
+      "factor_name": "SA注册仓单",
+      "direction": "negative",
+      "weight": 0.0714,
+      "proxy": "sa_inventory_w"
+    },
+    {
+      "factor_code": "sa_positions_long5",
+      "factor_name": "SA前5多头合计持仓",
+      "direction": "positive",
+      "weight": 0.0714,
+      "proxy": "sa_positions_long5"
+    },
+    {
+      "factor_code": "sa_positions_net5",
+      "factor_name": "SA前5净持仓",
+      "direction": "positive",
+      "weight": 0.0714,
+      "proxy": "sa_positions_net5"
+    },
+    {
+      "factor_code": "sa_positions_short5",
+      "factor_name": "SA前5空头合计持仓",
+      "direction": "negative",
+      "weight": 0.0714,
+      "proxy": "sa_positions_short5"
+    },
+    {
+      "factor_code": "sa_ratio_glass",
+      "factor_name": "SA/FG现货比价",
+      "direction": "positive",
+      "weight": 0.0714,
+      "proxy": "sa_ratio_glass"
+    },
+    {
+      "factor_code": "sa_ratio_glass_futures",
+      "factor_name": "SA/FG期货比价",
+      "direction": "positive",
+      "weight": 0.0714,
+      "proxy": "sa_ratio_glass_futures"
+    },
+    {
+      "factor_code": "sa_spot_price",
+      "factor_name": "SA现货基准价",
+      "direction": "positive",
+      "weight": 0.0714,
+      "proxy": "sa_spot_price"
+    },
+    {
+      "factor_code": "sa_sup_inventory_w",
+      "factor_name": "SA厂家库存",
+      "direction": "negative",
+      "weight": 0.0714,
+      "proxy": "sa_sup_inventory_w"
+    },
+    {
+      "factor_code": "sa_sup_op_rate",
+      "factor_name": "SA行业周度开工率",
+      "direction": "positive",
+      "weight": 0.0714,
+      "proxy": "sa_sup_op_rate"
+    },
+    {
+      "factor_code": "sa_sup_output_w",
+      "factor_name": "SA周度产量",
+      "direction": "positive",
+      "weight": 0.0714,
+      "proxy": "sa_sup_output_w"
+    },
+    {
+      "factor_code": "sa_warrant_daily",
+      "factor_name": "SA有效预报",
+      "direction": "negative",
+      "weight": 0.0714,
+      "proxy": "sa_warrant_daily"
+    }
+  ],
+  "TA": [
+    {
+      "factor_code": "TA_CST_BRENT",
+      "factor_name": "TA_CST_BRENT",
+      "direction": "positive",
+      "weight": 0.4659,
+      "proxy": "TA_CST_BRENT"
+    },
+    {
+      "factor_code": "TA_CST_USDCNY",
+      "factor_name": "TA_CST_USDCNY",
+      "direction": "positive",
+      "weight": 0.0182,
+      "proxy": "TA_CST_USDCNY"
+    },
+    {
+      "factor_code": "TA_POS_OI",
+      "factor_name": "TA_POS_OI",
+      "direction": "positive",
+      "weight": 0.4432,
+      "proxy": "TA_POS_OI"
+    },
+    {
+      "factor_code": "TA_SPD_BASIS",
+      "factor_name": "TA_SPD_BASIS",
+      "direction": "positive",
+      "weight": 0.0182,
+      "proxy": "TA_SPD_BASIS"
+    },
+    {
+      "factor_code": "TA_STK_SOCIAL",
+      "factor_name": "TA_STK_SOCIAL",
+      "direction": "positive",
+      "weight": 0.0182,
+      "proxy": "TA_STK_SOCIAL"
+    },
+    {
+      "factor_code": "TA_STK_WARRANT",
+      "factor_name": "TA_STK_WARRANT",
+      "direction": "positive",
+      "weight": 0.0182,
+      "proxy": "TA_STK_WARRANT"
+    },
+    {
+      "factor_code": "TA_VOLUME",
+      "factor_name": "TA_VOLUME",
+      "direction": "positive",
+      "weight": 0.0182,
+      "proxy": "TA_VOLUME"
+    }
+  ],
+  "AL": [
+    {
+      "factor_code": "AL_INV_LME",
+      "factor_name": "LME铝库存",
+      "direction": "negative",
+      "weight": 0.06,
+      "proxy": "AL_INV_LME"
+    },
+    {
+      "factor_code": "AL_INV_SHFE",
+      "factor_name": "上期所沪铝仓单",
+      "direction": "negative",
+      "weight": 0.08,
+      "proxy": "AL_INV_SHFE"
+    },
+    {
+      "factor_code": "AL_POS_CONCENTRATION",
+      "factor_name": "持仓集中度",
+      "direction": "positive",
+      "weight": 0.04,
+      "proxy": "AL_POS_CONCENTRATION"
+    },
+    {
+      "factor_code": "AL_POS_NET",
+      "factor_name": "上期所前20净持仓",
+      "direction": "positive",
+      "weight": 0.1,
+      "proxy": "AL_POS_NET"
+    },
+    {
+      "factor_code": "AL_SPD_AL_CU",
+      "factor_name": "铝/铜比价",
+      "direction": "positive",
+      "weight": 0.04,
+      "proxy": "AL_SPD_AL_CU"
+    },
+    {
+      "factor_code": "AL_SPD_BASIS",
+      "factor_name": "沪铝期现基差",
+      "direction": "positive",
+      "weight": 0.08,
+      "proxy": "AL_SPD_BASIS"
+    },
+    {
+      "factor_code": "AL_SPD_CONTRACT",
+      "factor_name": "沪铝近远月价差",
+      "direction": "negative",
+      "weight": 0.05,
+      "proxy": "AL_SPD_CONTRACT"
+    },
+    {
+      "factor_code": "AL_SPD_SHFE_LME",
+      "factor_name": "SHFE/LME铝比价",
+      "direction": "negative",
+      "weight": 0.06,
+      "proxy": "AL_SPD_SHFE_LME"
+    }
+  ],
+  "AO": [
+    {
+      "factor_code": "AO_DCE_INV",
+      "factor_name": "大连期货库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "AO_DCE_INV"
+    },
+    {
+      "factor_code": "AO_FUT_CLOSE",
+      "factor_name": "豆一期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "AO_FUT_CLOSE"
+    },
+    {
+      "factor_code": "AO_FUT_OI",
+      "factor_name": "豆一期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "AO_FUT_OI"
+    },
+    {
+      "factor_code": "AO_IMP_ALUMINA",
+      "factor_name": "氧化铝进口量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "AO_IMP_ALUMINA"
+    },
+    {
+      "factor_code": "AO_IMP_BAUXITE",
+      "factor_name": "铝土矿进口量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "AO_IMP_BAUXITE"
+    },
+    {
+      "factor_code": "AO_PRC_CIF_BAUXITE",
+      "factor_name": "铝土矿CIF价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "AO_PRC_CIF_BAUXITE"
+    },
+    {
+      "factor_code": "AO_SPD_BASIS",
+      "factor_name": "氧化铝期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "AO_SPD_BASIS"
+    }
+  ],
+  "BU": [
+    {
+      "factor_code": "BU_FUT_CLOSE",
+      "factor_name": "沥青期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_FUT_CLOSE"
+    },
+    {
+      "factor_code": "BU_FX_USDCNY",
+      "factor_name": "美元兑人民币汇率",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_FX_USDCNY"
+    },
+    {
+      "factor_code": "BU_MACRO_CCI",
+      "factor_name": "消费者信心指数",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_MACRO_CCI"
+    },
+    {
+      "factor_code": "BU_MACRO_HIGHWAY",
+      "factor_name": "全国高速公路整车流量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_MACRO_HIGHWAY"
+    },
+    {
+      "factor_code": "BU_POS_NET",
+      "factor_name": "沥青期货净持仓",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_POS_NET"
+    },
+    {
+      "factor_code": "BU_SPD_BASIS",
+      "factor_name": "沥青期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_SPD_BASIS"
+    },
+    {
+      "factor_code": "BU_SPD_BU_BRENT",
+      "factor_name": "沥青与布伦特原油价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_SPD_BU_BRENT"
+    },
+    {
+      "factor_code": "BU_SPT_EAST_CHINA",
+      "factor_name": "华东沥青市场价格",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_SPT_EAST_CHINA"
+    },
+    {
+      "factor_code": "BU_STK_INVENTORY",
+      "factor_name": "全国沥青总库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_STK_INVENTORY"
+    },
+    {
+      "factor_code": "BU_STK_PETROCHEM",
+      "factor_name": "石化企业沥青库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_STK_PETROCHEM"
+    },
+    {
+      "factor_code": "BU_STK_PORT",
+      "factor_name": "港口沥青库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_STK_PORT"
+    },
+    {
+      "factor_code": "BU_STK_REFINERY",
+      "factor_name": "炼厂沥青库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_STK_REFINERY"
+    },
+    {
+      "factor_code": "BU_STK_REFINE_RATE",
+      "factor_name": "炼厂沥青开工率",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_STK_REFINE_RATE"
+    },
+    {
+      "factor_code": "BU_STK_SOCIAL",
+      "factor_name": "沥青社会库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_STK_SOCIAL"
+    },
+    {
+      "factor_code": "BU_STK_WARRANT",
+      "factor_name": "沥青期货仓单",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "BU_STK_WARRANT"
+    }
+  ],
+  "EC": [
+    {
+      "factor_code": "EC_FUT_CLOSE",
+      "factor_name": "欧线期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EC_FUT_CLOSE"
+    },
+    {
+      "factor_code": "EC_FUT_OI",
+      "factor_name": "欧线期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EC_FUT_OI"
+    }
+  ],
+  "EG": [
+    {
+      "factor_code": "EG_FUT_CLOSE",
+      "factor_name": "EG乙二醇期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_FUT_CLOSE"
+    },
+    {
+      "factor_code": "EG_FUT_HIGH",
+      "factor_name": "EG乙二醇期货最高价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_FUT_HIGH"
+    },
+    {
+      "factor_code": "EG_FUT_LOW",
+      "factor_name": "EG乙二醇期货最低价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_FUT_LOW"
+    },
+    {
+      "factor_code": "EG_FUT_OI",
+      "factor_name": "EG乙二醇期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_FUT_OI"
+    },
+    {
+      "factor_code": "EG_FUT_OPEN",
+      "factor_name": "EG乙二醇期货开盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_FUT_OPEN"
+    },
+    {
+      "factor_code": "EG_FUT_SETTLE",
+      "factor_name": "EG乙二醇期货结算价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_FUT_SETTLE"
+    },
+    {
+      "factor_code": "EG_FUT_VOL",
+      "factor_name": "EG乙二醇期货成交量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_FUT_VOL"
+    },
+    {
+      "factor_code": "EG_POS_NET",
+      "factor_name": "乙二醇期货净持仓",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_POS_NET"
+    },
+    {
+      "factor_code": "EG_SPD_BASIS",
+      "factor_name": "乙二醇期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_SPD_BASIS"
+    },
+    {
+      "factor_code": "EG_SPOT_PRICE",
+      "factor_name": "EG乙二醇现货价格",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_SPOT_PRICE"
+    },
+    {
+      "factor_code": "EG_SPT_NAPTHA",
+      "factor_name": "石脑油裂解价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_SPT_NAPTHA"
+    },
+    {
+      "factor_code": "EG_STK_COAL_RATE",
+      "factor_name": "煤制乙二醇开工率",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_STK_COAL_RATE"
+    },
+    {
+      "factor_code": "EG_STK_PLANT_RATE",
+      "factor_name": "乙二醇装置开工率",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_STK_PLANT_RATE"
+    },
+    {
+      "factor_code": "EG_STK_POLYESTER",
+      "factor_name": "聚酯企业乙二醇库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_STK_POLYESTER"
+    },
+    {
+      "factor_code": "EG_STK_PORT",
+      "factor_name": "华东乙二醇港口库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_STK_PORT"
+    },
+    {
+      "factor_code": "EG_STK_WARRANT",
+      "factor_name": "EG乙二醇工厂库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "EG_STK_WARRANT"
+    }
+  ],
+  "HC": [
+    {
+      "factor_code": "HC_FUT_CLOSE",
+      "factor_name": "HC热轧卷板期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_FUT_CLOSE"
+    },
+    {
+      "factor_code": "HC_FUT_OI",
+      "factor_name": "HC热轧卷板期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_FUT_OI"
+    },
+    {
+      "factor_code": "HC_INV_EM",
+      "factor_name": "热卷库存变化",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_INV_EM"
+    },
+    {
+      "factor_code": "HC_HC_MACRO_AUTO_OUTPUT",
+      "factor_name": "汽车产量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_MACRO_AUTO_OUTPUT"
+    },
+    {
+      "factor_code": "HC_HC_MACRO_PMI_MFG",
+      "factor_name": "制造业PMI",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_MACRO_PMI_MFG"
+    },
+    {
+      "factor_code": "HC_POS_CONC",
+      "factor_name": "热卷持仓集中度",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_POS_CONC"
+    },
+    {
+      "factor_code": "HC_HC_POS_NET",
+      "factor_name": "热卷期货净持仓",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_POS_NET"
+    },
+    {
+      "factor_code": "HC_HC_PROD_CAPACITY",
+      "factor_name": "热卷产能利用率",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_PROD_CAPACITY"
+    },
+    {
+      "factor_code": "HC_HC_PROD_OUTPUT",
+      "factor_name": "热卷产量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_PROD_OUTPUT"
+    },
+    {
+      "factor_code": "HC_HC_SPD_BASIS",
+      "factor_name": "热卷期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_SPD_BASIS"
+    },
+    {
+      "factor_code": "HC_HC_SPD_HC_CC",
+      "factor_name": "热卷期货合约间价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_SPD_HC_CC"
+    },
+    {
+      "factor_code": "HC_HC_SPD_HC_RB",
+      "factor_name": "热卷-螺纹钢跨品种价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_SPD_HC_RB"
+    },
+    {
+      "factor_code": "HC_HC_SPD_NEAR_FAR",
+      "factor_name": "热卷期货近远月价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_SPD_NEAR_FAR"
+    },
+    {
+      "factor_code": "HC_HC_SPT_MYSTEEEL",
+      "factor_name": "我的钢铁网热卷现货价格",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_SPT_MYSTEEEL"
+    },
+    {
+      "factor_code": "HC_HC_STK_INVENTORY",
+      "factor_name": "热卷社会库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_STK_INVENTORY"
+    },
+    {
+      "factor_code": "HC_HC_STK_OUTPUT_WEEKLY",
+      "factor_name": "钢厂热卷库存周度",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_STK_OUTPUT_WEEKLY"
+    },
+    {
+      "factor_code": "HC_HC_STK_PLANT",
+      "factor_name": "钢厂热卷库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_STK_PLANT"
+    },
+    {
+      "factor_code": "HC_HC_STK_SOCIAL",
+      "factor_name": "热卷社会库存总量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_STK_SOCIAL"
+    },
+    {
+      "factor_code": "HC_HC_STK_TRADE",
+      "factor_name": "贸易商热卷库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_STK_TRADE"
+    },
+    {
+      "factor_code": "HC_HC_STK_WARRANT",
+      "factor_name": "热卷仓单库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "HC_HC_STK_WARRANT"
+    }
+  ],
+  "I": [
+    {
+      "factor_code": "I_FUT_MAIN",
+      "factor_name": "铁矿石期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "I_FUT_MAIN"
+    },
+    {
+      "factor_code": "I_FUT_OI",
+      "factor_name": "铁矿石期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "I_FUT_OI"
+    },
+    {
+      "factor_code": "I_INV_EM",
+      "factor_name": "铁矿石库存变化",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "I_INV_EM"
+    },
+    {
+      "factor_code": "I_SPD_BASIS",
+      "factor_name": "铁矿石期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "I_SPD_BASIS"
+    },
+    {
+      "factor_code": "I_SPD_CONTRACT",
+      "factor_name": "铁矿石近远月价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "I_SPD_CONTRACT"
+    },
+    {
+      "factor_code": "I_SPD_I_RB",
+      "factor_name": "铁矿螺纹比价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "I_SPD_I_RB"
+    },
+    {
+      "factor_code": "I_STK_PORT",
+      "factor_name": "铁矿石港口库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "I_STK_PORT"
+    }
+  ],
+  "J": [
+    {
+      "factor_code": "J_FOB_EXPORT",
+      "factor_name": "焦炭出口FOB价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_FOB_EXPORT"
+    },
+    {
+      "factor_code": "J_POS_NET",
+      "factor_name": "焦炭期货净持仓",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_POS_NET"
+    },
+    {
+      "factor_code": "J_PROD_OUTPUT",
+      "factor_name": "焦炭产量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_PROD_OUTPUT"
+    },
+    {
+      "factor_code": "J_SPD_BASIS",
+      "factor_name": "焦炭期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_SPD_BASIS"
+    },
+    {
+      "factor_code": "J_SPD_J_JM",
+      "factor_name": "焦炭与焦煤价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_SPD_J_JM"
+    },
+    {
+      "factor_code": "J_SPD_NEAR_FAR",
+      "factor_name": "焦炭期货近远月价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_SPD_NEAR_FAR"
+    },
+    {
+      "factor_code": "J_SPT_CCI",
+      "factor_name": "CCI焦炭价格指数",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_SPT_CCI"
+    },
+    {
+      "factor_code": "J_SPT_MYSTEEEL",
+      "factor_name": "我的钢铁网焦炭现货价格",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_SPT_MYSTEEEL"
+    },
+    {
+      "factor_code": "J_STK_COKE_RATE",
+      "factor_name": "焦化企业开工率",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_STK_COKE_RATE"
+    },
+    {
+      "factor_code": "J_STK_MINE",
+      "factor_name": "煤矿焦煤库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_STK_MINE"
+    },
+    {
+      "factor_code": "J_STK_PORT",
+      "factor_name": "港口焦炭库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_STK_PORT"
+    },
+    {
+      "factor_code": "J_STK_SEPARATE",
+      "factor_name": "独立焦企焦炭库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_STK_SEPARATE"
+    },
+    {
+      "factor_code": "J_STK_STEEL_DAYS",
+      "factor_name": "钢厂焦炭可用天数",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_STK_STEEL_DAYS"
+    },
+    {
+      "factor_code": "J_STK_TOTAL",
+      "factor_name": "焦炭社会总库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_STK_TOTAL"
+    },
+    {
+      "factor_code": "J_STK_TRADE",
+      "factor_name": "贸易商焦炭库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_STK_TRADE"
+    },
+    {
+      "factor_code": "J_STK_WARRANT",
+      "factor_name": "焦炭期货仓单",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_STK_WARRANT"
+    },
+    {
+      "factor_code": "J_TOT_DISPATCH",
+      "factor_name": "焦炭总调出量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "J_TOT_DISPATCH"
+    }
+  ],
+  "JM": [
+    {
+      "factor_code": "JM_COST_AU_PROFIT",
+      "factor_name": "甘其毛都口岸库存",
+      "direction": "positive",
+      "weight": 0.04,
+      "proxy": "JM_COST_AU_PROFIT"
+    },
+    {
+      "factor_code": "JM_COST_COKING_PROFIT",
+      "factor_name": "独立焦化厂炼焦煤库存(230家)",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "JM_COST_COKING_PROFIT"
+    },
+    {
+      "factor_code": "JM_COST_MONGOLIA",
+      "factor_name": "蒙煤-山西煤价差",
+      "direction": "positive",
+      "weight": 0.04,
+      "proxy": "JM_COST_MONGOLIA"
+    },
+    {
+      "factor_code": "JM_DEMAND_COKING_RATE",
+      "factor_name": "吨焦利润",
+      "direction": "positive",
+      "weight": 0.06,
+      "proxy": "JM_DEMAND_COKING_RATE"
+    },
+    {
+      "factor_code": "JM_DEMAND_HOT_METAL",
+      "factor_name": "230家焦企产能利用率",
+      "direction": "positive",
+      "weight": 0.06,
+      "proxy": "JM_DEMAND_HOT_METAL"
+    },
+    {
+      "factor_code": "JM_IMPORT",
+      "factor_name": "焦煤月度进口量",
+      "direction": "positive",
+      "weight": 0.06,
+      "proxy": "JM_IMPORT"
+    },
+    {
+      "factor_code": "JM_INV_COKING_PLANT",
+      "factor_name": "钢厂炼焦煤库存(247家)",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "JM_INV_COKING_PLANT"
+    },
+    {
+      "factor_code": "JM_INV_GQMD",
+      "factor_name": "蒙煤口岸成本(蒙5#折盘面)",
+      "direction": "negative",
+      "weight": 0.06,
+      "proxy": "JM_INV_GQMD"
+    },
+    {
+      "factor_code": "JM_INV_STEEL_PLANT",
+      "factor_name": "澳煤进口盈亏",
+      "direction": "positive",
+      "weight": 0.04,
+      "proxy": "JM_INV_STEEL_PLANT"
+    },
+    {
+      "factor_code": "JM_INV_THREE_PORTS",
+      "factor_name": "247家钢厂日均铁水产量",
+      "direction": "positive",
+      "weight": 0.1,
+      "proxy": "JM_INV_THREE_PORTS"
+    },
+    {
+      "factor_code": "JM_POS_OI",
+      "factor_name": "焦煤期货持仓量",
+      "direction": "positive",
+      "weight": 0.08,
+      "proxy": "JM_POS_OI"
+    },
+    {
+      "factor_code": "JM_SPD_BASIS",
+      "factor_name": "焦煤期现基差",
+      "direction": "negative",
+      "weight": 0.1,
+      "proxy": "JM_SPD_BASIS"
+    },
+    {
+      "factor_code": "JM_SPD_CONTRACT",
+      "factor_name": "焦煤月差",
+      "direction": "positive",
+      "weight": 0.06,
+      "proxy": "JM_SPD_CONTRACT"
+    },
+    {
+      "factor_code": "JM_SPD_MG_SX",
+      "factor_name": "蒙煤-山西煤价差",
+      "direction": "positive",
+      "weight": 0.04,
+      "proxy": "JM_SPD_MG_SX"
+    },
+    {
+      "factor_code": "JM_SPD_ZC",
+      "factor_name": "焦煤/动力煤比价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "JM_SPD_ZC"
+    },
+    {
+      "factor_code": "JM_SUPPLY_GQMD_CARS",
+      "factor_name": "三大口岸蒙煤总库存",
+      "direction": "positive",
+      "weight": 0.06,
+      "proxy": "JM_SUPPLY_GQMD_CARS"
+    },
+    {
+      "factor_code": "JM_SUPPLY_MINE_RATE",
+      "factor_name": "精煤日均产量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "JM_SUPPLY_MINE_RATE"
+    },
+    {
+      "factor_code": "JM_SUPPLY_WASHED_OUTPUT",
+      "factor_name": "甘其毛都口岸通关车数",
+      "direction": "positive",
+      "weight": 0.06,
+      "proxy": "JM_SUPPLY_WASHED_OUTPUT"
+    }
+  ],
+  "LC": [
+    {
+      "factor_code": "LC_FUT_CLOSE",
+      "factor_name": "碳酸锂期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LC_FUT_CLOSE"
+    },
+    {
+      "factor_code": "LC_FUT_OI",
+      "factor_name": "碳酸锂期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LC_FUT_OI"
+    }
+  ],
+  "LH": [
+    {
+      "factor_code": "LH_FUT_CLOSE",
+      "factor_name": "生猪期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LH_FUT_CLOSE"
+    },
+    {
+      "factor_code": "LH_FUT_OI",
+      "factor_name": "生猪期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LH_FUT_OI"
+    },
+    {
+      "factor_code": "LH_POS_NET",
+      "factor_name": "生猪期货净持仓",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LH_POS_NET"
+    },
+    {
+      "factor_code": "LH_PROD_OUTPUT",
+      "factor_name": "生猪出栏量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LH_PROD_OUTPUT"
+    },
+    {
+      "factor_code": "LH_SPD_BASIS",
+      "factor_name": "生猪期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LH_SPD_BASIS"
+    },
+    {
+      "factor_code": "LH_SPD_PIG_GRAIN",
+      "factor_name": "猪粮比",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LH_SPD_PIG_GRAIN"
+    },
+    {
+      "factor_code": "LH_SPT_SPOT",
+      "factor_name": "生猪现货价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LH_SPT_SPOT"
+    },
+    {
+      "factor_code": "LH_STK_SLAUGHTER",
+      "factor_name": "生猪屠宰量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LH_STK_SLAUGHTER"
+    },
+    {
+      "factor_code": "LH_STK_SOCIAL",
+      "factor_name": "生猪社会库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LH_STK_SOCIAL"
+    },
+    {
+      "factor_code": "LH_STK_WARRANT",
+      "factor_name": "生猪仓单",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "LH_STK_WARRANT"
+    }
+  ],
+  "M": [
+    {
+      "factor_code": "M_BASIS_SPOT_FUTURES",
+      "factor_name": "豆粕期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "M_BASIS_SPOT_FUTURES"
+    },
+    {
+      "factor_code": "M_BEAN_ARRIVAL",
+      "factor_name": "大豆到港量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "M_BEAN_ARRIVAL"
+    },
+    {
+      "factor_code": "M_FREIGHT_BDI",
+      "factor_name": "波罗的海干散货运价指数",
+      "direction": "negative",
+      "weight": 0.05,
+      "proxy": "M_FREIGHT_BDI"
+    },
+    {
+      "factor_code": "M_FX_USDCNY",
+      "factor_name": "美元兑人民币汇率",
+      "direction": "negative",
+      "weight": 0.1,
+      "proxy": "M_FX_USDCNY"
+    },
+    {
+      "factor_code": "M_OIL_BEAN_STOCK",
+      "factor_name": "油厂大豆库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "M_OIL_BEAN_STOCK"
+    },
+    {
+      "factor_code": "M_OIL_MEAL_STOCK",
+      "factor_name": "油厂豆粕库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "M_OIL_MEAL_STOCK"
+    },
+    {
+      "factor_code": "M_PLANT_OP_RATE",
+      "factor_name": "油厂开机率",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "M_PLANT_OP_RATE"
+    },
+    {
+      "factor_code": "M_POS_NET",
+      "factor_name": "豆粕持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "M_POS_NET"
+    },
+    {
+      "factor_code": "M_PRI_CBOT_SOYBEAN",
+      "factor_name": "CBOT大豆期货价格",
+      "direction": "positive",
+      "weight": 0.15,
+      "proxy": "M_PRI_CBOT_SOYBEAN"
+    },
+    {
+      "factor_code": "M_PRI_HOG",
+      "factor_name": "全国生猪价格",
+      "direction": "positive",
+      "weight": 0.1,
+      "proxy": "M_PRI_HOG"
+    },
+    {
+      "factor_code": "M_PRI_SOYBEAN_OIL",
+      "factor_name": "豆油期货价格",
+      "direction": "positive",
+      "weight": 0.1,
+      "proxy": "M_PRI_SOYBEAN_OIL"
+    },
+    {
+      "factor_code": "M_RATIO_OIL_MEAL",
+      "factor_name": "油粕比",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "M_RATIO_OIL_MEAL"
+    },
+    {
+      "factor_code": "M_SPD_M_RM",
+      "factor_name": "豆粕-菜粕价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "M_SPD_M_RM"
+    },
+    {
+      "factor_code": "M_SPD_NEAR_FEAR",
+      "factor_name": "豆粕近远月价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "M_SPD_NEAR_FEAR"
+    },
+    {
+      "factor_code": "M_STK_WARRANT",
+      "factor_name": "大商所豆粕仓单",
+      "direction": "negative",
+      "weight": 0.15,
+      "proxy": "M_STK_WARRANT"
+    },
+    {
+      "factor_code": "M_WEATHER_ENSO",
+      "factor_name": "ENSO指数",
+      "direction": "positive",
+      "weight": 0.1,
+      "proxy": "M_WEATHER_ENSO"
+    }
+  ],
+  "P": [
+    {
+      "factor_code": "P_DCE_INV",
+      "factor_name": "棕榈油期货库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "P_DCE_INV"
+    },
+    {
+      "factor_code": "P_FUT_CLOSE",
+      "factor_name": "棕榈油期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "P_FUT_CLOSE"
+    },
+    {
+      "factor_code": "P_FUT_OI",
+      "factor_name": "棕榈油期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "P_FUT_OI"
+    },
+    {
+      "factor_code": "P_INV_EM",
+      "factor_name": "棕榈油库存变化",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "P_INV_EM"
+    },
+    {
+      "factor_code": "P_OIL_REF",
+      "factor_name": "INE原油期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "P_OIL_REF"
+    },
+    {
+      "factor_code": "P_SPD_BASIS",
+      "factor_name": "棕榈油期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "P_SPD_BASIS"
+    },
+    {
+      "factor_code": "P_SPD_CONTRACT",
+      "factor_name": "棕榈油近远月价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "P_SPD_CONTRACT"
+    },
+    {
+      "factor_code": "P_SPD_P_Y",
+      "factor_name": "棕榈豆油价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "P_SPD_P_Y"
+    }
+  ],
+  "PB": [
+    {
+      "factor_code": "PB_FUT_CLOSE",
+      "factor_name": "PB沪铅期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_FUT_CLOSE"
+    },
+    {
+      "factor_code": "PB_FUT_OI",
+      "factor_name": "PB沪铅期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_FUT_OI"
+    },
+    {
+      "factor_code": "PB_FX_USDCNY",
+      "factor_name": "美元兑人民币汇率",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_FX_USDCNY"
+    },
+    {
+      "factor_code": "PB_MACRO_TC",
+      "factor_name": "铅TC加工费",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_MACRO_TC"
+    },
+    {
+      "factor_code": "PB_POS_NET",
+      "factor_name": "沪铅期货净持仓",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_POS_NET"
+    },
+    {
+      "factor_code": "PB_PROD_CAPACITY",
+      "factor_name": "原生铅产能利用率",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_PROD_CAPACITY"
+    },
+    {
+      "factor_code": "PB_PROD_OUTPUT",
+      "factor_name": "铅锭产量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_PROD_OUTPUT"
+    },
+    {
+      "factor_code": "PB_SPD_BASIS",
+      "factor_name": "沪铅期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_SPD_BASIS"
+    },
+    {
+      "factor_code": "PB_SPD_NEAR_FAR",
+      "factor_name": "沪铅期货近远月价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_SPD_NEAR_FAR"
+    },
+    {
+      "factor_code": "PB_SPD_PRI_VIRGIN",
+      "factor_name": "原生铅与再生铅价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_SPD_PRI_VIRGIN"
+    },
+    {
+      "factor_code": "PB_SPT_SMM",
+      "factor_name": "SMM沪铅现货价格",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_SPT_SMM"
+    },
+    {
+      "factor_code": "PB_STK_BATTERY_RATE",
+      "factor_name": "铅酸电池用铅占比",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_STK_BATTERY_RATE"
+    },
+    {
+      "factor_code": "PB_STK_FUTURES",
+      "factor_name": "沪铅期货库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_STK_FUTURES"
+    },
+    {
+      "factor_code": "PB_STK_INVENTORY",
+      "factor_name": "铅锭社会库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_STK_INVENTORY"
+    },
+    {
+      "factor_code": "PB_STK_PORT",
+      "factor_name": "铅锭港口库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_STK_PORT"
+    },
+    {
+      "factor_code": "PB_STK_SOCIAL",
+      "factor_name": "铅锭社会库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_STK_SOCIAL"
+    },
+    {
+      "factor_code": "PB_STK_WARRANT",
+      "factor_name": "铅锭仓单库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PB_STK_WARRANT"
+    }
+  ],
+  "PP": [
+    {
+      "factor_code": "PP_FUT_CLOSE",
+      "factor_name": "PP聚丙烯期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_FUT_CLOSE"
+    },
+    {
+      "factor_code": "PP_FUT_OI",
+      "factor_name": "PP聚丙烯期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_FUT_OI"
+    },
+    {
+      "factor_code": "PP_POS_NET",
+      "factor_name": "聚丙烯期货净持仓",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_POS_NET"
+    },
+    {
+      "factor_code": "PP_PROD_OUTPUT",
+      "factor_name": "聚丙烯产量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_PROD_OUTPUT"
+    },
+    {
+      "factor_code": "PP_SPD_BASIS",
+      "factor_name": "聚丙烯期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_SPD_BASIS"
+    },
+    {
+      "factor_code": "PP_SPD_LAM_Copoly",
+      "factor_name": "拉丝-共聚价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_SPD_LAM_Copoly"
+    },
+    {
+      "factor_code": "PP_SPD_LLDPE_PP",
+      "factor_name": "线型低密度聚乙烯-聚丙烯价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_SPD_LLDPE_PP"
+    },
+    {
+      "factor_code": "PP_SPT_CFR_CHINA",
+      "factor_name": "CFR中国丙烯到岸价格",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_SPT_CFR_CHINA"
+    },
+    {
+      "factor_code": "PP_STK_BAG_RATE",
+      "factor_name": "聚丙烯袋装比例",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_STK_BAG_RATE"
+    },
+    {
+      "factor_code": "PP_STK_INVENTORY",
+      "factor_name": "聚丙烯社会库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_STK_INVENTORY"
+    },
+    {
+      "factor_code": "PP_STK_PLANT",
+      "factor_name": "聚丙烯石化库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_STK_PLANT"
+    },
+    {
+      "factor_code": "PP_STK_PLANT_RATE",
+      "factor_name": "聚丙烯装置开工率",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_STK_PLANT_RATE"
+    },
+    {
+      "factor_code": "PP_STK_POLYMER",
+      "factor_name": "高分子库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_STK_POLYMER"
+    },
+    {
+      "factor_code": "PP_STK_PORT",
+      "factor_name": "聚丙烯港口库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_STK_PORT"
+    },
+    {
+      "factor_code": "PP_STK_WARRANT",
+      "factor_name": "聚丙烯仓单库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "PP_STK_WARRANT"
+    }
+  ],
+  "SC": [
+    {
+      "factor_code": "SC_FUT_CLOSE",
+      "factor_name": "原油期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SC_FUT_CLOSE"
+    },
+    {
+      "factor_code": "SC_FUT_OI",
+      "factor_name": "原油期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SC_FUT_OI"
+    },
+    {
+      "factor_code": "SC_MACRO_IMPORT",
+      "factor_name": "原油进口量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SC_MACRO_IMPORT"
+    },
+    {
+      "factor_code": "SC_POS_NET",
+      "factor_name": "原油期货净持仓",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SC_POS_NET"
+    },
+    {
+      "factor_code": "SC_PROD_OUTPUT",
+      "factor_name": "原油产量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SC_PROD_OUTPUT"
+    },
+    {
+      "factor_code": "SC_SPD_BASIS",
+      "factor_name": "原油期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SC_SPD_BASIS"
+    },
+    {
+      "factor_code": "SC_SPD_CRACK",
+      "factor_name": "裂解价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SC_SPD_CRACK"
+    },
+    {
+      "factor_code": "SC_SPT_SPOT",
+      "factor_name": "原油现货价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SC_SPT_SPOT"
+    },
+    {
+      "factor_code": "SC_STK_SOCIAL",
+      "factor_name": "原油社会库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SC_STK_SOCIAL"
+    },
+    {
+      "factor_code": "SC_STK_WARRANT",
+      "factor_name": "原油仓单",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SC_STK_WARRANT"
+    }
+  ],
+  "SN": [
+    {
+      "factor_code": "SN_DCE_INV",
+      "factor_name": "沪锡期货库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SN_DCE_INV"
+    },
+    {
+      "factor_code": "SN_FUT_CLOSE",
+      "factor_name": "沪锡期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SN_FUT_CLOSE"
+    },
+    {
+      "factor_code": "SN_FUT_OI",
+      "factor_name": "沪锡期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "SN_FUT_OI"
+    }
+  ],
+  "Y": [
+    {
+      "factor_code": "Y_COST_CNF",
+      "factor_name": "进口大豆CNF价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_COST_CNF"
+    },
+    {
+      "factor_code": "Y_FUT_CBOT_OIL",
+      "factor_name": "CBOT豆油期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_FUT_CBOT_OIL"
+    },
+    {
+      "factor_code": "Y_FUT_CBOT_SOY",
+      "factor_name": "CBOT大豆期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_FUT_CBOT_SOY"
+    },
+    {
+      "factor_code": "Y_FUT_CBOT_SOY_MEAL",
+      "factor_name": "CBOT豆粕主力合约",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_FUT_CBOT_SOY_MEAL"
+    },
+    {
+      "factor_code": "Y_FUT_CBOT_SOY_OIL",
+      "factor_name": "CBOT豆油主力合约",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_FUT_CBOT_SOY_OIL"
+    },
+    {
+      "factor_code": "Y_FUT_CLOSE",
+      "factor_name": "Y棕榈油期货收盘价",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_FUT_CLOSE"
+    },
+    {
+      "factor_code": "Y_FUT_OI",
+      "factor_name": "Y棕榈油期货持仓量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_FUT_OI"
+    },
+    {
+      "factor_code": "Y_INV_LAND",
+      "factor_name": "进口大豆港口库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_INV_LAND"
+    },
+    {
+      "factor_code": "Y_INV_MALAYS",
+      "factor_name": "马来西亚棕榈油库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_INV_MALAYS"
+    },
+    {
+      "factor_code": "Y_INV_PACIFIC",
+      "factor_name": "太平洋大豆到港量",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_INV_PACIFIC"
+    },
+    {
+      "factor_code": "Y_POS_NET",
+      "factor_name": "豆油期货净持仓",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_POS_NET"
+    },
+    {
+      "factor_code": "Y_SPD_BASIS",
+      "factor_name": "豆油期现基差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_SPD_BASIS"
+    },
+    {
+      "factor_code": "Y_SPD_PALM_OIL",
+      "factor_name": "豆油与棕榈油价差",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_SPD_PALM_OIL"
+    },
+    {
+      "factor_code": "Y_STK_COMMERCIAL",
+      "factor_name": "豆油商业库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_STK_COMMERCIAL"
+    },
+    {
+      "factor_code": "Y_STK_INVENTORY",
+      "factor_name": "豆油商业库存",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_STK_INVENTORY"
+    },
+    {
+      "factor_code": "Y_STK_WARRANT",
+      "factor_name": "豆油期货仓单",
+      "direction": "positive",
+      "weight": 0.05,
+      "proxy": "Y_STK_WARRANT"
+    }
+  ],
+  "FU": [
+    {
+      "factor_code": "FU_BASIS",
+      "direction": "negative",
+      "weight": 0.05
+    },
+    {
+      "factor_code": "FU_DCE_INV",
+      "direction": "negative",
+      "weight": 0.05
+    },
+    {
+      "factor_code": "FU_FUT_CLOSE",
+      "direction": "neutral",
+      "weight": 0.05
+    },
+    {
+      "factor_code": "FU_HIGH_LOW",
+      "direction": "positive",
+      "weight": 0.05
+    },
+    {
+      "factor_code": "FU_HS_LS_SPREAD",
+      "direction": "negative",
+      "weight": 0.05
+    },
+    {
+      "factor_code": "FU_NET_POSITION",
+      "direction": "positive",
+      "weight": 0.05
+    },
+    {
+      "factor_code": "FU_SG_INVENTORY",
+      "direction": "negative",
+      "weight": 0.05
+    },
+    {
+      "factor_code": "FU_SPOT_DOMESTIC",
+      "direction": "neutral",
+      "weight": 0.05
+    },
+    {
+      "factor_code": "FU_VOLUME",
+      "direction": "positive",
+      "weight": 0.05
+    },
+    {
+      "factor_code": "FU_WARRANT",
+      "direction": "negative",
+      "weight": 0.05
+    },
+    {
+      "factor_code": "FU_WTI_PRICE",
+      "direction": "positive",
+      "weight": 0.05
+    }
   ]
 }

@@ -33,22 +33,26 @@ def fetch(obs_date):
     # L1: AKShare 交易所排名
     try:
         print("[L1] AKShare get_shfe_rank_table...")
-        df = ak.get_shfe_rank_table(date=obs_date.strftime("%Y%m%d"))
-        if df is not None and len(df) > 0:
-            ao_df = df[df["variety"] == "AO"]
-            if len(ao_df) > 0:
-                cols = ao_df.columns.tolist()
-                # 找持仓量列（通常是 open_interest 或类似）
-                oi_col = None
-                for c in cols:
-                    if "open_interest" in str(c).lower() or "持仓" in str(c):
-                        oi_col = c
-                        break
-                if oi_col:
-                    oi = float(ao_df[oi_col].sum())
-                    if BOUNDS[0] <= oi <= BOUNDS[1]:
-                        print(f"[L1] 成功: {oi:.0f} 手")
-                        return oi, "akshare", 1.0
+        import pandas as pd
+        # 尝试obs_date，如果非交易日则回退
+        for offset in range(0, 7):
+            try_date = obs_date - __import__("datetime").timedelta(days=offset)
+            result = ak.get_shfe_rank_table(date=try_date.strftime("%Y%m%d"))
+            if isinstance(result, dict) and len(result) > 0:
+                ao_total = 0
+                for contract, df in result.items():
+                    if isinstance(df, pd.DataFrame) and "variety" in df.columns:
+                        ao_df = df[df["variety"] == "AO"]
+                        if len(ao_df) > 0:
+                            for col in ao_df.columns:
+                                # 总持仓量取long_open_interest（买卖对称）
+                                if col == "long_open_interest":
+                                    ao_total += float(ao_df[col].sum())
+                if ao_total > 0 and BOUNDS[0] <= ao_total <= BOUNDS[1]:
+                    print(f"[L1] 成功: {ao_total:.0f} 手 (date={try_date})")
+                    return ao_total, "akshare", 1.0
+                elif ao_total > 0:
+                    print(f"[L1] AO持仓={ao_total:.0f} 超出bounds")
     except Exception as e:
         print(f"[L1] 失败: {e}")
 

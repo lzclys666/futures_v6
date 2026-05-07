@@ -17,6 +17,14 @@ from db_utils import get_pit_dates, ensure_table
 SCRIPTS = [
     'SC_原油期货收盘价.py',
     'SC_原油期货持仓量.py',
+    'SC_原油现货价.py',
+    'SC_原油期现基差.py',
+    'SC_原油期货净持仓.py',
+    'SC_原油仓单.py',
+    'SC_原油社会库存.py',
+    'SC_裂解价差.py',
+    'SC_原油产量.py',
+    'SC_原油进口量.py',
 ]
 
 

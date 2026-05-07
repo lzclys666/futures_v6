@@ -17,6 +17,14 @@ from db_utils import get_pit_dates, ensure_table
 SCRIPTS = [
     'LH_生猪期货收盘价.py',
     'LH_生猪期货持仓量.py',
+    'LH_生猪现货价.py',
+    'LH_生猪期现基差.py',
+    'LH_生猪期货净持仓.py',
+    'LH_生猪仓单.py',
+    'LH_生猪社会库存.py',
+    'LH_生猪出栏量.py',
+    'LH_猪粮比.py',
+    'LH_生猪屠宰量.py',
 ]
 
 

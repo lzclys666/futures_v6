@@ -1,0 +1,19 @@
+factor_code: SC_SPD_CRACK
+symbol: SC
+category: derived
+name: 裂解价差
+description: 原油裂解价差
+frequency: daily
+unit: 元/桶
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- spread
+- SC
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -500.0
+- 500.0

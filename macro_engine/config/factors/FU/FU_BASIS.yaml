@@ -1,0 +1,19 @@
+factor_code: FU_BASIS
+symbol: FU
+category: derived
+name: 燃料油基差
+description: 燃料油现货-期货基差
+frequency: daily
+unit: 元/吨
+direction: negative
+confidence: 3
+source: Ship&Bunker + Sina
+calculation: null
+tags:
+- basis
+- FU
+source_confidence: 3
+data_source: Ship&Bunker + Sina
+expected_range:
+- -2000.0
+- 2000.0

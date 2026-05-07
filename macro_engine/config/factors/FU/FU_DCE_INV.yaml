@@ -1,0 +1,19 @@
+factor_code: FU_DCE_INV
+symbol: FU
+category: free_data
+name: 上期所燃料油库存
+description: 上期所燃料油期货库存
+frequency: daily
+unit: 吨
+direction: negative
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- inventory
+- FU
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- 0.0
+- 1000000.0

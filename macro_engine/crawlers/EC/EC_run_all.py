@@ -18,6 +18,8 @@ os.makedirs(LOG_DIR, exist_ok=True)
 SCRIPTS = [
     "EC_欧线期货收盘价.py",
     "EC_欧线期货持仓量.py",
+    "EC_欧线期货持仓量变化.py",
+    "EC_欧线期货跨期价差.py",
 ]
 
 def main():

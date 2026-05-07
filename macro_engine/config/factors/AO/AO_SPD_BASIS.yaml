@@ -1,0 +1,20 @@
+﻿factor_code: AO_SPD_BASIS
+symbol: AO
+category: free_data
+name: 氧化铝期现基差
+description: 氧化铝现货价-期货主力价格
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: null
+calculation: null
+tags:
+- basis
+- AO
+source_confidence: 0.0
+data_source: null
+expected_range:
+- -500.0
+- 500.0
+skip_reason: "氧化铝现货价无免费来源（Mysteel/SMM年费），AKShare futures_spot_price 对AO返回空"

@@ -73,7 +73,8 @@ from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 
 
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
 
 
 from pydantic import BaseModel, Field
@@ -89,6 +90,9 @@ from scipy.stats import pearsonr
 
 
 import csv
+
+
+import json
 
 
 import math
@@ -173,6 +177,9 @@ from routes.signal import router as signal_router
 
 
 from routes.circuit_breaker import router as circuit_breaker_router
+from routes.strategy import router as strategy_router
+from api.routes.recon import router as recon_router
+from services.signal_bridge import init_signal_ws
 
 
 
@@ -713,7 +720,34 @@ app.include_router(signal_router)
 
 
 app.include_router(circuit_breaker_router)
+app.include_router(strategy_router)
+app.include_router(recon_router)
 
+
+# ---------------------------------------------------------------------------
+# Auth middleware + login endpoint
+# ---------------------------------------------------------------------------
+try:
+    from api.auth import create_auth_middleware, handle_login
+    from pydantic import BaseModel as _BaseModel
+
+    create_auth_middleware(app)
+
+    class _LoginRequest(_BaseModel):
+        api_key: str
+
+    @app.post("/api/auth/login")
+    async def auth_login(req: _LoginRequest):
+        try:
+            result = handle_login(req.api_key)
+            return {"code": 0, "message": "success", "data": result}
+        except ValueError as e:
+            from fastapi import HTTPException
+            raise HTTPException(status_code=401, detail=str(e))
+
+    logging.getLogger("macro_api").info("Auth middleware registered (API Key + JWT)")
+except Exception as e:
+    logging.getLogger("macro_api").warning(f"Auth middleware registration failed (non-fatal): {e}")
 
 
 
@@ -1186,7 +1220,7 @@ def get_positions():
         )
 
 
-        return _wrap(data.model_dump())
+        return _wrap(data.model_dump(by_alias=True))
 
 
 
@@ -1315,7 +1349,7 @@ def get_positions():
     )
 
 
-    return _wrap(data.model_dump())
+    return _wrap(data.model_dump(by_alias=True))
 
 
 
@@ -1670,31 +1704,72 @@ async def websocket_events(websocket: WebSocket):
 
 
 
-@app.get("/health", response_model=ApiResponse, tags=["系统"])
+@app.get("/health", tags=["系统"])
 
 
 def health():
 
 
-    bridge = get_vnpy_bridge()
+    """
 
 
-    return _wrap({
+    Lightweight health check endpoint (no bridge dependency, < 100ms).
 
 
-        "status": "ok",
+    Used by service_guardian and monitoring tools.
 
 
+    """
+
+
+    # Enhanced health check with sub-checks
+    checks = {"database": "unknown", "signal_bridge": "unknown", "disk_space_mb": 0}
+    overall = "ok"
+
+    # Check 1: Database
+    try:
+        db_path = Path(r"D:\futures_v6\macro_engine\pit_data.db")
+        if db_path.exists():
+            checks["database"] = "ok"
+        else:
+            checks["database"] = "down"
+            overall = "degraded"
+    except Exception as e:
+        checks["database"] = f"error: {e}"
+        overall = "degraded"
+
+    # Check 2: SignalBridge (check if recent CSV exists)
+    try:
+        output_dir = Path(r"D:\futures_v6\macro_engine\output")
+        if output_dir.exists():
+            csv_files = list(output_dir.glob("*.csv"))
+            checks["signal_bridge"] = "ok" if csv_files else "no_data"
+            if not csv_files:
+                overall = "degraded"
+        else:
+            checks["signal_bridge"] = "down"
+            overall = "degraded"
+    except Exception as e:
+        checks["signal_bridge"] = f"error: {e}"
+        overall = "degraded"
+
+    # Check 3: Disk space
+    try:
+        import shutil
+        usage = shutil.disk_usage(r"D:\futures_v6")
+        checks["disk_space_mb"] = int(usage.free / (1024 * 1024))
+        if usage.free < 1024 * 1024 * 1024:  # < 1GB
+            overall = "degraded"
+    except Exception:
+        checks["disk_space_mb"] = -1
+
+    return {
+        "status": overall,
         "service": "macro-api",
-
-
         "version": "1.0.0",
-
-
-        "vnpy_bridge": "connected" if bridge else "disconnected"
-
-
-    })
+        "timestamp": datetime.now().isoformat(),
+        "checks": checks,
+    }
 
 
 
@@ -1926,5 +2001,158 @@ async def shutdown_vnpy_ws():
 
 
 _vnpy_ws_manager = None
+
+
+# ---------------------------------------------------------------------------
+# SignalBridge 集成（宏观信号 CSV → WebSocket 推送）
+# ---------------------------------------------------------------------------
+@app.on_event("startup")
+async def startup_signal_bridge():
+    """启动 SignalBridge + StrategyRegistry"""
+    # 1. SignalBridge
+    try:
+        init_signal_ws(app, use_mock=True)
+        logging.getLogger("macro_api").info(
+            "SignalBridge initialized (mock mode) → /ws/signal"
+        )
+    except Exception as e:
+        logging.getLogger("macro_api").warning(
+            f"SignalBridge init failed (non-fatal): {e}"
+        )
+
+    # 1.5 StrategyRegistry
+    try:
+        from core.strategy_registry import init_registry
+        from pathlib import Path
+        project_dir = Path(__file__).parent.parent
+        registry = init_registry(
+            strategy_dir=project_dir / "strategies",
+            bindings_path=project_dir / "config" / "strategy_bindings.yaml",
+            project_dir=project_dir,
+        )
+        logging.getLogger("macro_api").info(
+            f"StrategyRegistry initialized: {len(registry.get_all_strategies())} strategies, "
+            f"{len(registry.get_enabled_bindings())} enabled bindings"
+        )
+    except Exception as e:
+        logging.getLogger("macro_api").warning(
+            f"StrategyRegistry init failed (non-fatal): {e}"
+        )
+
+    # 1.7 AlertManager
+    try:
+        from api.alert import get_alert_manager
+        mgr = get_alert_manager()
+        logging.getLogger("macro_api").info(
+            f"AlertManager initialized: {len(mgr._queue)} alerts loaded from DB"
+        )
+    except Exception as e:
+        logging.getLogger("macro_api").warning(
+            f"AlertManager init failed (non-fatal): {e}"
+        )
+
+    # 2. 风控 WebSocket 广播循环
+    try:
+        from routes.risk import _risk_broadcast_loop
+        asyncio.create_task(_risk_broadcast_loop())
+        logging.getLogger("macro_api").info(
+            "Risk broadcast loop started → /ws/risk"
+        )
+    except Exception as e:
+        logging.getLogger("macro_api").warning(
+            f"Risk broadcast loop start failed (non-fatal): {e}"
+        )
+
+
+# ---------------------------------------------------------------------------
+# WebSocket 风控推送端点 /ws/risk
+# ---------------------------------------------------------------------------
+@app.websocket("/ws/risk")
+async def ws_risk_endpoint(websocket: WebSocket):
+    """
+    WebSocket 风控状态推送端点
+    推送格式：{type: "risk_status_update", data: {overallStatus, rules, updatedAt}}
+    支持命令：ping, get_status
+    """
+    from routes.risk import RiskConnectionManager, _get_risk_status_data, _risk_ws_manager
+
+    await websocket.accept()
+    _risk_ws_manager.add(websocket)
+    try:
+        # 连接时立即推送当前状态
+        status_data = _get_risk_status_data()
+        await websocket.send_text(json.dumps({
+            "type": "risk_status_update",
+            "data": status_data,
+        }, ensure_ascii=False))
+
+        # 保持连接，处理客户端命令
+        while True:
+            try:
+                raw = await websocket.receive_text()
+                msg = json.loads(raw)
+                action = msg.get("action", "")
+
+                if action == "ping":
+                    await websocket.send_text(json.dumps({"type": "pong"}))
+
+                elif action == "get_status":
+                    status_data = _get_risk_status_data()
+                    await websocket.send_text(json.dumps({
+                        "type": "risk_status_update",
+                        "data": status_data,
+                    }, ensure_ascii=False))
+
+            except WebSocketDisconnect:
+                break
+            except json.JSONDecodeError:
+                await websocket.send_text(json.dumps({
+                    "type": "error",
+                    "message": "Invalid JSON",
+                }))
+    finally:
+        _risk_ws_manager.remove(websocket)
+
+
+# ---------------------------------------------------------------------------
+# 前端静态文件服务（单端口部署：API + 前端同端口）
+# ---------------------------------------------------------------------------
+# 通过 SERVE_FRONTEND 环境变量控制是否挂载前端（默认 True）
+# 开发时可设置 SERVE_FRONTEND=false 关闭，只用 Vite dev server
+_SERVE_FRONTEND = _os.environ.get("SERVE_FRONTEND", "true").lower() in ("true", "1", "yes")
+_DIST_DIR = Path(__file__).resolve().parent.parent / "frontend" / "futures_trading" / "frontend" / "dist"
+
+if _SERVE_FRONTEND and _DIST_DIR.exists():
+    # 1) SPA 路由兜底：非 /api/ 非 /ws/ 非 /events/ 非 /health 非 /docs 非 /redoc
+    #    的 GET 请求 → 返回 index.html（React Router 客户端路由）
+    #    必须在所有 API 路由之后注册，否则会拦截 API 请求
+    @app.get("/{full_path:path}", tags=["前端"])
+    async def serve_spa(full_path: str):
+        """SPA 路由兜底：静态文件存在则返回文件，否则返回 index.html"""
+        # 先检查是否对应 dist 中的真实文件
+        file_path = _DIST_DIR / full_path
+        if full_path and file_path.is_file():
+            return FileResponse(str(file_path))
+        # SPA fallback → index.html
+        index_file = _DIST_DIR / "index.html"
+        if index_file.exists():
+            return FileResponse(str(index_file))
+        return {"detail": "Frontend not built"}
+
+    # 2) StaticFiles 挂载：处理根路径 / 和静态资源（/assets/ 等）
+    #    html=True 使得访问 / 时自动返回 index.html
+    #    必须在所有路由（包括 SPA catch-all）之后，作为最终兜底
+    app.mount("/", StaticFiles(directory=str(_DIST_DIR), html=True), name="frontend")
+
+    logging.getLogger("macro_api").info(
+        f"Frontend static files served from {_DIST_DIR} (SERVE_FRONTEND=true)"
+    )
+elif _SERVE_FRONTEND:
+    logging.getLogger("macro_api").warning(
+        f"SERVE_FRONTEND=true but dist directory not found: {_DIST_DIR}. "
+        f"Run frontend build first."
+    )
+else:
+    logging.getLogger("macro_api").info("SERVE_FRONTEND=false, frontend serving disabled")
 
 

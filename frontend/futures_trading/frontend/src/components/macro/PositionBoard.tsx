@@ -12,7 +12,8 @@ import {
 } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
 import { useTradingStore } from '../../store/tradingStore'
-import type { PositionItem, RiskLevelItem } from '../../types/macro'
+import type { PositionItem } from '../../types/macro'
+import type { RiskRuleStatus } from '../../types/risk'
 import './PositionBoard.css'
 
 /** 方向 → Tag 颜色 */
@@ -127,17 +128,17 @@ const PositionBoard: React.FC = () => {
   ]
 
   // --- 风控表格列 ---
-  const riskColumns: ColumnsType<RiskLevelItem> = [
-    { title: '层级', dataIndex: 'level', key: 'level', width: 60 },
-    { title: '规则', dataIndex: 'name', key: 'name', width: 140 },
+  const riskColumns: ColumnsType<RiskRuleStatus> = [
+    { title: '层级', dataIndex: 'layer', key: 'layer', width: 60 },
+    { title: '规则', dataIndex: 'ruleName', key: 'ruleName', width: 140 },
     {
       title: '状态',
-      dataIndex: 'status',
-      key: 'status',
+      dataIndex: 'severity',
+      key: 'severity',
       width: 80,
       render: (v: string) => <Badge status={RISK_STATUS_MAP[v]} text={v} />,
     },
-    { title: '当前值', dataIndex: 'value', key: 'value', width: 100, align: 'right' },
+    { title: '当前值', dataIndex: 'currentValue', key: 'currentValue', width: 100, align: 'right' },
     { title: '阈值', dataIndex: 'threshold', key: 'threshold', width: 100, align: 'right' },
   ]
 
@@ -145,7 +146,7 @@ const PositionBoard: React.FC = () => {
     <div className="position-board">
       {/* 顶部汇总 */}
       <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-        <Col span={6}>
+        <Col xs={12} md={4}>
           <Card size="small">
             <Statistic
               title="总资金"
@@ -155,7 +156,36 @@ const PositionBoard: React.FC = () => {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={12} md={4}>
+          <Card size="small">
+            <Statistic
+              title="可用资金"
+              value={portfolio?.availableFunds ?? 0}
+              precision={0}
+              prefix="¥"
+              valueStyle={{
+                color:
+                  (portfolio?.availableFunds ?? 0) <= 0
+                    ? '#ff4d4f'
+                    : (portfolio?.availableFunds ?? 0) < (portfolio?.totalEquity ?? 1) * 0.1
+                      ? '#faad14'
+                      : '#52c41a',
+              }}
+            />
+          </Card>
+        </Col>
+        <Col xs={12} md={4}>
+          <Card size="small">
+            <Statistic
+              title="冻结保证金"
+              value={portfolio?.usedMargin ?? 0}
+              precision={0}
+              prefix="¥"
+              valueStyle={{ color: '#faad14' }}
+            />
+          </Card>
+        </Col>
+        <Col xs={12} md={4}>
           <Card size="small">
             <Statistic
               title="当日盈亏"
@@ -168,7 +198,7 @@ const PositionBoard: React.FC = () => {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={12} md={4}>
           <Card size="small">
             <Statistic
               title="当日收益率"
@@ -181,7 +211,7 @@ const PositionBoard: React.FC = () => {
             />
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={12} md={4}>
           <Card size="small">
             <Statistic
               title="持仓占比"
@@ -237,10 +267,10 @@ const PositionBoard: React.FC = () => {
         size="small"
       >
         <Spin spinning={riskLoading}>
-          <Table<RiskLevelItem>
+          <Table<RiskRuleStatus>
             columns={riskColumns}
             dataSource={riskStatus?.rules ?? []}
-            rowKey="level"
+            rowKey="ruleId"
             size="small"
             pagination={false}
             locale={{ emptyText: '暂无风控数据' }}

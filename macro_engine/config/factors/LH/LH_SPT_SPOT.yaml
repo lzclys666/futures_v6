@@ -1,0 +1,19 @@
+factor_code: LH_SPT_SPOT
+symbol: LH
+category: free_data
+name: 生猪现货价
+description: 生猪现货价
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- spot
+- LH
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- 5000.0
+- 25000.0

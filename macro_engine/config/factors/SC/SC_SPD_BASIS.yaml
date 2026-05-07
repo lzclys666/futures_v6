@@ -1,0 +1,19 @@
+factor_code: SC_SPD_BASIS
+symbol: SC
+category: derived
+name: 原油期现基差
+description: 原油期现基差
+frequency: daily
+unit: 元/桶
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: spot_price - futures_price
+tags:
+- spread
+- SC
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -200.0
+- 200.0

@@ -35,7 +35,7 @@ function _adaptFactor(o: Record<string, unknown>): FactorDetail {
     normalizedScore: o.normalizedScore as number,
     weight:          o.weight as number,
     contribution:    o.contribution as number,
-    factorIc:        Number.isFinite(factorIcNum) ? factorIcNum : null,
+    factorIc:        Number.isFinite(factorIcNum) ? factorIcNum : undefined,
   }
 }
 
@@ -67,6 +67,39 @@ function _adaptSignalSummary(o: Record<string, unknown>): MacroSignalSummary {
 
 const USE_MOCK = false // 2026-04-29: 后端 /api/signal/* 已就绪
 
+// ============================================================
+// IC 热力图 API（/api/ic/heatmap）
+// ============================================================
+
+/** IC 热力图响应 */
+export interface ICHeatmapData {
+  factors: string[]
+  symbols: string[]
+  /** icMatrix[i][j] = 因子 i 对品种 j 的 IC 值 */
+  icMatrix: number[][]
+  lookbackPeriod: number
+  holdPeriod: number
+  updatedAt: string
+}
+
+/** IC 热力图请求参数 */
+export interface ICHeatmapParams {
+  symbols?: string
+  lookback?: number
+  hold_period?: number
+}
+
+const icHttp = createClient('/api/ic')
+
+/**
+ * 获取 IC 热力图数据
+ * GET /api/ic/heatmap
+ */
+export async function fetchICHeatmap(params?: ICHeatmapParams): Promise<ICHeatmapData> {
+  const res = await icHttp.get<ICHeatmapData>('/heatmap', { params })
+  return res.data
+}
+
 // ---------- Mock 数据（仅在 USE_MOCK=true 时使用） ----------
 
 const MOCK_SIGNAL: MacroSignal = {
@@ -90,6 +123,23 @@ const MOCK_ALL_SIGNALS: MacroSignalSummary[] = [
   { symbol: 'AU', direction: 'NEUTRAL', compositeScore: 0.05, updatedAt: new Date().toISOString() },
   { symbol: 'CU', direction: 'LONG', compositeScore: 0.28, updatedAt: new Date().toISOString() },
 ]
+
+// ---------- IC 热力图 Mock ----------
+
+export const MOCK_IC_HEATMAP: ICHeatmapData = {
+  factors: ['basis', 'spread', 'hold_volume', 'basis_volatility', 'import'],
+  symbols: ['JM', 'RU', 'RB', 'ZN', 'NI'],
+  icMatrix: [
+    [0.053, -0.032, 0.041, 0.029, -0.021],
+    [-0.044, 0.062, 0.038, 0.022, -0.015],
+    [0.048, 0.028, -0.025, 0.034, 0.009],
+    [-0.018, 0.055, 0.071, -0.011, 0.006],
+    [0.036, -0.019, 0.032, 0.048, -0.028],
+  ],
+  lookbackPeriod: 60,
+  holdPeriod: 5,
+  updatedAt: new Date().toISOString(),
+}
 
 const MOCK_HISTORY: ScoreHistoryPoint[] = Array.from({ length: 30 }, (_, i) => ({
   date: new Date(Date.now() - (29 - i) * 86400000).toISOString().slice(0, 10),

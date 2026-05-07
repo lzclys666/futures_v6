@@ -18,12 +18,17 @@ auto_scripts = [
     "I_抓取期货收盘价.py",
     "I_抓取港口库存.py",
     "I_抓取期货持仓量.py",
+    "I_铁矿石现货价.py",
+    "I_铁矿石期货仓单.py",
     "I_计算基差.py",
     "I_计算近远月价差.py",
+    "I_铁矿石港口库存变化.py",
+    "I_铁矿螺纹比价.py",
 ]
 
 manual_scripts = [
     "I_批次2_手动输入.py",
+    "I_铁矿石期货净持仓.py",  # [BLOCKED] DCE反爬，等待AKShare修复
 ]
 
 all_scripts = auto_scripts + manual_scripts

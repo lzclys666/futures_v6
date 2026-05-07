@@ -337,15 +337,47 @@ trading_sessions:
     end: '15:00'
   night:
   - start: '21:00'
-    end: '23:00'
+    end: '02:30'
     symbols:
-    - SC
-    - FU
     - AU
     - AG
+    - SC
+  - start: '21:00'
+    end: '01:00'
+    symbols:
+    - CU
+    - AL
+    - ZN
+    - PB
+    - NI
+    - SN
+  - start: '21:00'
+    end: '23:00'
+    symbols:
     - RU
     - RB
     - HC
+    - BU
+    - FU
+    - SP
+    - I
+    - J
+    - JM
+    - CF
+    - MA
+    - TA
+    - SR
+    - RM
+    - OI
+    - FG
+    - PP
+    - V
+    - L
+    - EG
+    - EB
+    - PG
+    - LH
+    - NR
 auction_sessions:
   morning:
     start: 08:55

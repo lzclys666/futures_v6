@@ -1,0 +1,20 @@
+﻿factor_code: M_BEAN_ARRIVAL
+symbol: M
+category: free_data
+name: 大豆到港量
+description: 大豆到港量（万吨，按月/周统计）
+frequency: weekly
+unit: 万吨
+direction: neutral
+confidence: 3
+source: null
+calculation: null
+tags:
+- supply
+- M
+source_confidence: 0.0
+data_source: null
+expected_range:
+- 0.0
+- 500.0
+skip_reason: "我的农产品网需付费订阅，海关总署接口未实现，USDA数据滞后且粒度不符"

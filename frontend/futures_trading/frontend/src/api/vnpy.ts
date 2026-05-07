@@ -6,8 +6,9 @@
 
 import { createClient } from './client'
 import type { VnpyStatus, VnpyAccount, VnpyPosition, VnpyOrder } from '../types/vnpy'
+import { MOCK_ACCOUNT, MOCK_POSITIONS } from '../mock/portfolioMock'
 
-const USE_MOCK = true // VNpy 后端非交易时段无数据，启用 Mock 展示
+const USE_MOCK = true // VNpy 后端未就绪，启用 Mock 展示
 
 // ---------- Mock 数据 ----------
 
@@ -19,23 +20,8 @@ const MOCK_VNPY_STATUS: VnpyStatus = {
   version: '3.9.0',
 }
 
-const MOCK_VNPY_ACCOUNT: VnpyAccount = {
-  accountId: '123456',
-  balance: 1000000,
-  available: 850000,
-  frozen: 50000,
-  unrealizedPnl: 25000,
-  realizedPnl: 15000,
-  totalPnl: 40000,
-  returnRate: 0.04,
-  marginRatio: 0.15,
-  updatedAt: new Date().toISOString(),
-}
-
-const MOCK_VNPY_POSITIONS: VnpyPosition[] = [
-  { symbol: 'RU2501', direction: 'LONG', volume: 5, ydVolume: 3, tdVolume: 2, available: 5, avgPrice: 14500, lastPrice: 14620, unrealizedPnl: 6000, margin: 35000, pnlRate: 0.0083, updatedAt: new Date().toISOString() },
-  { symbol: 'AG2502', direction: 'SHORT', volume: 3, ydVolume: 3, tdVolume: 0, available: 3, avgPrice: 5800, lastPrice: 5750, unrealizedPnl: 1500, margin: 18000, pnlRate: 0.0086, updatedAt: new Date().toISOString() },
-]
+const MOCK_VNPY_ACCOUNT: VnpyAccount = MOCK_ACCOUNT
+const MOCK_VNPY_POSITIONS: VnpyPosition[] = MOCK_POSITIONS
 
 const MOCK_VNPY_ORDERS: VnpyOrder[] = [
   { orderId: '1', symbol: 'RU2501', direction: 'LONG', offset: 'OPEN', price: 14500, volume: 2, tradedVolume: 2, status: '全部成交', orderTime: '09:30:00' },

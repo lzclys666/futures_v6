@@ -142,10 +142,11 @@ def main():
 
     print(f"\n写入区间: {START} → {END}, 可交易天数: {len(merged)}")
 
+    from datetime import date as _date
     total = 0
     for _, row in merged.iterrows():
         obs = row['obs_date']
-        pub = obs  # pub_date=obs_date (回填规范)
+        pub = _date.today()  # pub_date=今天（数据加载日期），obs_date=数据实际日期（PIT合规）
 
         # NR_FUT_CLOSE
         if pd.notna(row['close_nr']):
@@ -200,7 +201,7 @@ def main():
         if pd.notna(row['inv']):
             v = float(row['inv'])
             if 5000 <= v <= 200000:
-                save(conn, "NR_INV_TOTAL", SYMBOL, obs, obs, v, "INE_inventory_akshare", 1.0)
+                save(conn, "NR_INV_TOTAL", SYMBOL, _date.today(), obs, v, "INE_inventory_akshare", 1.0)
                 total += 1
 
     conn.commit()

@@ -1,0 +1,19 @@
+factor_code: SC_PROD_OUTPUT
+symbol: SC
+category: free_data
+name: 原油产量
+description: 原油产量
+frequency: daily
+unit: 万吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- supply
+- SC
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- 0.0
+- 10000.0

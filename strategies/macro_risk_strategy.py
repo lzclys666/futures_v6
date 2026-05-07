@@ -9,7 +9,7 @@ from config.paths import MACRO_ENGINE
 import csv
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 # 添加项目根目录到路径
@@ -65,7 +65,7 @@ class MacroRiskStrategy(CtaTemplate):
     fast_window = 10
     slow_window = 20
     use_macro = True
-    csv_path_str = "str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv"
+    csv_path_str = str(MACRO_ENGINE / "output" / "{symbol}_macro_daily_{date}.csv")
     
     # 风控开关（原有）
     enable_stop_loss = True
@@ -118,9 +118,20 @@ class MacroRiskStrategy(CtaTemplate):
         self.risk_engine = None
         self.risk_status = "OK"
         self._csv_missing_warned = False
+        self._position_synced = False  # CTP持仓同步标志
         
         # 交易统计（用于R7连续亏损计算）
         self.trade_history = []
+        
+        # 风控配置热感知（E1）
+        from pathlib import Path as _Path
+        self._risk_rules_path = _Path(__file__).parent.parent / 'risk' / 'rules' / 'risk_rules.yaml'
+        self._risk_config_mtime: float = 0.0
+        try:
+            if self._risk_rules_path.exists():
+                self._risk_config_mtime = self._risk_rules_path.stat().st_mtime
+        except Exception:
+            pass
 
     def extract_symbol(self, vt_symbol: str) -> str:
         """从vt_symbol提取品种代码"""
@@ -165,8 +176,100 @@ class MacroRiskStrategy(CtaTemplate):
         self.load_macro_signal()
 
     def on_start(self):
-        """策略启动"""
-        self.write_log_safe("[START] Strategy started")
+        """策略启动 - 同步CTP持仓状态"""
+        self.write_log_safe("[START] 策略启动")
+        self.sync_position_from_ctp()
+
+    def sync_position_from_ctp(self):
+        """
+        从CTP查询当前持仓并同步self.pos。
+        
+        策略重启后self.pos重置为0，但CTP账户可能有未平仓合约。
+        此方法在on_start()中调用，从MainEngine的持仓缓存中查询实际持仓。
+        
+        多个查询路径（优先级从高到低）：
+        1. vnpy_bridge.positions（FastAPI桥接器缓存）
+        2. main_engine.positions（VNpy主引擎缓存）
+        """
+        try:
+            if self.cta_engine is None:
+                self.write_log_safe("[SYNC] 测试模式，跳过持仓同步")
+                self._position_synced = True
+                return
+
+            # --- 路径1: vnpy_bridge ---
+            bridge = getattr(self.cta_engine, 'vnpy_bridge', None)
+            if bridge is None:
+                main_engine = getattr(self.cta_engine, 'main_engine', None)
+                if main_engine:
+                    bridge = getattr(main_engine, 'vnpy_bridge', None)
+
+            if bridge and hasattr(bridge, 'positions'):
+                positions = bridge.positions
+                long_vol = 0
+                short_vol = 0
+                prices = []
+                for key, pos in positions.items():
+                    if key == self.vt_symbol or key.startswith(self.symbol):
+                        if str(getattr(pos, 'direction', '')) == 'Direction.LONG':
+                            long_vol += pos.volume
+                            if pos.price > 0:
+                                prices.append((pos.volume, pos.price))
+                        elif str(getattr(pos, 'direction', '')) == 'Direction.SHORT':
+                            short_vol += pos.volume
+                            if pos.price > 0:
+                                prices.append((pos.volume, pos.price))
+
+                net_pos = long_vol - short_vol
+                if net_pos != 0:
+                    self.pos = net_pos
+                    if prices:
+                        total_vol = sum(v for v, _ in prices)
+                        if total_vol > 0:
+                            self.entry_price = sum(v * p for v, p in prices) / total_vol
+                    self.write_log_safe(f"[SYNC] 恢复持仓: pos={self.pos}, entry_price={self.entry_price:.2f}")
+                else:
+                    self.write_log_safe("[SYNC] CTP无持仓，pos=0")
+                self._position_synced = True
+                return
+
+            # --- 路径2: main_engine.positions ---
+            main_engine = getattr(self.cta_engine, 'main_engine', None)
+            if main_engine and hasattr(main_engine, 'positions'):
+                positions = main_engine.positions
+                long_vol = 0
+                short_vol = 0
+                prices = []
+                for key, pos in positions.items():
+                    if key == self.vt_symbol or key.startswith(self.symbol):
+                        if str(getattr(pos, 'direction', '')) == 'Direction.LONG':
+                            long_vol += pos.volume
+                            if pos.price > 0:
+                                prices.append((pos.volume, pos.price))
+                        elif str(getattr(pos, 'direction', '')) == 'Direction.SHORT':
+                            short_vol += pos.volume
+                            if pos.price > 0:
+                                prices.append((pos.volume, pos.price))
+
+                net_pos = long_vol - short_vol
+                if net_pos != 0:
+                    self.pos = net_pos
+                    if prices:
+                        total_vol = sum(v for v, _ in prices)
+                        if total_vol > 0:
+                            self.entry_price = sum(v * p for v, p in prices) / total_vol
+                    self.write_log_safe(f"[SYNC] 恢复持仓: pos={self.pos}, entry_price={self.entry_price:.2f}")
+                else:
+                    self.write_log_safe("[SYNC] CTP无持仓，pos=0")
+                self._position_synced = True
+                return
+
+            self.write_log_safe("[WARNING] 无法访问持仓数据源，跳过同步")
+            self._position_synced = True
+
+        except Exception as e:
+            self.write_log_safe(f"[ERROR] 持仓同步失败: {e}，使用默认pos=0")
+            self._position_synced = True
 
     def on_stop(self):
         """策略停止"""
@@ -187,10 +290,34 @@ class MacroRiskStrategy(CtaTemplate):
         csv_path = os.path.normpath(csv_path_str)
         
         if not os.path.exists(csv_path):
-            if bar_datetime is None and not self._csv_missing_warned:
-                self.write_log_safe(f"[WARNING] CSV file not found: {csv_path}")
-                self._csv_missing_warned = True
-            return
+            # Fallback: 往前找最近交易日的 CSV（最多 5 天）
+            fallback_date = None
+            if bar_datetime is not None:
+                base_dt = bar_datetime
+            else:
+                base_dt = datetime.now()
+
+            for i in range(1, 6):
+                prev_date = base_dt - timedelta(days=i)
+                # 跳过周末
+                if prev_date.weekday() >= 5:
+                    continue
+                prev_date_str = prev_date.strftime("%Y%m%d")
+                prev_csv = self.csv_path_str.format(symbol=self.symbol, date=prev_date_str)
+                prev_csv = os.path.normpath(prev_csv)
+                if os.path.exists(prev_csv):
+                    csv_path = prev_csv
+                    fallback_date = prev_date_str
+                    break
+
+            if fallback_date is None:
+                if bar_datetime is None and not self._csv_missing_warned:
+                    self.write_log_safe(f"[WARNING] CSV file not found for today or recent trading days: {self.symbol}")
+                    self._csv_missing_warned = True
+                return
+            else:
+                if bar_datetime is None:
+                    self.write_log_safe(f"[INFO] Using fallback CSV from {fallback_date} for {self.symbol}")
 
         try:
             with open(csv_path, 'r', encoding='utf-8-sig') as f:
@@ -223,6 +350,9 @@ class MacroRiskStrategy(CtaTemplate):
 
     def on_1min_bar(self, bar: BarData):
         """1分钟Bar回调 - 主交易逻辑"""
+        # 检查风控配置是否变更（E1 热感知）
+        self._check_risk_config_reload()
+        
         # 加载宏观信号
         self.load_macro_signal(bar.datetime)
         
@@ -239,6 +369,30 @@ class MacroRiskStrategy(CtaTemplate):
         
         # 检查出场（原有风控逻辑）
         self.check_exit(bar.close_price)
+
+    def _check_risk_config_reload(self) -> None:
+        """
+        检查风控配置文件是否变更，如变更则重建 RiskEngine（E1 热感知）。
+        每根 1min bar 调用一次，开销极低（仅 stat() 系统调用）。
+        """
+        if not self.enable_risk_engine or self.risk_engine is None:
+            return
+        try:
+            if not self._risk_rules_path.exists():
+                return
+            current_mtime = self._risk_rules_path.stat().st_mtime
+            if current_mtime <= self._risk_config_mtime:
+                return
+            # 配置文件已变更，重建 RiskEngine
+            old_profile = self.risk_engine.profile
+            self._risk_config_mtime = current_mtime
+            self.risk_engine = RiskEngine(profile=old_profile)
+            self.write_log_safe(
+                f"[RISK HOT-RELOAD] RiskEngine rebuilt with profile={old_profile}, "
+                f"rules={[r.rule_id for r in self.risk_engine.rules if r.is_enabled()]}"
+            )
+        except Exception as e:
+            self.write_log_safe(f"[WARNING] Risk config reload check failed: {e}")
 
     def calc_tech_signal(self):
         """计算技术信号"""

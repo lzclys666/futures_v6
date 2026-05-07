@@ -17,6 +17,8 @@ from db_utils import get_pit_dates, ensure_table
 SCRIPTS = [
     'LC_碳酸锂期货收盘价.py',
     'LC_碳酸锂期货持仓量.py',
+    'LC_碳酸锂期货持仓量变化.py',
+    'LC_碳酸锂期货跨期价差.py',
 ]
 
 

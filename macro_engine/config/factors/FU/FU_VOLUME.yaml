@@ -1,0 +1,19 @@
+factor_code: FU_VOLUME
+symbol: FU
+category: free_data
+name: 燃料油成交量
+description: 燃料油期货主力合约成交量
+frequency: daily
+unit: 手
+direction: positive
+confidence: 2
+source: AKShare
+calculation: null
+tags:
+- volume
+- FU
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- 0.0
+- 1000000.0

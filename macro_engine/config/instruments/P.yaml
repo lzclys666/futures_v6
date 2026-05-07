@@ -20,3 +20,9 @@ factors:
 - code: P_INV_PORT
   enabled: true
   weight_override: 0.12
+- code: P_INV_EM
+  enabled: true
+  weight_override: 0.10
+- code: P_SPD_P_Y
+  enabled: true
+  weight_override: 0.10

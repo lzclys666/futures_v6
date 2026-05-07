@@ -1,0 +1,66 @@
+# strategy_bindings.yaml — 品种→策略绑定配置
+# 热加载：文件修改后策略注册中心自动检测并重新加载
+#
+# 格式：
+#   bindings:
+#     <品种代码>:
+#       strategy: <策略类名>
+#       params: <策略参数（可选）>
+#       enabled: true/false
+#
+# 品种代码格式：RU.SHFE、AU.SHFE 等（VNpy 标准 vt_symbol 格式）
+
+version: 1
+
+defaults:
+  # 全局默认参数（可被单品种覆盖）
+  risk_profile: "moderate"
+  enable_risk_engine: true
+  fast_window: 10
+  slow_window: 20
+
+bindings:
+  RU.SHFE:
+    strategy: MacroRiskStrategy
+    params:
+      fast_window: 10
+      slow_window: 20
+    enabled: true
+
+  AU.SHFE:
+    strategy: MacroRiskStrategy
+    params:
+      fast_window: 10
+      slow_window: 20
+    enabled: true
+
+  AG.SHFE:
+    strategy: MacroRiskStrategy
+    params:
+      fast_window: 10
+      slow_window: 20
+    enabled: true
+
+  CU.SHFE:
+    strategy: MacroRiskStrategy
+    params:
+      fast_window: 10
+      slow_window: 20
+    enabled: true
+
+  RB.SHFE:
+    strategy: MacroRiskStrategy
+    params:
+      fast_window: 10
+      slow_window: 20
+    enabled: false  # 待验证后启用
+
+  NI.SHFE:
+    strategy: MacroRiskStrategy
+    params:
+      fast_window: 10
+      slow_window: 20
+    enabled: false
+
+# 未列出的品种不加载策略
+# 新增品种：添加 binding 条目 + 重启 run.py 即可

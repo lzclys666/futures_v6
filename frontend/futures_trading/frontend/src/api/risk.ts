@@ -7,6 +7,8 @@
 import { createClient } from './client'
 import type {
   RiskRule,
+  RiskRuleId,
+  RiskSeverity,
   RiskStatusResponse,
   KellyRequest,
   KellyResponse,
@@ -112,21 +114,87 @@ export async function updateRiskRule(rule: Partial<RiskRule> & { ruleId: string 
   return res.data
 }
 
-/** POST /api/risk/simulate → 风控预检（下单前） */
+/** 模拟结果类型 */
+export interface SimulateResult {
+  pass: boolean
+  violations: Array<{ ruleId: RiskRuleId; ruleName: string; message: string; severity: RiskSeverity }>
+  checkedRules: number
+  timestamp: string
+}
+
+/** POST /api/risk/simulate → 风控模拟测试 */
 export async function simulateRisk(params: {
   symbol: string
   direction: 'LONG' | 'SHORT'
   price: number
   volume: number
-}): Promise<{
-  pass: boolean
-  violations: Array<{ ruleId: string; message: string; severity: string }>
-}> {
+}): Promise<SimulateResult> {
+  if (USE_MOCK) {
+    await new Promise((r) => setTimeout(r, 300))
+    // 模拟：大单量触发违规
+    const violations: SimulateResult['violations'] = []
+    if (params.volume > 50) {
+      violations.push({
+        ruleId: 'R1_SINGLE_SYMBOL',
+        ruleName: '单品种持仓限制',
+        message: `${params.symbol} 持仓量 ${params.volume} 超过单品种限制`,
+        severity: 'BLOCK',
+      })
+    }
+    if (params.volume > 30 && params.direction === 'LONG') {
+      violations.push({
+        ruleId: 'R4_TOTAL_MARGIN',
+        ruleName: '总保证金上限',
+        message: '预计保证金占用率将超过90%',
+        severity: 'WARN',
+      })
+    }
+    return {
+      pass: violations.filter((v) => v.severity === 'BLOCK').length === 0,
+      violations,
+      checkedRules: 12,
+      timestamp: new Date().toISOString(),
+    }
+  }
+  const res = await client.post<SimulateResult>('/simulate', params)
+  return res.data
+}
+
+/** POST /api/risk/precheck → 下单前风控预检 */
+export async function precheckRisk(params: {
+  symbol: string
+  direction: 'LONG' | 'SHORT'
+  price: number
+  volume: number
+}): Promise<SimulateResult> {
   if (USE_MOCK) {
     await new Promise((r) => setTimeout(r, 200))
-    return { pass: true, violations: [] }
+    // 预检比模拟更严格
+    const violations: SimulateResult['violations'] = []
+    if (params.volume > 20) {
+      violations.push({
+        ruleId: 'R1_SINGLE_SYMBOL',
+        ruleName: '单品种持仓限制',
+        message: `预检：${params.symbol} 下单量 ${params.volume} 接近单品种限制`,
+        severity: 'WARN',
+      })
+    }
+    if (params.volume > 80) {
+      violations.push({
+        ruleId: 'R4_TOTAL_MARGIN',
+        ruleName: '总保证金上限',
+        message: '预检：预计保证金占用率将超过上限',
+        severity: 'BLOCK',
+      })
+    }
+    return {
+      pass: violations.filter((v) => v.severity === 'BLOCK').length === 0,
+      violations,
+      checkedRules: 12,
+      timestamp: new Date().toISOString(),
+    }
   }
-  const res = await client.post('/simulate', params)
+  const res = await client.post<SimulateResult>('/precheck', params)
   return res.data
 }
 

@@ -1,0 +1,10 @@
+factor_code: I_SPD_I_RB
+name: 铁矿螺纹比价
+category: derived
+description: 铁矿石/螺纹钢期货主力比价
+data_source: AKShare futures_main_sina
+source_confidence: 1.0
+expected_range:
+- 0.1
+- 0.5
+notes: I0收盘价/RB0收盘价

@@ -1,0 +1,20 @@
+factor_code: FU_WTI_PRICE
+symbol: FU
+category: free_data
+name: WTI原油价格
+description: WTI原油期货价格（美元/桶）
+frequency: daily
+unit: 美元/桶
+direction: positive
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- crude
+- FU
+- overseas
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- 30.0
+- 150.0

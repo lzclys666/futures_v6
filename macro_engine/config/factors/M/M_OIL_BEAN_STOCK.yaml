@@ -1,0 +1,20 @@
+﻿factor_code: M_OIL_BEAN_STOCK
+symbol: M
+category: free_data
+name: 油厂大豆库存
+description: 油厂大豆原料库存（万吨）
+frequency: weekly
+unit: 万吨
+direction: neutral
+confidence: 3
+source: null
+calculation: null
+tags:
+- inventory
+- M
+source_confidence: 0.0
+data_source: null
+expected_range:
+- 0.0
+- 1000.0
+skip_reason: "我的农产品网需付费订阅，无免费替代源"

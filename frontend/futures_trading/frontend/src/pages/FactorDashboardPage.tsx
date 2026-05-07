@@ -1,88 +1,81 @@
 /**
- * 因子仪表盘
- * 展示所有品种的因子 IC 热力图、因子权重、因子贡献
+ * FactorDashboardPage · 因子仪表盘（Phase 3）
+ *
+ * 布局：
+ *   顶部 - 品种选择器
+ *   左侧 - 信号概览（方向、得分、置信度）
+ *   右侧 - 因子明细表（因子名、IC 值、得分、权重）
+ *   底部 - 得分趋势图（折线）
+ *
  * @author Lucy
- * @date 2026-04-27
+ * @date 2026-05-06
  */
 
-import React, { useState } from 'react'
-import { Card, Typography, Row, Col, Select, Spin, Empty, Table, Tag, Tooltip } from 'antd'
-import { BarChartOutlined, HeatMapOutlined, ProjectOutlined } from '@ant-design/icons'
+import React, { useEffect } from 'react'
+import { Row, Col, Card, Select, Tag, Spin, Empty, Table, Statistic } from 'antd'
+import { BarChartOutlined, FundOutlined, ExperimentOutlined } from '@ant-design/icons'
+import { useMacroStore } from '../store/macroStore'
+import SignalChart from '../components/macro/SignalChart'
+import type { FactorDetail, SignalDirection } from '../types/macro'
 
-const { Title, Text } = Typography
-
-/** IC 热力图数据类型 */
-interface ICHeatmapRow {
-  factorName: string
-  icMean: number
-  icStd: number
-  icir: number
-  rankIcMean: number
-  rankIcir: number
-  weight: number
-  contribution: number
-  direction: 'positive' | 'negative' | 'neutral'
+const SIGNAL_CONFIG: Record<SignalDirection, { color: string; zh: string }> = {
+  LONG:    { color: '#52c41a', zh: '做多信号' },
+  SHORT:   { color: '#ff4d4f', zh: '做空信号' },
+  NEUTRAL: { color: '#faad14', zh: '中性信号' },
 }
 
-/** Mock IC 热力图数据 */
-const MOCK_IC_HEATMAP: Record<string, ICHeatmapRow[]> = {
-  RU: [
-    { factorName: '铜', icMean: 0.053, icStd: 0.089, icir: 0.595, rankIcMean: 0.061, rankIcir: 0.68, weight: 0.18, contribution: 0.32, direction: 'positive' },
-    { factorName: '金', icMean: 0.041, icStd: 0.078, icir: 0.526, rankIcMean: 0.048, rankIcir: 0.59, weight: 0.15, contribution: 0.25, direction: 'positive' },
-    { factorName: '原油', icMean: -0.032, icStd: 0.095, icir: -0.337, rankIcMean: -0.028, rankIcir: -0.29, weight: 0.14, contribution: -0.18, direction: 'negative' },
-    { factorName: '美债', icMean: 0.029, icStd: 0.082, icir: 0.354, rankIcMean: 0.033, rankIcir: 0.41, weight: 0.12, contribution: 0.15, direction: 'positive' },
-    { factorName: '标普', icMean: -0.021, icStd: 0.071, icir: -0.296, rankIcMean: -0.019, rankIcir: -0.25, weight: 0.10, contribution: -0.08, direction: 'negative' },
-    { factorName: '黄金', icMean: 0.055, icStd: 0.091, icir: 0.604, rankIcMean: 0.064, rankIcir: 0.71, weight: 0.16, contribution: 0.38, direction: 'positive' },
-    { factorName: '工业', icMean: -0.018, icStd: 0.066, icir: -0.273, rankIcMean: -0.015, rankIcir: -0.22, weight: 0.08, contribution: -0.06, direction: 'negative' },
-    { factorName: '农产品', icMean: 0.009, icStd: 0.058, icir: 0.155, rankIcMean: 0.011, rankIcir: 0.18, weight: 0.07, contribution: 0.03, direction: 'neutral' },
-  ],
-  AG: [
-    { factorName: '铜', icMean: 0.038, icStd: 0.085, icir: 0.447, rankIcMean: 0.044, rankIcir: 0.52, weight: 0.16, contribution: 0.22, direction: 'positive' },
-    { factorName: '金', icMean: 0.062, icStd: 0.097, icir: 0.639, rankIcMean: 0.071, rankIcir: 0.74, weight: 0.22, contribution: 0.48, direction: 'positive' },
-    { factorName: '原油', icMean: -0.025, icStd: 0.088, icir: -0.284, rankIcMean: -0.022, rankIcir: -0.24, weight: 0.13, contribution: -0.12, direction: 'negative' },
-    { factorName: '美债', icMean: 0.021, icStd: 0.074, icir: 0.284, rankIcMean: 0.025, rankIcir: 0.33, weight: 0.11, contribution: 0.09, direction: 'positive' },
-    { factorName: '标普', icMean: -0.015, icStd: 0.068, icir: -0.221, rankIcMean: -0.013, rankIcir: -0.18, weight: 0.09, contribution: -0.05, direction: 'negative' },
-    { factorName: '黄金', icMean: 0.058, icStd: 0.094, icir: 0.617, rankIcMean: 0.067, rankIcir: 0.72, weight: 0.20, contribution: 0.44, direction: 'positive' },
-    { factorName: '工业', icMean: -0.012, icStd: 0.061, icir: -0.197, rankIcMean: -0.010, rankIcir: -0.16, weight: 0.06, contribution: -0.03, direction: 'neutral' },
-    { factorName: '农产品', icMean: 0.007, icStd: 0.052, icir: 0.135, rankIcMean: 0.009, rankIcir: 0.16, weight: 0.03, contribution: 0.01, direction: 'neutral' },
-  ],
-  AU: [
-    { factorName: '铜', icMean: 0.028, icStd: 0.072, icir: 0.389, rankIcMean: 0.033, rankIcir: 0.45, weight: 0.14, contribution: 0.15, direction: 'positive' },
-    { factorName: '金', icMean: 0.071, icStd: 0.103, icir: 0.689, rankIcMean: 0.082, rankIcir: 0.79, weight: 0.25, contribution: 0.55, direction: 'positive' },
-    { factorName: '原油', icMean: -0.019, icStd: 0.081, icir: -0.235, rankIcMean: -0.017, rankIcir: -0.20, weight: 0.12, contribution: -0.08, direction: 'negative' },
-    { factorName: '美债', icMean: 0.034, icStd: 0.079, icir: 0.430, rankIcMean: 0.039, rankIcir: 0.50, weight: 0.13, contribution: 0.18, direction: 'positive' },
-    { factorName: '标普', icMean: -0.011, icStd: 0.065, icir: -0.169, rankIcMean: -0.009, rankIcir: -0.14, weight: 0.08, contribution: -0.03, direction: 'neutral' },
-    { factorName: '黄金', icMean: 0.068, icStd: 0.101, icir: 0.673, rankIcMean: 0.079, rankIcir: 0.77, weight: 0.23, contribution: 0.51, direction: 'positive' },
-    { factorName: '工业', icMean: -0.008, icStd: 0.055, icir: -0.145, rankIcMean: -0.007, rankIcir: -0.12, weight: 0.03, contribution: -0.01, direction: 'neutral' },
-    { factorName: '农产品', icMean: 0.004, icStd: 0.048, icir: 0.083, rankIcMean: 0.005, rankIcir: 0.10, weight: 0.02, contribution: 0.01, direction: 'neutral' },
-  ],
-  RB: [
-    { factorName: '铜', icMean: 0.048, icStd: 0.092, icir: 0.522, rankIcMean: 0.056, rankIcir: 0.61, weight: 0.19, contribution: 0.35, direction: 'positive' },
-    { factorName: '金', icMean: 0.032, icStd: 0.081, icir: 0.395, rankIcMean: 0.038, rankIcir: 0.46, weight: 0.14, contribution: 0.20, direction: 'positive' },
-    { factorName: '原油', icMean: -0.044, icStd: 0.098, icir: -0.449, rankIcMean: -0.039, rankIcir: -0.38, weight: 0.17, contribution: -0.28, direction: 'negative' },
-    { factorName: '美债', icMean: 0.022, icStd: 0.076, icir: 0.289, rankIcMean: 0.026, rankIcir: 0.34, weight: 0.11, contribution: 0.11, direction: 'positive' },
-    { factorName: '标普', icMean: -0.017, icStd: 0.069, icir: -0.246, rankIcMean: -0.015, rankIcir: -0.20, weight: 0.09, contribution: -0.06, direction: 'negative' },
-    { factorName: '黄金', icMean: 0.036, icStd: 0.086, icir: 0.419, rankIcMean: 0.042, rankIcir: 0.49, weight: 0.16, contribution: 0.24, direction: 'positive' },
-    { factorName: '工业', icMean: -0.028, icStd: 0.073, icir: -0.384, rankIcMean: -0.024, rankIcir: -0.32, weight: 0.10, contribution: -0.14, direction: 'negative' },
-    { factorName: '农产品', icMean: 0.006, icStd: 0.051, icir: 0.118, rankIcMean: 0.007, rankIcir: 0.14, weight: 0.04, contribution: 0.02, direction: 'neutral' },
-  ],
-}
+const SYMBOL_OPTIONS = [
+  { value: 'RU', label: '橡胶 (RU)' },
+  { value: 'CU', label: '铜 (CU)' },
+  { value: 'AU', label: '黄金 (AU)' },
+  { value: 'AG', label: '白银 (AG)' },
+  { value: 'RB', label: '螺纹 (RB)' },
+  { value: 'ZN', label: '锌 (ZN)' },
+  { value: 'NI', label: '镍 (NI)' },
+]
 
-const SYMBOLS = ['RU', 'AG', 'AU', 'RB']
+const CONFIDENCE_MAP: Record<string, { color: string; label: string }> = {
+  high:   { color: '#52c41a', label: '高' },
+  medium: { color: '#faad14', label: '中' },
+  low:    { color: '#ff4d4f', label: '低' },
+}
 
 const FactorDashboardPage: React.FC = () => {
-  const [selectedSymbol, setSelectedSymbol] = useState('RU')
-  const [loading] = useState(false)
+  const {
+    selectedSymbol,
+    setSelectedSymbol,
+    currentSignal,
+    currentSignalLoading,
+    factorDetails,
+    factorDetailsLoading,
+    scoreHistory,
+    scoreHistoryLoading,
+    loadSignal,
+    loadFactorDetails,
+    loadScoreHistory,
+  } = useMacroStore()
 
-  const data = MOCK_IC_HEATMAP[selectedSymbol] || []
+  useEffect(() => {
+    loadSignal(selectedSymbol)
+    loadFactorDetails(selectedSymbol)
+    loadScoreHistory(selectedSymbol)
+  }, [selectedSymbol, loadSignal, loadFactorDetails, loadScoreHistory])
 
-  const columns = [
+  const handleSymbolChange = (symbol: string) => {
+    setSelectedSymbol(symbol)
+  }
+
+  const signalCfg = currentSignal ? SIGNAL_CONFIG[currentSignal.direction] : null
+  const confCfg = currentSignal?.confidence ? CONFIDENCE_MAP[currentSignal.confidence] : null
+
+  // 因子明细表列定义
+  const factorColumns = [
     {
       title: '因子',
       dataIndex: 'factorName',
       key: 'factorName',
-      width: 100,
-      render: (v: string, row: ICHeatmapRow) => (
+      width: 120,
+      render: (v: string, row: FactorDetail) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span>{v}</span>
           <Tag
@@ -95,42 +88,24 @@ const FactorDashboardPage: React.FC = () => {
       ),
     },
     {
-      title: 'IC 均值',
-      dataIndex: 'icMean',
-      key: 'icMean',
-      width: 90,
+      title: 'IC 值',
+      dataIndex: 'factorIc',
+      key: 'factorIc',
+      width: 80,
+      render: (v: number | undefined) => (
+        <span style={{ color: v != null ? (v > 0 ? '#52c41a' : '#ff4d4f') : '#bfbfbf' }}>
+          {v != null ? v.toFixed(3) : '-'}
+        </span>
+      ),
+    },
+    {
+      title: '得分',
+      dataIndex: 'normalizedScore',
+      key: 'normalizedScore',
+      width: 80,
       render: (v: number) => (
         <span style={{ color: v > 0 ? '#52c41a' : '#ff4d4f', fontWeight: 500 }}>
           {v > 0 ? '+' : ''}{v.toFixed(3)}
-        </span>
-      ),
-    },
-    {
-      title: 'IC 标准差',
-      dataIndex: 'icStd',
-      key: 'icStd',
-      width: 90,
-      render: (v: number) => <span style={{ color: '#8c8c8c' }}>{v.toFixed(3)}</span>,
-    },
-    {
-      title: 'ICIR',
-      dataIndex: 'icir',
-      key: 'icir',
-      width: 80,
-      render: (v: number) => (
-        <span style={{ color: v > 0.3 ? '#52c41a' : v > 0 ? '#faad14' : '#ff4d4f', fontWeight: 500 }}>
-          {v.toFixed(3)}
-        </span>
-      ),
-    },
-    {
-      title: 'Rank ICIR',
-      dataIndex: 'rankIcir',
-      key: 'rankIcir',
-      width: 90,
-      render: (v: number) => (
-        <span style={{ color: v > 0.3 ? '#52c41a' : v > 0 ? '#faad14' : '#ff4d4f', fontWeight: 500 }}>
-          {v.toFixed(3)}
         </span>
       ),
     },
@@ -149,10 +124,10 @@ const FactorDashboardPage: React.FC = () => {
       ),
     },
     {
-      title: '因子贡献',
+      title: '贡献',
       dataIndex: 'contribution',
       key: 'contribution',
-      width: 100,
+      width: 80,
       render: (v: number) => (
         <span style={{ color: v > 0 ? '#52c41a' : '#ff4d4f', fontWeight: 500 }}>
           {v > 0 ? '+' : ''}{(v * 100).toFixed(1)}%
@@ -163,119 +138,91 @@ const FactorDashboardPage: React.FC = () => {
 
   return (
     <div>
+      {/* 顶部：标题 + 品种选择器 */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <Title level={4} style={{ margin: 0 }}>
+        <h4 style={{ margin: 0 }}>
           <BarChartOutlined style={{ marginRight: 8 }} />
           因子仪表盘
-        </Title>
+        </h4>
         <Select
           value={selectedSymbol}
-          onChange={setSelectedSymbol}
-          options={SYMBOLS.map((s) => ({ value: s, label: s }))}
-          style={{ width: 120 }}
+          onChange={handleSymbolChange}
+          options={SYMBOL_OPTIONS}
+          style={{ width: 160 }}
         />
       </div>
 
-      <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
-        <Col xs={24} md={6}>
-          <Card size="small">
-            <Text type="secondary" style={{ fontSize: 12 }}>因子数量</Text>
-            <div style={{ fontSize: 28, fontWeight: 600, color: '#1890ff' }}>{data.length}</div>
+      <Row gutter={[16, 16]}>
+        {/* 左侧：信号概览 */}
+        <Col xs={24} md={8}>
+          <Card size="small" title={<span><FundOutlined style={{ marginRight: 6 }} />信号概览</span>}>
+            <Spin spinning={currentSignalLoading}>
+              {currentSignal ? (
+                <div>
+                  <Statistic
+                    title="综合得分"
+                    value={currentSignal.compositeScore}
+                    precision={3}
+                    valueStyle={{
+                      fontSize: 32,
+                      fontWeight: 700,
+                      color: signalCfg?.color ?? '#262626',
+                    }}
+                  />
+                  <div style={{ marginTop: 16 }}>
+                    <div style={{ marginBottom: 8 }}>
+                      <span style={{ color: '#8c8c8c', marginRight: 8 }}>方向：</span>
+                      <Tag color={signalCfg?.color}>{signalCfg?.zh}</Tag>
+                    </div>
+                    <div style={{ marginBottom: 8 }}>
+                      <span style={{ color: '#8c8c8c', marginRight: 8 }}>置信度：</span>
+                      <Tag color={confCfg?.color ?? '#d9d9d9'}>{confCfg?.label ?? '-'}</Tag>
+                    </div>
+                    <div>
+                      <span style={{ color: '#8c8c8c', marginRight: 8 }}>更新时间：</span>
+                      <span>{currentSignal.updatedAt ? new Date(currentSignal.updatedAt).toLocaleString('zh-CN') : '-'}</span>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Empty description="暂无信号数据" />
+              )}
+            </Spin>
           </Card>
         </Col>
-        <Col xs={24} md={6}>
-          <Card size="small">
-            <Text type="secondary" style={{ fontSize: 12 }}>正向因子</Text>
-            <div style={{ fontSize: 28, fontWeight: 600, color: '#52c41a' }}>
-              {data.filter((d) => d.direction === 'positive').length}
-            </div>
-          </Card>
-        </Col>
-        <Col xs={24} md={6}>
-          <Card size="small">
-            <Text type="secondary" style={{ fontSize: 12 }}>负向因子</Text>
-            <div style={{ fontSize: 28, fontWeight: 600, color: '#ff4d4f' }}>
-              {data.filter((d) => d.direction === 'negative').length}
-            </div>
-          </Card>
-        </Col>
-        <Col xs={24} md={6}>
-          <Card size="small">
-            <Text type="secondary" style={{ fontSize: 12 }}>平均 ICIR</Text>
-            <div style={{ fontSize: 28, fontWeight: 600, color: '#faad14' }}>
-              {(data.reduce((sum, d) => sum + d.icir, 0) / Math.max(data.length, 1)).toFixed(3)}
-            </div>
+
+        {/* 右侧：因子明细表 */}
+        <Col xs={24} md={16}>
+          <Card size="small" title={<span><ExperimentOutlined style={{ marginRight: 6 }} />因子明细</span>}>
+            <Spin spinning={factorDetailsLoading}>
+              {factorDetails.length > 0 ? (
+                <Table
+                  columns={factorColumns}
+                  dataSource={factorDetails}
+                  rowKey="factorCode"
+                  size="small"
+                  pagination={false}
+                  scroll={{ x: 500 }}
+                />
+              ) : (
+                <Empty description="暂无因子数据" />
+              )}
+            </Spin>
           </Card>
         </Col>
       </Row>
 
+      {/* 底部：得分趋势图 */}
       <Card
         size="small"
-        title={
-          <span>
-            <HeatMapOutlined style={{ marginRight: 6 }} />
-            IC 热力图 &amp; 因子权重
-          </span>
-        }
-      >
-        {loading ? (
-          <div style={{ textAlign: 'center', padding: 40 }}><Spin /></div>
-        ) : data.length === 0 ? (
-          <Empty description="暂无缘何数据" />
-        ) : (
-          <Table
-            columns={columns}
-            dataSource={data}
-            rowKey="factorName"
-            size="small"
-            pagination={false}
-            scroll={{ x: 700 }}
-          />
-        )}
-      </Card>
-
-      <Card
-        size="small"
-        title={
-          <span>
-            <ProjectOutlined style={{ marginRight: 6 }} />
-            因子贡献分布
-          </span>
-        }
+        title={<span><BarChartOutlined style={{ marginRight: 6 }} />得分趋势</span>}
         style={{ marginTop: 16 }}
       >
-        <Row gutter={[8, 8]}>
-          {data
-            .slice()
-            .sort((a, b) => Math.abs(b.contribution) - Math.abs(a.contribution))
-            .map((row) => (
-              <Col span={12} key={row.factorName}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', borderBottom: '1px solid #f5f5f5' }}>
-                  <div style={{ width: 80, fontSize: 13 }}>{row.factorName}</div>
-                  <div style={{ flex: 1, height: 20, background: '#f0f0f0', borderRadius: 4, overflow: 'hidden', position: 'relative' }}>
-                    <Tooltip title={`贡献: ${(row.contribution * 100).toFixed(1)}%`}>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          left: row.contribution >= 0 ? '50%' : 'auto',
-                          right: row.contribution < 0 ? '50%' : 'auto',
-                          width: `${Math.abs(row.contribution) * 300}%`,
-                          maxWidth: '100%',
-                          height: '100%',
-                          background: row.contribution >= 0 ? '#52c41a' : '#ff4d4f',
-                          borderRadius: 4,
-                          transition: 'width 0.3s',
-                        }}
-                      />
-                    </Tooltip>
-                  </div>
-                  <div style={{ width: 50, textAlign: 'right', fontSize: 12, color: row.contribution >= 0 ? '#52c41a' : '#ff4d4f' }}>
-                    {row.contribution >= 0 ? '+' : ''}{(row.contribution * 100).toFixed(1)}%
-                  </div>
-                </div>
-              </Col>
-            ))}
-        </Row>
+        <SignalChart
+          symbol={selectedSymbol}
+          history={scoreHistory}
+          loading={scoreHistoryLoading}
+        />
       </Card>
     </div>
   )

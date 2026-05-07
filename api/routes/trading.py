@@ -1,9 +1,10 @@
 from fastapi import APIRouter, HTTPException, BackgroundTasks
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, Literal, ClassVar
 from datetime import datetime
 
 from services.vnpy_bridge import get_vnpy_bridge
+from services.reconciliation_engine import get_reconciliation_engine
 
 router = APIRouter(prefix="/api/trading", tags=["trading"])
 
@@ -89,21 +90,34 @@ class OrderRequest(BaseModel):
 
 
 class OrderResponse(BaseModel):
-    """下单响应"""
-    success: bool
-    order_id: Optional[str] = None
-    message: str
-    timestamp: str
+    """下单响应 — 对齐前端 types/trading.ts OrderResponse"""
+    orderId: str = Field("", alias="orderId")
+    symbol: str = ""
+    direction: str = ""
+    price: float = 0.0
+    volume: int = 0
+    tradedVolume: int = 0
+    status: str = "PENDING"
+    createdAt: str = ""
+    updatedAt: str = ""
+    message: Optional[str] = None
+    success: bool = True
+
+    class Config:
+        populate_by_name = True
 
 
 class CancelResponse(BaseModel):
-    """撤单响应"""
-    success: bool
-    message: str
-    timestamp: str
+    """撤单响应 — 对齐前端 types/trading.ts CancelOrderResponse"""
+    orderId: str = Field("", alias="orderId")
+    success: bool = True
+    message: Optional[str] = None
+
+    class Config:
+        populate_by_name = True
 
 
-@router.post("/order", response_model=OrderResponse)
+@router.post("/order", response_model=OrderResponse, response_model_by_alias=True)
 async def create_order(request: OrderRequest):
     """
     发送委托订单
@@ -128,11 +142,20 @@ async def create_order(request: OrderRequest):
         )
     
     # 检查交易时间
+    now_iso = datetime.now().isoformat()
     if not get_vnpy_bridge().is_trading_hours():
         return OrderResponse(
-            success=False,
+            orderId="",
+            symbol="",
+            direction="",
+            price=0.0,
+            volume=0,
+            tradedVolume=0,
+            status="REJECTED",
+            createdAt=now_iso,
+            updatedAt=now_iso,
             message="当前不在交易时间内",
-            timestamp=datetime.now().isoformat()
+            success=False,
         )
     
     # 发送订单
@@ -145,22 +168,72 @@ async def create_order(request: OrderRequest):
         volume=request.volume
     )
     
+    now_iso = datetime.now().isoformat()
     if vt_orderid:
+        # 解析 vt_orderid 提取 symbol 和 direction
+        # vt_orderid 格式: "EXCHANGE.SYMBOL-DIRECTION-COUNTER" (e.g. "SHFE.RU2505-LONG-abc12345")
+        parsed_symbol = ""
+        parsed_direction = ""
+        try:
+            parts = vt_orderid.split("-")
+            if len(parts) >= 2:
+                parsed_symbol = parts[0]  # e.g. "SHFE.RU2505"
+                parsed_direction = parts[1]  # e.g. "LONG"
+        except Exception:
+            pass
+
+        # 集成对账引擎：record_order
+        try:
+            engine = get_reconciliation_engine()
+            order_uuid = engine.record_order({
+                "symbol": parsed_symbol or vt_symbol,
+                "exchange": "",  # 从 parsed_symbol 提取或留空
+                "direction": parsed_direction or request.direction,
+                "offset": request.offset,
+                "price": request.price,
+                "volume": request.volume,
+                "vt_orderid": vt_orderid,
+                "source": "api",
+            })
+            # 注册 vt_orderid → order_uuid 映射，供成交回调时查找
+            _bridge = get_vnpy_bridge()
+            if _bridge is not None and hasattr(_bridge, 'set_order_uuid_mapping'):
+                _bridge.set_order_uuid_mapping(vt_orderid, order_uuid)
+        except Exception as e:
+            # 对账失败不应阻塞交易主流程，只记录警告
+            import logging
+            logging.getLogger("trading").warning(f"[Reconciliation] record_order failed: {e}")
+
         return OrderResponse(
-            success=True,
-            order_id=vt_orderid,
+            orderId=vt_orderid,
+            symbol=parsed_symbol or vt_symbol,
+            direction=parsed_direction or request.direction,
+            price=request.price,
+            volume=request.volume,
+            tradedVolume=0,
+            status="NOT_TRADED",
+            createdAt=now_iso,
+            updatedAt=now_iso,
             message=f"订单已发送: {vt_orderid}",
-            timestamp=datetime.now().isoformat()
+            success=True,
         )
     else:
         return OrderResponse(
-            success=False,
+            orderId="",
+            symbol=vt_symbol,
+            direction=request.direction,
+            price=request.price,
+            volume=request.volume,
+            tradedVolume=0,
+            status="REJECTED",
+            createdAt=now_iso,
+            updatedAt=now_iso,
             message="订单发送失败，请检查引擎状态和参数",
-            timestamp=datetime.now().isoformat()
+            success=False,
         )
 
 
-@router.post("/order/{order_id}/cancel", response_model=CancelResponse)
+@router.post("/order/{order_id}/cancel", response_model=CancelResponse, response_model_by_alias=True)
 async def cancel_order(order_id: str):
     """
     撤销委托订单
@@ -180,15 +253,15 @@ async def cancel_order(order_id: str):
     
     if success:
         return CancelResponse(
+            orderId=order_id,
             success=True,
             message=f"撤单成功: {order_id}",
-            timestamp=datetime.now().isoformat()
         )
     else:
         return CancelResponse(
+            orderId=order_id,
             success=False,
             message=f"撤单失败: {order_id}，订单可能已成交或不存在",
-            timestamp=datetime.now().isoformat()
         )
 
 

@@ -93,6 +93,31 @@ def fetch_shfe_direct():
     except Exception as e:
         print(f"[L2] SHFE解析失败: {e}")
     return None, None
+
+
+def fetch_shfe_warrant_get_receipt():
+    """L1: AKShare get_receipt（替代已失效的futures_shfe_warehouse_receipt）"""
+    try:
+        from datetime import datetime, timedelta
+        for days_back in range(5):
+            check_date = datetime.now() - timedelta(days=days_back)
+            if check_date.weekday() >= 5:
+                continue
+            date_str = check_date.strftime("%Y%m%d")
+            try:
+                df = ak.get_receipt(start_date=date_str, end_date=date_str, vars_list=["FU"])
+                if df is not None and len(df) > 0:
+                    row = df.iloc[-1]
+                    val = float(row["receipt"])
+                    obs_date_raw = str(row["date"])
+                    obs_date_fmt = f"{obs_date_raw[:4]}-{obs_date_raw[4:6]}-{obs_date_raw[6:8]}"
+                    print(f"[L1] get_receipt({obs_date_fmt}): {val}")
+                    return val, obs_date_fmt
+            except Exception as inner_e:
+                print(f"[L1] {date_str} 失败: {inner_e}")
+                continue
+    except Exception as e:
+        print(f"[L1] get_receipt失败: {e}")
     return None, None
 
 
@@ -101,27 +126,15 @@ def main():
     pub_date, obs_date = get_pit_dates()
     print(f"(auto) === {FACTOR_CODE} === obs={obs_date}")
 
-    val, source = None, None
-
-    # L1
-    val, source = fetch_shfe_warrant_ak()
+    # L1: AKShare get_receipt
+    val, obs_dt = fetch_shfe_warrant_get_receipt()
     if val is not None:
         if not (BOUNDS[0] <= val <= BOUNDS[1]):
             print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
-        else:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                        source_confidence=1.0, source=f"L1-AKShare-SHFE:{source}")
-            return
-
-    # L2
-    val, source = fetch_shfe_direct()
-    if val is not None:
-        if not (BOUNDS[0] <= val <= BOUNDS[1]):
-            print(f"[WARN] {FACTOR_CODE}={val} out of {BOUNDS}")
-        else:
-            save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, val,
-                        source_confidence=0.9, source=f"L2-SHFE官网:{source}")
-            return
+        save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_dt, val,
+                    source_confidence=1.0, source=f"AKShare-get_receipt")
+        print(f"[OK] {FACTOR_CODE}={val}")
+        return
 
     # L4: DB fallback
     record = _get_latest_record(FACTOR_CODE, SYMBOL)
@@ -129,10 +142,10 @@ def main():
         raw_value, orig_obs_date, orig_source, orig_conf = record
         save_to_db(FACTOR_CODE, SYMBOL, pub_date, obs_date, raw_value,
                     source_confidence=0.5, source=f"L4回补({orig_source})")
-        print(f"[L4] {FACTOR_CODE}={raw_value} 回补成功")
+        print(f"[L4] {FACTOR_CODE}={raw_value} 回补成功 (obs={orig_obs_date})")
         return
 
-    print(f"[L5] {FACTOR_CODE}: 所有数据源失效，不写占位符")
+    print(f"[L5] {FACTOR_CODE}: 无历史数据可回补")
 
 
 if __name__ == "__main__":

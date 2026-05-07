@@ -6,13 +6,13 @@
  */
 
 import React, { useEffect } from 'react'
-import { Card, Table, Tag, Progress, Typography, Row, Col, Statistic, Empty } from 'antd'
+import { Card, Table, Tag, Progress, Typography, Row, Col, Statistic, Empty, Popover } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { SafetyCertificateOutlined, CheckCircleOutlined, WarningOutlined, CloseCircleOutlined } from '@ant-design/icons'
 import { useRiskStore } from '../store/useRiskStore'
 import type { RiskRuleStatus, RiskLayerKey } from '../types/risk'
 
-const { Title } = Typography
+const { Title, Text } = Typography
 
 const severityConfig = {
   PASS: { color: '#52c41a', icon: <CheckCircleOutlined />, label: '通过' },
@@ -36,11 +36,39 @@ const RiskPage: React.FC = () => {
   }, [])
 
   const columns: ColumnsType<RiskRuleStatus> = [
-    { title: '规则', dataIndex: 'ruleName', key: 'name', fixed: 'left', width: 180 },
+    {
+      title: '规则',
+      dataIndex: 'ruleName',
+      fixed: 'left',
+      width: 180,
+      render: (name: string, record: RiskRuleStatus) => (
+        <Popover
+          trigger={['hover', 'click']}
+          title={<Text strong>{record.ruleName}</Text>}
+          content={
+            <div style={{ maxWidth: 300 }}>
+              <p style={{ marginBottom: 8, color: '#595959' }}>{record.message}</p>
+              <div style={{ marginBottom: 8 }}>
+                <Tag color={severityConfig[record.severity].color} icon={severityConfig[record.severity].icon}>
+                  {severityConfig[record.severity].label}
+                </Tag>
+              </div>
+              <p style={{ marginBottom: 4 }}>
+                当前值：{record.currentValue.toFixed(2)}　阈值：{record.threshold.toFixed(2)}
+              </p>
+              <p style={{ color: record.severity === 'BLOCK' ? '#ff4d4f' : record.severity === 'WARN' ? '#faad14' : '#52c41a', fontWeight: 500 }}>
+                {record.severity === 'BLOCK' ? '⚠ 建议暂停开仓' : record.severity === 'WARN' ? '⚠ 密切监控' : '✓ 运行正常'}
+              </p>
+            </div>
+          }
+        >
+          <a style={{ cursor: 'pointer' }}>{name}</a>
+        </Popover>
+      ),
+    },
     {
       title: '状态',
       dataIndex: 'severity',
-      key: 'severity',
       width: 100,
       render: (v: string) => (
         <Tag color={severityConfig[v as keyof typeof severityConfig]?.color} icon={severityConfig[v as keyof typeof severityConfig]?.icon}>
@@ -51,34 +79,33 @@ const RiskPage: React.FC = () => {
     {
       title: '当前值',
       dataIndex: 'currentValue',
-      key: 'current',
       align: 'right',
       render: (v: number) => v?.toFixed(2),
     },
     {
       title: '阈值',
       dataIndex: 'threshold',
-      key: 'threshold',
       align: 'right',
-      render: (v: number) => v?.toFixed(2),
+      render: (v: number | undefined) => (v !== undefined ? v.toFixed(2) : '-'),
     },
     {
       title: '使用率',
       key: 'usage',
       align: 'right',
-      render: (_, r) => {
-        const pct = r.threshold > 0 ? (r.currentValue / r.threshold) * 100 : 0
+      render: (_: unknown, r: RiskRuleStatus) => {
+        if (r.threshold === 0) return <span style={{ color: '#999' }}>N/A</span>
+        const pct = (r.currentValue / r.threshold) * 100
         return (
           <Progress
             percent={Math.min(pct, 100)}
             size="small"
-            status={pct > 100 ? 'exception' : pct > 80 ? 'active' : 'success'}
-            format={(p) => `${p?.toFixed(0)}%`}
+            strokeColor={pct > 100 ? '#ff4d4f' : pct > 80 ? '#fa8c16' : pct > 60 ? '#faad14' : '#52c41a'}
+            format={pct > 100 ? () => `${pct.toFixed(0)}%` : (p) => `${p}%`}
           />
         )
       },
     },
-    { title: '描述', dataIndex: 'message', key: 'message', ellipsis: true },
+    { title: '描述', dataIndex: 'message', ellipsis: true },
   ]
 
   const triggeredCount = status?.triggeredCount ?? 0
@@ -143,6 +170,9 @@ const RiskPage: React.FC = () => {
               pagination={false}
               size="small"
               scroll={{ x: 800 }}
+              onRow={(record) => ({
+                style: { backgroundColor: record.severity !== 'PASS' ? 'rgba(255,77,79,0.05)' : undefined },
+              })}
             />
           ) : (
             <Empty description="该层级暂无规则" image={Empty.PRESENTED_IMAGE_SIMPLE} />

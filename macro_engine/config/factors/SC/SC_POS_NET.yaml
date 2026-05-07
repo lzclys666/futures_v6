@@ -1,0 +1,19 @@
+factor_code: SC_POS_NET
+symbol: SC
+category: free_data
+name: 原油期货净持仓
+description: 原油期货前20净持仓
+frequency: daily
+unit: 手
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- position
+- SC
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0

@@ -20,6 +20,7 @@ SCRIPTS = [
     "NI_沪镍期货库存.py",
     "NI_计算基差.py",
     "NI_抓取SHFE仓单.py",
+    "NI_抓取持仓排名.py",
 ]
 
 

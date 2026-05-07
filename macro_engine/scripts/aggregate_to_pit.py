@@ -113,6 +113,10 @@ def process_spread(conn, sym) -> int:
             for pub_date, obs_date, raw_val in rows:
                 if raw_val is None:
                     continue
+                # PIT 合规：跳过 obs_date == pub_date 的记录
+                if obs_date == pub_date:
+                    log.warning(f"[{sym}] spread {fc}: 跳过 obs_date=pub_date={obs_date} (PIT违规)")
+                    continue
                 cur.execute(stmt, (fc, sym, pub_date, obs_date, float(raw_val), SOURCE, CONFIDENCE))
                 written += 1
 
@@ -202,6 +206,10 @@ def process_hold_volume(conn, sym) -> int:
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             """
             for obs_date, (pub_date, total_oi) in obs_data.items():
+                # PIT 合规：跳过 obs_date == pub_date 的记录
+                if obs_date == pub_date:
+                    log.warning(f"[{sym}] hold_volume {oi_factor}: 跳过 obs_date=pub_date={obs_date} (PIT违规)")
+                    continue
                 cur.execute(stmt, (oi_factor, sym, pub_date, obs_date, float(total_oi), SOURCE, CONFIDENCE))
                 written += 1
 
@@ -226,6 +234,10 @@ def process_hold_volume(conn, sym) -> int:
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             """
             for obs_date, (pub_date, total_change) in obs_data.items():
+                # PIT 合规：跳过 obs_date == pub_date 的记录
+                if obs_date == pub_date:
+                    log.warning(f"[{sym}] hold_volume {chg_factor}: 跳过 obs_date=pub_date={obs_date} (PIT违规)")
+                    continue
                 cur.execute(stmt, (chg_factor, sym, pub_date, obs_date, float(total_change), SOURCE, CONFIDENCE))
                 written += 1
 
@@ -300,6 +312,10 @@ def process_ohlcv(conn, sym) -> int:
             VALUES (?, ?, ?, ?, ?, ?, ?)
         """
         for obs_date, (pub_date, close_val) in obs_data.items():
+            # PIT 合规：跳过 obs_date == pub_date 的记录
+            if obs_date == pub_date:
+                log.warning(f"[{sym}] ohlcv {factor}: 跳过 obs_date=pub_date={obs_date} (PIT违规)")
+                continue
             cur.execute(stmt, (factor, sym, pub_date, obs_date, float(close_val), SOURCE, CONFIDENCE))
             written += 1
 

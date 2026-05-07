@@ -1,0 +1,12 @@
+[
+  {
+    "key": "futures_admin_2026",
+    "name": "admin",
+    "role": "admin"
+  },
+  {
+    "key": "viewer_2026",
+    "name": "viewer",
+    "role": "read_only"
+  }
+]

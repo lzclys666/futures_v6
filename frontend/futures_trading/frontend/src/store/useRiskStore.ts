@@ -7,7 +7,8 @@
 
 import { create } from 'zustand'
 import type { RiskRule, RiskStatusResponse, KellyResponse, StressTestReport } from '../types/risk'
-import { fetchRiskStatus, fetchRiskRules, calculateKelly, runStressTest, simulateRisk } from '../api/risk'
+import { fetchRiskStatus, fetchRiskRules, calculateKelly, runStressTest, simulateRisk, precheckRisk, type SimulateResult } from '../api/risk'
+import { validateRiskStatusData } from '../utils/tradingValidators'
 
 interface RiskState {
   /** 风控状态总览 */
@@ -26,8 +27,12 @@ interface RiskState {
   stressReport: StressTestReport | null
   stressLoading: boolean
 
+  /** 模拟测试结果 */
+  simulateResult: SimulateResult | null
+  simulateLoading: boolean
+
   /** 风控预检结果 */
-  precheckResult: { pass: boolean; violations: Array<{ ruleId: string; message: string; severity: string }> } | null
+  precheckResult: SimulateResult | null
   precheckLoading: boolean
 
   /** 轮询 */
@@ -39,6 +44,7 @@ interface RiskState {
   updateRiskRule: (params: Partial<RiskRule> & { ruleId: string }) => Promise<void>
   runKelly: (params: { symbol: string; winRate: number; avgWin: number; avgLoss: number; capital: number; fraction?: number }) => Promise<void>
   runStressTest: (params: { symbol: string; scenarios?: string[] }) => Promise<void>
+  runSimulate: (params: { symbol: string; direction: 'LONG' | 'SHORT'; price: number; volume: number }) => Promise<void>
   precheckOrder: (params: { symbol: string; direction: 'LONG' | 'SHORT'; price: number; volume: number }) => Promise<boolean>
   startPolling: (intervalMs?: number) => void
   stopPolling: () => void
@@ -56,6 +62,8 @@ export const useRiskStore = create<RiskState>((set, get) => ({
   kellyLoading: false,
   stressReport: null,
   stressLoading: false,
+  simulateResult: null,
+  simulateLoading: false,
   precheckResult: null,
   precheckLoading: false,
   pollTimer: null,
@@ -64,8 +72,14 @@ export const useRiskStore = create<RiskState>((set, get) => ({
   loadStatus: async () => {
     set({ statusLoading: true })
     try {
-      const status = await fetchRiskStatus()
-      set({ status, statusLoading: false, error: null })
+      const raw = await fetchRiskStatus()
+      const result = validateRiskStatusData(raw)
+      if (result.valid && result.data) {
+        set({ status: result.data as unknown as RiskStatusResponse, statusLoading: false, error: null })
+      } else {
+        console.warn('[useRiskStore] RiskStatusData 校验失败:', result.errors)
+        set({ statusLoading: false, error: `风控数据格式错误: ${result.errors.join('; ')}` })
+      }
     } catch (e) {
       set({ statusLoading: false, status: null })
     }
@@ -117,10 +131,20 @@ export const useRiskStore = create<RiskState>((set, get) => ({
     }
   },
 
+  runSimulate: async (params) => {
+    set({ simulateLoading: true })
+    try {
+      const result = await simulateRisk(params)
+      set({ simulateResult: result, simulateLoading: false })
+    } catch {
+      set({ simulateLoading: false })
+    }
+  },
+
   precheckOrder: async (params) => {
     set({ precheckLoading: true })
     try {
-      const result = await simulateRisk(params)
+      const result = await precheckRisk(params)
       set({ precheckResult: result, precheckLoading: false })
       return result.pass
     } catch {

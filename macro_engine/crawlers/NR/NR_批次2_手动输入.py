@@ -115,7 +115,10 @@ def main():
 
     today = date.today()
     pub_date = today.isoformat()
-    obs_date = pub_date
+    # obs_date 应使用最近交易日，而非 pub_date（PIT 合规）
+    from db_utils import get_pit_dates as _gpd
+    _, _obs = _gpd()
+    obs_date = _obs.isoformat() if hasattr(_obs, 'isoformat') else str(_obs)
 
     print(f"=" * 56)
     print(f"  NR批次2  付费因子手动录入  @ {pub_date}")

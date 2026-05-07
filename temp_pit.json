@@ -1,0 +1,586 @@
+{
+  "generated_at": "2026-05-06 15:44:57",
+  "db_path": "D:\\futures_v6\\macro_engine\\pit_data.db",
+  "stale_days_threshold": 5,
+  "min_factors": 10,
+  "exit_code": 2,
+  "pit_violations": [
+    {
+      "symbol": "AG",
+      "violations": 0,
+      "total": 115,
+      "rate": 0.0
+    },
+    {
+      "symbol": "AL",
+      "violations": 39,
+      "total": 66,
+      "rate": 0.5909090909090909
+    },
+    {
+      "symbol": "AO",
+      "violations": 13,
+      "total": 1440,
+      "rate": 0.009027777777777777
+    },
+    {
+      "symbol": "AU",
+      "violations": 14,
+      "total": 2454,
+      "rate": 0.0057049714751426246
+    },
+    {
+      "symbol": "BR",
+      "violations": 34,
+      "total": 60,
+      "rate": 0.5666666666666667
+    },
+    {
+      "symbol": "BU",
+      "violations": 5,
+      "total": 20,
+      "rate": 0.25
+    },
+    {
+      "symbol": "CU",
+      "violations": 1490,
+      "total": 3178,
+      "rate": 0.46884833228445566
+    },
+    {
+      "symbol": "EC",
+      "violations": 2,
+      "total": 1296,
+      "rate": 0.0015432098765432098
+    },
+    {
+      "symbol": "EG",
+      "violations": 3,
+      "total": 20,
+      "rate": 0.15
+    },
+    {
+      "symbol": "FU",
+      "violations": 7,
+      "total": 17,
+      "rate": 0.4117647058823529
+    },
+    {
+      "symbol": "HC",
+      "violations": 2,
+      "total": 15,
+      "rate": 0.13333333333333333
+    },
+    {
+      "symbol": "I",
+      "violations": 4,
+      "total": 1611,
+      "rate": 0.002482929857231533
+    },
+    {
+      "symbol": "J",
+      "violations": 0,
+      "total": 7,
+      "rate": 0.0
+    },
+    {
+      "symbol": "JM",
+      "violations": 20,
+      "total": 2524,
+      "rate": 0.00792393026941363
+    },
+    {
+      "symbol": "LC",
+      "violations": 1,
+      "total": 1335,
+      "rate": 0.000749063670411985
+    },
+    {
+      "symbol": "LH",
+      "violations": 1,
+      "total": 1599,
+      "rate": 0.0006253908692933083
+    },
+    {
+      "symbol": "M",
+      "violations": 24,
+      "total": 38,
+      "rate": 0.631578947368421
+    },
+    {
+      "symbol": "NI",
+      "violations": 12,
+      "total": 4597,
+      "rate": 0.0026103980857080703
+    },
+    {
+      "symbol": "NR",
+      "violations": 0,
+      "total": 4794,
+      "rate": 0.0
+    },
+    {
+      "symbol": "P",
+      "violations": 6,
+      "total": 1629,
+      "rate": 0.003683241252302026
+    },
+    {
+      "symbol": "PB",
+      "violations": 3,
+      "total": 12,
+      "rate": 0.25
+    },
+    {
+      "symbol": "PP",
+      "violations": 2,
+      "total": 11,
+      "rate": 0.18181818181818182
+    },
+    {
+      "symbol": "RB",
+      "violations": 36,
+      "total": 6280,
+      "rate": 0.005732484076433121
+    },
+    {
+      "symbol": "RU",
+      "violations": 1773,
+      "total": 9330,
+      "rate": 0.190032154340836
+    },
+    {
+      "symbol": "SA",
+      "violations": 34,
+      "total": 62,
+      "rate": 0.5483870967741935
+    },
+    {
+      "symbol": "SC",
+      "violations": 1,
+      "total": 1599,
+      "rate": 0.0006253908692933083
+    },
+    {
+      "symbol": "SN",
+      "violations": 6,
+      "total": 1674,
+      "rate": 0.0035842293906810036
+    },
+    {
+      "symbol": "TA",
+      "violations": 30,
+      "total": 350,
+      "rate": 0.08571428571428572
+    },
+    {
+      "symbol": "Y",
+      "violations": 2,
+      "total": 12,
+      "rate": 0.16666666666666666
+    },
+    {
+      "symbol": "ZN",
+      "violations": 7,
+      "total": 4561,
+      "rate": 0.0015347511510633632
+    }
+  ],
+  "data_freshness": [
+    {
+      "symbol": "AG",
+      "latest_date": "2026-05-04",
+      "days_ago": 2,
+      "stale": false
+    },
+    {
+      "symbol": "AL",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "AO",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "AU",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "BR",
+      "latest_date": "2026-05-02",
+      "days_ago": 4,
+      "stale": false
+    },
+    {
+      "symbol": "BU",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "CU",
+      "latest_date": "2026-05-04",
+      "days_ago": 2,
+      "stale": false
+    },
+    {
+      "symbol": "EC",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "EG",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "FU",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "HC",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "I",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "J",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "JM",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "LC",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "LH",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "M",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "NI",
+      "latest_date": "2026-05-04",
+      "days_ago": 2,
+      "stale": false
+    },
+    {
+      "symbol": "NR",
+      "latest_date": "2026-04-17",
+      "days_ago": 19,
+      "stale": true
+    },
+    {
+      "symbol": "P",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "PB",
+      "latest_date": "2026-05-06",
+      "days_ago": 0,
+      "stale": false
+    },
+    {
+      "symbol": "PP",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "RB",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "RU",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "SA",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "SC",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "SN",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "TA",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    },
+    {
+      "symbol": "Y",
+      "latest_date": "2026-04-30",
+      "days_ago": 6,
+      "stale": true
+    },
+    {
+      "symbol": "ZN",
+      "latest_date": "2026-05-05",
+      "days_ago": 1,
+      "stale": false
+    }
+  ],
+  "factor_counts": [
+    {
+      "symbol": "AG",
+      "active_factors": 14,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "AL",
+      "active_factors": 10,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "AO",
+      "active_factors": 14,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "AU",
+      "active_factors": 19,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "BR",
+      "active_factors": 13,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "BU",
+      "active_factors": 10,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "CU",
+      "active_factors": 13,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "EC",
+      "active_factors": 2,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "EG",
+      "active_factors": 10,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "FU",
+      "active_factors": 11,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "HC",
+      "active_factors": 8,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "I",
+      "active_factors": 8,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "J",
+      "active_factors": 7,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "JM",
+      "active_factors": 10,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "LC",
+      "active_factors": 2,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "LH",
+      "active_factors": 2,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "M",
+      "active_factors": 19,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "NI",
+      "active_factors": 13,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "NR",
+      "active_factors": 7,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "P",
+      "active_factors": 6,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "PB",
+      "active_factors": 7,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "PP",
+      "active_factors": 4,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "RB",
+      "active_factors": 14,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "RU",
+      "active_factors": 20,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "SA",
+      "active_factors": 16,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "SC",
+      "active_factors": 2,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "SN",
+      "active_factors": 6,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "TA",
+      "active_factors": 10,
+      "required": 10,
+      "ok": true
+    },
+    {
+      "symbol": "Y",
+      "active_factors": 5,
+      "required": 10,
+      "ok": false
+    },
+    {
+      "symbol": "ZN",
+      "active_factors": 10,
+      "required": 10,
+      "ok": true
+    }
+  ],
+  "summary": {
+    "total_violations": 3571,
+    "stale_symbols": [
+      "EC",
+      "EG",
+      "HC",
+      "I",
+      "J",
+      "LC",
+      "LH",
+      "NR",
+      "P",
+      "PP",
+      "SC",
+      "SN",
+      "Y"
+    ],
+    "under_factor_symbols": [
+      "EC",
+      "HC",
+      "I",
+      "J",
+      "LC",
+      "LH",
+      "NR",
+      "P",
+      "PB",
+      "PP",
+      "SC",
+      "SN",
+      "Y"
+    ]
+  }
+}

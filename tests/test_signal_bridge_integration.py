@@ -46,7 +46,7 @@ def test_signal_bridge_integration():
     
     # 3. Create SignalBridge
     csv_dir = "str(MACRO_ENGINE)/output"
-    signal_bridge = SignalBridge(event_engine, csv_dir=csv_dir)
+    signal_bridge = SignalBridge(csv_dir=csv_dir, event_engine=event_engine)
     
     # Manually set signals for testing
     signal_bridge._cache = {

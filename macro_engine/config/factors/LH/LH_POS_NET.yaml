@@ -1,0 +1,20 @@
+factor_code: LH_POS_NET
+symbol: LH
+category: free_data
+name: 生猪期货净持仓
+description: 生猪期货前20净持仓
+frequency: daily
+unit: 手
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- position
+- LH
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- -100000.0
+- 100000.0
+skip_reason: DCE净持仓因内网无法部署浏览器环境而暂不获取（2026-05-06 PM决定）

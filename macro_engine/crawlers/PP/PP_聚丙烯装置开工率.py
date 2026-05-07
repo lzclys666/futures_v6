@@ -3,8 +3,12 @@
 """
 PP_聚丙烯装置开工率.py
 因子: PP_STK_PLANT_RATE = 聚丙烯装置开工率（%）
+
+公式: 数据采集（无独立计算公式）
+
 当前状态: [⛔永久跳过]
-- 原因: 付费订阅(隆众资讯/CCF)，无免费数据源
+- L1: AKShare — 无聚丙烯装置开工率接口
+- L2: 隆众资讯/CCF — 付费订阅
 - 不写占位符，不做L4回补
 """
 import sys, os
@@ -22,7 +26,7 @@ def main():
     pub_date, obs_date = get_pit_dates()
     print(f"=== {FCODE} === pub={pub_date} obs={obs_date}")
     print(f"[跳过] {FCODE} = None (obs={obs_date})")
-    print(f"  原因: 付费订阅(隆众资讯/CCF)，无免费数据源")
+    print(f"  原因: 聚丙烯装置开工率无免费数据源（隆众资讯/CCF付费）")
     print(f"  不写占位符，不做L4回补")
 
 

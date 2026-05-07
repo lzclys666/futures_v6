@@ -1,0 +1,20 @@
+﻿factor_code: M_PLANT_OP_RATE
+symbol: M
+category: free_data
+name: 油厂开机率
+description: 油厂大豆压榨开机率（%）
+frequency: weekly
+unit: '%'
+direction: neutral
+confidence: 3
+source: null
+calculation: null
+tags:
+- operation
+- M
+source_confidence: 0.0
+data_source: null
+expected_range:
+- 0.0
+- 100.0
+skip_reason: "我的农产品网需付费订阅，无免费替代源"

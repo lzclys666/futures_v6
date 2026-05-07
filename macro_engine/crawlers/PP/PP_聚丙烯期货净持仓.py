@@ -2,10 +2,19 @@
 # -*- coding: utf-8 -*-
 """
 PP_聚丙烯期货净持仓.py
-因子: PP_POS_NET = 上期所聚丙烯前20净持仓
+因子: PP_POS_NET = 大商所聚丙烯前20净持仓（手）
+
+公式: sum(持买仓量) - sum(持卖仓量) across all PP contracts top 20
+
 当前状态: [⛔永久跳过]
-- 原因: SHFE持仓排名接口待验证
+- L1: AKShare futures_dce_position_rank — DCE网站412反爬，BadZipFile
+- L2: AKShare get_dce_rank_table — 同样被DCE反爬阻断
 - 不写占位符，不做L4回补
+
+备注: DCE（大连商品交易所）网站对爬虫实施412反爬策略（JS挑战+WAF），
+内网无法部署浏览器环境（无Chrome/Edge/Chromium），无法绕过。
+此问题影响所有DCE品种（LH/PP/EG等），非脚本问题。
+2026-05-06 PM决定：跳过DCE净持仓，按P2标准推进。
 """
 import sys, os
 sys.stdout.reconfigure(encoding='utf-8')
@@ -22,7 +31,7 @@ def main():
     pub_date, obs_date = get_pit_dates()
     print(f"=== {FCODE} === pub={pub_date} obs={obs_date}")
     print(f"[跳过] {FCODE} = None (obs={obs_date})")
-    print(f"  原因: SHFE持仓排名接口待验证")
+    print(f"  原因: DCE网站412反爬，内网无法部署浏览器环境而暂不获取")
     print(f"  不写占位符，不做L4回补")
 
 

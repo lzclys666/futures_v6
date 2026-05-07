@@ -32,7 +32,13 @@ export function validatePortfolioData(data: unknown): { valid: boolean; errors: 
   return { valid: false, errors: ['PortfolioData 结构不完整'] }
 }
 
-/** 校验 RiskStatusData */
+/**
+ * 校验并规范化 RiskStatusData
+ * 兼容两种格式：
+ *   1. 新格式（后端已转换）：{ overallStatus, rules, ... }
+ *   2. 旧格式（vnpy_bridge 原始）：{ status, active_rules, levels, ... }
+ * 同时兼容 API 包装层 { code, message, data } 和直接数据
+ */
 export function validateRiskStatusData(data: unknown): { valid: boolean; errors: string[]; data?: RiskStatusData } {
   const errors: string[] = []
 
@@ -40,13 +46,40 @@ export function validateRiskStatusData(data: unknown): { valid: boolean; errors:
     return { valid: false, errors: ['数据必须是对象'] }
   }
 
-  const r = data as Record<string, unknown>
+  // 兼容 API 包装层 { code, message, data }
+  const raw = data as Record<string, unknown>
+  const r: Record<string, unknown> =
+    'code' in raw && 'data' in raw && typeof raw.data === 'object' && raw.data !== null
+      ? (raw.data as Record<string, unknown>)
+      : raw
 
+  // --- 字段规范化：旧格式 → 新格式 ---
+  // status → overallStatus
+  if (!('overallStatus' in r) && 'status' in r) {
+    const s = r.status as string
+    r.overallStatus = s === 'normal' ? 'PASS' : s === 'warning' ? 'WARN' : s === 'danger' ? 'BLOCK' : s
+  }
+  // active_rules / levels → rules
+  if (!('rules' in r)) {
+    if ('active_rules' in r && Array.isArray(r.active_rules)) {
+      r.rules = r.active_rules
+    } else if ('levels' in r && Array.isArray(r.levels)) {
+      r.rules = r.levels
+    }
+  }
+
+  // --- 字段校验 ---
   if (typeof r.date !== 'string') errors.push('date 必须是字符串')
   if (!['PASS', 'WARN', 'BLOCK'].includes(r.overallStatus as string)) {
-    errors.push('overallStatus 必须是 PASS|WARN|BLOCK')
+    errors.push(`overallStatus 必须是 PASS|WARN|BLOCK，实际值: ${r.overallStatus}`)
   }
   if (!Array.isArray(r.rules)) errors.push('rules 必须是数组')
+
+  // 补全可选字段默认值
+  if (typeof r.triggeredCount !== 'number') r.triggeredCount = 0
+  if (typeof r.circuitBreaker !== 'boolean') r.circuitBreaker = false
+  if (typeof r.updatedAt !== 'string') r.updatedAt = new Date().toISOString()
+  if (typeof r.date !== 'string') r.date = new Date().toISOString().slice(0, 10)
 
   if (errors.length > 0) {
     return { valid: false, errors }

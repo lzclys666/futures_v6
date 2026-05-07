@@ -14,11 +14,20 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
+# Windows 控制台 GBK 编码兼容：强制 stdout/stderr 使用 UTF-8
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 import csv
 import logging
 import logging.handlers
 import yaml
 import os
+import subprocess
 from datetime import date, datetime, timedelta
 from core.data.pit_service import PitDataService
 from core.pipeline.nodes import NormalizeNode, OrthogonalizeNode, WeightNode, DirectionNode
@@ -155,6 +164,22 @@ def run_daily_scoring():
     today_str = today.strftime('%Y-%m-%d')
     today_yyyymmdd = today.strftime('%Y%m%d')
     updated_at = datetime.now().strftime('%Y-%m-%dT%H:%M:%S+08:00')
+
+    # 先计算派生因子
+    derived_script = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'add_derived_factors.py')
+    try:
+        derived_result = subprocess.run(
+            [sys.executable, derived_script],
+            capture_output=True, text=True, timeout=120
+        )
+        if derived_result.returncode == 0:
+            print(f"[OK] Derived factors updated")
+        else:
+            print(f"[WARN] Derived factors failed: {derived_result.stderr[:200]}")
+    except subprocess.TimeoutExpired:
+        print(f"[WARN] Derived factors timed out after 120s")
+    except Exception as e:
+        print(f"[WARN] Derived factors error: {e}")
 
     print(f"\n{'='*60}")
     print(f"  D引擎每日打分流水线 - {today_str}")

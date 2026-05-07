@@ -43,7 +43,7 @@ if not cta_engine:
 print(f"[成功] CtaEngine 已获取: {type(cta_engine)}")
 
 # 加载策略 - 使用 Path 对象
-strategy_dir = Path(project_dir) / "macro_engine" / "strategies"
+strategy_dir = Path(project_dir) / "strategies"
 if strategy_dir.exists():
     cta_engine.load_strategy_class_from_folder(strategy_dir, module_name="macro_engine.strategies")
     class_names = cta_engine.get_all_strategy_class_names()
@@ -75,7 +75,7 @@ if "MacroDemoStrategy" in class_names:
                 "fast_window": 10,
                 "slow_window": 20,
                 "use_macro": True,
-                "csv_path_str": "str(MACRO_ENGINE)/output/{symbol}_macro_daily_{date}.csv"
+                "csv_path_str": str(MACRO_ENGINE / "output" / "{symbol}_macro_daily_{date}.csv")
             }
             
             # 模拟创建策略实例

@@ -11,11 +11,13 @@ import RiskPage from './pages/RiskPage'
 import RiskConfigPage from './pages/RiskConfigPage'
 import StressTestPage from './pages/StressTestPage'
 import KellyPage from './pages/KellyPage'
+import KellyCalculatorPage from './pages/KellyCalculatorPage'
 import ProfilePage from './pages/ProfilePage'
 import AdminPage from './pages/AdminPage'
 import FactorDashboardPage from './pages/FactorDashboardPage'
 import RuleSimulatorPage from './pages/RuleSimulatorPage'
 import ReportPage from './pages/ReportPage'
+import ICHeatmapPage from './pages/ICHeatmapPage'
 import { useUserStore } from './store/useUserStore'
 
 const App: React.FC = () => {
@@ -50,11 +52,13 @@ const App: React.FC = () => {
             <Route path="risk/config" element={<RiskConfigPage />} />
             <Route path="stress-test" element={<StressTestPage />} />
             <Route path="kelly" element={<KellyPage />} />
+            <Route path="kelly-calculator" element={<KellyCalculatorPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="admin" element={<AdminPage />} />
             <Route path="factor-dashboard" element={<FactorDashboardPage />} />
             <Route path="rule-simulator" element={<RuleSimulatorPage />} />
             <Route path="report" element={<ReportPage />} />
+            <Route path="ic-heatmap" element={<ICHeatmapPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

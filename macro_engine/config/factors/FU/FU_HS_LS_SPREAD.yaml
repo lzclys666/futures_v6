@@ -1,0 +1,19 @@
+factor_code: FU_HS_LS_SPREAD
+symbol: FU
+category: derived
+name: 高低硫价差
+description: 高硫燃料油与低硫燃料油价差
+frequency: daily
+unit: 美元/吨
+direction: negative
+confidence: 3
+source: Ship&Bunker
+calculation: null
+tags:
+- spread
+- FU
+source_confidence: 3
+data_source: Ship&Bunker
+expected_range:
+- -500.0
+- 500.0

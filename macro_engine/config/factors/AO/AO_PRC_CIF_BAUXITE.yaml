@@ -1,0 +1,20 @@
+﻿factor_code: AO_PRC_CIF_BAUXITE
+symbol: AO
+category: free_data
+name: 铝土矿CIF价
+description: 几内亚铝土矿CIF价（美元/吨）
+frequency: monthly
+unit: 美元/吨
+direction: neutral
+confidence: 3
+source: null
+calculation: null
+tags:
+- price
+- AO
+source_confidence: 0.0
+data_source: null
+expected_range:
+- 40.0
+- 120.0
+skip_reason: "AKShare海关价格数据无铝土矿单价字段，SMM百川需付费订阅"

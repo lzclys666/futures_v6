@@ -7,10 +7,11 @@ AO_抓取沪铝期货价格.py
 公式: 数据采集（无独立计算公式）
 
 当前状态: [✅正常]
-- L1: AKShare futures_main_sina(symbol="AL") 获取沪铝主力合约价格
+- L1: AKShare futures_zh_daily_sina(symbol="AL0") 获取沪铝主力合约日K
 - L2: 新浪 nf_AL0 实时行情
 - L3: save_l4_fallback() 兜底
 - bounds: [15000, 30000]元/吨
+- 修复记录: 2026-05-05 futures_main_sina返回ValueError, 改用futures_zh_daily_sina
 
 订阅优先级: 无需付费
 替代付费源: 无
@@ -30,10 +31,10 @@ BOUNDS = (15_000, 30_000)
 
 
 def fetch():
-    # L1: AKShare
-    print("[L1] AKShare futures_main_sina AL...")
+    # L1: AKShare futures_zh_daily_sina
+    print("[L1] AKShare futures_zh_daily_sina AL0...")
     try:
-        df = ak.futures_main_sina(symbol="AL")
+        df = ak.futures_zh_daily_sina(symbol="AL0")
         if df is not None and len(df) > 0:
             val = float(df.iloc[-1]["close"])
             if BOUNDS[0] <= val <= BOUNDS[1]:

@@ -25,6 +25,7 @@ import {
   BarChartOutlined,
   ExperimentOutlined,
   FileTextOutlined,
+  HeatMapOutlined,
 } from '@ant-design/icons'
 import { useVnpyStore } from '../store/useVnpyStore'
 import { useRiskStore } from '../store/useRiskStore'
@@ -50,11 +51,13 @@ const navItems: NavItem[] = [
   { key: '/risk/config', icon: <SettingOutlined />, label: '风控配置' },
   { key: '/stress-test', icon: <ThunderboltOutlined />, label: '压力测试' },
   { key: '/kelly', icon: <CalculatorOutlined />, label: '凯利计算器' },
+  { key: '/kelly-calculator', icon: <CalculatorOutlined />, label: '凯利计算器(本地)' },
   { key: '/profile', icon: <UserOutlined />, label: '个人中心' },
   { key: '/admin', icon: <ControlOutlined />, label: '系统管理' },
   { key: '/factor-dashboard', icon: <BarChartOutlined />, label: '因子仪表盘' },
   { key: '/rule-simulator', icon: <ExperimentOutlined />, label: '规则模拟器' },
   { key: '/report', icon: <FileTextOutlined />, label: '月度报告' },
+  { key: '/ic-heatmap', icon: <HeatMapOutlined />, label: 'IC 热力图' },
 ]
 
 const MainLayout: React.FC = () => {
@@ -124,7 +127,7 @@ const MainLayout: React.FC = () => {
                     count={triggeredCount}
                     size="small"
                     style={{ marginLeft: 8 }}
-                    color={overallSeverity === 'HIGH' ? '#ff4d4f' : '#faad14'}
+                    color={overallSeverity === 'BLOCK' ? '#ff4d4f' : '#faad14'}
                   />
                 )}
               </span>

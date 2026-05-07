@@ -83,8 +83,6 @@ export function isRiskStatusData(obj: unknown): obj is RiskStatusData {
     typeof r.date === 'string' &&
     ['PASS', 'WARN', 'BLOCK'].includes(r.overallStatus as string) &&
     Array.isArray(r.rules) &&
-    typeof r.equity === 'number' &&
-    typeof r.drawdown === 'number' &&
     typeof r.updatedAt === 'string'
   )
 }

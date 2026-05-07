@@ -1,0 +1,19 @@
+factor_code: LH_SPD_BASIS
+symbol: LH
+category: derived
+name: 生猪期现基差
+description: 生猪期现基差
+frequency: daily
+unit: 元/吨
+direction: neutral
+confidence: 3
+source: AKShare
+calculation: spot_price - futures_price
+tags:
+- spread
+- LH
+source_confidence: 3
+data_source: Calculated
+expected_range:
+- -10000.0
+- 10000.0

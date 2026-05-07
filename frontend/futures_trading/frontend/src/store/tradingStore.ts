@@ -5,7 +5,9 @@
 
 import { create } from 'zustand'
 import type { PortfolioData, RiskStatusData } from '../types/macro'
-import { fetchPortfolio, fetchRiskStatus } from '../api/trading'
+import { fetchPortfolio } from '../api/trading'
+import { fetchRiskStatus } from '../api/risk'
+import { validateRiskStatusData } from '../utils/tradingValidators'
 
 interface TradingState {
   /** 持仓数据 */
@@ -46,8 +48,14 @@ export const useTradingStore = create<TradingState>((set) => ({
   loadRiskStatus: async () => {
     set({ riskLoading: true, error: null })
     try {
-      const data = await fetchRiskStatus()
-      set({ riskStatus: data, riskLoading: false })
+      const raw = await fetchRiskStatus()
+      const result = validateRiskStatusData(raw)
+      if (result.valid && result.data) {
+        set({ riskStatus: result.data, riskLoading: false })
+      } else {
+        console.warn('[tradingStore] RiskStatusData 校验失败:', result.errors)
+        set({ error: `风控数据格式错误: ${result.errors.join('; ')}`, riskLoading: false })
+      }
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : '加载风控状态失败'
       set({ error: msg, riskLoading: false })

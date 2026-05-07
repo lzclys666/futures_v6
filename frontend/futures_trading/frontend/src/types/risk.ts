@@ -192,5 +192,4 @@ export interface StressTestReport {
   recommendations: string[]
 }
 
-// Re-export circuit breaker types for consumers
-export type { CircuitBreakerStatus, CircuitBreakerResponse, CircuitHistoryEntry, SameDirectionData, ConfirmPauseParams, DismissParams, ResumeParams }
+

@@ -1,0 +1,38 @@
+[
+  {
+    "event_type": "SCORING_COMPLETE",
+    "timestamp": "2026-05-07T01:26:47+08:00",
+    "payload": {
+      "script": "daily_scoring.py",
+      "interface": "I005",
+      "date": "2026-05-07",
+      "symbols_count": 29,
+      "output_dir": "D:\\futures_v6\\macro_engine\\output",
+      "engine_version": "d_engine_v1.0"
+    }
+  },
+  {
+    "event_type": "SCORING_COMPLETE",
+    "timestamp": "2026-05-07T01:33:36+08:00",
+    "payload": {
+      "script": "daily_scoring.py",
+      "interface": "I005",
+      "date": "2026-05-07",
+      "symbols_count": 30,
+      "output_dir": "D:\\futures_v6\\macro_engine\\output",
+      "engine_version": "d_engine_v1.0"
+    }
+  },
+  {
+    "event_type": "SCORING_COMPLETE",
+    "timestamp": "2026-05-07T14:30:16+08:00",
+    "payload": {
+      "script": "daily_scoring.py",
+      "interface": "I005",
+      "date": "2026-05-07",
+      "symbols_count": 30,
+      "output_dir": "D:\\futures_v6\\macro_engine\\output",
+      "engine_version": "d_engine_v1.0"
+    }
+  }
+]

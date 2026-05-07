@@ -10,6 +10,14 @@
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
+.factor-card--has-risk {
+  border-left: 3px solid #faad14;
+}
+
+.factor-card--has-risk:has(.factor-card__risk-dot[style*='rgb(255, 77, 79)']) {
+  border-left-color: #ff4d4f;
+}
+
 .factor-card__header {
   display: flex;
   justify-content: space-between;
@@ -57,4 +65,65 @@
   font-family: 'Courier New', monospace;
   font-weight: 600;
   color: #595959;
+}
+
+/* ---------- 风险状态区域 ---------- */
+
+.factor-card__risk-collapse {
+  margin-top: 8px;
+}
+
+.factor-card__risk-collapse .ant-collapse-header {
+  padding: 4px 8px !important;
+  font-size: 11px;
+}
+
+.factor-card__risk-collapse .ant-collapse-content-box {
+  padding: 4px 8px !important;
+}
+
+.factor-card__risk-title {
+  font-size: 11px;
+  color: #faad14;
+  font-weight: 600;
+}
+
+.factor-card__risk-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.factor-card__risk-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  cursor: default;
+  line-height: 1;
+}
+
+.factor-card__risk-safe {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.factor-card__risk-safe .factor-card__risk-dot {
+  width: 16px;
+  height: 16px;
+  font-size: 9px;
+}
+
+.factor-card__risk-safe-text {
+  font-size: 11px;
+  color: #8c8c8c;
 }

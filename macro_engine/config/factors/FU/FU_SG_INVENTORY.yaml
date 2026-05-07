@@ -1,0 +1,20 @@
+factor_code: FU_SG_INVENTORY
+symbol: FU
+category: free_data
+name: 新加坡燃料油库存
+description: 新加坡燃料油陆上库存
+frequency: weekly
+unit: 桶
+direction: negative
+confidence: 3
+source: AKShare
+calculation: null
+tags:
+- inventory
+- FU
+- overseas
+source_confidence: 3
+data_source: AKShare
+expected_range:
+- 0.0
+- 5000000.0

@@ -24,7 +24,7 @@ interface OrderRequest {
 }
 
 interface ActiveOrder {
-  vt_orderid: string
+  orderId: string
   symbol: string
   direction: string
   offset: string
@@ -114,7 +114,7 @@ const TradingPanel: React.FC = () => {
       if (ordersData.status === 'fulfilled') {
         const raw = (ordersData.value as any)?.orders ?? ((Array.isArray(ordersData.value) ? ordersData.value : []) || [])
         setOrders(raw.map((o: any, i: number) => ({
-          vt_orderid: o.vt_orderid || o.order_id || `order-${i}`,
+          orderId: o.orderId || o.order_id || `order-${i}`,
           symbol: (o.vt_symbol || o.symbol || '').split('.')[0],
           direction: o.direction || '-',
           offset: o.offset || '-',
@@ -215,8 +215,8 @@ const TradingPanel: React.FC = () => {
         }),
       })
       const json = await res.json()
-      if (json.code === 0 && json.data?.vt_orderid) {
-        message.success(`✅ 下单成功: ${json.data.vt_orderid}`)
+      if (json.code === 0 && json.data?.orderId) {
+        message.success(`✅ 下单成功: ${json.data.orderId}`)
         form.resetFields()
         fetchAll()
       } else {
@@ -252,7 +252,7 @@ const TradingPanel: React.FC = () => {
   // ─── Columns ───
 
   const orderColumns = [
-    { title: '订单号', dataIndex: 'vt_orderid', key: 'vt_orderid', width: 180 },
+    { title: '订单号', dataIndex: 'orderId', key: 'orderId', width: 180 },
     { title: '品种', dataIndex: 'symbol', key: 'symbol', width: 80 },
     {
       title: '方向',
@@ -289,7 +289,7 @@ const TradingPanel: React.FC = () => {
           size="small"
           danger
           icon={<CloseOutlined />}
-          onClick={() => handleCancel(record.vt_orderid)}
+          onClick={() => handleCancel(record.orderId)}
           disabled={record.status === '已撤单' || record.status === '全部成交'}
         >
           撤
@@ -533,7 +533,7 @@ const TradingPanel: React.FC = () => {
                   <Table
                     dataSource={orders}
                     columns={orderColumns}
-                    rowKey="vt_orderid"
+                    rowKey="orderId"
                     size="small"
                     pagination={{ pageSize: 5, size: 'small' }}
                     scroll={{ x: 900 }}

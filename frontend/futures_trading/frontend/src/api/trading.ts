@@ -6,8 +6,6 @@
 import { createClient } from './client'
 import type { PortfolioData } from '../types/macro'
 import type { PositionItem } from '../types/macro'
-import { fetchRiskStatus } from './risk'
-
 const USE_MOCK = false // 后端 /api/trading/* 就绪后改为 false
 
 // ---------- Mock 数据（对应 types/macro.ts 的 snake_case 字段） ----------
@@ -16,6 +14,8 @@ const MOCK_PORTFOLIO: PortfolioData = {
   date: new Date().toISOString().slice(0, 10),
   totalEquity: 1000000,
   availableCash: 850000,
+  availableFunds: 850000,
+  usedMargin: 45000,
   positions: [
     {
       symbol: 'RU2501',
@@ -77,6 +77,8 @@ export async function fetchPortfolio(): Promise<PortfolioData> {
     date: (p.date as string) || '',
     totalEquity: (p.total_equity as number) ?? 0,
     availableCash: (p.available_cash as number) ?? 0,
+    availableFunds: (p.available_funds as number) ?? (p.available_cash as number) ?? 0,
+    usedMargin: (p.used_margin as number) ?? 0,
     dailyPnl: (p.daily_pnl as number) ?? 0,
     dailyReturn: (p.daily_return as number) ?? 0,
     totalPositionPct: (p.total_position_pct as number) ?? 0,
@@ -94,7 +96,4 @@ export async function fetchPortfolio(): Promise<PortfolioData> {
   }
 }
 
-/**
- * GET /api/risk/status — 风控状态（委托自 @/api/risk）
- */
-export { fetchRiskStatus } from './risk'
+// fetchRiskStatus 已统一在 api/risk.ts，不再重复导出
